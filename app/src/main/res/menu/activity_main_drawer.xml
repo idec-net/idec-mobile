@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_carbon"
+            android:title="Карбонка" />
+        <item
+            android:id="@+id/nav_unsent"
+            android:title="Исходящие" />
+        <item
+            android:id="@+id/nav_favorites"
+            android:title="Избранные" />
+        <item
+            android:id="@+id/nav_tools"
+            android:title="Дополнительно" />
+        <item
+            android:id="@+id/nav_stations"
+            android:title="Станции" />
+        <item
+            android:id="@+id/nav_settings"
+            android:title="Настройки" />
+        <item
+            android:id="@+id/nav_help"
+            android:title="Справка" />
+    </group>
+</menu>
