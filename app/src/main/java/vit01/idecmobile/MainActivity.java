@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
             stationsList.add(station.nodename);
         }
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, stationsList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, stationsList);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void updateEcholist() {
-        echoListAdapter = new ArrayAdapter<String>(this,
+        echoListAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, currentStation.echoareas);
 
         echoList.setAdapter(echoListAdapter);

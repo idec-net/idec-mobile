@@ -66,6 +66,18 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="numberDecimal" />
+
+            <TextView
+                android:id="@+id/textView3"
+                style="@style/AppTheme.MyCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Offline-эхоконференции" />
+
+            <ListView
+                android:id="@+id/settings_offline_echoareas_listview"
+                android:layout_width="match_parent"
+                android:layout_height="220dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

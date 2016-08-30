@@ -12,7 +12,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +22,6 @@ public class EchoView extends AppCompatActivity {
     int countMessages;
     int groupN = 10;
     AbstractTransport transport;
-    Station currentStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +42,11 @@ public class EchoView extends AppCompatActivity {
 
         Intent intent = getIntent();
         echoarea = intent.getStringExtra("echoarea");
-        currentStation = Config.values.stations.get(
-                intent.getIntExtra("nodeindex", 0));
+        int nodeIndex = intent.getIntExtra("nodeindex", -1);
 
-        Toast.makeText(EchoView.this, "Мы на станции " + currentStation.nodename, Toast.LENGTH_SHORT).show();
-        getSupportActionBar().setTitle(echoarea);
+        if (nodeIndex < 0) {
+            fab.setVisibility(View.INVISIBLE);
+        }
 
         transport = new SqliteTransport(getApplicationContext());
         countMessages = transport.countMessages(echoarea);

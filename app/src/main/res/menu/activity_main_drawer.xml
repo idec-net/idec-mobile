@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_echolist"
+            android:title="Эхоконференции" />
+        <item
             android:id="@+id/nav_carbon"
             android:title="Карбонка" />
         <item
@@ -10,6 +13,9 @@
         <item
             android:id="@+id/nav_favorites"
             android:title="Избранные" />
+        <item
+            android:id="@+id/nav_offline_echoes"
+            android:title="Offline-эхи" />
         <item
             android:id="@+id/nav_tools"
             android:title="Дополнительно" />
