@@ -145,6 +145,10 @@ public class MainActivity extends AppCompatActivity
             }
             Toast.makeText(MainActivity.this, "Кэш /x/c очищен", Toast.LENGTH_SHORT).show();
             return true;
+        } else if (id == R.id.action_delete_everything) {
+            SqliteTransport transport = new SqliteTransport(this);
+            transport.FuckDeleteEverything();
+            Toast.makeText(MainActivity.this, "База очищена", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);

@@ -240,4 +240,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         db.close();
         return result;
     }
+
+    void FuckDeleteEverything() {
+        SQLiteDatabase db = getReadableDatabase();
+        db.delete(tableName, null, null);
+        db.close();
+    }
 }
