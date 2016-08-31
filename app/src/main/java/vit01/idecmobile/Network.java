@@ -14,7 +14,7 @@ import java.net.URL;
 public class Network {
     static String appName = "idecmobile";
 
-    public static String getFile(Context context, String url, String data) {
+    public static String getFile(Context context, String url, String data, int timeout) {
         SimpleFunctions.debug("fetch " + url);
 
         ConnectivityManager connMgr;
@@ -25,7 +25,7 @@ public class Network {
 
         if (networkInfo != null && networkInfo.isConnected()) {
             try {
-                return downloadUrl(url, data);
+                return downloadUrl(url, data, timeout);
             } catch (Exception exception) {
                 Log.w(appName, "Throw Exception: " + exception);
                 exception.printStackTrace();
@@ -34,13 +34,14 @@ public class Network {
         } else return null;
     }
 
-    public static String downloadUrl(String myurl, String data) throws IOException {
+    public static String downloadUrl(String myurl, String data, int timeout) throws IOException {
         InputStream is = null;
+        timeout *= 1000;
         try {
             URL url = new URL(myurl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
+            conn.setReadTimeout(timeout);
+            conn.setConnectTimeout(timeout);
 
             if (data == null) {
                 conn.setRequestMethod("GET");

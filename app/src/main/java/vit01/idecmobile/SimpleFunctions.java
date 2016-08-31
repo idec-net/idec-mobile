@@ -109,6 +109,9 @@ public class SimpleFunctions {
 
     public static void debug(String message) {
         Log.d(appName, message);
-        debugMessages.add(message);
+
+        if (!debugTaskFinished) {
+            debugMessages.add(message);
+        }
     }
 }

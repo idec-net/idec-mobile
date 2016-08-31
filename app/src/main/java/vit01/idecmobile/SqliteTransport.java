@@ -182,8 +182,11 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     public Hashtable<String, IIMessage> getMessages(ArrayList<String> msgids) {
+        // Будем считать, что слепить запрос с кучей OR - это норма
+        // В конце концов, в ii-php всё точно так же
+
+
         String args = "id='" + TextUtils.join("' or id='", msgids.toArray()) + "'";
-        SimpleFunctions.debug(args);
         Hashtable<String, IIMessage> result = new Hashtable<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(tableName, null, args, null, null, null, null);
@@ -195,7 +198,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
                 result.put(msgid, message);
             }
-        } else SimpleFunctions.debug("FUCKING");
+        }
 
         cursor.close();
         db.close();

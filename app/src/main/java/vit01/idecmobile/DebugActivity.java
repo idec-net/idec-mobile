@@ -161,7 +161,8 @@ public class DebugActivity extends AppCompatActivity {
                             Config.values.oneRequestLimit,
                             ue_limit,
                             station.pervasive_ue,
-                            station.cut_remote_index
+                            station.cut_remote_index,
+                            Config.values.connectionTimeout
                     );
                 }
             } catch (Exception e) {
