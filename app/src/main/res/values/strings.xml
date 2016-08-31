@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Настройки клиента</string>
     <string name="title_activity_echo_view">EchoView</string>
     <string name="title_activity_main_settings">Settings</string>
 

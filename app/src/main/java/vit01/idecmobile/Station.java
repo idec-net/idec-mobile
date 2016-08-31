@@ -16,7 +16,7 @@ public class Station implements Serializable {
             advanced_ue = true,
             pervasive_ue = false;
     public int
-            ue_limit = 60,
+            ue_limit = 5,
             cut_remote_index = 0;
 
     Station() {

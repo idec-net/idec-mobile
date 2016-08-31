@@ -13,11 +13,15 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class SimpleFunctions {
     static String appName = "IDECMobile";
     static ArrayList<String> emptyList = new ArrayList<>();
+    static Queue<String> debugMessages = new LinkedList<>();
+    static boolean debugTaskFinished = true;
 
     static String join(String[] array, String delimiter) {
         String result = "";
@@ -97,8 +101,14 @@ public class SimpleFunctions {
         return parts;
     }
 
+    static String[] List2Arr(List<String> list) {
+        String[] newString = new String[list.size()];
+        list.toArray(newString);
+        return newString;
+    }
+
     public static void debug(String message) {
         Log.d(appName, message);
-        // TODO: do internal debug window broadcast
+        debugMessages.add(message);
     }
 }

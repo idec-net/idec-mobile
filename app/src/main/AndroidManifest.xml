@@ -33,7 +33,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
-        <activity android:name=".CommonSettings"></activity>
+        <activity android:name=".CommonSettings" />
+        <activity android:name=".DebugActivity"></activity>
     </application>
 
 </manifest>

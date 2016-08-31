@@ -138,7 +138,9 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         } else limitstr = null;
 
         Cursor cursor = db.query(tableName, new String[]{"id", "number"}, "echoarea = ?",
-                new String[]{echo}, null, null, "number asc", limitstr);
+                new String[]{echo}, null, null, "date", limitstr);
+
+        // TODO: исправить в фетчере сохранение, потому что не работает сортировка по числу
 
         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
             while (cursor.moveToNext()) {
@@ -180,10 +182,11 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     public Hashtable<String, IIMessage> getMessages(ArrayList<String> msgids) {
-        String args = TextUtils.join(", ", msgids.toArray());
+        String args = "id='" + TextUtils.join("' or id='", msgids.toArray()) + "'";
+        SimpleFunctions.debug(args);
         Hashtable<String, IIMessage> result = new Hashtable<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(tableName, null, "id in (?)", new String[]{args}, null, null, null);
+        Cursor cursor = db.query(tableName, null, args, null, null, null, null);
 
         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
             while (cursor.moveToNext()) {
@@ -192,7 +195,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
                 result.put(msgid, message);
             }
-        }
+        } else SimpleFunctions.debug("FUCKING");
 
         cursor.close();
         db.close();

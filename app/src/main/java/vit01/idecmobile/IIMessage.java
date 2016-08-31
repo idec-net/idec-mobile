@@ -56,7 +56,7 @@ public class IIMessage {
         String[] all_tags = str.split("/");
         Hashtable<String, String> new_tags = new Hashtable<>();
 
-        for (int i = 0; i < all_tags.length; i++) {
+        for (int i = 0; i < all_tags.length; i += 2) {
             if (all_tags[i + 1] != null) {
                 new_tags.put(all_tags[i], all_tags[i + 1]);
             } else {
@@ -78,7 +78,7 @@ public class IIMessage {
             if (value != null) fragments.add(key + "/" + value);
         }
 
-        return SimpleFunctions.join((String[]) fragments.toArray(), "/");
+        return SimpleFunctions.join(SimpleFunctions.List2Arr(fragments), "/");
     }
 
     String raw() {

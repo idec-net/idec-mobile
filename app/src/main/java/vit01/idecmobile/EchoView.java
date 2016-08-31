@@ -42,6 +42,7 @@ public class EchoView extends AppCompatActivity {
 
         Intent intent = getIntent();
         echoarea = intent.getStringExtra("echoarea");
+        getSupportActionBar().setTitle(echoarea);
         int nodeIndex = intent.getIntExtra("nodeindex", -1);
 
         if (nodeIndex < 0) {
@@ -61,25 +62,33 @@ public class EchoView extends AppCompatActivity {
             currentLayout.addView(this_is_empty, 0);
         } else {
             ArrayList<String> msglist;
-            ArrayList<IIMessage> newMessages = new ArrayList<>();
+            ArrayList<String> newMessages = new ArrayList<>();
 
-            if (countMessages < groupN) {
-                msglist = transport.getMsgList(echoarea, 0, 0);
-            } else {
-                msglist = transport.getMsgList(echoarea, countMessages - groupN, groupN);
-            }
+            msglist = transport.getMsgList(echoarea, countMessages - groupN, groupN);
 
             Collections.reverse(msglist);
 
             Hashtable<String, IIMessage> messages = transport.getMessages(msglist);
 
             for (String msgid : msglist) {
-                newMessages.add(messages.get(msgid));
+                IIMessage message = messages.get(msgid);
+                if (message == null) continue;
+                newMessages.add(message2Text(message));
             }
 
             ListView v = (ListView) findViewById(R.id.msglist_view);
-            ListAdapter adapter = new ArrayAdapter<IIMessage>(this, android.R.layout.activity_list_item, newMessages);
+            ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, newMessages);
             v.setAdapter(adapter);
         }
+    }
+
+    // От этой функции надо избавляться, она не нужна!
+
+    public String message2Text(IIMessage message) {
+        String result = "msgid: " + message.id +
+                "\n" + message.from + " => " + message.to +
+                "\n" + message.subj +
+                "\n\n" + message.msg;
+        return result;
     }
 }

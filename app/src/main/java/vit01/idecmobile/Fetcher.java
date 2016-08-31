@@ -9,9 +9,6 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
-/**
- * Created by user on 27.08.16.
- */
 public class Fetcher {
     AbstractTransport transport;
     ArrayList<String> emptyList;
@@ -24,7 +21,7 @@ public class Fetcher {
     public ArrayList<String> fetch_messages(
             Context context,
             String address,
-            String[] firstEchoesToFetch,
+            ArrayList<String> firstEchoesToFetch,
             String xc_id,
             int one_request_limit,
             int fetch_limit,
@@ -34,14 +31,15 @@ public class Fetcher {
         // Слабо прочитать код всей этой функции на трезвую голову?
         // В общем, запасайтесь попкорном и алкоголем, ребята
 
-        if (firstEchoesToFetch.length == 0) return new ArrayList<>();
+        if (firstEchoesToFetch.size() == 0) return new ArrayList<>();
 
         ArrayList<String> echoesToFetch = new ArrayList<>();
-        echoesToFetch.addAll(Arrays.asList(firstEchoesToFetch));
+        echoesToFetch.addAll(firstEchoesToFetch);
 
         if (xc_id != null) {
-            String xc_cell_name = "xc_" + SimpleFunctions.hsh(address);
-            String xc_url = address + "x/c/" + SimpleFunctions.join(firstEchoesToFetch, "/");
+            String xc_cell_name = "xc_" + xc_id;
+            String xc_url = address + "x/c/" + SimpleFunctions.join(
+                    SimpleFunctions.List2Arr(firstEchoesToFetch), "/");
 
             String remote_xc_data = Network.getFile(context, xc_url, null);
             String local_xc_data = SimpleFunctions.read_internal_file(context, xc_cell_name);
@@ -110,13 +108,16 @@ public class Fetcher {
 
         if (fetch_limit != 0) {
             bottomOffset = fetch_limit;
+            String offset = String.valueOf(bottomOffset);
 
             echoBundle = Network.getFile(context,
-                    address + "u/e/" + SimpleFunctions.join((String[]) echoesToFetch.toArray(), "/") +
-                            "/-" + String.valueOf(bottomOffset), null);
+                    address + "u/e/" + SimpleFunctions.join(
+                            SimpleFunctions.List2Arr(echoesToFetch), "/") +
+                            "/-" + offset + ":" + offset, null);
         } else {
             echoBundle = Network.getFile(context,
-                    address + "u/e/" + SimpleFunctions.join((String[]) echoesToFetch.toArray(), "/"), null);
+                    address + "u/e/" + SimpleFunctions.join(
+                            SimpleFunctions.List2Arr(echoesToFetch), "/"), null);
         }
 
         Hashtable<String, ArrayList<String>> localIndex = new Hashtable<>();
@@ -174,7 +175,7 @@ public class Fetcher {
                 ArrayList<String> diff = SimpleFunctions.ListDifference(remoteMessages, localMessages);
                 diff = SimpleFunctions.ListDifference(diff, commonDiff.get(echo));
 
-                ArrayList<String> sumdiff = (ArrayList<String>) (diff.clone());
+                ArrayList<String> sumdiff = new ArrayList<>(diff);
 
                 sumdiff.addAll(diff);
                 sumdiff.addAll(commonDiff.get(echo));
@@ -206,7 +207,8 @@ public class Fetcher {
 
         for (List<String> diff : difference2d) {
             String fullBundle = Network.getFile(context,
-                    address + "u/m/" + SimpleFunctions.join((String[]) diff.toArray(), "/"), null);
+                    address + "u/m/" + SimpleFunctions.join(
+                            SimpleFunctions.List2Arr(diff), "/"), null);
 
             if (fullBundle == null) {
                 SimpleFunctions.debug("Ошибка получения бандла сообщений. Проверь интернет");

@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +132,18 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, CommonSettings.class));
+            return true;
+        } else if (id == R.id.action_fetch) {
+            Intent intent = new Intent(this, DebugActivity.class);
+            intent.putExtra("task", "fetch");
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_clear_cache) {
+            for (Station station : Config.values.stations) {
+                String xc_name = "xc_" + SimpleFunctions.hsh(station.nodename);
+                SimpleFunctions.write_internal_file(this, xc_name, "");
+            }
+            Toast.makeText(MainActivity.this, "Кэш /x/c очищен", Toast.LENGTH_SHORT).show();
             return true;
         }
 
