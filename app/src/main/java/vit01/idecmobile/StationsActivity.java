@@ -17,10 +17,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class StationsActivity extends AppCompatActivity {
+    ArrayList<String> stationNames;
+    ArrayAdapter nodenamesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +43,14 @@ public class StationsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        stationNames = new ArrayList<>();
+
         // Setup spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(new MyAdapter(
-                toolbar.getContext(),
-                new String[]{
-                        "Section 1",
-                        "Section 2",
-                        "Section 3",
-                }));
+        nodenamesAdapter = new MyAdapter(toolbar.getContext(), stationNames);
+        spinner.setAdapter(nodenamesAdapter);
+
+        updateSpinner();
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -48,12 +58,14 @@ public class StationsActivity extends AppCompatActivity {
                 // When the given dropdown item is selected, show its contents in the
                 // container view.
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position))
                         .commit();
+                updateSpinner();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                updateSpinner();
             }
         });
 
@@ -65,9 +77,7 @@ public class StationsActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,11 +101,19 @@ public class StationsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    void updateSpinner() {
+        stationNames.clear();
+        for (Station station : Config.values.stations) {
+            stationNames.add(station.nodename);
+        }
+
+        nodenamesAdapter.notifyDataSetChanged();
+    }
 
     private static class MyAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
         private final ThemedSpinnerAdapter.Helper mDropDownHelper;
 
-        public MyAdapter(Context context, String[] objects) {
+        public MyAdapter(Context context, ArrayList<String> objects) {
             super(context, android.R.layout.simple_list_item_1, objects);
             mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
         }
@@ -138,7 +156,17 @@ public class StationsActivity extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        int currentIndex;
+
+        Station station;
+        EditText nodename, address, authstr, fetch_limit, cut_remote_index;
+        Switch fetch_enable;
+        CheckBox xc_enable, advanced_ue, pervasive_ue;
+        Button get_echolist, autoconfig;
+        ListView echolist_view;
+        ArrayAdapter echolist_adapter;
+        ArrayList<String> current_echolist;
 
         public PlaceholderFragment() {
         }
@@ -150,7 +178,7 @@ public class StationsActivity extends AppCompatActivity {
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putInt("station_number", sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
@@ -159,9 +187,91 @@ public class StationsActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
-            // TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            // textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            getControls(rootView);
+            currentIndex = getArguments().getInt("station_number");
+            installValues(currentIndex);
             return rootView;
+        }
+
+        @Override
+        public void onDestroyView() {
+            fetchValues();
+            Config.writeConfig(getContext());
+            super.onDestroyView();
+        }
+
+        protected void getControls(View fragm) {
+            nodename = (EditText) fragm.findViewById(R.id.stations_nodename);
+            address = (EditText) fragm.findViewById(R.id.stations_address);
+            authstr = (EditText) fragm.findViewById(R.id.stations_authstr);
+            fetch_enable = (Switch) fragm.findViewById(R.id.stations_fetch_enable);
+            xc_enable = (CheckBox) fragm.findViewById(R.id.stations_xc_enable);
+            advanced_ue = (CheckBox) fragm.findViewById(R.id.stations_advanced_ue);
+            pervasive_ue = (CheckBox) fragm.findViewById(R.id.stations_pervasive_ue);
+            fetch_limit = (EditText) fragm.findViewById(R.id.stations_fetch_limit);
+            cut_remote_index = (EditText) fragm.findViewById(R.id.stations_cut_remote_index);
+            get_echolist = (Button) fragm.findViewById(R.id.stations_get_echolist);
+            autoconfig = (Button) fragm.findViewById(R.id.stations_autoconfig);
+            echolist_view = (ListView) fragm.findViewById(R.id.stations_echoareas);
+
+            current_echolist = new ArrayList<>();
+            echolist_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, current_echolist);
+            echolist_view.setAdapter(echolist_adapter);
+
+            advanced_ue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    pervasive_ue.setEnabled(isChecked);
+                    fetch_limit.setEnabled(isChecked);
+                }
+            });
+
+            get_echolist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "Пока что это не работает", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            autoconfig.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "И это тоже не работает. Жди!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        protected void installValues(int index) {
+            station = Config.values.stations.get(index);
+
+            nodename.setText(station.nodename);
+            address.setText(station.address);
+            authstr.setText(station.authstr);
+            fetch_enable.setChecked(station.fetch_enabled);
+            xc_enable.setChecked(station.xc_enable);
+            advanced_ue.setChecked(station.advanced_ue);
+            pervasive_ue.setChecked(station.pervasive_ue);
+            fetch_limit.setText(String.valueOf(station.ue_limit));
+            cut_remote_index.setText(String.valueOf(station.cut_remote_index));
+
+            current_echolist.clear();
+            current_echolist.addAll(station.echoareas);
+            echolist_adapter.notifyDataSetChanged();
+        }
+
+        protected void fetchValues() {
+            station.nodename = nodename.getText().toString();
+            station.address = address.getText().toString();
+            station.authstr = authstr.getText().toString();
+            station.fetch_enabled = fetch_enable.isChecked();
+            station.xc_enable = xc_enable.isChecked();
+            station.advanced_ue = advanced_ue.isChecked();
+            station.pervasive_ue = pervasive_ue.isChecked();
+            station.ue_limit = Integer.parseInt(fetch_limit.getText().toString());
+            station.cut_remote_index = Integer.parseInt(cut_remote_index.getText().toString());
+
+            station.echoareas.clear();
+            station.echoareas.addAll(current_echolist);
         }
     }
 }
