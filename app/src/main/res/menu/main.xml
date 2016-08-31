@@ -15,4 +15,7 @@
     <item
         android:id="@+id/action_delete_everything"
         android:title="Очистить базу данных" />
+    <item
+        android:id="@+id/action_stations"
+        android:title="Настройки станций" />
 </menu>

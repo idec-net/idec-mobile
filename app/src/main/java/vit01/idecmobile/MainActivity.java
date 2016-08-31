@@ -149,6 +149,10 @@ public class MainActivity extends AppCompatActivity
             SqliteTransport transport = new SqliteTransport(this);
             transport.FuckDeleteEverything();
             Toast.makeText(MainActivity.this, "База очищена", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (id == R.id.action_stations) {
+            startActivity(new Intent(this, StationsActivity.class));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
