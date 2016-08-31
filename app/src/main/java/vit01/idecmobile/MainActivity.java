@@ -27,19 +27,15 @@ import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
-
+    private static final int ADD_NODE = 100000;
+    private static final int MANAGE_NODE = 100001;
     public Station currentStation;
     public ListView echoList;
     public ArrayAdapter echoListAdapter;
     public int currentStationIndex = 0;
     public Drawer drawer;
-
-    private static final int ADD_NODE = 100000;
-    private static final int MANAGE_NODE = 100001;
+    public AccountHeader drawerHeader;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -51,43 +47,40 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final List<String> stationsList = new ArrayList<>();
-
-        for (Station station : Config.values.stations) {
-            stationsList.add(station.nodename);
-        }
-
-        AccountHeader drawerHeader = new AccountHeaderBuilder()
+        drawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header)
                 .withCompactStyle(true)
                 .withProfileImagesVisible(false)
-                .addProfiles(
-                        new ProfileSettingDrawerItem().withName("Добавить станцию").withIdentifier(ADD_NODE).withIcon(GoogleMaterial.Icon.gmd_add),
-                        new ProfileSettingDrawerItem().withName("Управление станциями").withIdentifier(MANAGE_NODE).withIcon(GoogleMaterial.Icon.gmd_settings)
-                )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        if (profile instanceof IDrawerItem && profile.getIdentifier() == ADD_NODE) {
-                            Toast.makeText(MainActivity.this, "Диалог добавления станции не реализован", Toast.LENGTH_SHORT).show();
-                        }
+                        if (profile instanceof IDrawerItem) {
+                            long identifier = profile.getIdentifier();
+                            int countStations = Config.values.stations.size();
 
-                        // Выбрали другую станцию, обновляем список
-                        if (profile instanceof IDrawerItem && profile.getIdentifier() < stationsList.size()) {
-                            currentStation = Config.values.stations.get((int)profile.getIdentifier());
-                            currentStationIndex = (int)profile.getIdentifier();
-                            updateEcholist();
+                            if (identifier == ADD_NODE) {
+                                Config.values.stations.add(new Station());
+                                Intent editNew = new Intent(MainActivity.this, StationsActivity.class);
+                                editNew.putExtra("index", countStations);
+                                startActivity(editNew);
+                            } else if (identifier == MANAGE_NODE) {
+                                startActivity(new Intent(MainActivity.this, StationsActivity.class));
+                            } else if (identifier < countStations) {
+                                // Выбрали другую станцию, обновляем список
+                                currentStationIndex = (int) identifier;
+                                currentStation = Config.values.stations.get(currentStationIndex);
+                                updateEcholist();
+                                return true;
+                            }
+                            return true;
                         }
                         return false;
                     }
                 })
                 .build();
 
-        // добавляем станции в navigation drawer
-        for (int i = 0; i < stationsList.size(); i++) {
-            drawerHeader.addProfile(new ProfileDrawerItem().withEmail(stationsList.get(i)).withIdentifier(i), i);
-        }
+        updateStationsList();
 
         PrimaryDrawerItem echoItem = new PrimaryDrawerItem().withIdentifier(1).withName("Эхоконференции").withIcon(GoogleMaterial.Icon.gmd_message);
         PrimaryDrawerItem carbonItem = new PrimaryDrawerItem().withIdentifier(2).withName("Карбонка").withIcon(GoogleMaterial.Icon.gmd_input);
@@ -147,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (Config.values.firstRun) {
             Config.values.firstRun = false;
-            startActivity(new Intent(this, CommonSettings.class));
+            startActivity(new Intent(this, StationsActivity.class));
         }
     }
 
@@ -160,11 +153,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        updateStationsList();
+        super.onResume();
+    }
+
     public void updateEcholist() {
         echoListAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, currentStation.echoareas);
 
         echoList.setAdapter(echoListAdapter);
+    }
+
+    public void updateStationsList() {
+        // добавляем станции в navigation drawer
+
+        drawerHeader.clear();
+
+        for (int i = 0; i < Config.values.stations.size(); i++) {
+            Station station = Config.values.stations.get(i);
+            String nodename = station.nodename;
+
+            drawerHeader.addProfile(new ProfileDrawerItem()
+                    .withName(nodename)
+                    .withIdentifier(i), i);
+        }
+
+        drawerHeader.addProfiles(
+                new ProfileSettingDrawerItem().withName("Добавить станцию").withIdentifier(ADD_NODE).withIcon(GoogleMaterial.Icon.gmd_add),
+                new ProfileSettingDrawerItem().withName("Управление станциями").withIdentifier(MANAGE_NODE).withIcon(GoogleMaterial.Icon.gmd_settings)
+        );
     }
 
     @Override

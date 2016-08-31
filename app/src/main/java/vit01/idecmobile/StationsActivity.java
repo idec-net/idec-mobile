@@ -1,10 +1,9 @@
 package vit01.idecmobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ThemedSpinnerAdapter;
@@ -30,8 +29,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class StationsActivity extends AppCompatActivity {
+    Spinner spinner;
     ArrayList<String> stationNames;
     ArrayAdapter nodenamesAdapter;
+    int currentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +44,13 @@ public class StationsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        Intent intent = getIntent();
+        currentIndex = intent.getIntExtra("index", 0);
+
         stationNames = new ArrayList<>();
 
         // Setup spinner
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = (Spinner) findViewById(R.id.spinner);
         nodenamesAdapter = new MyAdapter(toolbar.getContext(), stationNames);
         spinner.setAdapter(nodenamesAdapter);
 
@@ -69,14 +73,7 @@ public class StationsActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        spinner.setSelection(currentIndex);
     }
 
     @Override
@@ -94,7 +91,16 @@ public class StationsActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.delete_station) {
+            if (Config.values.stations.size() == 1) {
+                Toast.makeText(StationsActivity.this, "Это последняя станция!", Toast.LENGTH_SHORT).show();
+            } else {
+                currentIndex = spinner.getSelectedItemPosition();
+                Config.values.stations.remove(currentIndex);
+                currentIndex = 0;
+                updateSpinner();
+                spinner.setSelection(currentIndex);
+            }
             return true;
         }
 
@@ -147,7 +153,6 @@ public class StationsActivity extends AppCompatActivity {
         }
     }
 
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -194,10 +199,10 @@ public class StationsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onDestroyView() {
+        public void onStop() {
             fetchValues();
             Config.writeConfig(getContext());
-            super.onDestroyView();
+            super.onStop();
         }
 
         protected void getControls(View fragm) {

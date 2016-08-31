@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="vit01.idecmobile.StationsActivity">
     <item
-        android:id="@+id/empty_item"
-        android:orderInCategory="100"
-        android:title="Здесь пока ничего нет"
+        android:id="@+id/delete_station"
+        android:title="Удалить станцию"
         app:showAsAction="never" />
 </menu>
