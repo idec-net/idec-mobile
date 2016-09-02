@@ -23,7 +23,8 @@
             android:id="@+id/stations_nodename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:singleLine="true" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
@@ -35,7 +36,8 @@
             android:id="@+id/stations_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textUri" />
+            android:inputType="textUri"
+            android:singleLine="true" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
@@ -47,7 +49,8 @@
             android:id="@+id/stations_authstr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:singleLine="true" />
 
         <Switch
             android:id="@+id/stations_fetch_enable"
@@ -89,7 +92,8 @@
             android:id="@+id/stations_fetch_limit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
@@ -101,7 +105,8 @@
             android:id="@+id/stations_cut_remote_index"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
 
         <Button
             android:id="@+id/stations_get_echolist"
@@ -114,17 +119,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Настроить всё автоматически" />
-
-        <TextView
-            style="@style/AppTheme.MyCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Список эхоконференций" />
-
-        <ListView
-            android:id="@+id/stations_echoareas"
-            android:layout_width="wrap_content"
-            android:layout_height="220dp" />
     </LinearLayout>
-
 </ScrollView>

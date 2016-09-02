@@ -67,17 +67,12 @@
                 android:ems="10"
                 android:inputType="numberDecimal" />
 
-            <TextView
-                android:id="@+id/textView3"
-                style="@style/AppTheme.MyCaption"
+            <Button
+                android:id="@+id/edit_offline_echoareas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Offline-эхоконференции" />
-
-            <ListView
-                android:id="@+id/settings_offline_echoareas_listview"
-                android:layout_width="match_parent"
-                android:layout_height="220dp" />
+                android:onClick="openEchoEdit"
+                android:text="Править offline-эхи" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

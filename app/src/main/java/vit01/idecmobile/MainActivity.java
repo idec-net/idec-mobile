@@ -136,6 +136,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        echoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, ListEditActivity.class);
+                intent.putExtra("type", "fromstation");
+                intent.putExtra("index", currentStationIndex);
+                startActivity(intent);
+                return true;
+            }
+        });
+
         updateEcholist();
 
         if (Config.values.firstRun) {
@@ -156,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         updateStationsList();
+        updateEcholist();
         super.onResume();
     }
 

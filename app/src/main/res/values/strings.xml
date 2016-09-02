@@ -33,6 +33,14 @@
         <item>-1</item>
     </string-array>
 
+    <string-array name="echo_menu_options">
+        <item>В начало</item>
+        <item>Выше</item>
+        <item>Ниже</item>
+        <item>В конец</item>
+        <item>Удалить эху</item>
+    </string-array>
+
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 

@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -168,10 +167,7 @@ public class StationsActivity extends AppCompatActivity {
         EditText nodename, address, authstr, fetch_limit, cut_remote_index;
         Switch fetch_enable;
         CheckBox xc_enable, advanced_ue, pervasive_ue;
-        Button get_echolist, autoconfig;
-        ListView echolist_view;
-        ArrayAdapter echolist_adapter;
-        ArrayList<String> current_echolist;
+        Button get_echolist, autoconfig, editEchoareas;
 
         public PlaceholderFragment() {
         }
@@ -217,11 +213,6 @@ public class StationsActivity extends AppCompatActivity {
             cut_remote_index = (EditText) fragm.findViewById(R.id.stations_cut_remote_index);
             get_echolist = (Button) fragm.findViewById(R.id.stations_get_echolist);
             autoconfig = (Button) fragm.findViewById(R.id.stations_autoconfig);
-            echolist_view = (ListView) fragm.findViewById(R.id.stations_echoareas);
-
-            current_echolist = new ArrayList<>();
-            echolist_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, current_echolist);
-            echolist_view.setAdapter(echolist_adapter);
 
             advanced_ue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -258,10 +249,6 @@ public class StationsActivity extends AppCompatActivity {
             pervasive_ue.setChecked(station.pervasive_ue);
             fetch_limit.setText(String.valueOf(station.ue_limit));
             cut_remote_index.setText(String.valueOf(station.cut_remote_index));
-
-            current_echolist.clear();
-            current_echolist.addAll(station.echoareas);
-            echolist_adapter.notifyDataSetChanged();
         }
 
         protected void fetchValues() {
@@ -274,9 +261,6 @@ public class StationsActivity extends AppCompatActivity {
             station.pervasive_ue = pervasive_ue.isChecked();
             station.ue_limit = Integer.parseInt(fetch_limit.getText().toString());
             station.cut_remote_index = Integer.parseInt(cut_remote_index.getText().toString());
-
-            station.echoareas.clear();
-            station.echoareas.addAll(current_echolist);
         }
     }
 }
