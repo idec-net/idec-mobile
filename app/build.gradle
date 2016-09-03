@@ -29,4 +29,5 @@ dependencies {
         transitive = true
     }
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
 }

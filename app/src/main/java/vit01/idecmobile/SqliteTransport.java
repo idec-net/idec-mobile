@@ -185,8 +185,13 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         // Будем считать, что слепить запрос с кучей OR - это норма
         // В конце концов, в ii-php всё точно так же
 
+        String args;
+        if (msgids.size() == 1) {
+            args = "id='" + msgids.get(0) + "'";
+        } else {
+            args = "id='" + TextUtils.join("' or id='", msgids.toArray()) + "'";
+        }
 
-        String args = "id='" + TextUtils.join("' or id='", msgids.toArray()) + "'";
         Hashtable<String, IIMessage> result = new Hashtable<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(tableName, null, args, null, null, null, null);
