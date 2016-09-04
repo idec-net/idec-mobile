@@ -1,4 +1,4 @@
-package vit01.idecmobile;
+package vit01.idecmobile.Core;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,7 +13,7 @@ import java.util.Hashtable;
 public class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
     public String tableName = "idecMessages";
 
-    SqliteTransport(Context context) {
+    public SqliteTransport(Context context) {
         super(context, "idec-db", null, 1);
     }
 
@@ -246,7 +246,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return result;
     }
 
-    void FuckDeleteEverything() {
+    public void FuckDeleteEverything() {
         SQLiteDatabase db = getReadableDatabase();
         db.delete(tableName, null, null);
         db.close();

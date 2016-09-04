@@ -1,4 +1,4 @@
-package vit01.idecmobile;
+package vit01.idecmobile.Core;
 
 import android.content.Context;
 import android.util.Base64;
@@ -13,7 +13,7 @@ public class Fetcher {
     AbstractTransport transport;
     ArrayList<String> emptyList;
 
-    Fetcher(AbstractTransport db) {
+    public Fetcher(AbstractTransport db) {
         transport = db;
         emptyList = SimpleFunctions.emptyList;
     }

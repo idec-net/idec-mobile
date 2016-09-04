@@ -12,14 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
+
+import vit01.idecmobile.Core.AbstractTransport;
+import vit01.idecmobile.Core.IIMessage;
+import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.Core.SqliteTransport;
 
 public class EchoView extends AppCompatActivity {
     String echoarea;
@@ -87,7 +91,6 @@ public class EchoView extends AppCompatActivity {
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        DateFormat dateFormat;
         AbstractTransport transport;
         private ArrayList<String> msglist;
 
@@ -95,8 +98,6 @@ public class EchoView extends AppCompatActivity {
         public MyAdapter(ArrayList<String> hashes, AbstractTransport db) {
             msglist = hashes;
             transport = db;
-
-            dateFormat = new SimpleDateFormat("MM.dd.yyyy, hh:mm");
         }
 
         // Create new views (invoked by the layout manager)
@@ -108,7 +109,18 @@ public class EchoView extends AppCompatActivity {
                     .inflate(R.layout.message_list_element, parent, false);
             // set the view's size, margins, paddings and layout parameters
 
-            return new ViewHolder(v);
+            LinearLayout l = (LinearLayout) v.findViewById(R.id.msg_clickable_layout);
+
+            final ViewHolder holder = new ViewHolder(v);
+
+            l.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(v.getContext(), holder.msgid, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            return holder;
         }
 
         // Replace the contents of a view (invoked by the layout manager)
@@ -116,16 +128,14 @@ public class EchoView extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            String needed_msgid = msglist.get(position);
-            IIMessage message = transport.getMessage(needed_msgid);
+            holder.msgid = msglist.get(position);
+            IIMessage message = transport.getMessage(holder.msgid);
             if (message == null) message = new IIMessage();
 
             holder.msg_subj.setText(message.subj);
             holder.msg_from_to.setText(message.from + " to " + message.to);
             holder.msg_text.setText(message.msg);
-
-            Date date = new Date(message.time * 1000);
-            holder.msg_date.setText(dateFormat.format(date));
+            holder.msg_date.setText(SimpleFunctions.timestamp2date(message.time));
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -141,6 +151,7 @@ public class EchoView extends AppCompatActivity {
             // each data item is just a string in this case
             public TextView msg_subj, msg_from_to, msg_text, msg_date;
             public CheckBox msg_favorite;
+            public String msgid;
 
             public ViewHolder(View myLayout) {
                 super(myLayout);

@@ -1,4 +1,4 @@
-package vit01.idecmobile;
+package vit01.idecmobile.Core;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

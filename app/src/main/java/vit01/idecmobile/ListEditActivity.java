@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import vit01.idecmobile.Core.Config;
+
 public class ListEditActivity extends AppCompatActivity {
     ArrayList<String> contents;
     ArrayAdapter<String> contents_adapter;
@@ -45,7 +47,7 @@ public class ListEditActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_ev);
 
-        contents_adapter = new ArrayAdapter<String>(this,
+        contents_adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, contents);
 
         listView = (ListView) findViewById(R.id.contents);

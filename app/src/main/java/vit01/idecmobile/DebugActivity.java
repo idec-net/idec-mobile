@@ -14,6 +14,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import vit01.idecmobile.Core.AbstractTransport;
+import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.Fetcher;
+import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.Core.SqliteTransport;
+import vit01.idecmobile.Core.Station;
+
 public class DebugActivity extends AppCompatActivity {
     RelativeLayout debugLayout;
     customTextView textView;

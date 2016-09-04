@@ -1,4 +1,4 @@
-package vit01.idecmobile;
+package vit01.idecmobile.Core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ public class IIMessage {
     public long time;
     public String from, addr, to, subj, msg, repto;
 
-    IIMessage() {
+    public IIMessage() {
         id = null;
         echo = "no.echo";
         tags = new Hashtable<>();
@@ -25,7 +25,7 @@ public class IIMessage {
         repto = null;
     }
 
-    IIMessage(String rawmsg) {
+    public IIMessage(String rawmsg) {
         String[] elems = rawmsg.split("\n");
 
         if (elems.length >= 8) {

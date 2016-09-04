@@ -27,6 +27,11 @@ import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.Core.SqliteTransport;
+import vit01.idecmobile.Core.Station;
+
 public class MainActivity extends AppCompatActivity {
     private static final int ADD_NODE = 100000;
     private static final int MANAGE_NODE = 100001;

@@ -27,6 +27,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.Station;
+
 public class StationsActivity extends AppCompatActivity {
     Spinner spinner;
     ArrayList<String> stationNames;

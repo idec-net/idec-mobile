@@ -1,4 +1,4 @@
-package vit01.idecmobile;
+package vit01.idecmobile.Core;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -8,6 +8,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import vit01.idecmobile.Core.Config;
+
 public class CommonSettings extends AppCompatActivity {
     CheckBox defaultEditor, firstrun, useProxy;
     EditText messages_per_fetch, connTimeout;

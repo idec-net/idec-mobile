@@ -1,4 +1,4 @@
-package vit01.idecmobile;
+package vit01.idecmobile.Core;
 
 import android.content.Context;
 import android.util.Base64;
@@ -12,18 +12,22 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 public class SimpleFunctions {
-    static String appName = "IDECMobile";
-    static ArrayList<String> emptyList = new ArrayList<>();
-    static Queue<String> debugMessages = new LinkedList<>();
-    static boolean debugTaskFinished = true;
+    public static String appName = "IDECMobile";
+    public static ArrayList<String> emptyList = new ArrayList<>();
+    public static Queue<String> debugMessages = new LinkedList<>();
+    public static boolean debugTaskFinished = true;
+    public static DateFormat simple_date = new SimpleDateFormat("dd.MM.yyyy, hh:mm");
 
-    static String join(String[] array, String delimiter) {
+    public static String join(String[] array, String delimiter) {
         String result = "";
         int stopLength = array.length - 1;
 
@@ -34,7 +38,7 @@ public class SimpleFunctions {
         return result;
     }
 
-    static String read_internal_file(Context context, String filename) {
+    public static String read_internal_file(Context context, String filename) {
         try {
             FileInputStream is = context.openFileInput(filename);
             return readIt(is);
@@ -43,7 +47,7 @@ public class SimpleFunctions {
         }
     }
 
-    static void write_internal_file(Context context, String filename, String data) {
+    public static void write_internal_file(Context context, String filename, String data) {
         try {
             FileOutputStream os = context.openFileOutput(filename, Context.MODE_PRIVATE);
             os.write(data.getBytes(Charset.forName("UTF-8")));
@@ -90,7 +94,7 @@ public class SimpleFunctions {
         return copy;
     }
 
-    static <T> List<List<T>> chunks_divide(List<T> list, final int L) {
+    public static <T> List<List<T>> chunks_divide(List<T> list, final int L) {
         List<List<T>> parts = new ArrayList<>();
         final int N = list.size();
         for (int i = 0; i < N; i += L) {
@@ -101,10 +105,14 @@ public class SimpleFunctions {
         return parts;
     }
 
-    static String[] List2Arr(List<String> list) {
+    public static String[] List2Arr(List<String> list) {
         String[] newString = new String[list.size()];
         list.toArray(newString);
         return newString;
+    }
+
+    public static String timestamp2date(long unixtime) {
+        return simple_date.format(new Date(unixtime * 1000));
     }
 
     public static void debug(String message) {
