@@ -1,5 +1,6 @@
 package vit01.idecmobile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +16,6 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,19 +85,21 @@ public class EchoView extends AppCompatActivity {
 
             Collections.reverse(msglist);
 
-            mAdapter = new MyAdapter(msglist, transport);
+            mAdapter = new MyAdapter(this, msglist, transport);
             recyclerView.setAdapter(mAdapter);
         }
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         AbstractTransport transport;
+        Activity callingActivity;
         private ArrayList<String> msglist;
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(ArrayList<String> hashes, AbstractTransport db) {
+        public MyAdapter(Activity activity, ArrayList<String> hashes, AbstractTransport db) {
             msglist = hashes;
             transport = db;
+            callingActivity = activity;
         }
 
         // Create new views (invoked by the layout manager)
@@ -116,7 +118,13 @@ public class EchoView extends AppCompatActivity {
             l.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), holder.msgid, Toast.LENGTH_SHORT).show();
+                    ArrayList<String> normalMsglist = new ArrayList<>(msglist);
+                    Collections.reverse(normalMsglist);
+
+                    Intent intent = new Intent(callingActivity, MessageSlideActivity.class);
+                    intent.putExtra("msglist", normalMsglist);
+                    intent.putExtra("position", getItemCount() - holder.position - 1);
+                    callingActivity.startActivity(intent);
                 }
             });
 
@@ -129,13 +137,14 @@ public class EchoView extends AppCompatActivity {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             holder.msgid = msglist.get(position);
+            holder.position = position;
             IIMessage message = transport.getMessage(holder.msgid);
             if (message == null) message = new IIMessage();
 
             holder.msg_subj.setText(message.subj);
             holder.msg_from_to.setText(message.from + " to " + message.to);
             holder.msg_text.setText(message.msg);
-            holder.msg_date.setText(SimpleFunctions.timestamp2date(message.time));
+            holder.msg_date.setText(SimpleFunctions.timestamp2date(message.time, false));
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -152,6 +161,7 @@ public class EchoView extends AppCompatActivity {
             public TextView msg_subj, msg_from_to, msg_text, msg_date;
             public CheckBox msg_favorite;
             public String msgid;
+            public int position;
 
             public ViewHolder(View myLayout) {
                 super(myLayout);

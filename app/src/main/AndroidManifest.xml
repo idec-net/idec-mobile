@@ -51,6 +51,7 @@
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
         <activity android:name=".ListEditActivity" />
+        <activity android:name=".MessageSlideActivity"></activity>
     </application>
 
 </manifest>

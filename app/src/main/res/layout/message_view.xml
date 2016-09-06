@@ -10,14 +10,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/full_subj"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Re: Большой текст темы сообщения"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <CheckBox
-            android:id="@+id/checkBox4"
+            android:id="@+id/full_favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -25,39 +25,42 @@
             android:text="Mark as favorite" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/full_from_to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="user1 (mira, N) to user2"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/full_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1970-01-01 (Понедельник), 00:00"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/full_msgid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="msgid: XXXXXXXXXXXXXX"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textIsSelectable="true" />
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/full_repto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ответ на: YYYYYYYYYYYYYYYY" />
+            android:text="Ответ на: YYYYYYYYYYYYYYYY"
+            android:textIsSelectable="true" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/full_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            android:text="Очень большой текст с большим содержанием" />
+            android:text="Очень большой текст с большим содержанием"
+            android:textIsSelectable="true" />
 
         <GridLayout
             android:layout_width="match_parent"
@@ -67,13 +70,13 @@
             android:rowCount="1">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/full_answer_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ответ" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/full_quote_answer_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ответ с цитатой" />

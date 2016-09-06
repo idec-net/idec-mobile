@@ -25,7 +25,8 @@ public class SimpleFunctions {
     public static ArrayList<String> emptyList = new ArrayList<>();
     public static Queue<String> debugMessages = new LinkedList<>();
     public static boolean debugTaskFinished = true;
-    public static DateFormat simple_date = new SimpleDateFormat("dd.MM.yyyy, hh:mm");
+    public static DateFormat simple_date = new SimpleDateFormat("dd.MM\nhh:mm");
+    public static DateFormat full_date = new SimpleDateFormat("dd.mm.yyyy (E), hh:mm");
 
     public static String join(String[] array, String delimiter) {
         String result = "";
@@ -111,8 +112,11 @@ public class SimpleFunctions {
         return newString;
     }
 
-    public static String timestamp2date(long unixtime) {
-        return simple_date.format(new Date(unixtime * 1000));
+    public static String timestamp2date(long unixtime, boolean verbose) {
+        Date date = new Date(unixtime * 1000);
+
+        if (verbose) return full_date.format(date);
+        else return simple_date.format(date);
     }
 
     public static void debug(String message) {

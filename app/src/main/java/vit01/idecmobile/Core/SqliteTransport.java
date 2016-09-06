@@ -143,8 +143,12 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         // TODO: исправить в фетчере сохранение, потому что не работает сортировка по числу
 
         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            while (cursor.moveToNext()) {
+            boolean needToClose = false;
+
+            while (!needToClose) {
                 result.add(cursor.getString(0));
+
+                if (!cursor.moveToNext()) needToClose = true;
             }
         }
 
@@ -197,13 +201,17 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         Cursor cursor = db.query(tableName, null, args, null, null, null, null);
 
         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            while (cursor.moveToNext()) {
+            boolean needToClose = false;
+
+            while (!needToClose) {
                 IIMessage message = parseMessage(cursor);
                 String msgid = message.id;
 
                 result.put(msgid, message);
+                if (!cursor.moveToNext()) needToClose = true;
             }
         }
+        SimpleFunctions.debug(String.valueOf(result.size()));
 
         cursor.close();
         db.close();
