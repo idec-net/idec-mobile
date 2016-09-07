@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,72 +8,69 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:clipToPadding="false"
+    android:scrollbarStyle="outsideOverlay"
     tools:context="vit01.idecmobile.CommonSettings">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <CheckBox
+            android:id="@+id/checkBox"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="Внутренний редактор сообщений" />
 
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="Внутренний редактор сообщений" />
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="Показать настройки при следующем запуске" />
 
-            <CheckBox
-                android:id="@+id/checkBox2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="Показать настройки при следующем запуске" />
+        <CheckBox
+            android:id="@+id/checkBox3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="Подключаться через прокси" />
 
-            <CheckBox
-                android:id="@+id/checkBox3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="Подключаться через прокси" />
+        <TextView
+            android:id="@+id/textView"
+            style="@style/AppTheme.MyCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Скачивать сообщений за один запрос" />
 
-            <TextView
-                android:id="@+id/textView"
-                style="@style/AppTheme.MyCaption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Скачивать сообщений за один запрос" />
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal" />
 
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="numberDecimal" />
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/AppTheme.MyCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Таймаут сетевого соединения" />
 
-            <TextView
-                android:id="@+id/textView2"
-                style="@style/AppTheme.MyCaption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Таймаут сетевого соединения" />
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal" />
 
-            <EditText
-                android:id="@+id/editText2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="numberDecimal" />
-
-            <Button
-                android:id="@+id/edit_offline_echoareas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="openEchoEdit"
-                android:text="Править offline-эхи" />
-        </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+        <Button
+            android:id="@+id/edit_offline_echoareas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="openEchoEdit"
+            android:text="Править offline-эхи" />
+    </LinearLayout>
+</ScrollView>
