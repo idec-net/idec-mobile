@@ -140,8 +140,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         Cursor cursor = db.query(tableName, new String[]{"id", "number"}, "echoarea = ?",
                 new String[]{echo}, null, null, "number", limitstr);
 
-        // TODO: исправить в фетчере сохранение, потому что не работает сортировка по числу
-
         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
             boolean needToClose = false;
 
@@ -211,7 +209,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
                 if (!cursor.moveToNext()) needToClose = true;
             }
         }
-        SimpleFunctions.debug(String.valueOf(result.size()));
 
         cursor.close();
         db.close();

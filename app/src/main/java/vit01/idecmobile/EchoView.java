@@ -61,7 +61,6 @@ public class EchoView extends AppCompatActivity {
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.msglist_view);
-        recyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -85,7 +84,7 @@ public class EchoView extends AppCompatActivity {
 
             Collections.reverse(msglist);
 
-            mAdapter = new MyAdapter(this, msglist, transport);
+            mAdapter = new MyAdapter(this, recyclerView, msglist, transport);
             recyclerView.setAdapter(mAdapter);
         }
     }
@@ -93,13 +92,47 @@ public class EchoView extends AppCompatActivity {
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         AbstractTransport transport;
         Activity callingActivity;
+        int total_count;
+        int visibleItems = 5;
+        int lastVisibleItem;
+        boolean loading;
         private ArrayList<String> msglist;
+        private ArrayList<String> visible_msglist;
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(Activity activity, ArrayList<String> hashes, AbstractTransport db) {
+        public MyAdapter(Activity activity,
+                         RecyclerView recyclerView,
+                         ArrayList<String> hashes,
+                         AbstractTransport db) {
             msglist = hashes;
             transport = db;
             callingActivity = activity;
+            visible_msglist = new ArrayList<>(msglist.subList(0, visibleItems));
+            total_count = msglist.size();
+
+            final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    recyclerView.onScrolled(dx, dy);
+                    int countitems = layoutManager.getItemCount();
+                    lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                    if (!loading && lastVisibleItem == countitems - 1 && countitems < total_count) {
+                        loading = true;
+                        for (int i = 1; i <= visibleItems; i++) {
+                            int itemToInsert = lastVisibleItem + i;
+
+                            if (itemToInsert == total_count) break;
+
+                            visible_msglist.add(msglist.get(itemToInsert));
+                            notifyItemInserted(itemToInsert);
+                        }
+                        loading = false;
+                    }
+                }
+            });
         }
 
         // Create new views (invoked by the layout manager)
@@ -123,7 +156,8 @@ public class EchoView extends AppCompatActivity {
 
                     Intent intent = new Intent(callingActivity, MessageSlideActivity.class);
                     intent.putExtra("msglist", normalMsglist);
-                    intent.putExtra("position", getItemCount() - holder.position - 1);
+                    int pos = total_count - holder.position - 1;
+                    intent.putExtra("position", pos);
                     callingActivity.startActivity(intent);
                 }
             });
@@ -136,7 +170,7 @@ public class EchoView extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            holder.msgid = msglist.get(position);
+            holder.msgid = visible_msglist.get(position);
             holder.position = position;
             IIMessage message = transport.getMessage(holder.msgid);
             if (message == null) message = new IIMessage();
@@ -150,7 +184,7 @@ public class EchoView extends AppCompatActivity {
         // Return the size of your dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {
-            return msglist.size();
+            return visible_msglist.size();
         }
 
         // Provide a reference to the views for each data item
