@@ -1,12 +1,17 @@
 package vit01.idecmobile;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
@@ -74,6 +79,15 @@ public class MessageView_full extends Fragment {
         String repto_insert = (message.repto != null) ? message.repto : "-";
         full_repto.setText("Ответ: " + repto_insert);
         full_date.setText(SimpleFunctions.timestamp2date(message.time, true));
+
+        Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
+        fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(24).color(Color.GRAY), null, null);
+        fullAnswerBtn.setCompoundDrawablePadding(30);
+        fullAnswerBtn.setTextColor(Color.GRAY);
+        Button fullQuoteAnswerBtn = (Button) rootLayout.findViewById(R.id.full_quote_answer_button);
+        fullQuoteAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_format_quote).sizeDp(24).color(Color.GRAY), null, null);
+        fullQuoteAnswerBtn.setCompoundDrawablePadding(30);
+        fullQuoteAnswerBtn.setTextColor(Color.GRAY);
 
         return rootLayout;
     }
