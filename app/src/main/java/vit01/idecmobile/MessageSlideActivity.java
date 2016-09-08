@@ -4,15 +4,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
-public class MessageSlideActivity extends FragmentActivity implements MessageView_full.OnFragmentInteractionListener {
+public class MessageSlideActivity extends AppCompatActivity implements MessageView_full.OnFragmentInteractionListener {
     private int msgCount, firstPosition;
     private ArrayList<String> msglist;
     private ViewPager mPager;
@@ -22,6 +24,10 @@ public class MessageSlideActivity extends FragmentActivity implements MessageVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_slide);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent gotInfo = getIntent();
         msglist = gotInfo.getStringArrayListExtra("msglist");
@@ -37,6 +43,17 @@ public class MessageSlideActivity extends FragmentActivity implements MessageVie
     @Override
     public void onFragmentInteraction(Uri uri) {
         // now do nothing
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
