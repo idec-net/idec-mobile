@@ -4,15 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class GlobalConfig implements Serializable {
+    static final long serialVersionUID = 1L;
     public boolean
             defaultEditor = true,
             firstRun = true,
             useProxy = false;
-
     public int
             oneRequestLimit = 20,
             connectionTimeout = 20;
-
     public ArrayList<String> offlineEchoareas = new ArrayList<>();
     public ArrayList<Station> stations = new ArrayList<>();
 
