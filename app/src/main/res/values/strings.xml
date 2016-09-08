@@ -13,8 +13,5 @@
         <item>Удалить эху</item>
     </string-array>
 
-    <string name="defaultConfig">{ \t\"servers\": [ \t\t{ \t\t\t\"adress\": \"https://ii-net.tk/ii/ii-point.php?q=/\", \t\t\t\"authstr\": \"\", \t\t\t\"echoareas\": [ \t\t\t\t\"pipe.2032\", \t\t\t\t\"ii.14\", \t\t\t\t\"lor-opennet.15\", \t\t\t\t\"mlp.15\" \t\t\t], \t\t\t\"outbox_storage_id\": \"mira\", \t\t\t\"fetch_enabled\":true, \t\t\t\"xcenable\":true, \t\t\t\"advancedue\":true, \t\t\t\"pervasiveue\": false, \t\t\t\"uelimit\":60, \t\t\t\"cut_remote_index\": 0 \t\t}, \t\t{ \t\t\t\"adress\": \"http://spline.rooker.ru/ii/ii-point.php?q=/\", \t\t\t\"authstr\": \"\", \t\t\t\"echoareas\": [ \t\t\t\t\"spline.creepy.14\", \t\t\t\t\"spline.local.14\" \t\t\t], \t\t\t\"outbox_storage_id\": \"station13\", \t\t\t\"fetch_enabled\":true, \t\t\t\"xcenable\":false, \t\t\t\"advancedue\":false, \t\t\t\"pervasiveue\": false, \t\t\t\"uelimit\":50, \t\t\t\"cut_remote_index\": 0 \t\t} \t], \t\"offline-echoareas\": [ \t\t\"ii.soft.14\", \t\t\"ii.dev.14\" \t], \t\"editor\": \"external\", \t\"proxy\": \"http://user:pass@localhost:8080\", \t\"proxyType\": \"http\", \t\"defaultEditor\": true, \t\"firstrun\": true, \t\"maximized\": false, \t\"autoSaveChanges\": true, \t\"useProxy\": false, \t\"rememberEchoPosition\": true, \t\"oneRequestLimit\": 20, \t\"connectionTimeout\": 20 }</string>
     <string name="title_activity_stations">StationsActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-
 </resources>
