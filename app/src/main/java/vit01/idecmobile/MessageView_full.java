@@ -2,9 +2,13 @@ package vit01.idecmobile;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -24,6 +28,8 @@ public class MessageView_full extends Fragment {
     private AbstractTransport transport;
     private ArrayList<String> msglist;
     private int position;
+
+    private boolean messageStarred = false;
 
     private Context mListener;
 
@@ -51,7 +57,7 @@ public class MessageView_full extends Fragment {
             msglist = getArguments().getStringArrayList("msglist");
             position = getArguments().getInt("position");
         }
-
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -90,6 +96,48 @@ public class MessageView_full extends Fragment {
         fullQuoteAnswerBtn.setTextColor(Color.GRAY);
 
         return rootLayout;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.message_view, menu);
+
+        // TODO здесь нужно получить из БД значение messageStarred
+
+        MenuItem starredItem = menu.findItem(R.id.action_starred);
+        if (messageStarred) {
+            setStarredIcon(true, starredItem);
+        } else {
+            setStarredIcon(false, starredItem);
+        }
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_starred:
+                messageStarred = !messageStarred;
+                setStarredIcon(messageStarred, item);
+                // TODO здесь нужно записать в БД значение messageStarred
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setStarredIcon(boolean isStarred, MenuItem item) {
+        Drawable icon;
+        if (isStarred) {
+            icon = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_star)
+                    .actionBar().color(Color.WHITE);
+        } else {
+            icon = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_star)
+                    .actionBar().color(Color.WHITE).alpha(80);
+        }
+        item.setIcon(icon);
     }
 
     @Override
