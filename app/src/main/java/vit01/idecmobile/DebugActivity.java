@@ -8,9 +8,8 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +21,7 @@ import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 
 public class DebugActivity extends AppCompatActivity {
-    RelativeLayout debugLayout;
+    ScrollView debugLayout;
     customTextView textView;
     BroadcastReceiver receiver;
     IntentFilter filter;
@@ -32,13 +31,11 @@ public class DebugActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
         getSupportActionBar().setTitle("Окно отладки");
-        debugLayout = (RelativeLayout) findViewById(R.id.debugLayout);
+        debugLayout = (ScrollView) findViewById(R.id.debugLayout);
         textView = new customTextView(this);
         textView.setTextColor(Color.BLACK);
         textView.setTextSize(16);
         textView.setText("");
-        textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        textView.setMaxLines(19);
         debugLayout.addView(textView);
 
         SimpleFunctions.debugTaskFinished = false;
@@ -53,6 +50,7 @@ public class DebugActivity extends AppCompatActivity {
                 } else if (intent.getStringExtra("task").equals("addText")) {
                     String data = intent.getStringExtra("data");
                     textView.append(data);
+                    debugLayout.fullScroll(1);
                 } else if (intent.getStringExtra("task").equals("toast")) {
                     String data = intent.getStringExtra("data");
                     Toast.makeText(DebugActivity.this, data, Toast.LENGTH_SHORT).show();
@@ -131,7 +129,7 @@ public class DebugActivity extends AppCompatActivity {
         public void run() {
             while (!SimpleFunctions.debugTaskFinished) {
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

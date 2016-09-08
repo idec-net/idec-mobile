@@ -108,8 +108,15 @@ public class EchoView extends AppCompatActivity {
             msglist = hashes;
             transport = db;
             callingActivity = activity;
-            visible_msglist = new ArrayList<>(msglist.subList(0, visibleItems));
+
             total_count = msglist.size();
+
+            if (total_count < visibleItems) {
+                visible_msglist = new ArrayList<>(msglist);
+            } else {
+                visible_msglist = new ArrayList<>(msglist.subList(0, visibleItems));
+            }
+
             handler = new Handler();
 
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();

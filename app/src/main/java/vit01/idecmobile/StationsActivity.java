@@ -35,6 +35,7 @@ public class StationsActivity extends AppCompatActivity {
     ArrayList<String> stationNames;
     ArrayAdapter nodenamesAdapter;
     int currentIndex;
+    Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +64,9 @@ public class StationsActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // When the given dropdown item is selected, show its contents in the
                 // container view.
+                currentFragment = PlaceholderFragment.newInstance(position);
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position))
+                        .replace(R.id.container, currentFragment)
                         .commit();
                 updateSpinner();
             }
@@ -76,6 +78,18 @@ public class StationsActivity extends AppCompatActivity {
         });
 
         spinner.setSelection(currentIndex);
+    }
+
+    @Override
+    public void onBackPressed() {
+        currentFragment.onStop();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -170,7 +184,7 @@ public class StationsActivity extends AppCompatActivity {
         EditText nodename, address, authstr, fetch_limit, cut_remote_index;
         Switch fetch_enable;
         CheckBox xc_enable, advanced_ue, pervasive_ue;
-        Button get_echolist, autoconfig, editEchoareas;
+        Button get_echolist, autoconfig;
 
         public PlaceholderFragment() {
         }
