@@ -1,24 +1,23 @@
 package vit01.idecmobile;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
 
-public class MessageSlideActivity extends AppCompatActivity implements MessageView_full.OnFragmentInteractionListener {
-    private int msgCount, firstPosition;
+public class MessageSlideActivity extends AppCompatActivity {
+    ActionBar actionBar;
+    private int msgCount;
     private ArrayList<String> msglist;
-    private ViewPager mPager;
-    private PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,22 +26,29 @@ public class MessageSlideActivity extends AppCompatActivity implements MessageVi
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         Intent gotInfo = getIntent();
         msglist = gotInfo.getStringArrayListExtra("msglist");
         msgCount = msglist.size();
-        firstPosition = gotInfo.getIntExtra("position", msgCount - 1);
+        int firstPosition = gotInfo.getIntExtra("position", msgCount - 1);
 
-        mPager = (ViewPager) findViewById(R.id.swipe_pager);
-        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        ViewPager mPager = (ViewPager) findViewById(R.id.swipe_pager);
+        PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);
         mPager.setCurrentItem(firstPosition);
+        mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                updateActionBar(position);
+            }
+        });
+        updateActionBar(firstPosition);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        // now do nothing
+    public void updateActionBar(int position) {
+        actionBar.setTitle(String.valueOf(position + 1) + " из " + msgCount);
     }
 
     @Override

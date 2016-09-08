@@ -3,6 +3,7 @@ package vit01.idecmobile;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -65,7 +66,6 @@ public class EchoView extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
 
-
         transport = new SqliteTransport(getApplicationContext());
         countMessages = transport.countMessages(echoarea);
 
@@ -98,6 +98,7 @@ public class EchoView extends AppCompatActivity {
         boolean loading;
         private ArrayList<String> msglist;
         private ArrayList<String> visible_msglist;
+        private Handler handler;
 
         // Provide a suitable constructor (depends on the kind of dataset)
         public MyAdapter(Activity activity,
@@ -109,6 +110,7 @@ public class EchoView extends AppCompatActivity {
             callingActivity = activity;
             visible_msglist = new ArrayList<>(msglist.subList(0, visibleItems));
             total_count = msglist.size();
+            handler = new Handler();
 
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
@@ -116,21 +118,27 @@ public class EchoView extends AppCompatActivity {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     recyclerView.onScrolled(dx, dy);
-                    int countitems = layoutManager.getItemCount();
-                    lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-                    if (!loading && lastVisibleItem == countitems - 1 && countitems < total_count) {
-                        loading = true;
-                        for (int i = 1; i <= visibleItems; i++) {
-                            int itemToInsert = lastVisibleItem + i;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            int countitems = layoutManager.getItemCount();
+                            lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-                            if (itemToInsert == total_count) break;
+                            if (!loading && lastVisibleItem == countitems - 1 && countitems < total_count) {
+                                loading = true;
+                                for (int i = 1; i <= visibleItems; i++) {
+                                    int itemToInsert = lastVisibleItem + i;
 
-                            visible_msglist.add(msglist.get(itemToInsert));
-                            notifyItemInserted(itemToInsert);
+                                    if (itemToInsert == total_count) break;
+
+                                    visible_msglist.add(msglist.get(itemToInsert));
+                                    notifyItemInserted(itemToInsert);
+                                }
+                                loading = false;
+                            }
                         }
-                        loading = false;
-                    }
+                    }, 500);
                 }
             });
         }
