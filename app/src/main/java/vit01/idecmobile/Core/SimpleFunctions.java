@@ -1,6 +1,7 @@
 package vit01.idecmobile.Core;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -19,6 +20,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SimpleFunctions {
     public static String appName = "IDECMobile";
@@ -27,6 +30,12 @@ public class SimpleFunctions {
     public static boolean debugTaskFinished = true;
     public static DateFormat simple_date = new SimpleDateFormat("dd.MM.yy\nhh:mm");
     public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), hh:mm");
+    public static Pattern quote_pattern = Pattern.compile("^\\s?[\\w_а-яА-Я\\-]{0,20}(>)+.+$",
+            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+    public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(PS|P\\.S|ЗЫ|З\\.Ы|//|#)(.+$)",
+            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+    public static Pattern ii_link_pattern = Pattern.compile("ii:\\/\\/(\\w[\\w.]+\\w+)",
+            Pattern.MULTILINE);
 
     public static String join(String[] array, String delimiter) {
         String result = "";
@@ -117,6 +126,32 @@ public class SimpleFunctions {
 
         if (verbose) return full_date.format(date);
         else return simple_date.format(date);
+    }
+
+    public static String reparseMessage(String msg) {
+        Matcher quote_match = quote_pattern.matcher(msg);
+        msg = quote_match.replaceAll("<font color='#189818'>$0</font>");
+
+        Matcher comment_match = comment_pattern.matcher(msg);
+        msg = comment_match.replaceAll("$1<font color='#bb0000'>$3$4</font>");
+
+        String[] strings = msg.split("\n");
+        ArrayList<String> result = new ArrayList<>();
+        boolean pre_flag = false;
+
+        for (String piece : strings) {
+            if (piece.equals("====")) {
+                if (!pre_flag) {
+                    pre_flag = true;
+                    result.add("<pre style='font-family: monospace;'>====");
+                } else {
+                    pre_flag = false;
+                    result.add("====</pre>");
+                }
+            } else result.add(piece);
+        }
+
+        return TextUtils.join("<br>", result);
     }
 
     public static void debug(String message) {

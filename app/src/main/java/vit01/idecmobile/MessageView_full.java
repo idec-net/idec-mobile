@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,7 +84,7 @@ public class MessageView_full extends Fragment {
 
         messageStarred = message.is_favorite;
         full_subj.setText(message.subj);
-        full_msg.setText(message.msg);
+        full_msg.setText(Html.fromHtml(SimpleFunctions.reparseMessage(message.msg)));
         full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
         full_msgid.setText("msgid: " + msgid);
         String repto_insert = (message.repto != null) ? message.repto : "-";
