@@ -9,12 +9,13 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 public class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
     public String tableName = "idecMessages";
 
     public SqliteTransport(Context context) {
-        super(context, "idec-db", null, 1);
+        super(context, "idec-db", null, 2);
     }
 
     @Override
@@ -29,7 +30,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
                 + "addr text,"
                 + "msgto text,"
                 + "subj text not null,"
-                + "msg text not null )");
+                + "msg text not null,"
+                + "isfavorite integer default 0,"
+                + "isunread integer default 1"
+                + ")");
     }
 
     @Override
@@ -43,6 +47,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("alter table " + tableName + " add isfavorite integer default 0");
+            db.execSQL("alter table " + tableName + " add isunread integer default 1");
+        }
     }
 
     public ContentValues getContentValues(IIMessage message) {
@@ -56,6 +64,8 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         cv.put("msgto", message.to);
         cv.put("subj", message.subj);
         cv.put("msg", message.msg);
+        cv.put("isfavorite", (message.is_favorite) ? 1 : 0);
+        cv.put("isunread", (message.is_unread) ? 1 : 0);
 
         return cv;
     }
@@ -73,6 +83,8 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         msg.subj = cursor.getString(cursor.getColumnIndex("subj"));
         msg.msg = cursor.getString(cursor.getColumnIndex("msg"));
         msg.repto = (msg.tags.containsKey("repto")) ? msg.tags.get("repto") : null;
+        msg.is_favorite = (cursor.getInt(cursor.getColumnIndex("isfavorite")) == 1);
+        msg.is_unread = (cursor.getInt(cursor.getColumnIndex("isunread")) == 1);
 
         return msg;
     }
@@ -128,17 +140,8 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         db.close();
     }
 
-    public ArrayList<String> getMsgList(String echo, int offset, int length) {
+    public ArrayList<String> fetch_rows(Cursor cursor) {
         ArrayList<String> result = new ArrayList<>();
-        SQLiteDatabase db = getReadableDatabase();
-
-        String limitstr;
-        if (offset > 0 && length > 0) {
-            limitstr = String.valueOf(offset) + ", " + String.valueOf(length);
-        } else limitstr = null;
-
-        Cursor cursor = db.query(tableName, new String[]{"id", "number"}, "echoarea = ?",
-                new String[]{echo}, null, null, "number", limitstr);
 
         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
             boolean needToClose = false;
@@ -151,6 +154,21 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
 
         cursor.close();
+        return result;
+    }
+
+    public ArrayList<String> getMsgList(String echo, int offset, int length) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        String limitstr;
+        if (offset > 0 && length > 0) {
+            limitstr = String.valueOf(offset) + ", " + String.valueOf(length);
+        } else limitstr = null;
+
+        Cursor cursor = db.query(tableName, new String[]{"id", "number"}, "echoarea = ?",
+                new String[]{echo}, null, null, "number", limitstr);
+
+        ArrayList<String> result = fetch_rows(cursor);
         db.close();
         return result;
     }
@@ -191,7 +209,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         if (msgids.size() == 1) {
             args = "id='" + msgids.get(0) + "'";
         } else {
-            args = "id='" + TextUtils.join("' or id='", msgids.toArray()) + "'";
+            args = "id='" + TextUtils.join("' or id='", msgids) + "'";
         }
 
         Hashtable<String, IIMessage> result = new Hashtable<>();
@@ -221,15 +239,8 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         Cursor cursor = db.query(true, tableName, new String[]{"echoarea"},
                 null, null, null, null, null, null);
 
-        ArrayList<String> results = new ArrayList<>();
+        ArrayList<String> results = fetch_rows(cursor);
 
-        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            while (cursor.moveToNext()) {
-                results.add(cursor.getString(cursor.getColumnIndex("echoarea")));
-            }
-        }
-
-        cursor.close();
         db.close();
         return results;
     }
@@ -252,8 +263,79 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     public void FuckDeleteEverything() {
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         db.delete(tableName, null, null);
         db.close();
+    }
+
+    public ArrayList<String> msgidsBySelection(String selection_block) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.query(true, tableName, new String[]{"id, number"},
+                selection_block, null, null, null, "number", null);
+
+        ArrayList<String> result = fetch_rows(cursor);
+        db.close();
+        return result;
+    }
+
+    public ArrayList<String> getFavorites() {
+        return msgidsBySelection("isfavorite=1");
+    }
+
+    public ArrayList<String> getUnreadMessages(String echoarea) {
+        String selection_block = (echoarea != null) ? "echoarea='" + echoarea + "'" : null;
+
+        return msgidsBySelection(selection_block);
+    }
+
+    public ArrayList<String> getUnreadEchoareas() {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.query(true, tableName, new String[]{"echoarea"}, "isunread=1", null, null, null, null, null);
+
+        ArrayList<String> result = fetch_rows(cursor);
+        db.close();
+        return result;
+    }
+
+    public ArrayList<String> messagesToUsers(List<String> users_to) {
+        if (users_to.size() == 0) return new ArrayList<>();
+
+        String selection_block;
+
+        if (users_to.size() == 1) {
+            selection_block = "msgto='" + users_to.get(0) + "'";
+        } else {
+            selection_block = "msgto='" + TextUtils.join("' or msgto='", users_to) + "'";
+        }
+
+        return msgidsBySelection(selection_block);
+    }
+
+    public void updateBooleanField(String field, boolean value, List<String> msgids) {
+        if (msgids.size() == 0) SimpleFunctions.debug(field + " update failed: empty input!");
+
+        SQLiteDatabase db = getWritableDatabase();
+        int favorite_insert = (value) ? 1 : 0;
+        String clause_part;
+
+        if (msgids.size() == 1) {
+            clause_part = "id='" + msgids.get(0) + "'";
+        } else {
+            clause_part = "id='" + TextUtils.join("' or id='", msgids) + "'";
+        }
+
+        db.execSQL("update " + tableName + " set " + field + "="
+                + String.valueOf(favorite_insert) + " where " + clause_part);
+        db.close();
+    }
+
+    public void setUnread(boolean unread, List<String> msgids) {
+        updateBooleanField("isunread", unread, msgids);
+    }
+
+    public void setFavorite(boolean favorite, List<String> msgids) {
+        updateBooleanField("isfavorite", favorite, msgids);
     }
 }

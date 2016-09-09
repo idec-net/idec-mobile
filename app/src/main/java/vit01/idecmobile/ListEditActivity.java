@@ -2,6 +2,7 @@ package vit01.idecmobile;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +14,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
@@ -46,6 +50,8 @@ public class ListEditActivity extends AppCompatActivity {
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_ev);
+        IconicsDrawable add_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_add).color(Color.WHITE).sizeDp(24);
+        fab.setImageDrawable(add_icon);
 
         contents_adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, contents);

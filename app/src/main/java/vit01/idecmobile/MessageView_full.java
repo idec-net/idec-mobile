@@ -18,6 +18,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.IIMessage;
@@ -28,6 +29,7 @@ public class MessageView_full extends Fragment {
     private AbstractTransport transport;
     private ArrayList<String> msglist;
     private int position;
+    private String msgid;
 
     private boolean messageStarred = false;
 
@@ -65,11 +67,11 @@ public class MessageView_full extends Fragment {
                              Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.message_view, null, false);
 
-        String msgid = msglist.get(position);
+        msgid = msglist.get(position);
         IIMessage message = transport.getMessage(msgid);
         if (message == null) message = new IIMessage();
 
-        TextView full_subj, full_msg, full_from_to, full_date, full_msgid, full_repto;
+        TextView full_subj, full_msg, full_from_to, full_date, full_msgid, full_repto, full_echo;
 
         full_subj = (TextView) rootLayout.findViewById(R.id.full_subj);
         full_msg = (TextView) rootLayout.findViewById(R.id.full_text);
@@ -77,7 +79,9 @@ public class MessageView_full extends Fragment {
         full_date = (TextView) rootLayout.findViewById(R.id.full_date);
         full_msgid = (TextView) rootLayout.findViewById(R.id.full_msgid);
         full_repto = (TextView) rootLayout.findViewById(R.id.full_repto);
+        full_echo = (TextView) rootLayout.findViewById(R.id.full_echo);
 
+        messageStarred = message.is_favorite;
         full_subj.setText(message.subj);
         full_msg.setText(message.msg);
         full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
@@ -85,6 +89,7 @@ public class MessageView_full extends Fragment {
         String repto_insert = (message.repto != null) ? message.repto : "-";
         full_repto.setText("Ответ: " + repto_insert);
         full_date.setText(SimpleFunctions.timestamp2date(message.time, true));
+        full_echo.setText(message.echo);
 
         Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
         fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(24).color(Color.GRAY), null, null);
@@ -101,8 +106,6 @@ public class MessageView_full extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.message_view, menu);
-
-        // TODO здесь нужно получить из БД значение messageStarred
 
         MenuItem starredItem = menu.findItem(R.id.action_starred);
         if (messageStarred) {
@@ -121,7 +124,7 @@ public class MessageView_full extends Fragment {
             case R.id.action_starred:
                 messageStarred = !messageStarred;
                 setStarredIcon(messageStarred, item);
-                // TODO здесь нужно записать в БД значение messageStarred
+                transport.setFavorite(messageStarred, Arrays.asList(msgid));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

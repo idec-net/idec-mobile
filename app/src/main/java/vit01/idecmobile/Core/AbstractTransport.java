@@ -2,6 +2,7 @@ package vit01.idecmobile.Core;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 public interface AbstractTransport {
     boolean saveMessage(String msgid, String echo, IIMessage message);
@@ -31,4 +32,17 @@ public interface AbstractTransport {
     ArrayList<String> fullEchoList();
 
     int countMessages(String echo);
+
+    ArrayList<String> getFavorites();
+
+    // Это для работы карбонки (классической)!
+    ArrayList<String> messagesToUsers(List<String> users);
+
+    ArrayList<String> getUnreadEchoareas();
+
+    ArrayList<String> getUnreadMessages(String echoarea);
+
+    void setUnread(boolean unread, List<String> msgids);
+
+    void setFavorite(boolean favorite, List<String> msgids);
 }

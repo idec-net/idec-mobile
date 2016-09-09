@@ -2,6 +2,7 @@ package vit01.idecmobile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -13,10 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,28 +53,42 @@ public class EchoView extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        IconicsDrawable create_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_create).color(Color.WHITE).sizeDp(24);
+        fab.setImageDrawable(create_icon);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        recyclerView = (RecyclerView) findViewById(R.id.msglist_view);
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
 
         Intent intent = getIntent();
         echoarea = intent.getStringExtra("echoarea");
-        getSupportActionBar().setTitle(echoarea);
         int nodeIndex = intent.getIntExtra("nodeindex", -1);
 
         if (nodeIndex < 0) {
             fab.setVisibility(View.INVISIBLE);
         }
 
-        recyclerView = (RecyclerView) findViewById(R.id.msglist_view);
-
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-
         transport = new SqliteTransport(getApplicationContext());
-        countMessages = transport.countMessages(echoarea);
+        ArrayList<String> msglist;
+
+        if (echoarea.equals("_favorites")) {
+            getSupportActionBar().setTitle("Избранные");
+            msglist = transport.getFavorites();
+            countMessages = msglist.size();
+        } else {
+            getSupportActionBar().setTitle(echoarea);
+            countMessages = transport.countMessages(echoarea);
+
+            msglist = (countMessages > 0) ?
+                    transport.getMsgList(echoarea, 0, 0) : SimpleFunctions.emptyList;
+        }
 
         if (countMessages == 0) {
             TextView this_is_empty = new TextView(this);
-            this_is_empty.setText("Эха пуста!");
+            this_is_empty.setText("Здесь пусто!");
             this_is_empty.setTextSize(20);
             this_is_empty.setPadding(10, 10, 10, 10);
             RelativeLayout currentLayout = (RelativeLayout)
@@ -79,9 +96,6 @@ public class EchoView extends AppCompatActivity {
 
             currentLayout.addView(this_is_empty, 0);
         } else {
-            ArrayList<String> msglist;
-            msglist = transport.getMsgList(echoarea, 0, 0);
-
             Collections.reverse(msglist);
 
             mAdapter = new MyAdapter(this, recyclerView, msglist, transport);
@@ -208,7 +222,6 @@ public class EchoView extends AppCompatActivity {
         public static class ViewHolder extends RecyclerView.ViewHolder {
             // each data item is just a string in this case
             public TextView msg_subj, msg_from_to, msg_text, msg_date;
-            public CheckBox msg_favorite;
             public String msgid;
             public int position;
 

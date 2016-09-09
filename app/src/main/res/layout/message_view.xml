@@ -20,8 +20,15 @@
             android:id="@+id/full_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
             android:text="1970-01-01 (Понедельник), 00:00"
+            android:textSize="@dimen/material_text_body1" />
+
+        <TextView
+            android:id="@+id/full_echo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:text="echoarea.new"
             android:textSize="@dimen/material_text_body1" />
 
         <TextView

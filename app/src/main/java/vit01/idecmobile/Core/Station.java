@@ -6,7 +6,7 @@ import java.util.Collections;
 
 public class Station implements Serializable {
     static final long serialVersionUID = 100L;
-    
+
     public String
             nodename = "New Station",
             address = "https://ii-net.tk/ii/ii-point.php?q=/",

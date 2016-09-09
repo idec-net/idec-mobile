@@ -11,6 +11,7 @@ public class IIMessage {
     public String echo;
     public long time;
     public String from, addr, to, subj, msg, repto;
+    public boolean is_favorite, is_unread;
 
     public IIMessage() {
         id = null;
@@ -23,6 +24,8 @@ public class IIMessage {
         subj = "no subj";
         msg = "no message";
         repto = null;
+        is_favorite = false;
+        is_unread = true;
     }
 
     public IIMessage(String rawmsg) {
