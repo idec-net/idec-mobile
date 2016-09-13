@@ -78,6 +78,12 @@ public class EchoView extends AppCompatActivity {
             getSupportActionBar().setTitle("Избранные");
             msglist = transport.getFavorites();
             countMessages = msglist.size();
+        } else if (echoarea.equals("_carbon_classic")) {
+            getSupportActionBar().setTitle("Карбонка");
+            // TODO: карбонка нужна народу!
+
+            msglist = new ArrayList<>();
+            countMessages = msglist.size();
         } else {
             getSupportActionBar().setTitle(echoarea);
             countMessages = transport.countMessages(echoarea);

@@ -4,11 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +20,7 @@ import vit01.idecmobile.Core.Station;
 
 public class DebugActivity extends AppCompatActivity {
     ScrollView debugLayout;
-    customTextView textView;
+    TextView textView;
     BroadcastReceiver receiver;
     IntentFilter filter;
 
@@ -32,11 +30,8 @@ public class DebugActivity extends AppCompatActivity {
         setContentView(R.layout.activity_debug);
         getSupportActionBar().setTitle("Окно отладки");
         debugLayout = (ScrollView) findViewById(R.id.debugLayout);
-        textView = new customTextView(this);
-        textView.setTextColor(Color.BLACK);
-        textView.setTextSize(16);
+        textView = (TextView) findViewById(R.id.debug_view);
         textView.setText("");
-        debugLayout.addView(textView);
 
         SimpleFunctions.debugTaskFinished = false;
 
@@ -50,7 +45,7 @@ public class DebugActivity extends AppCompatActivity {
                 } else if (intent.getStringExtra("task").equals("addText")) {
                     String data = intent.getStringExtra("data");
                     textView.append(data);
-                    debugLayout.fullScroll(1);
+                    debugLayout.fullScroll(View.FOCUS_DOWN);
                 } else if (intent.getStringExtra("task").equals("toast")) {
                     String data = intent.getStringExtra("data");
                     Toast.makeText(DebugActivity.this, data, Toast.LENGTH_SHORT).show();
@@ -87,40 +82,6 @@ public class DebugActivity extends AppCompatActivity {
             myIntent.putExtra("task", "addText");
             myIntent.putExtra("data", message);
             sendBroadcast(myIntent);
-        }
-    }
-
-    static class customTextView extends TextView {
-        public customTextView(Context context, AttributeSet attrs, int defStyle) {
-            super(context, attrs, defStyle);
-        }
-
-        public customTextView(Context context, AttributeSet attrs) {
-            super(context, attrs);
-        }
-
-        public customTextView(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onFocusChanged(boolean focused, int direction,
-                                      Rect previouslyFocusedRect) {
-            if (focused) {
-                super.onFocusChanged(focused, direction, previouslyFocusedRect);
-            }
-        }
-
-        @Override
-        public void onWindowFocusChanged(boolean focused) {
-            if (focused) {
-                super.onWindowFocusChanged(focused);
-            }
-        }
-
-        @Override
-        public boolean isFocused() {
-            return true;
         }
     }
 

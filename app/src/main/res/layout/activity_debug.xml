@@ -10,4 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="vit01.idecmobile.DebugActivity">
 
+    <TextView
+        android:id="@+id/debug_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/md_black_1000"
+        android:textSize="16sp" />
 </ScrollView>

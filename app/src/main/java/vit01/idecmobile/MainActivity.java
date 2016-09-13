@@ -2,8 +2,10 @@ package vit01.idecmobile;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -41,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     public int currentStationIndex = 0;
     public Drawer drawer;
     public AccountHeader drawerHeader;
+    public boolean is_offline_list_now = false;
+    public SharedPreferences sharedPref;
+    public SharedPreferences.Editor prefEditor;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -51,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         drawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -75,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                                 // Выбрали другую станцию, обновляем список
                                 currentStationIndex = (int) identifier;
                                 currentStation = Config.values.stations.get(currentStationIndex);
+                                saveCurrentStationPosition(currentStationIndex);
                                 updateEcholist();
                                 return true;
                             }
@@ -85,14 +93,12 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 
-        updateStationsList();
-
         PrimaryDrawerItem echoItem = new PrimaryDrawerItem().withIdentifier(1).withName("Эхоконференции").withIcon(GoogleMaterial.Icon.gmd_message);
-        PrimaryDrawerItem carbonItem = new PrimaryDrawerItem().withIdentifier(2).withName("Карбонка").withIcon(GoogleMaterial.Icon.gmd_input);
+        PrimaryDrawerItem carbonItem = new PrimaryDrawerItem().withIdentifier(2).withName("Карбонка").withIcon(GoogleMaterial.Icon.gmd_input).withSelectable(false);
         PrimaryDrawerItem sentItem = new PrimaryDrawerItem().withIdentifier(3).withName("Отправленные").withIcon(GoogleMaterial.Icon.gmd_send);
         final PrimaryDrawerItem draftsItem = new PrimaryDrawerItem().withIdentifier(4).withName("Черновики").withIcon(GoogleMaterial.Icon.gmd_drafts);
         PrimaryDrawerItem starredItem = new PrimaryDrawerItem().withIdentifier(5).withName("Избранные").withIcon(GoogleMaterial.Icon.gmd_star).withSelectable(false);
-        PrimaryDrawerItem offlineItem = new PrimaryDrawerItem().withIdentifier(6).withName("Offline-эхи").withIcon(GoogleMaterial.Icon.gmd_signal_wifi_off);
+        final PrimaryDrawerItem offlineItem = new PrimaryDrawerItem().withIdentifier(6).withName("Offline-эхи").withIcon(GoogleMaterial.Icon.gmd_signal_wifi_off);
         PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(7).withName("Дополнительно").withIcon(GoogleMaterial.Icon.gmd_extension);
         PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(8).withName("Настройки").withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
         PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(9).withName("Помощь").withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
@@ -127,14 +133,25 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra("echoarea", "_favorites");
                                 intent.putExtra("nodeindex", -1);
                                 startActivity(intent);
+                            } else if (identifier == 1) {
+                                is_offline_list_now = false;
+                                updateEcholist();
+                            } else if (identifier == 6) {
+                                is_offline_list_now = true;
+                                updateEcholist();
+                            } else if (identifier == 9) {
+                                startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                            } else if (identifier == 2) {
+                                Intent intent = new Intent(MainActivity.this, EchoView.class);
+                                intent.putExtra("echoarea", "_carbon_classic");
+                                intent.putExtra("nodeindex", -1);
+                                startActivity(intent);
                             }
                         }
                         return false;
                     }
                 })
                 .build();
-
-        currentStation = Config.values.stations.get(0);
 
         echoList = (ListView) findViewById(R.id.echolist);
         echoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -143,7 +160,12 @@ public class MainActivity extends AppCompatActivity {
                 String echoarea = ((TextView) view).getText().toString();
                 Intent viewEcho = new Intent(MainActivity.this, EchoView.class);
                 viewEcho.putExtra("echoarea", echoarea);
-                viewEcho.putExtra("nodeindex", currentStationIndex);
+
+                if (is_offline_list_now) {
+                    viewEcho.putExtra("nodeindex", -1);
+                } else {
+                    viewEcho.putExtra("nodeindex", currentStationIndex);
+                }
                 startActivity(viewEcho);
             }
         });
@@ -152,13 +174,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, ListEditActivity.class);
-                intent.putExtra("type", "fromstation");
-                intent.putExtra("index", currentStationIndex);
+
+                if (is_offline_list_now) {
+                    intent.putExtra("type", "offline");
+                    intent.putExtra("index", -1);
+                } else {
+                    intent.putExtra("type", "fromstation");
+                    intent.putExtra("index", currentStationIndex);
+                }
                 startActivity(intent);
                 return true;
             }
         });
 
+        updateStationsList();
         updateEcholist();
 
         if (Config.values.firstRun) {
@@ -183,13 +212,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public void updateEcholist() {
-        echoListAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, currentStation.echoareas);
-
-        echoList.setAdapter(echoListAdapter);
-    }
-
     public void updateStationsList() {
         // добавляем станции в navigation drawer
 
@@ -208,6 +230,32 @@ public class MainActivity extends AppCompatActivity {
                 new ProfileSettingDrawerItem().withName("Добавить станцию").withIdentifier(ADD_NODE).withIcon(GoogleMaterial.Icon.gmd_add),
                 new ProfileSettingDrawerItem().withName("Управление станциями").withIdentifier(MANAGE_NODE).withIcon(GoogleMaterial.Icon.gmd_settings)
         );
+
+        currentStationIndex = sharedPref.getInt("nodeindex_current", 0);
+
+        if (currentStationIndex >= Config.values.stations.size()) {
+            currentStationIndex = 0;
+            saveCurrentStationPosition(0);
+        }
+        currentStation = Config.values.stations.get(currentStationIndex);
+        drawerHeader.setActiveProfile(currentStationIndex);
+    }
+
+    public void updateEcholist() {
+        if (is_offline_list_now) {
+            echoListAdapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, Config.values.offlineEchoareas);
+        } else {
+            echoListAdapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, currentStation.echoareas);
+        }
+        echoList.setAdapter(echoListAdapter);
+    }
+
+    public void saveCurrentStationPosition(int position) {
+        prefEditor = sharedPref.edit();
+        prefEditor.putInt("nodeindex_current", position);
+        prefEditor.apply();
     }
 
     @Override

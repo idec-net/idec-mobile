@@ -58,6 +58,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.EchoView" />
         </activity>
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="vit01.idecmobile.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

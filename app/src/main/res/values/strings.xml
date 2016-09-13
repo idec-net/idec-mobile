@@ -14,4 +14,8 @@
     </string-array>
 
     <string name="title_activity_stations">StationsActivity</string>
+    <string name="title_activity_help">Помощь</string>
+    <string name="help_text">
+        Это очень большой текст. И очень важный для клиента. Я пока что не знаю, что сюда запихать.
+    </string>
 </resources>
