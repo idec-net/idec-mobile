@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -24,7 +24,8 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:text="Re: Новые какие-то обсуждения каких-то людей о чём-то"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textSize="@dimen/material_text_subhead"
+                android:textColor="@color/md_black_1000" />
 
             <TextView
                 android:id="@+id/msg_from_to"
@@ -32,7 +33,8 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:text="someuser -> All"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textSize="@dimen/material_text_body2"
+                android:textColor="@color/md_black_1000" />
 
             <TextView
                 android:id="@+id/msg_text"
@@ -40,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:text="Большой и длинный текст на много строк, в котором куча разных цитат, мыслей и всего такого"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textSize="@dimen/material_text_body1" />
         </LinearLayout>
 
         <LinearLayout
@@ -56,7 +58,8 @@
                 android:id="@+id/msg_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="03.09.16, 17:18" />
+                android:text="03.09.16, 17:18"
+                android:textSize="@dimen/material_text_caption" />
 
             <CheckBox
                 android:id="@+id/msg_favorite"
