@@ -18,6 +18,7 @@ public class Config {
             values = (GlobalConfig) ois.readObject();
             ois.close();
             is.close();
+            configUpdate();
         } catch (Exception e) {
             SimpleFunctions.debug("Конфиг не найден/ошибка, создаём по умолчанию");
             e.printStackTrace();
@@ -36,6 +37,16 @@ public class Config {
         } catch (Exception e) {
             SimpleFunctions.debug("Ошибка записи конфига");
             e.printStackTrace();
+        }
+    }
+
+    public static void configUpdate() {
+        if (Config.values.carbon_to == null) {
+            Config.values.carbon_to = "All";
+        }
+
+        if (Config.values.carbon_limit <= 0) {
+            Config.values.carbon_limit = 50;
         }
     }
 }

@@ -36,7 +36,7 @@ public interface AbstractTransport {
     ArrayList<String> getFavorites();
 
     // Это для работы карбонки (классической)!
-    ArrayList<String> messagesToUsers(List<String> users);
+    ArrayList<String> messagesToUsers(List<String> users, int limit);
 
     ArrayList<String> getUnreadEchoareas();
 

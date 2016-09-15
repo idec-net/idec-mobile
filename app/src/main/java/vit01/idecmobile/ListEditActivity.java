@@ -137,13 +137,12 @@ public class ListEditActivity extends AppCompatActivity {
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 echoPosition = position;
                 echoEdit.setText(((TextView) view).getText());
                 editEchoarea.show();
-                return true;
             }
         });
     }

@@ -11,9 +11,13 @@ public class GlobalConfig implements Serializable {
             useProxy = false;
     public int
             oneRequestLimit = 20,
-            connectionTimeout = 20;
+            connectionTimeout = 20,
+            carbon_limit = 50; // максимальное количество сообщений в карбонке
     public ArrayList<String> offlineEchoareas = new ArrayList<>();
     public ArrayList<Station> stations = new ArrayList<>();
+
+    // Сообщения какого пользователя слать в карбонку
+    public String carbon_to = "All"; // разделять двоеточием
 
     GlobalConfig() {
         offlineEchoareas.add("lenta.rss");

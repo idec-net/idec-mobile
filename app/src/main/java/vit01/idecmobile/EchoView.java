@@ -22,9 +22,12 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import vit01.idecmobile.Core.AbstractTransport;
+import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
@@ -80,9 +83,9 @@ public class EchoView extends AppCompatActivity {
             countMessages = msglist.size();
         } else if (echoarea.equals("_carbon_classic")) {
             getSupportActionBar().setTitle("Карбонка");
-            // TODO: карбонка нужна народу!
 
-            msglist = new ArrayList<>();
+            List<String> carbon_users = Arrays.asList(Config.values.carbon_to.split(":"));
+            msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit);
             countMessages = msglist.size();
         } else {
             getSupportActionBar().setTitle(echoarea);

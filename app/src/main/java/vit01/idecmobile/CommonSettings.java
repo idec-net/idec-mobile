@@ -12,7 +12,7 @@ import vit01.idecmobile.Core.Config;
 
 public class CommonSettings extends AppCompatActivity {
     CheckBox defaultEditor, firstrun, useProxy;
-    EditText messages_per_fetch, connTimeout;
+    EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,8 @@ public class CommonSettings extends AppCompatActivity {
 
         messages_per_fetch = (EditText) findViewById(R.id.editText);
         connTimeout = (EditText) findViewById(R.id.editText2);
+        carbon_usernames = (EditText) findViewById(R.id.editText3);
+        carbon_limit = (EditText) findViewById(R.id.editText4);
    }
 
     protected void installValues() {
@@ -42,7 +44,9 @@ public class CommonSettings extends AppCompatActivity {
                 String.valueOf(Config.values.oneRequestLimit), TextView.BufferType.EDITABLE);
         connTimeout.setText(
                 String.valueOf(Config.values.connectionTimeout), TextView.BufferType.EDITABLE);
-
+        carbon_usernames.setText(Config.values.carbon_to, TextView.BufferType.EDITABLE);
+        carbon_limit.setText(
+                String.valueOf(Config.values.carbon_limit), TextView.BufferType.EDITABLE);
     }
 
     protected void fetchValues() {
@@ -52,6 +56,8 @@ public class CommonSettings extends AppCompatActivity {
 
         Config.values.oneRequestLimit = Integer.parseInt(messages_per_fetch.getText().toString());
         Config.values.connectionTimeout = Integer.parseInt(connTimeout.getText().toString());
+        Config.values.carbon_to = carbon_usernames.getText().toString();
+        Config.values.carbon_limit = Integer.parseInt(carbon_limit.getText().toString());
     }
 
     public void openEchoEdit(View view) {

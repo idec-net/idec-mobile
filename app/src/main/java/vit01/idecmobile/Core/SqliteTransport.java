@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -268,11 +269,14 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         db.close();
     }
 
-    public ArrayList<String> msgidsBySelection(String selection_block) {
+    public ArrayList<String> msgidsBySelection(String selection_block, String sort, String limit) {
         SQLiteDatabase db = getReadableDatabase();
 
+        if (sort != null) sort = " " + sort;
+        else sort = "";
+
         Cursor cursor = db.query(true, tableName, new String[]{"id, number"},
-                selection_block, null, null, null, "number", null);
+                selection_block, null, null, null, "number" + sort, limit);
 
         ArrayList<String> result = fetch_rows(cursor);
         db.close();
@@ -280,13 +284,13 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     public ArrayList<String> getFavorites() {
-        return msgidsBySelection("isfavorite=1");
+        return msgidsBySelection("isfavorite=1", null, null);
     }
 
     public ArrayList<String> getUnreadMessages(String echoarea) {
         String selection_block = (echoarea != null) ? "echoarea='" + echoarea + "'" : null;
 
-        return msgidsBySelection(selection_block);
+        return msgidsBySelection(selection_block, null, null);
     }
 
     public ArrayList<String> getUnreadEchoareas() {
@@ -299,7 +303,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return result;
     }
 
-    public ArrayList<String> messagesToUsers(List<String> users_to) {
+    public ArrayList<String> messagesToUsers(List<String> users_to, int limit) {
         if (users_to.size() == 0) return new ArrayList<>();
 
         String selection_block;
@@ -310,7 +314,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
             selection_block = "msgto='" + TextUtils.join("' or msgto='", users_to) + "'";
         }
 
-        return msgidsBySelection(selection_block);
+        // получаем последние limit сообщений к нужным юзерам в порядке по возрастанию id
+        ArrayList<String> selected = msgidsBySelection(selection_block, "desc", "0," + String.valueOf(limit));
+        Collections.reverse(selected);
+        return selected;
     }
 
     public void updateBooleanField(String field, boolean value, List<String> msgids) {
