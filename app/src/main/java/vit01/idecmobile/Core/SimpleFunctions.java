@@ -32,10 +32,9 @@ public class SimpleFunctions {
     public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), hh:mm");
     public static Pattern quote_pattern = Pattern.compile("^\\s?[\\w_а-яА-Я\\-]{0,20}(>)+.+$",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
-    public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(PS|P\\.S|ЗЫ|З\\.Ы|//|#)(.+$)",
-            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
-    public static Pattern ii_link_pattern = Pattern.compile("ii:\\/\\/(\\w[\\w.]+\\w+)",
-            Pattern.MULTILINE);
+    public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(//|#)(.+$)", Pattern.MULTILINE);
+    public static Pattern PS_pattern = Pattern.compile("^(PS|P.S|ЗЫ|З.Ы)(.+$)", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+    static String ii_link_pattern = "ii:\\/\\/(\\w[\\w.]+\\w+)";
 
     public static String join(String[] array, String delimiter) {
         String result = "";
@@ -134,6 +133,11 @@ public class SimpleFunctions {
 
         Matcher comment_match = comment_pattern.matcher(msg);
         msg = comment_match.replaceAll("$1<font color='#bb0000'>$3$4</font>");
+
+        Matcher PS_match = PS_pattern.matcher(msg);
+        msg = PS_match.replaceAll("<font color='#bb0000'>$0</font>");
+
+        msg = msg.replaceAll(ii_link_pattern, "<font color='blue'>$0</font>");
 
         String[] strings = msg.split("\n");
         ArrayList<String> result = new ArrayList<>();
