@@ -158,6 +158,14 @@ public class SimpleFunctions {
         return TextUtils.join("<br>", result);
     }
 
+    public static String messagePreview(String text) {
+        Matcher quote_matcher = quote_pattern.matcher(text);
+        text = quote_matcher.replaceAll("");
+        text = text.replaceAll("\n(\n)+", "\n");
+
+        return text.trim();
+    }
+
     public static void debug(String message) {
         Log.d(appName, message);
 

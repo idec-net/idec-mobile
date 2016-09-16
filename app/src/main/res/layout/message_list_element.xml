@@ -1,74 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/msg_clickable_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="@dimen/list_horizontal_margin"
+    android:paddingRight="@dimen/list_horizontal_margin"
+    android:background="?android:attr/selectableItemBackground" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/msg_subj"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:lines="1"
+        android:text="Re: Новые какие-то обсуждения каких-то людей о чём-то"
+        android:textSize="@dimen/material_text_subhead"
+        android:textColor="@color/md_black_1000"
+        android:layout_toLeftOf="@+id/msg_date"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
 
-        <LinearLayout
-            android:id="@+id/msg_clickable_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".85"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="vertical"
-            android:padding="10dp">
+    <TextView
+        android:id="@+id/msg_from_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:text="someuser -> All"
+        android:textSize="@dimen/material_text_body2"
+        android:textColor="@color/md_black_1000"
+        android:layout_below="@+id/msg_subj"
+        android:layout_alignParentLeft="true" />
 
-            <TextView
-                android:id="@+id/msg_subj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="Re: Новые какие-то обсуждения каких-то людей о чём-то"
-                android:textSize="@dimen/material_text_subhead"
-                android:textColor="@color/md_black_1000" />
+    <TextView
+        android:id="@+id/msg_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:text="Большой и длинный текст на много строк, в котором куча разных цитат, мыслей и всего такого"
+        android:textSize="@dimen/material_text_body1"
+        android:layout_below="@+id/msg_from_to"
+        android:layout_toLeftOf="@+id/star"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:maxLength="250" />
 
-            <TextView
-                android:id="@+id/msg_from_to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="someuser -> All"
-                android:textSize="@dimen/material_text_body2"
-                android:textColor="@color/md_black_1000" />
+    <TextView
+        android:id="@+id/msg_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="03.09.16, 17:18"
+        android:textSize="@dimen/material_text_caption"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
 
-            <TextView
-                android:id="@+id/msg_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:text="Большой и длинный текст на много строк, в котором куча разных цитат, мыслей и всего такого"
-                android:textSize="@dimen/material_text_body1" />
-        </LinearLayout>
+    <ImageView
+        android:id="@+id/star"
+        android:layout_below="@+id/msg_date"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="16dp"
+        app:ico_color="@color/md_grey_500"
+        app:ico_icon="gmd-star-border"
+        app:ico_size="20dp" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".15"
-            android:orientation="vertical"
-            android:paddingEnd="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:id="@+id/msg_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="03.09.16, 17:18"
-                android:textSize="@dimen/material_text_caption" />
-
-            <CheckBox
-                android:id="@+id/msg_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <View style="@style/Divider" />
-</LinearLayout>
+</RelativeLayout>
