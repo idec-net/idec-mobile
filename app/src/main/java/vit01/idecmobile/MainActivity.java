@@ -173,16 +173,7 @@ public class MainActivity extends AppCompatActivity {
         echoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, ListEditActivity.class);
-
-                if (is_offline_list_now) {
-                    intent.putExtra("type", "offline");
-                    intent.putExtra("index", -1);
-                } else {
-                    intent.putExtra("type", "fromstation");
-                    intent.putExtra("index", currentStationIndex);
-                }
-                startActivity(intent);
+                editEchoList();
                 return true;
             }
         });
@@ -258,6 +249,19 @@ public class MainActivity extends AppCompatActivity {
         prefEditor.apply();
     }
 
+    public void editEchoList() {
+        Intent intent = new Intent(MainActivity.this, ListEditActivity.class);
+
+        if (is_offline_list_now) {
+            intent.putExtra("type", "offline");
+            intent.putExtra("index", -1);
+        } else {
+            intent.putExtra("type", "fromstation");
+            intent.putExtra("index", currentStationIndex);
+        }
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -295,6 +299,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_stations) {
             startActivity(new Intent(this, StationsActivity.class));
+            return true;
+        } else if (id == R.id.action_edit_echoareas) {
+            editEchoList();
             return true;
         }
 
