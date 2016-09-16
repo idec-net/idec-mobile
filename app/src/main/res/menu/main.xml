@@ -11,7 +11,8 @@
         android:title="Править список эх" />
     <item
         android:id="@+id/action_fetch"
-        android:title="Скачать сообщения" />
+        android:title="Скачать сообщения"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_clear_cache"
         android:title="Очистить кэш" />
