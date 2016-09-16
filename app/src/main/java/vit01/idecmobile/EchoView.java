@@ -1,12 +1,17 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +19,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.context.IconicsLayoutInflater;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +48,7 @@ public class EchoView extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_echo_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -65,6 +71,7 @@ public class EchoView extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.msglist_view);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this));
 
         Intent intent = getIntent();
         echoarea = intent.getStringExtra("echoarea");
@@ -182,7 +189,7 @@ public class EchoView extends AppCompatActivity {
                     .inflate(R.layout.message_list_element, parent, false);
             // set the view's size, margins, paddings and layout parameters
 
-            LinearLayout l = (LinearLayout) v.findViewById(R.id.msg_clickable_layout);
+            RelativeLayout l = (RelativeLayout) v.findViewById(R.id.msg_clickable_layout);
 
             final ViewHolder holder = new ViewHolder(v);
 
@@ -240,6 +247,38 @@ public class EchoView extends AppCompatActivity {
                 msg_from_to = (TextView) myLayout.findViewById(R.id.msg_from_to);
                 msg_text = (TextView) myLayout.findViewById(R.id.msg_text);
                 msg_date = (TextView) myLayout.findViewById(R.id.msg_date);
+            }
+        }
+    }
+
+    public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int[] ATTRS = new int[]{android.R.attr.listDivider};
+
+        private Drawable divider;
+
+        public DividerItemDecoration(Context context) {
+            final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
+            divider = styledAttributes.getDrawable(0);
+            styledAttributes.recycle();
+        }
+
+        @Override
+        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + divider.getIntrinsicHeight();
+
+                divider.setBounds(left, top, right, bottom);
+                divider.draw(c);
             }
         }
     }
