@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +18,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.iconics.context.IconicsLayoutInflater;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +47,6 @@ public class EchoView extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_echo_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -119,6 +117,12 @@ public class EchoView extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
+
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         AbstractTransport transport;
         Activity callingActivity;
@@ -129,6 +133,7 @@ public class EchoView extends AppCompatActivity {
         private ArrayList<String> msglist;
         private ArrayList<String> visible_msglist;
         private Handler handler;
+        private Drawable starredDrawable, unstarredDrawable;
 
         // Provide a suitable constructor (depends on the kind of dataset)
         public MyAdapter(Activity activity,
@@ -178,6 +183,15 @@ public class EchoView extends AppCompatActivity {
                     }, 500);
                 }
             });
+
+            starredDrawable = new IconicsDrawable(activity)
+                    .icon(GoogleMaterial.Icon.gmd_star)
+                    .color(activity.getResources().getColor(R.color.accent))
+                    .sizeDp(20);
+            unstarredDrawable = new IconicsDrawable(activity)
+                    .icon(GoogleMaterial.Icon.gmd_star_border)
+                    .color(activity.getResources().getColor(R.color.md_grey_500))
+                    .sizeDp(20);
         }
 
         // Create new views (invoked by the layout manager)
@@ -207,6 +221,22 @@ public class EchoView extends AppCompatActivity {
                 }
             });
 
+            final ImageView star = (ImageView) v.findViewById(R.id.msg_star);
+            star.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IIMessage message = transport.getMessage(holder.msgid);
+                    message.is_favorite = !message.is_favorite;
+                    if (message.is_favorite) {
+                        star.setImageDrawable(starredDrawable);
+                        transport.setFavorite(true, Arrays.asList(holder.msgid));
+                    } else {
+                        star.setImageDrawable(unstarredDrawable);
+                        transport.setFavorite(false, Arrays.asList(holder.msgid));
+                    }
+                }
+            });
+
             return holder;
         }
 
@@ -224,6 +254,11 @@ public class EchoView extends AppCompatActivity {
             holder.msg_from_to.setText(message.from + " to " + message.to);
             holder.msg_text.setText(SimpleFunctions.messagePreview(message.msg));
             holder.msg_date.setText(SimpleFunctions.timestamp2date(message.time, false));
+            if (message.is_favorite) {
+                holder.msg_star.setImageDrawable(starredDrawable);
+            } else {
+                holder.msg_star.setImageDrawable(unstarredDrawable);
+            }
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -238,6 +273,7 @@ public class EchoView extends AppCompatActivity {
         public static class ViewHolder extends RecyclerView.ViewHolder {
             // each data item is just a string in this case
             public TextView msg_subj, msg_from_to, msg_text, msg_date;
+            public ImageView msg_star;
             public String msgid;
             public int position;
 
@@ -247,6 +283,7 @@ public class EchoView extends AppCompatActivity {
                 msg_from_to = (TextView) myLayout.findViewById(R.id.msg_from_to);
                 msg_text = (TextView) myLayout.findViewById(R.id.msg_text);
                 msg_date = (TextView) myLayout.findViewById(R.id.msg_date);
+                msg_star = (ImageView) myLayout.findViewById(R.id.msg_star);
             }
         }
     }
