@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -255,7 +256,7 @@ public class EchoView extends AppCompatActivity {
             holder.msg_subj.setText(message.subj);
             holder.msg_from_to.setText(message.from + " to " + message.to);
             holder.msg_text.setText(SimpleFunctions.messagePreview(message.msg));
-            holder.msg_date.setText(SimpleFunctions.timestamp2date(message.time, false));
+            holder.msg_date.setText(DateUtils.getRelativeTimeSpanString(message.time * 1000));
             if (message.is_favorite) {
                 holder.msg_star.setImageDrawable(starredDrawable);
             } else {
