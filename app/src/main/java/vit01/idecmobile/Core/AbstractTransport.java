@@ -36,13 +36,16 @@ public interface AbstractTransport {
     ArrayList<String> getFavorites();
 
     // Это для работы карбонки (классической)!
-    ArrayList<String> messagesToUsers(List<String> users, int limit);
+    ArrayList<String> messagesToUsers(List<String> users, int limit, boolean unread);
 
     ArrayList<String> getUnreadEchoareas();
-
     ArrayList<String> getUnreadMessages(String echoarea);
 
+    ArrayList<String> getUnreadFavorites();
+
     void setUnread(boolean unread, List<String> msgids);
+
+    void setUnread(boolean unread, String area);
 
     void setFavorite(boolean favorite, List<String> msgids);
 }

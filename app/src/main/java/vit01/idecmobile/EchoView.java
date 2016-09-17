@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,6 +42,7 @@ import vit01.idecmobile.Core.SqliteTransport;
 
 public class EchoView extends AppCompatActivity {
     String echoarea;
+    ArrayList<String> msglist = null;
     int countMessages;
     AbstractTransport transport;
 
@@ -81,24 +85,32 @@ public class EchoView extends AppCompatActivity {
         }
 
         transport = new SqliteTransport(getApplicationContext());
-        ArrayList<String> msglist;
+        loadContent(false);
+    }
 
+    void loadContent(boolean unread_only) {
         if (echoarea.equals("_favorites")) {
             getSupportActionBar().setTitle("Избранные");
-            msglist = transport.getFavorites();
+            msglist = (unread_only) ? transport.getUnreadFavorites() : transport.getFavorites();
             countMessages = msglist.size();
         } else if (echoarea.equals("_carbon_classic")) {
             getSupportActionBar().setTitle("Карбонка");
 
             List<String> carbon_users = Arrays.asList(Config.values.carbon_to.split(":"));
-            msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit);
+            msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit, unread_only);
             countMessages = msglist.size();
         } else {
             getSupportActionBar().setTitle(echoarea);
-            countMessages = transport.countMessages(echoarea);
 
-            msglist = (countMessages > 0) ?
-                    transport.getMsgList(echoarea, 0, 0) : SimpleFunctions.emptyList;
+            if (unread_only) {
+                msglist = transport.getUnreadMessages(echoarea);
+                countMessages = msglist.size();
+            } else {
+                countMessages = transport.countMessages(echoarea);
+
+                msglist = (countMessages > 0) ?
+                        transport.getMsgList(echoarea, 0, 0) : SimpleFunctions.emptyList;
+            }
         }
 
         if (countMessages == 0) {
@@ -124,6 +136,45 @@ public class EchoView extends AppCompatActivity {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_echoview, menu);
+
+        menu.findItem(R.id.action_display_unread_only).setOnMenuItemClickListener(
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        boolean display_unread_only = !item.isChecked();
+                        item.setChecked(display_unread_only);
+
+                        loadContent(display_unread_only);
+                        return false;
+                    }
+                }
+        );
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_mark_all_read) {
+            if (echoarea.equals("_carbon_classic")) {
+                transport.setUnread(false, msglist);
+            } else {
+                transport.setUnread(false, echoarea);
+            }
+
+            if (mAdapter != null) {
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
@@ -230,13 +281,14 @@ public class EchoView extends AppCompatActivity {
                 public void onClick(View v) {
                     IIMessage message = transport.getMessage(holder.msgid);
                     message.is_favorite = !message.is_favorite;
+
                     if (message.is_favorite) {
                         star.setImageDrawable(starredDrawable);
-                        transport.setFavorite(true, Arrays.asList(holder.msgid));
                     } else {
                         star.setImageDrawable(unstarredDrawable);
-                        transport.setFavorite(false, Arrays.asList(holder.msgid));
                     }
+
+                    transport.setFavorite(message.is_favorite, Arrays.asList(holder.msgid));
                 }
             });
 
@@ -257,11 +309,24 @@ public class EchoView extends AppCompatActivity {
             holder.msg_from_to.setText(message.from + " to " + message.to);
             holder.msg_text.setText(SimpleFunctions.messagePreview(message.msg));
             holder.msg_date.setText(DateUtils.getRelativeTimeSpanString(message.time * 1000));
+
             if (message.is_favorite) {
                 holder.msg_star.setImageDrawable(starredDrawable);
             } else {
                 holder.msg_star.setImageDrawable(unstarredDrawable);
             }
+
+            int font_style = (message.is_unread) ? Typeface.BOLD : Typeface.NORMAL;
+
+            if (message.is_unread) {
+                holder.msg_text.setTextColor(Color.BLACK);
+            } else {
+                holder.msg_text.setTextColor(Color.GRAY);
+            }
+
+            holder.msg_subj.setTypeface(null, font_style);
+            holder.msg_from_to.setTypeface(null, font_style);
+            holder.msg_text.setTypeface(null, font_style);
         }
 
         // Return the size of your dataset (invoked by the layout manager)

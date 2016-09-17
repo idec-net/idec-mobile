@@ -14,10 +14,14 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
+import vit01.idecmobile.Core.AbstractTransport;
+import vit01.idecmobile.Core.SqliteTransport;
+
 public class MessageSlideActivity extends AppCompatActivity {
     ActionBar actionBar;
     private int msgCount;
     private ArrayList<String> msglist;
+    private ArrayList<String> user_watched_these = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +46,16 @@ public class MessageSlideActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 updateActionBar(position);
+                String msgid = msglist.get(position);
+
+                // добавляем сообщение в прочитанные
+                if (!user_watched_these.contains(msgid)) {
+                    user_watched_these.add(msgid);
+                }
             }
         });
+
+        user_watched_these.add(msglist.get(firstPosition));
         updateActionBar(firstPosition);
     }
 
@@ -60,6 +72,20 @@ public class MessageSlideActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Помечаем нужные сообщения прочитанными
+        AbstractTransport transport = new SqliteTransport(getApplicationContext());
+        transport.setUnread(false, user_watched_these);
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

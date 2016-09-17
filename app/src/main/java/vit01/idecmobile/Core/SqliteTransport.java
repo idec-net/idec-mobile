@@ -289,6 +289,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
     public ArrayList<String> getUnreadMessages(String echoarea) {
         String selection_block = (echoarea != null) ? "echoarea='" + echoarea + "'" : null;
+        selection_block += " and isunread=1";
 
         return msgidsBySelection(selection_block, null, null);
     }
@@ -303,7 +304,12 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return result;
     }
 
-    public ArrayList<String> messagesToUsers(List<String> users_to, int limit) {
+    public ArrayList<String> getUnreadFavorites() {
+        String selection_block = "isfavorite=1 and isunread=1";
+        return msgidsBySelection(selection_block, null, null);
+    }
+
+    public ArrayList<String> messagesToUsers(List<String> users_to, int limit, boolean unread) {
         if (users_to.size() == 0) return new ArrayList<>();
 
         String selection_block;
@@ -312,6 +318,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
             selection_block = "msgto='" + users_to.get(0) + "'";
         } else {
             selection_block = "msgto='" + TextUtils.join("' or msgto='", users_to) + "'";
+        }
+
+        if (unread) {
+            selection_block += " and isunread=1";
         }
 
         // получаем последние limit сообщений к нужным юзерам в порядке по возрастанию id
@@ -324,7 +334,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         if (msgids.size() == 0) SimpleFunctions.debug(field + " update failed: empty input!");
 
         SQLiteDatabase db = getWritableDatabase();
-        int favorite_insert = (value) ? 1 : 0;
+        int value_to_insert = (value) ? 1 : 0;
         String clause_part;
 
         if (msgids.size() == 1) {
@@ -334,12 +344,28 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
 
         db.execSQL("update " + tableName + " set " + field + "="
-                + String.valueOf(favorite_insert) + " where " + clause_part);
+                + String.valueOf(value_to_insert) + " where " + clause_part);
         db.close();
     }
 
     public void setUnread(boolean unread, List<String> msgids) {
         updateBooleanField("isunread", unread, msgids);
+    }
+
+    public void setUnread(boolean unread, String area) {
+        SQLiteDatabase db = getWritableDatabase();
+        int value_to_insert = (unread) ? 1 : 0;
+        String clause_part;
+
+        if (area.equals("_favorites")) {
+            clause_part = "isfavorite=1";
+        } else {
+            clause_part = "echoarea='" + area + "'";
+        }
+
+        db.execSQL("update " + tableName + " set isunread="
+                + String.valueOf(value_to_insert) + " where " + clause_part);
+        db.close();
     }
 
     public void setFavorite(boolean favorite, List<String> msgids) {
