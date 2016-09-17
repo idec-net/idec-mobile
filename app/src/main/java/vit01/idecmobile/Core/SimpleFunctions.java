@@ -28,8 +28,8 @@ public class SimpleFunctions {
     public static ArrayList<String> emptyList = new ArrayList<>();
     public static Queue<String> debugMessages = new LinkedList<>();
     public static boolean debugTaskFinished = true;
-    public static DateFormat simple_date = new SimpleDateFormat("dd.MM.yy\nhh:mm");
-    public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), hh:mm");
+    public static DateFormat simple_date = new SimpleDateFormat("dd.MM.yy\nHH:mm");
+    public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), HH:mm");
     public static Pattern quote_pattern = Pattern.compile("^\\s?[\\w_а-яА-Я\\-]{0,20}(>)+.+$",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
     public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(//|#)(.+$)", Pattern.MULTILINE);
