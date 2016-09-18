@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 .withAccountHeader(drawerHeader)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggleAnimated(true)
+                .withTranslucentStatusBar(false)
                 .addDrawerItems(
                         echoItem,
                         carbonItem,
