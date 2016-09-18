@@ -13,11 +13,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.Light">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,8 +26,7 @@
         <activity
             android:name=".EchoView"
             android:label="@string/title_activity_echo_view"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
@@ -44,16 +42,19 @@
         <activity
             android:name=".StationsActivity"
             android:label="@string/title_activity_stations"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
-        <activity android:name=".ListEditActivity" />
+        <activity android:name=".ListEditActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="vit01.idecmobile.MainActivity" />
+        </activity>
         <activity
-            android:name=".MessageSlideActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".MessageSlideActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.EchoView" />
@@ -61,8 +62,7 @@
         <activity
             android:name=".HelpActivity"
             android:label="@string/title_activity_help"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
