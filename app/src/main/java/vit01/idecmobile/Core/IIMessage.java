@@ -45,6 +45,8 @@ public class IIMessage {
 
             repto = (tags.containsKey("repto")) ? tags.get("repto") : null;
             id = null;
+            is_favorite = false;
+            is_unread = true;
         }
     }
 
