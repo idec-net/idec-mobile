@@ -67,6 +67,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
+        <activity
+            android:name=".OpenLinkActivity"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="ii" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

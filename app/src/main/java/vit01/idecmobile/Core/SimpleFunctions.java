@@ -34,7 +34,9 @@ public class SimpleFunctions {
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
     public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(//|#)(.+$)", Pattern.MULTILINE);
     public static Pattern PS_pattern = Pattern.compile("^(PS|P.S|ЗЫ|З.Ы)(.+$)", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
-    static String ii_link_pattern = "ii:\\/\\/(\\w[\\w.]+\\w+)";
+    public static Pattern ii_link_pattern = Pattern.compile("ii:\\/\\/(\\w[\\w.]+\\w+)");
+    public static Pattern url_pattern = Pattern.compile("(https?|ftp|file):\\/\\/?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]",
+            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     public static String join(String[] array, String delimiter) {
         String result = "";
@@ -137,7 +139,11 @@ public class SimpleFunctions {
         Matcher PS_match = PS_pattern.matcher(msg);
         msg = PS_match.replaceAll("<font color='#bb0000'>$0</font>");
 
-        msg = msg.replaceAll(ii_link_pattern, "<font color='blue'>$0</font>");
+        Matcher ii_link_match = ii_link_pattern.matcher(msg);
+        msg = ii_link_match.replaceAll("<a href=\"$0\">$0</a>");
+
+        Matcher url_match = url_pattern.matcher(msg);
+        msg = url_match.replaceAll("<a href=\"$0\">$0</a>");
 
         String[] strings = msg.split("\n");
         ArrayList<String> result = new ArrayList<>();

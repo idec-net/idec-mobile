@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -92,6 +93,9 @@ public class MessageView_full extends Fragment {
         full_date.setText(SimpleFunctions.timestamp2date(message.time, true));
         full_echo.setText(message.echo);
 
+        full_msg.setClickable(true);
+        full_msg.setMovementMethod(LinkMovementMethod.getInstance());
+
         Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
         fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(24).color(Color.GRAY), null, null);
         fullAnswerBtn.setCompoundDrawablePadding(30);
@@ -116,7 +120,6 @@ public class MessageView_full extends Fragment {
         }
 
         super.onCreateOptionsMenu(menu, inflater);
-
     }
 
     @Override
