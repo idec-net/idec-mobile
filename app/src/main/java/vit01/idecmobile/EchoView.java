@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -42,12 +43,12 @@ import vit01.idecmobile.Core.SqliteTransport;
 
 public class EchoView extends AppCompatActivity {
     String echoarea;
-    ArrayList<String> msglist = null;
+    ArrayList<String> msglist;
     int countMessages;
     AbstractTransport transport;
 
     RecyclerView recyclerView;
-    RecyclerView.Adapter mAdapter;
+    RecyclerView.Adapter mAdapter = null;
     RecyclerView.LayoutManager mLayoutManager;
 
     @Override
@@ -88,7 +89,7 @@ public class EchoView extends AppCompatActivity {
         loadContent(false);
     }
 
-    void loadContent(boolean unread_only) {
+    boolean loadContent(boolean unread_only) {
         if (echoarea.equals("_favorites")) {
             getSupportActionBar().setTitle("Избранные");
             msglist = (unread_only) ? transport.getUnreadFavorites() : transport.getFavorites();
@@ -114,20 +115,29 @@ public class EchoView extends AppCompatActivity {
         }
 
         if (countMessages == 0) {
-            TextView this_is_empty = new TextView(this);
-            this_is_empty.setText("Здесь пусто!");
-            this_is_empty.setTextSize(20);
-            this_is_empty.setPadding(10, 10, 10, 10);
-            RelativeLayout currentLayout = (RelativeLayout)
-                    findViewById(R.id.msglist_view_layout);
+            if (mAdapter == null) {
+                // если мы только зашли в эху
+                TextView this_is_empty = new TextView(this);
+                this_is_empty.setText("Здесь пусто!");
+                this_is_empty.setTextSize(20);
+                this_is_empty.setPadding(10, 10, 10, 10);
+                RelativeLayout currentLayout = (RelativeLayout)
+                        findViewById(R.id.msglist_view_layout);
 
-            currentLayout.addView(this_is_empty, 0);
+                currentLayout.addView(this_is_empty, 0);
+            } else {
+                Toast.makeText(EchoView.this, "Непрочитанных сообщений нет!", Toast.LENGTH_SHORT).show();
+            }
+            // возвращение false приведёт к невозможности сменить чекбокс на противоположный
+            return false;
         } else {
             Collections.reverse(msglist);
 
             mAdapter = new MyAdapter(this, recyclerView, msglist, transport);
             recyclerView.setAdapter(mAdapter);
         }
+
+        return true;
     }
 
     @Override
@@ -148,9 +158,10 @@ public class EchoView extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         boolean display_unread_only = !item.isChecked();
-                        item.setChecked(display_unread_only);
 
-                        loadContent(display_unread_only);
+                        if (loadContent(display_unread_only)) {
+                            item.setChecked(display_unread_only);
+                        }
                         return false;
                     }
                 }

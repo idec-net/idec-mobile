@@ -8,5 +8,5 @@
         android:id="@+id/action_display_unread_only"
         android:checkable="true"
         android:checked="false"
-        android:title="Отображать только непрочитанные" />
+        android:title="Вид: только непрочитанные" />
 </menu>
