@@ -18,4 +18,6 @@
     <string name="help_text">
         Это очень большой текст. И очень важный для клиента. Я пока что не знаю, что сюда запихать.
     </string>
+    <string name="title_activity_additional">AdditionalActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

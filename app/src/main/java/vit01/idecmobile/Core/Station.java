@@ -10,7 +10,8 @@ public class Station implements Serializable {
     public String
             nodename = "New Station",
             address = "https://ii-net.tk/ii/ii-point.php?q=/",
-            authstr = "";
+            authstr = "",
+            outbox_storage_id = null;
     public ArrayList<String> echoareas = new ArrayList<>();
     public boolean
             fetch_enabled = true,
@@ -18,7 +19,7 @@ public class Station implements Serializable {
             advanced_ue = true,
             pervasive_ue = false;
     public int
-            ue_limit = 5,
+            ue_limit = 25,
             cut_remote_index = 0;
 
     public Station() {
@@ -26,5 +27,6 @@ public class Station implements Serializable {
                 "habra.16", "test.15", "develop.16", "linux.14"};
 
         Collections.addAll(echoareas, default_echoareas);
+        outbox_storage_id = SimpleFunctions.getRandomUUID();
     }
 }

@@ -79,7 +79,16 @@
                 <data android:scheme="ii" />
             </intent-filter>
         </activity>
-        <activity android:name=".DraftEditor"></activity>
+        <activity android:name=".DraftEditor" />
+        <activity
+            android:name=".AdditionalActivity"
+            android:label="@string/title_activity_additional"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.Light">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="vit01.idecmobile.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

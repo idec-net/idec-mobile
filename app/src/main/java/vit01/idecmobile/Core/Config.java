@@ -18,7 +18,7 @@ public class Config {
             values = (GlobalConfig) ois.readObject();
             ois.close();
             is.close();
-            configUpdate();
+            configUpdate(context);
         } catch (Exception e) {
             SimpleFunctions.debug("Конфиг не найден/ошибка, создаём по умолчанию");
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class Config {
         }
     }
 
-    public static void configUpdate() {
+    public static void configUpdate(Context context) {
         if (Config.values.carbon_to == null) {
             Config.values.carbon_to = "All";
         }
@@ -48,5 +48,16 @@ public class Config {
         if (Config.values.carbon_limit <= 0) {
             Config.values.carbon_limit = 50;
         }
+
+        boolean needForWrite = false;
+
+        for (Station station : Config.values.stations) {
+            if (station.outbox_storage_id == null) {
+                station.outbox_storage_id = SimpleFunctions.getRandomUUID();
+                needForWrite = true;
+            }
+        }
+
+        if (needForWrite) writeConfig(context);
     }
 }

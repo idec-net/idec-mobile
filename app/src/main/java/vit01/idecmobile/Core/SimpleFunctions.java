@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -170,6 +171,10 @@ public class SimpleFunctions {
         text = text.replaceAll("\n(\n)+", "\n");
 
         return text.trim();
+    }
+
+    public static String getRandomUUID() {
+        return UUID.randomUUID().toString();
     }
 
     public static void debug(String message) {
