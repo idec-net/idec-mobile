@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:text="03.09.16, 17:18"
         android:textSize="@dimen/material_text_caption"
+        android:layout_marginLeft="16dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true" />
 
@@ -60,8 +61,9 @@
         android:layout_below="@+id/msg_date"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="16dp" />
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp" />
 
 </RelativeLayout>
