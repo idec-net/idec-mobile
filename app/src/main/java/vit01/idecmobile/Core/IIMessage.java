@@ -29,6 +29,7 @@ public class IIMessage {
     }
 
     public IIMessage(String rawmsg) {
+        this();
         String[] elems = rawmsg.split("\n");
 
         if (elems.length >= 8) {

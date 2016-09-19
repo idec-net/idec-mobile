@@ -47,14 +47,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
-        <activity android:name=".ListEditActivity"
+        <activity
+            android:name=".ListEditActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
-        <activity
-            android:name=".MessageSlideActivity">
+        <activity android:name=".MessageSlideActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.EchoView" />
@@ -79,6 +79,7 @@
                 <data android:scheme="ii" />
             </intent-filter>
         </activity>
+        <activity android:name=".DraftEditor"></activity>
     </application>
 
 </manifest>
