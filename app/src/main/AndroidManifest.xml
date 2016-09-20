@@ -89,6 +89,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
+        <activity android:name=".DraftsView"></activity>
     </application>
 
 </manifest>

@@ -3,6 +3,8 @@ package vit01.idecmobile.Core;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +15,14 @@ public class DraftStorage {
     static FilenameFilter draftsFilter;
     static FilenameFilter sentFilter;
 
-    public DraftStorage() {
+    DraftStorage() {
+    }
+
+    public static void initStorage() {
+        if (isExternalStorageWritable()) {
+            SimpleFunctions.debug("External storage is not writable!");
+        }
+
         if (!rootStorage.mkdirs()) {
             SimpleFunctions.debug("Root directory for drafts not created!");
         }
@@ -51,7 +60,10 @@ public class DraftStorage {
 
         File[] contents = directory.listFiles(filter);
         ArrayList<File> result = new ArrayList<>();
-        Collections.addAll(result, contents);
+
+        if (contents != null) {
+            Collections.addAll(result, contents);
+        }
 
         return result;
     }
@@ -66,5 +78,36 @@ public class DraftStorage {
         }
 
         return result;
+    }
+
+    public static DraftMessage readFromFile(File file) {
+        String contents;
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            contents = SimpleFunctions.readIt(fis);
+            fis.close();
+        } catch (Exception e) {
+            SimpleFunctions.debug(e.toString());
+            e.printStackTrace();
+            return null;
+        }
+
+        return new DraftMessage(contents);
+    }
+
+    public static boolean writeToFile(File file, DraftMessage message) {
+        String contents = message.raw();
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(contents.getBytes("UTF-8"));
+            fos.close();
+        } catch (Exception e) {
+            SimpleFunctions.debug(e.toString());
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }

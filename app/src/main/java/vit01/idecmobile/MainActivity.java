@@ -151,6 +151,14 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                             } else if (identifier == 7) {
                                 startActivity(new Intent(MainActivity.this, AdditionalActivity.class));
+                            } else if (identifier == 3) {
+                                Intent intent = new Intent(MainActivity.this, DraftsView.class);
+                                intent.putExtra("unsent", false);
+                                startActivity(intent);
+                            } else if (identifier == 4) {
+                                Intent intent = new Intent(MainActivity.this, DraftsView.class);
+                                intent.putExtra("unsent", true);
+                                startActivity(intent);
                             }
                         }
                         return false;
