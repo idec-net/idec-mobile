@@ -45,6 +45,7 @@ public class EchoView extends AppCompatActivity {
     ArrayList<String> msglist;
     int countMessages;
     AbstractTransport transport;
+    int nodeIndex;
 
     RecyclerView recyclerView;
     RecyclerView.Adapter mAdapter = null;
@@ -62,9 +63,9 @@ public class EchoView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EchoView.this, DraftEditor.class);
-                intent.putExtra("task", "new");
+                intent.putExtra("task", "new_in_echo");
                 intent.putExtra("echoarea", echoarea);
-
+                intent.putExtra("nodeindex", nodeIndex);
                 startActivity(intent);
             }
         });
@@ -81,7 +82,7 @@ public class EchoView extends AppCompatActivity {
 
         Intent intent = getIntent();
         echoarea = intent.getStringExtra("echoarea");
-        int nodeIndex = intent.getIntExtra("nodeindex", -1);
+        nodeIndex = intent.getIntExtra("nodeindex", -1);
 
         if (nodeIndex < 0) {
             fab.setVisibility(View.INVISIBLE);

@@ -64,6 +64,8 @@ public class DebugActivity extends AppCompatActivity {
 
         if (task.equals("fetch"))
             new Thread(new doFetch()).start();
+        else if (task.equals("send"))
+            new Thread(new sendMessages()).start();
     }
 
     @Override
@@ -99,6 +101,40 @@ public class DebugActivity extends AppCompatActivity {
                 }
 
                 takeDebugMessage();
+            }
+        }
+    }
+
+    class sendMessages implements Runnable {
+        @Override
+        public void run() {
+            SimpleFunctions.debugTaskFinished = false;
+            Context appContext = getApplicationContext();
+
+            try {
+                Thread.sleep(1000);
+                SimpleFunctions.debug("\nОТПРАВКА СООБЩЕНИЙ ПОКА НЕ РАБОТАЕТ!");
+                // Здесь пытаемся отправить сообщения
+                // TODO: Написать новый класс Core.Sender и сделать отправку
+            } catch (Exception e) {
+                e.printStackTrace();
+                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+            } finally {
+                SimpleFunctions.debugTaskFinished = true;
+                Intent temp = new Intent("DebugActivity");
+                temp.putExtra("task", "toast");
+                temp.putExtra("data", "Вроде бы, всё!");
+                sendBroadcast(temp);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleFunctions.debugMessages.clear();
+                Intent intent = new Intent("DebugActivity");
+                intent.putExtra("task", "stop");
+                sendBroadcast(intent);
             }
         }
     }
@@ -139,7 +175,6 @@ public class DebugActivity extends AppCompatActivity {
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
-                SimpleFunctions.debugMessages.clear();
                 Intent temp = new Intent("DebugActivity");
                 temp.putExtra("task", "toast");
                 temp.putExtra("data", "2 секунды, и окно закроется");
@@ -149,6 +184,8 @@ public class DebugActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                SimpleFunctions.debugMessages.clear();
                 Intent intent = new Intent("DebugActivity");
                 intent.putExtra("task", "stop");
                 sendBroadcast(intent);

@@ -1,11 +1,12 @@
 package vit01.idecmobile.Core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-public class IIMessage {
+public class IIMessage implements Serializable {
     public String id;
     public Hashtable<String, String> tags;
     public String echo;

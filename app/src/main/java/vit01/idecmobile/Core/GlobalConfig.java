@@ -8,7 +8,8 @@ public class GlobalConfig implements Serializable {
     public boolean
             defaultEditor = true,
             firstRun = true,
-            useProxy = false;
+            useProxy = false,
+            oldQuote = false; // упрощённое (старое) цитирование
     public int
             oneRequestLimit = 20,
             connectionTimeout = 20,

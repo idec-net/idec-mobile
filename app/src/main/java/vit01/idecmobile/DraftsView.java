@@ -3,11 +3,13 @@ package vit01.idecmobile;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,14 +24,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftMessage;
 import vit01.idecmobile.Core.DraftStorage;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.Core.Station;
 
 public class DraftsView extends AppCompatActivity {
     ArrayList<File> msglist;
     boolean unsent_only = true;
     int countMessages;
+    ArrayList<String> stations_outbox_id_list = new ArrayList<>();
 
     RecyclerView recyclerView;
     RecyclerView.Adapter mAdapter = null;
@@ -44,6 +49,10 @@ public class DraftsView extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         DraftStorage.initStorage();
+
+        for (Station station : Config.values.stations) {
+            stations_outbox_id_list.add(station.outbox_storage_id);
+        }
 
         recyclerView = (RecyclerView) findViewById(R.id.drafts_list_view);
         mLayoutManager = new LinearLayoutManager(this);
@@ -66,14 +75,13 @@ public class DraftsView extends AppCompatActivity {
             this_is_empty.setPadding(10, 10, 10, 10);
             RelativeLayout currentLayout = (RelativeLayout)
                     findViewById(R.id.draftslist_view_layout);
-            // TODO: fix layout
 
             currentLayout.addView(this_is_empty, 0);
             return false;
         } else {
             Collections.reverse(msglist);
 
-            mAdapter = new MyAdapter(this, recyclerView, msglist);
+            mAdapter = new MyAdapter(this, recyclerView, msglist, stations_outbox_id_list);
             recyclerView.setAdapter(mAdapter);
         }
 
@@ -135,13 +143,17 @@ public class DraftsView extends AppCompatActivity {
         boolean loading;
         private ArrayList<File> msglist;
         private ArrayList<File> visible_msglist;
+        private ArrayList<String> outbox_storage_list;
         private Handler handler;
 
         public MyAdapter(Activity activity,
                          RecyclerView recyclerView,
-                         ArrayList<File> files) {
+                         ArrayList<File> files,
+                         ArrayList<String> outbox_id_list
+        ) {
             msglist = files;
             callingActivity = activity;
+            outbox_storage_list = outbox_id_list;
 
             total_count = msglist.size();
 
@@ -198,7 +210,9 @@ public class DraftsView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(callingActivity, DraftEditor.class);
+                    intent.putExtra("task", "edit_existing");
                     intent.putExtra("file", msglist.get(holder.position));
+                    intent.putExtra("nodeindex", holder.draft_storage_index);
                     callingActivity.startActivity(intent);
                 }
             });
@@ -209,8 +223,17 @@ public class DraftsView extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.position = position;
-            DraftMessage message = DraftStorage.readFromFile(msglist.get(position));
+            File file = msglist.get(position);
+            DraftMessage message = DraftStorage.readFromFile(file);
             if (message == null) message = new DraftMessage();
+
+            String storage_id = file.getParentFile().getName();
+            if (outbox_storage_list.contains(storage_id)) {
+                holder.draft_storage_index = outbox_storage_list.indexOf(storage_id);
+            } else {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(callingActivity);
+                holder.draft_storage_index = sharedPref.getInt("nodeindex_current", 0);
+            }
 
             holder.draft_subj.setText(message.subj);
             holder.draft_to.setText("to " + message.to);
@@ -224,7 +247,7 @@ public class DraftsView extends AppCompatActivity {
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public TextView draft_subj, draft_to, draft_text;
-            public int position;
+            public int position, draft_storage_index;
 
             public ViewHolder(View myLayout) {
                 super(myLayout);

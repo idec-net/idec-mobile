@@ -12,7 +12,7 @@ import android.widget.TextView;
 import vit01.idecmobile.Core.Config;
 
 public class CommonSettings extends AppCompatActivity {
-    CheckBox defaultEditor, firstrun, useProxy;
+    CheckBox defaultEditor, firstrun, useProxy, oldQuote;
     EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit;
 
     @Override
@@ -31,6 +31,7 @@ public class CommonSettings extends AppCompatActivity {
         defaultEditor = (CheckBox) findViewById(R.id.checkBox);
         firstrun = (CheckBox) findViewById(R.id.checkBox2);
         useProxy = (CheckBox) findViewById(R.id.checkBox3);
+        oldQuote = (CheckBox) findViewById(R.id.old_quote);
 
         messages_per_fetch = (EditText) findViewById(R.id.editText);
         connTimeout = (EditText) findViewById(R.id.editText2);
@@ -42,6 +43,7 @@ public class CommonSettings extends AppCompatActivity {
         defaultEditor.setChecked(Config.values.defaultEditor);
         firstrun.setChecked(Config.values.firstRun);
         useProxy.setChecked(Config.values.useProxy);
+        oldQuote.setChecked(Config.values.oldQuote);
 
         messages_per_fetch.setText(
                 String.valueOf(Config.values.oneRequestLimit), TextView.BufferType.EDITABLE);
@@ -56,6 +58,7 @@ public class CommonSettings extends AppCompatActivity {
         Config.values.defaultEditor = defaultEditor.isChecked();
         Config.values.firstRun = firstrun.isChecked();
         Config.values.useProxy = useProxy.isChecked();
+        Config.values.oldQuote = oldQuote.isChecked();
 
         Config.values.oneRequestLimit = Integer.parseInt(messages_per_fetch.getText().toString());
         Config.values.connectionTimeout = Integer.parseInt(connTimeout.getText().toString());

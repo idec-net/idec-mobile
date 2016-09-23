@@ -1,6 +1,8 @@
 package vit01.idecmobile.Core;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -175,6 +177,36 @@ public class SimpleFunctions {
 
     public static String getRandomUUID() {
         return UUID.randomUUID().toString();
+    }
+
+    public static String subjAnswer(String subj) {
+        if (!subj.startsWith("Re:")) {
+            return "Re: " + subj;
+        } else return subj;
+    }
+
+    public static String quoteAnswer(String message, String user, Boolean old) {
+        // TODO: Сделать эту фунцию, она очень нужна!
+        return message;
+    }
+
+    public static int getPreferredOutboxId(Context context, String echoarea) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        int nodeindex = sharedPref.getInt("nodeindex_current", 0);
+
+        if (Config.values.stations.get(nodeindex).echoareas.contains(echoarea)) {
+            return nodeindex;
+        } else {
+            int node = 0;
+            for (Station station : Config.values.stations) {
+                if (station.echoareas.contains(echoarea)) {
+                    return node;
+                }
+                node += 1;
+            }
+
+            return nodeindex;
+        }
     }
 
     public static void debug(String message) {

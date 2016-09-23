@@ -36,6 +36,13 @@
             android:paddingBottom="8dp"
             android:paddingTop="8dp">
 
+            <Spinner
+                android:id="@+id/compose_stations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View style="@style/Divider" />
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

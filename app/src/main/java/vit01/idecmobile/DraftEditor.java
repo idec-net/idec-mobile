@@ -1,18 +1,40 @@
 package vit01.idecmobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.DraftMessage;
+import vit01.idecmobile.Core.DraftStorage;
+import vit01.idecmobile.Core.IIMessage;
+import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.Core.Station;
+
 public class DraftEditor extends AppCompatActivity {
+    Spinner compose_stations;
+    TextInputEditText compose_echoarea, compose_to, compose_subj, compose_repto, compose_msg;
+    DraftMessage message;
+    ArrayList<String> station_names = new ArrayList<>();
+    ArrayAdapter<String> spinnerAdapter;
+    int nodeindex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +46,40 @@ public class DraftEditor extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Написать");
+
+        getControls();
+        Intent incoming = getIntent();
+
+        nodeindex = incoming.getIntExtra("nodeindex", 0);
+        String task = incoming.getStringExtra("task");
+
+        if (task.equals("new_in_echo")) {
+            message = new DraftMessage();
+            message.echo = incoming.getStringExtra("echoarea");
+            saveMessage();
+        } else if (task.equals("new_answer")) {
+            message = new DraftMessage();
+            IIMessage to_which = (IIMessage) incoming.getSerializableExtra("message");
+            message.echo = to_which.echo;
+            message.to = to_which.from;
+            message.subj = SimpleFunctions.subjAnswer(to_which.subj);
+            message.repto = to_which.id;
+
+            if (incoming.getBooleanExtra("quote", false)) {
+                message.msg = SimpleFunctions.quoteAnswer(to_which.msg, message.to, Config.values.oldQuote);
+            }
+            saveMessage();
+        } else if (task.equals("edit_existing")) {
+            File file = (File) incoming.getSerializableExtra("file");
+            message = DraftStorage.readFromFile(file);
+        }
+
+        if (!Config.values.defaultEditor) {
+            // TODO: предусмотреть внешний редактор сообщений!
+            finish();
+        }
+
+        installValues();
     }
 
     @Override
@@ -46,6 +102,8 @@ public class DraftEditor extends AppCompatActivity {
 
         if (id == R.id.action_compose_save) {
             Toast.makeText(DraftEditor.this, "Пробуем сохранить сообщение", Toast.LENGTH_SHORT).show();
+            fetchValues();
+            saveMessage();
         } else if (id == R.id.action_compose_delete) {
             Toast.makeText(DraftEditor.this, "Удаляем черновик", Toast.LENGTH_SHORT).show();
             // TODO: сделать надо!
@@ -57,7 +115,6 @@ public class DraftEditor extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // TODO: здесь сохраняем всё и/или спрашиваем
         super.onBackPressed();
     }
 
@@ -65,5 +122,65 @@ public class DraftEditor extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void getControls() {
+        compose_stations = (Spinner) findViewById(R.id.compose_stations);
+        compose_echoarea = (TextInputEditText) findViewById(R.id.compose_echoarea);
+        compose_to = (TextInputEditText) findViewById(R.id.compose_to);
+        compose_subj = (TextInputEditText) findViewById(R.id.compose_subj);
+        compose_repto = (TextInputEditText) findViewById(R.id.compose_repto);
+        compose_msg = (TextInputEditText) findViewById(R.id.compose_msg);
+
+        compose_stations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (nodeindex != position) {
+                    // TODO: перемещать сообщение со станции на станцию, мигом!
+                    nodeindex = position;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void installValues() {
+        for (Station station : Config.values.stations) {
+            station_names.add(station.nodename);
+        }
+        spinnerAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, station_names);
+        compose_stations.setAdapter(spinnerAdapter);
+        compose_stations.setSelection(nodeindex);
+
+        compose_echoarea.setText(message.echo);
+        compose_to.setText(message.to);
+        compose_subj.setText(message.subj);
+        compose_repto.setText((message.repto != null) ? message.repto : "");
+        compose_msg.setText(message.msg);
+    }
+
+    public void fetchValues() {
+        message.echo = compose_echoarea.getText().toString();
+        message.to = compose_to.getText().toString();
+        message.subj = compose_subj.getText().toString();
+
+        String repto = compose_repto.getText().toString();
+        message.repto = (repto.equals("") ? null : repto);
+        message.msg = compose_msg.getText().toString();
+    }
+
+    public void saveMessage() {
+        // TODO: сохранение - важное дело
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        fetchValues();
+        saveMessage();
     }
 }

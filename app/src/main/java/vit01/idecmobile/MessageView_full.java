@@ -1,6 +1,7 @@
 package vit01.idecmobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class MessageView_full extends Fragment {
     private ArrayList<String> msglist;
     private int position;
     private String msgid;
+    private IIMessage message;
 
     private boolean messageStarred = false;
 
@@ -70,7 +72,7 @@ public class MessageView_full extends Fragment {
         View rootLayout = inflater.inflate(R.layout.message_view, null, false);
 
         msgid = msglist.get(position);
-        IIMessage message = transport.getMessage(msgid);
+        message = transport.getMessage(msgid);
         if (message == null) message = new IIMessage();
 
         TextView full_subj, full_msg, full_from_to, full_date, full_msgid, full_repto, full_echo;
@@ -100,11 +102,39 @@ public class MessageView_full extends Fragment {
         fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(24).color(Color.GRAY), null, null);
         fullAnswerBtn.setCompoundDrawablePadding(30);
         fullAnswerBtn.setTextColor(Color.GRAY);
+
+        fullAnswerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DraftEditor.class);
+                intent.putExtra("task", "new_answer");
+                intent.putExtra("nodeindex",
+                        SimpleFunctions.getPreferredOutboxId(getActivity(), message.echo));
+                intent.putExtra("message", message);
+                intent.putExtra("quote", false);
+
+                startActivity(intent);
+            }
+        });
+
         Button fullQuoteAnswerBtn = (Button) rootLayout.findViewById(R.id.full_quote_answer_button);
         fullQuoteAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_format_quote).sizeDp(24).color(Color.GRAY), null, null);
         fullQuoteAnswerBtn.setCompoundDrawablePadding(30);
         fullQuoteAnswerBtn.setTextColor(Color.GRAY);
 
+        fullQuoteAnswerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DraftEditor.class);
+                intent.putExtra("task", "new_answer");
+                intent.putExtra("nodeindex",
+                        SimpleFunctions.getPreferredOutboxId(getActivity(), message.echo));
+                intent.putExtra("message", message);
+                intent.putExtra("quote", true);
+
+                startActivity(intent);
+            }
+        });
         return rootLayout;
     }
 

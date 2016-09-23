@@ -283,6 +283,10 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.action_fetch).setIcon(
                 new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_get_app)
                         .actionBar().color(Color.WHITE));
+
+        menu.findItem(R.id.action_send).setIcon(
+                new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_cloud_upload)
+                        .actionBar().color(Color.WHITE));
         return true;
     }
 
@@ -300,6 +304,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_fetch) {
             Intent intent = new Intent(this, DebugActivity.class);
             intent.putExtra("task", "fetch");
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_send) {
+            Intent intent = new Intent(this, DebugActivity.class);
+            intent.putExtra("task", "send");
             startActivity(intent);
             return true;
         } else if (id == R.id.action_clear_cache) {
