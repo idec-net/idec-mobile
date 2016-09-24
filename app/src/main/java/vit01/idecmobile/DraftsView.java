@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class DraftsView extends AppCompatActivity {
 
     boolean loadContent(boolean unsent) {
         msglist = DraftStorage.getAllEntries(unsent);
+        countMessages = msglist.size();
 
         if (countMessages == 0) {
             TextView this_is_empty = new TextView(this);
@@ -85,6 +87,12 @@ public class DraftsView extends AppCompatActivity {
             recyclerView.setAdapter(mAdapter);
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
         return true;
     }
 
@@ -200,7 +208,7 @@ public class DraftsView extends AppCompatActivity {
         public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                        int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.message_list_element, parent, false);
+                    .inflate(R.layout.draft_list_element, parent, false);
 
             RelativeLayout l = (RelativeLayout) v.findViewById(R.id.draft_clickable_layout);
 
@@ -214,6 +222,15 @@ public class DraftsView extends AppCompatActivity {
                     intent.putExtra("file", msglist.get(holder.position));
                     intent.putExtra("nodeindex", holder.draft_storage_index);
                     callingActivity.startActivity(intent);
+                }
+            });
+
+            l.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    // TODO: удаление сообщений; может быть, свайпом
+                    Toast.makeText(callingActivity, "Надо бы здесь удаление сообщений сделать...", Toast.LENGTH_SHORT).show();
+                    return true;
                 }
             });
 

@@ -32,9 +32,11 @@ public class DraftEditor extends AppCompatActivity {
     Spinner compose_stations;
     TextInputEditText compose_echoarea, compose_to, compose_subj, compose_repto, compose_msg;
     DraftMessage message;
+    File fileToSave;
     ArrayList<String> station_names = new ArrayList<>();
     ArrayAdapter<String> spinnerAdapter;
     int nodeindex = 0;
+    String outbox_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +52,17 @@ public class DraftEditor extends AppCompatActivity {
         getControls();
         Intent incoming = getIntent();
 
+        DraftStorage.initStorage();
+
         nodeindex = incoming.getIntExtra("nodeindex", 0);
+        outbox_id = Config.values.stations.get(nodeindex).outbox_storage_id;
+
         String task = incoming.getStringExtra("task");
 
         if (task.equals("new_in_echo")) {
             message = new DraftMessage();
             message.echo = incoming.getStringExtra("echoarea");
-            saveMessage();
+            fileToSave = DraftStorage.newMessage(outbox_id, message);
         } else if (task.equals("new_answer")) {
             message = new DraftMessage();
             IIMessage to_which = (IIMessage) incoming.getSerializableExtra("message");
@@ -68,10 +74,16 @@ public class DraftEditor extends AppCompatActivity {
             if (incoming.getBooleanExtra("quote", false)) {
                 message.msg = SimpleFunctions.quoteAnswer(to_which.msg, message.to, Config.values.oldQuote);
             }
-            saveMessage();
+            fileToSave = DraftStorage.newMessage(outbox_id, message);
         } else if (task.equals("edit_existing")) {
-            File file = (File) incoming.getSerializableExtra("file");
-            message = DraftStorage.readFromFile(file);
+            fileToSave = (File) incoming.getSerializableExtra("file");
+            message = DraftStorage.readFromFile(fileToSave);
+        }
+
+        if (fileToSave == null) {
+            Toast.makeText(DraftEditor.this, "Не удалось создать/открыть файл", Toast.LENGTH_SHORT).show();
+            SimpleFunctions.debug("Проблема с созданием/открытием файла!");
+            finish();
         }
 
         if (!Config.values.defaultEditor) {
@@ -174,7 +186,11 @@ public class DraftEditor extends AppCompatActivity {
     }
 
     public void saveMessage() {
-        // TODO: сохранение - важное дело
+        boolean result = DraftStorage.writeToFile(fileToSave, message);
+        if (!result) {
+            SimpleFunctions.debug("Проблемсы!");
+            Toast.makeText(DraftEditor.this, "Файл как-то не сохранён. Сожалею :(", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

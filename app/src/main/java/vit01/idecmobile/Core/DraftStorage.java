@@ -6,12 +6,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class DraftStorage {
     static String dataDirectory = "idecMobile";
-    static File rootStorage = Environment.getExternalStoragePublicDirectory(dataDirectory);
+    static File rootStorage;
     static FilenameFilter draftsFilter;
     static FilenameFilter sentFilter;
 
@@ -19,11 +20,13 @@ public class DraftStorage {
     }
 
     public static void initStorage() {
-        if (isExternalStorageWritable()) {
+        if (!isExternalStorageWritable()) {
             SimpleFunctions.debug("External storage is not writable!");
         }
 
-        if (!rootStorage.mkdirs()) {
+        rootStorage = new File(Environment.getExternalStorageDirectory(), dataDirectory);
+
+        if (!rootStorage.exists() && !rootStorage.mkdirs()) {
             SimpleFunctions.debug("Root directory for drafts not created!");
         }
 
@@ -44,8 +47,9 @@ public class DraftStorage {
 
     public static File getStationStorageDir(String outbox_id) {
         File file = new File(rootStorage, outbox_id);
-        if (!file.mkdirs()) {
+        if (!file.exists() && !file.mkdirs()) {
             SimpleFunctions.debug("Directory not created");
+            return null;
         }
         return file;
     }
@@ -73,6 +77,7 @@ public class DraftStorage {
 
         for (Station station : Config.values.stations) {
             File stationDir = getStationStorageDir(station.outbox_storage_id);
+            if (stationDir == null) continue;
             ArrayList<File> current = getFilesInside(stationDir, unsent);
             result.addAll(current);
         }
@@ -109,5 +114,52 @@ public class DraftStorage {
         }
 
         return true;
+    }
+
+    public static int getAndIncrementNumber(String outbox_id) {
+        File directory = getStationStorageDir(outbox_id);
+        if (directory == null) return -1;
+        FilenameFilter filter = draftsFilter;
+
+        String[] inside = directory.list(filter);
+        ArrayList<String> contents = new ArrayList<>();
+
+        if (inside != null) {
+            Collections.addAll(contents, inside);
+        }
+
+        int num = contents.size();
+
+        String toss_inside = String.valueOf(num) + ".toss";
+        String out_inside = String.valueOf(num) + ".out";
+
+        while (contents.contains(toss_inside) || contents.contains(out_inside)) {
+            num++;
+            toss_inside = String.valueOf(num) + ".toss";
+            out_inside = String.valueOf(num) + ".out";
+        }
+        return num;
+    }
+
+    public static File newMessage(String outbox_id, DraftMessage message) {
+        File directory = getStationStorageDir(outbox_id);
+        if (directory == null) return null;
+
+        String path = directory.getAbsolutePath();
+
+        int new_filename = getAndIncrementNumber(outbox_id);
+        path += File.separator + String.valueOf(new_filename) + ".toss";
+
+        File file = new File(path);
+        try {
+            Boolean r = file.createNewFile();
+            if (!r) return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            SimpleFunctions.debug(e.toString());
+            return null;
+        }
+        if (!writeToFile(file, message)) return null;
+        return file;
     }
 }
