@@ -1,10 +1,12 @@
 package vit01.idecmobile;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
@@ -25,9 +27,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.DraftStorage;
 import vit01.idecmobile.Core.Station;
 
 public class StationsActivity extends AppCompatActivity {
@@ -78,6 +82,7 @@ public class StationsActivity extends AppCompatActivity {
         });
 
         spinner.setSelection(currentIndex);
+        DraftStorage.initStorage();
     }
 
     @Override
@@ -112,10 +117,51 @@ public class StationsActivity extends AppCompatActivity {
                 Toast.makeText(StationsActivity.this, "Это последняя станция!", Toast.LENGTH_SHORT).show();
             } else {
                 currentIndex = spinner.getSelectedItemPosition();
-                Config.values.stations.remove(currentIndex);
-                currentIndex = 0;
-                updateSpinner();
-                spinner.setSelection(currentIndex);
+
+                final File draftsDir = DraftStorage.getStationStorageDir(Config.values.stations.get(currentIndex).outbox_storage_id);
+                final ArrayList<File> contents = DraftStorage.getFilesInside(draftsDir, true);
+                contents.addAll(DraftStorage.getFilesInside(draftsDir, false));
+
+                if (contents.size() > 0) {
+                    new AlertDialog.Builder(this)
+                            .setTitle("Удалить станцию")
+                            .setMessage("На этой станции остались черновики/отправленные сообщения. Точно удалить?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    for (File file : contents) {
+                                        boolean result = file.delete();
+                                    }
+
+                                    if (draftsDir != null) {
+                                        boolean r = draftsDir.delete();
+                                        if (!r)
+                                            Toast.makeText(StationsActivity.this, "Чё-то не заработало :(", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    Config.values.stations.remove(currentIndex);
+                                    currentIndex = 0;
+                                    updateSpinner();
+                                    spinner.setSelection(currentIndex);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(StationsActivity.this, "Оки-доки-локи!", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .show();
+                } else {
+                    if (draftsDir != null) {
+                        boolean r = draftsDir.delete();
+                        if (!r)
+                            Toast.makeText(StationsActivity.this, "Пустой каталог для черновиков не удалился...", Toast.LENGTH_SHORT).show();
+                    }
+
+                    Config.values.stations.remove(currentIndex);
+                    currentIndex = 0;
+                    updateSpinner();
+                    spinner.setSelection(currentIndex);
+                }
             }
             return true;
         }

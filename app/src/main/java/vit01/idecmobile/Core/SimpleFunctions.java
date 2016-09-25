@@ -37,8 +37,8 @@ public class SimpleFunctions {
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
     public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(//|#)(.+$)", Pattern.MULTILINE);
     public static Pattern PS_pattern = Pattern.compile("^(PS|P.S|ЗЫ|З.Ы)(.+$)", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
-    public static Pattern ii_link_pattern = Pattern.compile("ii:\\/\\/(\\w[\\w.]+\\w+)");
-    public static Pattern url_pattern = Pattern.compile("(https?|ftp|file):\\/\\/?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]",
+    public static Pattern ii_link_pattern = Pattern.compile("ii://(\\w[\\w.]+\\w+)");
+    public static Pattern url_pattern = Pattern.compile("(https?|ftp|file)://?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     public static String join(String[] array, String delimiter) {
@@ -186,7 +186,6 @@ public class SimpleFunctions {
     }
 
     public static String quoteAnswer(String message, String user, Boolean old) {
-        // TODO: Сделать эту фунцию, она очень нужна!
         String[] pieces;
         if (old) {
             pieces = message.split("\n");
