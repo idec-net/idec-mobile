@@ -129,7 +129,7 @@ public class EchoView extends AppCompatActivity {
 
                 currentLayout.addView(this_is_empty, 0);
             } else {
-                Toast.makeText(EchoView.this, "Непрочитанных сообщений нет!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EchoView.this, "Таких сообщений нет!", Toast.LENGTH_SHORT).show();
             }
             // возвращение false приведёт к невозможности сменить чекбокс на противоположный
             return false;

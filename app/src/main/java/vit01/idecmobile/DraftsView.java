@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class DraftsView extends AppCompatActivity {
     ArrayList<String> stations_outbox_id_list = new ArrayList<>();
 
     RecyclerView recyclerView;
-    RecyclerView.Adapter mAdapter = null;
+    MyAdapter mAdapter = null;
     RecyclerView.LayoutManager mLayoutManager;
 
     @Override
@@ -70,7 +71,7 @@ public class DraftsView extends AppCompatActivity {
         msglist = DraftStorage.getAllEntries(unsent);
         countMessages = msglist.size();
 
-        if (countMessages == 0) {
+        if (countMessages == 0 && mAdapter == null) {
             TextView this_is_empty = new TextView(this);
             this_is_empty.setText("Здесь пусто!");
             this_is_empty.setTextSize(20);
@@ -82,6 +83,7 @@ public class DraftsView extends AppCompatActivity {
             return false;
         } else {
             Collections.reverse(msglist);
+            mAdapter = null;
 
             mAdapter = new MyAdapter(this, recyclerView, msglist, stations_outbox_id_list);
             recyclerView.setAdapter(mAdapter);
@@ -99,9 +101,7 @@ public class DraftsView extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
-        }
+        loadContent(unsent_only);
     }
 
     /* @Override
@@ -171,6 +171,10 @@ public class DraftsView extends AppCompatActivity {
                 visible_msglist = new ArrayList<>(msglist.subList(0, visibleItems));
             }
 
+            ItemTouchHelper.Callback touchCallback = new ItemTouchHelperCallback(this);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
+            touchHelper.attachToRecyclerView(recyclerView);
+
             handler = new Handler();
 
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -225,15 +229,6 @@ public class DraftsView extends AppCompatActivity {
                 }
             });
 
-            l.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    // TODO: удаление сообщений; может быть, свайпом
-                    Toast.makeText(callingActivity, "Надо бы здесь удаление сообщений сделать...", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            });
-
             return holder;
         }
 
@@ -241,6 +236,7 @@ public class DraftsView extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.position = position;
             File file = msglist.get(position);
+            if (file == null) onItemDismiss(position);
             DraftMessage message = DraftStorage.readFromFile(file);
             if (message == null) message = new DraftMessage();
 
@@ -255,6 +251,18 @@ public class DraftsView extends AppCompatActivity {
             holder.draft_subj.setText(message.subj);
             holder.draft_to.setText("to " + message.to);
             holder.draft_text.setText(SimpleFunctions.messagePreview(message.msg));
+        }
+
+        public void onItemDismiss(int position) {
+            File file = visible_msglist.get(position);
+            boolean r = file.delete();
+            if (r) {
+                visible_msglist.remove(position);
+                total_count--;
+                notifyItemRemoved(position);
+            } else {
+                Toast.makeText(callingActivity, "Удалить не получилось :(", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -272,6 +280,34 @@ public class DraftsView extends AppCompatActivity {
                 draft_to = (TextView) myLayout.findViewById(R.id.draft_to);
                 draft_text = (TextView) myLayout.findViewById(R.id.draft_text);
             }
+        }
+    }
+
+    public static class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
+        public MyAdapter adapter;
+
+        public ItemTouchHelperCallback(MyAdapter mAdapter) {
+            adapter = mAdapter;
+        }
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            return makeMovementFlags(0, ItemTouchHelper.START | ItemTouchHelper.END);
+        }
+
+        @Override
+        public boolean isItemViewSwipeEnabled() {
+            return true;
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            adapter.onItemDismiss(viewHolder.getAdapterPosition());
         }
     }
 

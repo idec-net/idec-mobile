@@ -118,7 +118,10 @@ public class DraftEditor extends AppCompatActivity {
             saveMessage();
         } else if (id == R.id.action_compose_delete) {
             Toast.makeText(DraftEditor.this, "Удаляем черновик", Toast.LENGTH_SHORT).show();
-            // TODO: сделать надо!
+            boolean r = fileToSave.delete();
+            if (!r) {
+                Toast.makeText(DraftEditor.this, "Удалить не получилось!", Toast.LENGTH_SHORT).show();
+            } else fileToSave = null;
             finish();
         }
 
@@ -148,7 +151,17 @@ public class DraftEditor extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (nodeindex != position) {
-                    // TODO: перемещать сообщение со станции на станцию, мигом!
+                    String secondOutbox_id = Config.values.stations.get(position).outbox_storage_id;
+                    File newDirectory = DraftStorage.getStationStorageDir(secondOutbox_id);
+
+                    File newFile = new File(newDirectory, fileToSave.getName());
+                    boolean renamed = fileToSave.renameTo(newFile);
+
+                    if (!renamed) {
+                        Toast.makeText(DraftEditor.this, "Переместить на другую станцию не получилось!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    fileToSave = newFile;
                     nodeindex = position;
                 }
             }
@@ -196,7 +209,5 @@ public class DraftEditor extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        fetchValues();
-        saveMessage();
     }
 }

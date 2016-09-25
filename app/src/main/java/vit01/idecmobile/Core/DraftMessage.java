@@ -1,5 +1,9 @@
 package vit01.idecmobile.Core;
 
+import android.text.TextUtils;
+
+import java.util.Arrays;
+
 public class DraftMessage {
     public String echo, to, subj, repto, msg;
 
@@ -15,7 +19,12 @@ public class DraftMessage {
         this();
         String[] pieces = raw.split("\n");
 
-        if (pieces.length >= 5) {
+        if (pieces.length == 3) {
+            echo = pieces[0];
+            to = pieces[1];
+            subj = pieces[2];
+            msg = "";
+        } else if (pieces.length >= 5) {
             echo = pieces[0];
             to = pieces[1];
             subj = pieces[2];
@@ -25,13 +34,11 @@ public class DraftMessage {
                 repto = pieces[4].substring(7);
                 start = 5;
             } else {
-                start = 6;
+                start = 4;
             }
 
-            for (int i = start; i < pieces.length - 1; i++) {
-                msg += pieces[i] + "\n";
-            }
-            msg += pieces[pieces.length - 1];
+            String[] msgArr = Arrays.copyOfRange(pieces, start, pieces.length);
+            msg = TextUtils.join("\n", msgArr);
         }
     }
 
