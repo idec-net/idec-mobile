@@ -14,7 +14,9 @@ import android.widget.Toast;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.DraftStorage;
 import vit01.idecmobile.Core.Fetcher;
+import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
@@ -112,10 +114,9 @@ public class DebugActivity extends AppCompatActivity {
             Context appContext = getApplicationContext();
 
             try {
-                Thread.sleep(1000);
-                SimpleFunctions.debug("\nОТПРАВКА СООБЩЕНИЙ ПОКА НЕ РАБОТАЕТ!");
-                // Здесь пытаемся отправить сообщения
-                // TODO: Написать новый класс Core.Sender и сделать отправку
+                DraftStorage.initStorage();
+                int sent = Sender.sendMessages(getApplicationContext());
+                SimpleFunctions.debug("Отправлено сообщений: " + String.valueOf(sent));
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());

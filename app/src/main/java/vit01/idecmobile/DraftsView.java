@@ -87,6 +87,10 @@ public class DraftsView extends AppCompatActivity {
 
             mAdapter = new MyAdapter(this, recyclerView, msglist, stations_outbox_id_list);
             recyclerView.setAdapter(mAdapter);
+
+            ItemTouchHelper.Callback touchCallback = new ItemTouchHelperCallback(mAdapter);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
+            touchHelper.attachToRecyclerView(recyclerView);
         }
 
         return true;
@@ -171,10 +175,6 @@ public class DraftsView extends AppCompatActivity {
                 visible_msglist = new ArrayList<>(msglist.subList(0, visibleItems));
             }
 
-            ItemTouchHelper.Callback touchCallback = new ItemTouchHelperCallback(this);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
-            touchHelper.attachToRecyclerView(recyclerView);
-
             handler = new Handler();
 
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -236,7 +236,10 @@ public class DraftsView extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.position = position;
             File file = msglist.get(position);
-            if (file == null) onItemDismiss(position);
+            if (file == null) {
+                onItemDismiss(position);
+                return;
+            }
             DraftMessage message = DraftStorage.readFromFile(file);
             if (message == null) message = new DraftMessage();
 
@@ -258,8 +261,10 @@ public class DraftsView extends AppCompatActivity {
             boolean r = file.delete();
             if (r) {
                 visible_msglist.remove(position);
+                msglist.remove(position);
                 total_count--;
                 notifyItemRemoved(position);
+                Toast.makeText(callingActivity, "Мы здесь", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(callingActivity, "Удалить не получилось :(", Toast.LENGTH_SHORT).show();
             }
@@ -284,7 +289,7 @@ public class DraftsView extends AppCompatActivity {
     }
 
     public static class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
-        public MyAdapter adapter;
+        public final MyAdapter adapter;
 
         public ItemTouchHelperCallback(MyAdapter mAdapter) {
             adapter = mAdapter;
@@ -296,13 +301,13 @@ public class DraftsView extends AppCompatActivity {
         }
 
         @Override
-        public boolean isItemViewSwipeEnabled() {
-            return true;
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
         }
 
         @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
+        public boolean isItemViewSwipeEnabled() {
+            return true;
         }
 
         @Override
