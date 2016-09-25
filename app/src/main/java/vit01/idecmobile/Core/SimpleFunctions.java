@@ -33,7 +33,7 @@ public class SimpleFunctions {
     public static boolean debugTaskFinished = true;
     public static DateFormat simple_date = new SimpleDateFormat("dd.MM.yy\nHH:mm");
     public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), HH:mm");
-    public static Pattern quote_pattern = Pattern.compile("^\\s?[\\w_а-яА-Я\\-]{0,20}(>)+.+$",
+    public static Pattern quote_pattern = Pattern.compile("(^\\s?[\\w_а-яА-Я\\-]{0,20})((>)+)(.+$)",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
     public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(//|#)(.+$)", Pattern.MULTILINE);
     public static Pattern PS_pattern = Pattern.compile("^(PS|P.S|ЗЫ|З.Ы)(.+$)", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
@@ -187,7 +187,40 @@ public class SimpleFunctions {
 
     public static String quoteAnswer(String message, String user, Boolean old) {
         // TODO: Сделать эту фунцию, она очень нужна!
-        return message;
+        String[] pieces;
+        if (old) {
+            pieces = message.split("\n");
+            for (int i = 0; i < pieces.length; i++) {
+                if (pieces[i].trim().equals("")) continue;
+
+                if (pieces[i].contains(">")) pieces[i] = ">" + pieces[i];
+                else pieces[i] = "> " + pieces[i];
+            }
+        } else {
+            String quoted_user = "";
+            String[] user_pieces = user.split(" ");
+
+            if (user_pieces.length > 1) {
+                for (String piece : user_pieces) {
+                    quoted_user += piece.charAt(0);
+                }
+            } else {
+                quoted_user = user;
+            }
+
+            pieces = message.split("\n");
+            for (int i = 0; i < pieces.length; i++) {
+                if (pieces[i].trim().equals("")) continue;
+
+                Matcher quote_match = quote_pattern.matcher(pieces[i]);
+                if (quote_match.matches()) {
+                    pieces[i] = quote_match.replaceAll("$1>$2$4");
+                } else {
+                    pieces[i] = quoted_user + "> " + pieces[i];
+                }
+            }
+        }
+        return TextUtils.join("\n", pieces);
     }
 
     public static int getPreferredOutboxId(Context context, String echoarea) {
