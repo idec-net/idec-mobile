@@ -3,6 +3,7 @@ package vit01.idecmobile;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -87,7 +88,11 @@ public class DraftEditor extends AppCompatActivity {
         }
 
         if (!Config.values.defaultEditor) {
-            // TODO: предусмотреть внешний редактор сообщений!
+            Intent intent = new Intent();
+            intent.setAction(android.content.Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(fileToSave), "text/plain");
+
+            startActivity(intent);
             finish();
         }
 
