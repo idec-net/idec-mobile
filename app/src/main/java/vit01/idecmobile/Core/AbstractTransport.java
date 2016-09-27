@@ -32,6 +32,7 @@ public interface AbstractTransport {
     ArrayList<String> fullEchoList();
 
     int countMessages(String echo);
+    int countUnread(String echo);
 
     ArrayList<String> getFavorites();
 
@@ -40,6 +41,7 @@ public interface AbstractTransport {
 
     ArrayList<String> getUnreadEchoareas();
     ArrayList<String> getUnreadMessages(String echoarea);
+    ArrayList<String> getAllUnreadMessages();
 
     ArrayList<String> getUnreadFavorites();
 

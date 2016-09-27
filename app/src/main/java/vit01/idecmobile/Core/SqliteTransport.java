@@ -263,6 +263,22 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return result;
     }
 
+    public int countUnread(String echo) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(tableName, new String[]{"count(*)"},
+                "echoarea = ? and isunread=1", new String[]{echo}, null, null, null);
+
+        int result = 0;
+
+        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+            result = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return result;
+    }
+
     public void FuckDeleteEverything() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(tableName, null, null);
@@ -292,6 +308,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         selection_block += " and isunread=1";
 
         return msgidsBySelection(selection_block, null, null);
+    }
+
+    public ArrayList<String> getAllUnreadMessages() {
+        return msgidsBySelection("isunread=1", null, null);
     }
 
     public ArrayList<String> getUnreadEchoareas() {

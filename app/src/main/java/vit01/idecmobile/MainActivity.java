@@ -36,6 +36,9 @@ import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.util.ArrayList;
+
+import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
@@ -122,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(7).withName("Дополнительно").withIcon(GoogleMaterial.Icon.gmd_extension).withSelectable(false);
         PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(8).withName("Настройки").withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
         PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(9).withName("Помощь").withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
+        PrimaryDrawerItem unreadItem = new PrimaryDrawerItem().withIdentifier(10).withName("Непрочитанные").withIcon(GoogleMaterial.Icon.gmd_remove_red_eye).withSelectable(false);
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -132,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 .addDrawerItems(
                         echoItem,
                         carbonItem,
+                        unreadItem,
                         sentItem,
                         draftsItem,
                         starredItem,
@@ -177,6 +182,18 @@ public class MainActivity extends AppCompatActivity {
                                 Intent intent = new Intent(MainActivity.this, DraftsView.class);
                                 intent.putExtra("unsent", true);
                                 startActivity(intent);
+                            } else if (identifier == 10) {
+                                AbstractTransport transport = new SqliteTransport(MainActivity.this);
+                                ArrayList<String> unread = transport.getAllUnreadMessages();
+
+                                if (unread.size() == 0) {
+                                    Toast.makeText(MainActivity.this, "Непрочитанных сообщений нет!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Intent intent = new Intent(MainActivity.this, MessageSlideActivity.class);
+                                    intent.putExtra("msglist", unread);
+                                    intent.putExtra("position", 0);
+                                    startActivity(intent);
+                                }
                             }
                         }
                         return false;
