@@ -54,6 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Эхоконференция"
+                    android:inputType="none"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
@@ -102,6 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Ответ на"
+                    android:inputType="none"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
@@ -118,7 +120,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Сообщение"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textLongMessage|textMultiLine|textCapSentences" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </ScrollView>

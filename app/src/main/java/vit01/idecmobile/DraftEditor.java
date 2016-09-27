@@ -135,6 +135,8 @@ public class DraftEditor extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        fetchValues();
+        saveMessage();
         super.onBackPressed();
     }
 

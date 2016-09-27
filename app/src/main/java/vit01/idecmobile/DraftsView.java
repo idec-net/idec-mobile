@@ -260,9 +260,10 @@ public class DraftsView extends AppCompatActivity {
             File file = visible_msglist.get(position);
             boolean r = file.delete();
             if (r) {
-                visible_msglist.remove(position);
-                msglist.remove(position);
-                total_count--;
+                // TODO: Исправить
+                // visible_msglist.remove(position);
+                // msglist.remove(position);
+                // total_count--;
                 notifyItemRemoved(position);
                 Toast.makeText(callingActivity, "Мы здесь", Toast.LENGTH_SHORT).show();
             } else {

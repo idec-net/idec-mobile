@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -63,6 +64,18 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        final SwipeRefreshLayout swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_fetch);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Intent intent = new Intent(MainActivity.this, DebugActivity.class);
+                intent.putExtra("task", "fetch");
+                startActivity(intent);
+
+                swipeRefresh.setRefreshing(false);
+            }
+        });
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
