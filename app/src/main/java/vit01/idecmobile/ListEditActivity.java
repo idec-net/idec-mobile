@@ -152,8 +152,14 @@ public class ListEditActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    public void onBackPressed() {
         Config.writeConfig(this);
-        super.onStop();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,7 @@ import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftMessage;
 import vit01.idecmobile.Core.DraftStorage;
 import vit01.idecmobile.Core.IIMessage;
+import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 
@@ -97,6 +99,8 @@ public class DraftEditor extends AppCompatActivity {
         }
 
         installValues();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     @Override
@@ -106,8 +110,8 @@ public class DraftEditor extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
-        menu.findItem(R.id.action_compose_save).setIcon(new IconicsDrawable
-                (context, GoogleMaterial.Icon.gmd_save).actionBar().color(Color.WHITE));
+        menu.findItem(R.id.action_compose_send).setIcon(new IconicsDrawable
+                (context, GoogleMaterial.Icon.gmd_send).actionBar().color(Color.WHITE));
         menu.findItem(R.id.action_compose_delete).setIcon(new IconicsDrawable
                 (context, GoogleMaterial.Icon.gmd_delete).actionBar().color(Color.WHITE));
         return true;
@@ -117,10 +121,27 @@ public class DraftEditor extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_compose_save) {
-            Toast.makeText(DraftEditor.this, "Пробуем сохранить сообщение", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_compose_send) {
             fetchValues();
             saveMessage();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    boolean sent = Sender.sendOneMessage(DraftEditor.this,
+                            Config.values.stations.get(nodeindex), fileToSave);
+
+                    final String statusText = (sent) ? "Сообщение отправлено" : "Ошибка отправки!";
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), statusText, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }).start();
+
+            finish();
         } else if (id == R.id.action_compose_delete) {
             Toast.makeText(DraftEditor.this, "Удаляем черновик", Toast.LENGTH_SHORT).show();
             boolean r = fileToSave.delete();

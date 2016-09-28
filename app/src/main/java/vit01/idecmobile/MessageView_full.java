@@ -90,8 +90,11 @@ public class MessageView_full extends Fragment {
         full_msg.setText(Html.fromHtml(SimpleFunctions.reparseMessage(message.msg)));
         full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
         full_msgid.setText("msgid: " + msgid);
-        String repto_insert = (message.repto != null) ? message.repto : "-";
-        full_repto.setText("Ответ: " + repto_insert);
+
+        if (message.repto == null) {
+            full_repto.setVisibility(View.GONE);
+        } else full_repto.setText("Ответ: " + message.repto);
+
         full_date.setText(SimpleFunctions.timestamp2date(message.time, true));
         full_echo.setText(message.echo);
 

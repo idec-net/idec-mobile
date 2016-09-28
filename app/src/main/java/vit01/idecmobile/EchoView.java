@@ -248,7 +248,7 @@ public class EchoView extends AppCompatActivity {
                                 loading = false;
                             }
                         }
-                    }, 500);
+                    }, 10);
                 }
             });
 

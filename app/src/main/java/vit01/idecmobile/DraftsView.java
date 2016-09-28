@@ -203,7 +203,7 @@ public class DraftsView extends AppCompatActivity {
                                 loading = false;
                             }
                         }
-                    }, 500);
+                    }, 10);
                 }
             });
         }
