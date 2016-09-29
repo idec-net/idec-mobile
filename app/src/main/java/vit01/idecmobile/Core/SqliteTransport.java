@@ -377,7 +377,9 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         int value_to_insert = (unread) ? 1 : 0;
         String clause_part;
 
-        if (area.equals("_favorites")) {
+        if (area == null) {
+            clause_part = "1";
+        } else if (area.equals("_favorites")) {
             clause_part = "isfavorite=1";
         } else {
             clause_part = "echoarea='" + area + "'";

@@ -10,6 +10,9 @@
         android:id="@+id/action_edit_echoareas"
         android:title="Править список эх" />
     <item
+        android:id="@+id/action_mark_all_base_read"
+        android:title="Пометить почту прочитанной" />
+    <item
         android:id="@+id/action_fetch"
         android:title="Скачать сообщения"
         app:showAsAction="ifRoom" />

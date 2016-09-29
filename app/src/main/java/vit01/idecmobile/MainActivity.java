@@ -374,6 +374,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_edit_echoareas) {
             editEchoList();
             return true;
+        } else if (id == R.id.action_mark_all_base_read) {
+            SqliteTransport transport = new SqliteTransport(this);
+            transport.setUnread(false, (String) null);
+            updateEcholist();
         }
 
         return super.onOptionsItemSelected(item);
