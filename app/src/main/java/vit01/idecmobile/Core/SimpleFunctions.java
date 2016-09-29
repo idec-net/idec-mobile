@@ -133,6 +133,7 @@ public class SimpleFunctions {
     }
 
     public static String reparseMessage(String msg) {
+        msg = msg.replaceAll("<", "&lt;");
         Matcher quote_match = quote_pattern.matcher(msg);
         msg = quote_match.replaceAll("<font color='#189818'>$0</font>");
 

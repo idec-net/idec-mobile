@@ -223,7 +223,7 @@ public class DraftsView extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(callingActivity, DraftEditor.class);
                     intent.putExtra("task", "edit_existing");
-                    intent.putExtra("file", msglist.get(holder.position));
+                    intent.putExtra("file", msglist.get(holder.getAdapterPosition()));
                     intent.putExtra("nodeindex", holder.draft_storage_index);
                     callingActivity.startActivity(intent);
                 }
@@ -234,7 +234,6 @@ public class DraftsView extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.position = position;
             File file = msglist.get(position);
             if (file == null) {
                 onItemDismiss(position);
@@ -260,10 +259,9 @@ public class DraftsView extends AppCompatActivity {
             File file = visible_msglist.get(position);
             boolean r = file.delete();
             if (r) {
-                // TODO: Исправить
-                // visible_msglist.remove(position);
-                // msglist.remove(position);
-                // total_count--;
+                visible_msglist.remove(position);
+                msglist.remove(position);
+                total_count--;
                 notifyItemRemoved(position);
                 Toast.makeText(callingActivity, "Мы здесь", Toast.LENGTH_SHORT).show();
             } else {
@@ -278,7 +276,7 @@ public class DraftsView extends AppCompatActivity {
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public TextView draft_subj, draft_to, draft_text;
-            public int position, draft_storage_index;
+            public int draft_storage_index;
 
             public ViewHolder(View myLayout) {
                 super(myLayout);
