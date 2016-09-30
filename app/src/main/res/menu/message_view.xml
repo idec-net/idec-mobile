@@ -9,4 +9,13 @@
         android:title="В избранное"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_first_item"
+        android:title="В начало"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_last_item"
+        android:title="В конец"
+        app:showAsAction="never" />
 </menu>

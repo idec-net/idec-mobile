@@ -19,6 +19,7 @@ import vit01.idecmobile.Core.SqliteTransport;
 
 public class MessageSlideActivity extends AppCompatActivity {
     ActionBar actionBar;
+    ViewPager mPager;
     private int msgCount;
     private ArrayList<String> msglist;
     private ArrayList<String> user_watched_these = new ArrayList<>();
@@ -38,7 +39,7 @@ public class MessageSlideActivity extends AppCompatActivity {
         msgCount = msglist.size();
         int firstPosition = gotInfo.getIntExtra("position", msgCount - 1);
 
-        ViewPager mPager = (ViewPager) findViewById(R.id.swipe_pager);
+        mPager = (ViewPager) findViewById(R.id.swipe_pager);
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);
         mPager.setCurrentItem(firstPosition);
@@ -66,9 +67,14 @@ public class MessageSlideActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.action_first_item:
+                mPager.setCurrentItem(0, false);
+                return true;
+            case R.id.action_last_item:
+                mPager.setCurrentItem(msgCount - 1, false);
                 return true;
         }
         return super.onOptionsItemSelected(item);
