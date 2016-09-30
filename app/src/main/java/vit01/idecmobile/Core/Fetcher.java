@@ -3,6 +3,12 @@ package vit01.idecmobile.Core;
 import android.content.Context;
 import android.util.Base64;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +22,81 @@ public class Fetcher {
     public Fetcher(AbstractTransport db) {
         transport = db;
         emptyList = SimpleFunctions.emptyList;
+    }
+
+    public static ArrayList<String> xfile_list_download(Context context, Station station) {
+        ArrayList<String> result = new ArrayList<>();
+
+        String toServer = "";
+
+        try {
+            toServer = "pauth=" + URLEncoder.encode(station.authstr, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            SimpleFunctions.debug("Wrong encoding " + e.toString());
+            return result;
+        }
+
+        String out = Network.getFile(context, station.address + "x/filelist", toServer, Config.values.connectionTimeout);
+        if (out == null) return result;
+
+        Collections.addAll(result, out.split("\n"));
+
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i).equals("")) result.remove(i);
+        }
+
+        return result;
+    }
+
+    public static boolean xfile_download(Context context, Station station, String filename, File fileToSave) {
+        String toServer = "";
+
+        try {
+            toServer = "pauth=" + URLEncoder.encode(station.authstr, "UTF-8") +
+                    "&filename=" + URLEncoder.encode(filename, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            SimpleFunctions.debug("Wrong encoding " + e.toString());
+            return false;
+        }
+
+        if (!fileToSave.exists()) try {
+            fileToSave.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            SimpleFunctions.debug("Failed to create new file" + fileToSave.getAbsolutePath());
+            return false;
+        }
+
+        InputStream inputStream = Network.streamTransaction(context, station.address + "x/file", toServer, Config.values.connectionTimeout);
+        if (inputStream == null) return false;
+
+        FileOutputStream os;
+        try {
+            os = new FileOutputStream(fileToSave);
+            final byte[] buffer = new byte[500];
+            int totalRead = 0;
+
+            int read;
+
+            do {
+                read = inputStream.read(buffer, 0, buffer.length);
+                if (read > 0) os.write(buffer, 0, read);
+                totalRead += read;
+                SimpleFunctions.debug(String.valueOf(totalRead) + " байт");
+            }
+            while (read >= 0);
+
+            os.close();
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            SimpleFunctions.debug("Error writing to file " + e.toString());
+            return false;
+        }
+
+        return true;
     }
 
     public ArrayList<String> fetch_messages(

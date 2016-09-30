@@ -12,9 +12,22 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Network {
-    static String appName = "idecmobile";
-
     public static String getFile(Context context, String url, String data, int timeout) {
+        InputStream stream = streamTransaction(context, url, data, timeout);
+        if (stream == null) return null;
+
+        try {
+            String result = SimpleFunctions.readIt(stream);
+            stream.close();
+            return result;
+        } catch (IOException e) {
+            SimpleFunctions.debug("Throw Exception: " + e.toString());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static InputStream streamTransaction(Context context, String url, String data, int timeout) {
         SimpleFunctions.debug("fetch " + url);
 
         ConnectivityManager connMgr;
@@ -25,46 +38,43 @@ public class Network {
 
         if (networkInfo != null && networkInfo.isConnected()) {
             try {
-                return downloadUrl(url, data, timeout);
+                return getInputStream(url, data, timeout);
             } catch (Exception exception) {
-                Log.w(appName, "Throw Exception: " + exception);
+                SimpleFunctions.debug("Throw Exception: " + exception);
                 exception.printStackTrace();
                 return null;
             }
         } else return null;
     }
 
-    public static String downloadUrl(String myurl, String data, int timeout) throws IOException {
+    public static InputStream getInputStream(String myurl, String data, int timeout) throws IOException {
         InputStream is = null;
         timeout *= 1000;
-        try {
-            URL url = new URL(myurl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(timeout);
-            conn.setConnectTimeout(timeout);
 
-            if (data == null) {
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-            } else {
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-                conn.setDoOutput(true);
+        URL url = new URL(myurl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setReadTimeout(timeout);
+        conn.setConnectTimeout(timeout);
 
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                wr.write(data);
-                wr.flush();
-            }
+        if (data == null) {
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+        } else {
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+            conn.setDoOutput(true);
 
-            conn.connect();
-            int response = conn.getResponseCode();
-
-            Log.d(appName, "ServerResponse: " + response);
-            is = conn.getInputStream();
-
-            return SimpleFunctions.readIt(is);
-        } finally {
-            if (is != null) is.close();
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            wr.write(data);
+            wr.flush();
         }
+
+        conn.connect();
+        int response = conn.getResponseCode();
+
+        Log.d(SimpleFunctions.appName, "ServerResponse: " + response);
+        is = conn.getInputStream();
+
+        return is;
     }
 }

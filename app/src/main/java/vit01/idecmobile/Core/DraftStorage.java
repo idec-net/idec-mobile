@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class DraftStorage {
+    public static File rootStorage;
     static String dataDirectory = "idecMobile";
-    static File rootStorage;
     static FilenameFilter draftsFilter;
     static FilenameFilter sentFilter;
 

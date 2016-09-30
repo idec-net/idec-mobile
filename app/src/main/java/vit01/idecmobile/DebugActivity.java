@@ -10,6 +10,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
@@ -47,6 +48,13 @@ public class DebugActivity extends AppCompatActivity {
             new Thread(new doFetch()).start();
         else if (task.equals("send"))
             new Thread(new sendMessages()).start();
+        else if (task.equals("download_file")) {
+            xfile_download xfile_load = new xfile_download();
+            xfile_load.station = Config.values.stations.get(intent.getIntExtra("nodeindex", 0));
+            xfile_load.filename = intent.getStringExtra("filename");
+
+            new Thread(xfile_load).start();
+        }
     }
 
     @Override
@@ -169,6 +177,52 @@ public class DebugActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "Получено сообщений: " + finalFetched, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleFunctions.debugMessages.clear();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                });
+            }
+        }
+    }
+
+    class xfile_download implements Runnable {
+        public Station station;
+        public String filename;
+
+        @Override
+        public void run() {
+            SimpleFunctions.debugTaskFinished = false;
+            boolean success = false;
+
+            DraftStorage.initStorage();
+            final File new_file = new File(DraftStorage.rootStorage.getParentFile(), filename);
+
+            try {
+                success = Fetcher.xfile_download(getApplicationContext(), station, filename, new_file);
+            } catch (Exception e) {
+                e.printStackTrace();
+                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+            } finally {
+                SimpleFunctions.debugTaskFinished = true;
+
+                final boolean finalSuccess = success;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String result = (finalSuccess) ? "Файл загружен в " + new_file.getAbsolutePath() : "Были ошибки";
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                     }
                 });
 
