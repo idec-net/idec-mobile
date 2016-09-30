@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class AdditionalActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -35,26 +34,50 @@ public class AdditionalActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    public static class PlaceholderFragment extends Fragment {
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
+    public static class xfile_Fragment extends Fragment {
+        public xfile_Fragment() {
         }
 
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+        public static xfile_Fragment newInstance() {
+            return new xfile_Fragment();
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_additional_xfile, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            return rootView;
+        }
+    }
+
+    public static class Database_Fragment extends Fragment {
+        public Database_Fragment() {
+        }
+
+        public static Database_Fragment newInstance() {
+            return new Database_Fragment();
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_additional_database, container, false);
+
+            return rootView;
+        }
+    }
+
+    public static class Blacklist_Fragment extends Fragment {
+        public Blacklist_Fragment() {
+        }
+
+        public static Blacklist_Fragment newInstance() {
+            return new Blacklist_Fragment();
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_additional_blacklist, container, false);
+
             return rootView;
         }
     }
@@ -68,9 +91,15 @@ public class AdditionalActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-
+                case 0:
+                    return xfile_Fragment.newInstance();
+                case 1:
+                    return Database_Fragment.newInstance();
+                case 2:
+                    return Blacklist_Fragment.newInstance();
+                default:
+                    return null;
             }
-            return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override

@@ -95,7 +95,7 @@ public class MessageView_full extends Fragment {
             full_repto.setVisibility(View.GONE);
         } else full_repto.setText("Ответ: " + message.repto);
 
-        full_date.setText(SimpleFunctions.timestamp2date(message.time, true));
+        full_date.setText(SimpleFunctions.timestamp2date(message.time));
         full_echo.setText(message.echo);
 
         full_msg.setClickable(true);

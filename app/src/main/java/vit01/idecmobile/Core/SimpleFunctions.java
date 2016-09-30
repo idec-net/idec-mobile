@@ -31,7 +31,6 @@ public class SimpleFunctions {
     public static ArrayList<String> emptyList = new ArrayList<>();
     public static Queue<String> debugMessages = new LinkedList<>();
     public static boolean debugTaskFinished = true;
-    public static DateFormat simple_date = new SimpleDateFormat("dd.MM.yy\nHH:mm");
     public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), HH:mm");
     public static Pattern quote_pattern = Pattern.compile("(^\\s?[\\w_а-яА-Я\\-]{0,20})((>)+)(.+$)",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
@@ -39,6 +38,8 @@ public class SimpleFunctions {
     public static Pattern PS_pattern = Pattern.compile("^(PS|P.S|ЗЫ|З.Ы)(.+$)", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
     public static Pattern ii_link_pattern = Pattern.compile("ii://(\\w[\\w.]+\\w+)");
     public static Pattern url_pattern = Pattern.compile("(https?|ftp|file)://?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]",
+            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+    public static Pattern mailto_pattern = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     public static String join(String[] array, String delimiter) {
@@ -125,11 +126,8 @@ public class SimpleFunctions {
         return newString;
     }
 
-    public static String timestamp2date(long unixtime, boolean verbose) {
-        Date date = new Date(unixtime * 1000);
-
-        if (verbose) return full_date.format(date);
-        else return simple_date.format(date);
+    public static String timestamp2date(long unixtime) {
+        return full_date.format(new Date(unixtime * 1000));
     }
 
     public static String reparseMessage(String msg) {
@@ -148,6 +146,9 @@ public class SimpleFunctions {
 
         Matcher url_match = url_pattern.matcher(msg);
         msg = url_match.replaceAll("<a href=\"$0\">$0</a>");
+
+        Matcher mailto_match = mailto_pattern.matcher(msg);
+        msg = mailto_match.replaceAll("<a href=\"mailto:$0\">$0</a>");
 
         String[] strings = msg.split("\n");
         ArrayList<String> result = new ArrayList<>();
