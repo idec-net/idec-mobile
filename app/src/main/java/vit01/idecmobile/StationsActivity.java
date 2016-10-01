@@ -29,9 +29,12 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftStorage;
+import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.Station;
 
 public class StationsActivity extends AppCompatActivity {
@@ -295,9 +298,60 @@ public class StationsActivity extends AppCompatActivity {
             autoconfig.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "И это тоже не работает. Жди!", Toast.LENGTH_SHORT).show();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String str_address = address.getText().toString();
+
+                            if (!str_address.endsWith("/")) {
+                                str_address += "/";
+
+                                final String finalStr_address = str_address;
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getContext(), "Адрес станции должен заканчиваться слешем, запомни на будущее!", Toast.LENGTH_SHORT).show();
+                                        address.setText(finalStr_address);
+                                    }
+                                });
+                            }
+
+                            final String xfinfo = Network.getFile(getContext(), str_address + "x/features", null, Config.values.connectionTimeout);
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    xfeatures_configure(xfinfo);
+                                }
+                            });
+                        }
+                    }).start();
                 }
             });
+        }
+
+        public void xfeatures_configure(String xfinfo) {
+            if (xfinfo != null) {
+                List<String> keys = Arrays.asList(xfinfo.split("\n"));
+                boolean xc = keys.contains("x/c");
+                boolean ue = keys.contains("u/e");
+
+                xc_enable.setChecked(xc);
+                advanced_ue.setChecked(ue);
+
+                if (ue) {
+                    pervasive_ue.setChecked(false);
+                    cut_remote_index.setText("0");
+                } else {
+                    cut_remote_index.setText("30");
+                }
+            } else {
+                xc_enable.setChecked(false);
+                advanced_ue.setChecked(false);
+                cut_remote_index.setText("30");
+            }
+
+            Toast.makeText(getContext(), "Автоконфигурация выполнена", Toast.LENGTH_SHORT).show();
         }
 
         protected void installValues(int index) {
