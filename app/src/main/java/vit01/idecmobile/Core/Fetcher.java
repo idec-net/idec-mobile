@@ -84,7 +84,7 @@ public class Fetcher {
                 read = inputStream.read(buffer, 0, buffer.length);
                 if (read > 0) os.write(buffer, 0, read);
                 totalRead += read;
-                SimpleFunctions.debug(String.valueOf(totalRead) + " байт");
+                SimpleFunctions.debug(android.text.format.Formatter.formatFileSize(context, totalRead));
             }
             while (read >= 0);
 

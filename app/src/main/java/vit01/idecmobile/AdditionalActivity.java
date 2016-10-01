@@ -1,5 +1,6 @@
 package vit01.idecmobile;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,8 +87,10 @@ public class AdditionalActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
+                            Context mContext = getContext();
+
                             List<HashMap<String, String>> adapter_data = new ArrayList<>();
-                            ArrayList<String> lines = Fetcher.xfile_list_download(getContext(),
+                            ArrayList<String> lines = Fetcher.xfile_list_download(mContext,
                                     Config.values.stations.get(spinner.getSelectedItemPosition()));
 
                             for (String line : lines) {
@@ -94,11 +98,11 @@ public class AdditionalActivity extends AppCompatActivity {
 
                                 HashMap<String, String> entryMap = new HashMap<>(2);
                                 entryMap.put("First Line", entry.filename);
-                                entryMap.put("Second Line", String.valueOf(entry.filesize) + " байт - " + entry.description);
+                                entryMap.put("Second Line", Formatter.formatFileSize(mContext, entry.filesize) + " - " + entry.description);
                                 adapter_data.add(entryMap);
                             }
 
-                            final SimpleAdapter adapter = new SimpleAdapter(getContext(), adapter_data,
+                            final SimpleAdapter adapter = new SimpleAdapter(mContext, adapter_data,
                                     android.R.layout.simple_list_item_2,
                                     new String[]{"First Line", "Second Line"},
                                     new int[]{android.R.id.text1, android.R.id.text2});
