@@ -20,6 +20,7 @@ public interface AbstractTransport {
     ArrayList<String> getMsgList(String echo, int offset, int length);
 
     void deleteEchoarea(String echo, boolean with_contents);
+    void FuckDeleteEverything();
 
     String getRawMessage(String msgid);
 

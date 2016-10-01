@@ -21,12 +21,6 @@
         android:title="Отправить всё"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_clear_cache"
-        android:title="Очистить кэш" />
-    <item
-        android:id="@+id/action_delete_everything"
-        android:title="Очистить базу данных" />
-    <item
         android:id="@+id/action_stations"
         android:title="Настройки станций" />
 </menu>

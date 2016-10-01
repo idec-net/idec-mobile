@@ -1,5 +1,6 @@
 package vit01.idecmobile;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -25,14 +28,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.Fetcher;
+import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 
 public class AdditionalActivity extends AppCompatActivity {
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +46,8 @@ public class AdditionalActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Дополнительно");
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -144,6 +147,11 @@ public class AdditionalActivity extends AppCompatActivity {
     }
 
     public static class Database_Fragment extends Fragment {
+        AbstractTransport transport;
+        Spinner echoareas_spinner;
+        ArrayAdapter<String> spinner_adapter;
+        ArrayList<String> echolist = new ArrayList<>();
+
         public Database_Fragment() {
         }
 
@@ -153,9 +161,74 @@ public class AdditionalActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            transport = new SqliteTransport(getContext());
+
             View rootView = inflater.inflate(R.layout.fragment_additional_database, container, false);
 
+            Button delete_everything = (Button) rootView.findViewById(R.id.additional_database_clear_all);
+            delete_everything.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Очистить всю базу данных")
+                            .setMessage("Ты в своём уме, товарищ??")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    transport.FuckDeleteEverything();
+                                    updateEchoList();
+                                    Toast.makeText(getContext(), "База очищена", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(getContext(), "Вот и правильно, что отменил!", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .show();
+                }
+            });
+
+            Button clear_xc_cache = (Button) rootView.findViewById(R.id.additional_clear_xc);
+            clear_xc_cache.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for (Station station : Config.values.stations) {
+                        String xc_name = "xc_" + SimpleFunctions.hsh(station.nodename);
+                        SimpleFunctions.write_internal_file(getContext(), xc_name, "");
+                    }
+                    Toast.makeText(getContext(), "Кэш /x/c очищен", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            EditText truncate_echoarea = (EditText) rootView.findViewById(R.id.additional_truncate_echoarea_limit);
+            truncate_echoarea.setText("50");
+
+            echoareas_spinner = (Spinner) rootView.findViewById(R.id.additional_full_echolist);
+            spinner_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, echolist);
+            echoareas_spinner.setAdapter(spinner_adapter);
+            updateEchoList();
+
+            Button delete_echoarea = (Button) rootView.findViewById(R.id.additional_database_clear_echo);
+            delete_echoarea.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String current_echo = ((TextView) echoareas_spinner.getSelectedView()).getText().toString();
+
+                    if (!current_echo.equals("")) {
+                        transport.deleteEchoarea(current_echo, true);
+                        Toast.makeText(getContext(), "Эха удалена", Toast.LENGTH_SHORT).show();
+                        updateEchoList();
+                    }
+                }
+            });
+
             return rootView;
+        }
+
+        public void updateEchoList() {
+            echolist.clear();
+            echolist.addAll(transport.fullEchoList());
+            spinner_adapter.notifyDataSetChanged();
         }
     }
 
@@ -170,6 +243,14 @@ public class AdditionalActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_additional_blacklist, container, false);
+            final Spinner spinner = (Spinner) rootView.findViewById(R.id.additional_blacklist_station_spinner);
+
+            ArrayList<String> stationNames = new ArrayList<>();
+            for (Station station : Config.values.stations) {
+                stationNames.add(station.nodename);
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, stationNames);
+            spinner.setAdapter(adapter);
 
             return rootView;
         }

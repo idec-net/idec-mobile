@@ -9,30 +9,38 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".AdditionalActivity$xfile_Fragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Подробнее про расширение /x/file написано в документации" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Spinner
-            android:id="@+id/additional_stations_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/additional_load_xfile_list"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Скачать список" />
+            android:text="Подробнее про расширение /x/file написано в документации" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/additional_stations_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/additional_load_xfile_list"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Скачать список" />
+        </LinearLayout>
     </LinearLayout>
 
     <ListView
         android:id="@+id/additional_xfile_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="fill_parent" />
 </LinearLayout>

@@ -40,7 +40,6 @@ import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
-import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 
@@ -355,18 +354,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, DebugActivity.class);
             intent.putExtra("task", "send");
             startActivity(intent);
-            return true;
-        } else if (id == R.id.action_clear_cache) {
-            for (Station station : Config.values.stations) {
-                String xc_name = "xc_" + SimpleFunctions.hsh(station.nodename);
-                SimpleFunctions.write_internal_file(this, xc_name, "");
-            }
-            Toast.makeText(MainActivity.this, "Кэш /x/c очищен", Toast.LENGTH_SHORT).show();
-            return true;
-        } else if (id == R.id.action_delete_everything) {
-            SqliteTransport transport = new SqliteTransport(this);
-            transport.FuckDeleteEverything();
-            Toast.makeText(MainActivity.this, "База очищена", Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.action_stations) {
             startActivity(new Intent(this, StationsActivity.class));
