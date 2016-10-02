@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import vit01.idecmobile.Core.Config;
@@ -291,7 +294,41 @@ public class StationsActivity extends AppCompatActivity {
             get_echolist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "Пока что это не работает", Toast.LENGTH_SHORT).show();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String str_address = address.getText().toString();
+
+                            if (!str_address.endsWith("/")) {
+                                str_address += "/";
+
+                                final String finalStr_address = str_address;
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getContext(), "Адрес станции должен заканчиваться слешем, запомни на будущее!", Toast.LENGTH_SHORT).show();
+                                        address.setText(finalStr_address);
+                                    }
+                                });
+                            }
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getContext(), "Подожди-ка...", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            final String echolist_info = Network.getFile(getContext(), str_address + "list.txt", null, Config.values.connectionTimeout);
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    installEchoList(echolist_info, currentIndex);
+                                }
+                            });
+                        }
+                    }).start();
                 }
             });
 
@@ -315,6 +352,13 @@ public class StationsActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getContext(), "Связываемся со станцией...", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                             final String xfinfo = Network.getFile(getContext(), str_address + "x/features", null, Config.values.connectionTimeout);
 
@@ -354,6 +398,55 @@ public class StationsActivity extends AppCompatActivity {
             Toast.makeText(getContext(), "Автоконфигурация выполнена", Toast.LENGTH_SHORT).show();
         }
 
+        public void installEchoList(String rawfile, final int nodeindex) {
+            final ArrayList<String> realEchoList = new ArrayList<>();
+            final Context mContext = getContext();
+            final ListView lv = new ListView(mContext);
+
+            List<HashMap<String, String>> adapter_data = new ArrayList<>();
+
+            String[] lines = rawfile.split("\n");
+
+            for (String line : lines) {
+                echoarea_entry entry = new echoarea_entry(line);
+
+                HashMap<String, String> entryMap = new HashMap<>(2);
+                entryMap.put("First Line", entry.name);
+                entryMap.put("Second Line", "[" + String.valueOf(entry.count) + "] - " + entry.description);
+                adapter_data.add(entryMap);
+                realEchoList.add(entry.name);
+            }
+
+            if (realEchoList.size() == 0) {
+                Toast.makeText(mContext, "Проблемы с парсингом списка эх!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            final SimpleAdapter adapter = new SimpleAdapter(mContext, adapter_data,
+                    android.R.layout.simple_list_item_2,
+                    new String[]{"First Line", "Second Line"},
+                    new int[]{android.R.id.text1, android.R.id.text2});
+
+
+            lv.setAdapter(adapter);
+
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Установить этот список эх?")
+                    .setView(lv)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Config.values.stations.get(nodeindex).echoareas = realEchoList;
+                            Config.writeConfig(mContext);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(mContext, "Правь список сам...", Toast.LENGTH_SHORT).show();
+                        }
+                    }).show();
+        }
+
         protected void installValues(int index) {
             station = Config.values.stations.get(index);
 
@@ -378,6 +471,20 @@ public class StationsActivity extends AppCompatActivity {
             station.pervasive_ue = pervasive_ue.isChecked();
             station.ue_limit = Integer.parseInt(fetch_limit.getText().toString());
             station.cut_remote_index = Integer.parseInt(cut_remote_index.getText().toString());
+        }
+    }
+
+    public static class echoarea_entry {
+        String name = "null", description = "null";
+        int count = 0;
+
+        echoarea_entry(String rawline) {
+            String[] values = rawline.split(":");
+            if (values.length == 3) {
+                name = values[0];
+                count = Integer.parseInt(values[1]);
+                description = values[2];
+            }
         }
     }
 }
