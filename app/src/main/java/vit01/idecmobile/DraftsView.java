@@ -83,12 +83,31 @@ public class DraftsView extends AppCompatActivity {
             return false;
         } else {
             Collections.reverse(msglist);
-            mAdapter = null;
 
             mAdapter = new MyAdapter(this, recyclerView, msglist, stations_outbox_id_list);
             recyclerView.setAdapter(mAdapter);
 
-            ItemTouchHelper.Callback touchCallback = new ItemTouchHelperCallback(mAdapter);
+            ItemTouchHelper.Callback touchCallback = new ItemTouchHelper.Callback() {
+                @Override
+                public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                    return makeMovementFlags(0, ItemTouchHelper.START | ItemTouchHelper.END);
+                }
+
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public boolean isItemViewSwipeEnabled() {
+                    return true;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+                }
+            };
             ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
             touchHelper.attachToRecyclerView(recyclerView);
         }
@@ -287,34 +306,6 @@ public class DraftsView extends AppCompatActivity {
         }
     }
 
-    public static class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
-        public final MyAdapter adapter;
-
-        public ItemTouchHelperCallback(MyAdapter mAdapter) {
-            adapter = mAdapter;
-        }
-
-        @Override
-        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            return makeMovementFlags(0, ItemTouchHelper.START | ItemTouchHelper.END);
-        }
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public boolean isItemViewSwipeEnabled() {
-            return true;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            adapter.onItemDismiss(viewHolder.getAdapterPosition());
-        }
-    }
-
     public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
         private final int[] ATTRS = new int[]{android.R.attr.listDivider};
@@ -338,7 +329,7 @@ public class DraftsView extends AppCompatActivity {
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 
-                int top = child.getBottom() + params.bottomMargin;
+                int top = child.getBottom() + params.bottomMargin + Math.round(child.getTranslationY());
                 int bottom = top + divider.getIntrinsicHeight();
 
                 divider.setBounds(left, top, right, bottom);
