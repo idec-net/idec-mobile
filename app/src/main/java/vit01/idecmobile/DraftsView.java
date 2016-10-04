@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +23,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -88,6 +93,14 @@ public class DraftsView extends AppCompatActivity {
             recyclerView.setAdapter(mAdapter);
 
             ItemTouchHelper.Callback touchCallback = new ItemTouchHelper.Callback() {
+                Drawable background = new ColorDrawable(getResources().getColor(R.color.accent));
+                Drawable icon = new IconicsDrawable(getBaseContext())
+                        .icon(GoogleMaterial.Icon.gmd_delete)
+                        .color(Color.WHITE)
+                        .sizeDp(20);
+                int iconMargin = (int) getResources().getDimension(R.dimen.list_horizontal_margin);
+                int itemHeight, iconTop, iconBottom, iconLeft, iconRight;
+
                 @Override
                 public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                     return makeMovementFlags(0, ItemTouchHelper.START | ItemTouchHelper.END);
@@ -106,6 +119,34 @@ public class DraftsView extends AppCompatActivity {
                 @Override
                 public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                     mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+                }
+
+                @Override
+                public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                    if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                        View itemView = viewHolder.itemView;
+
+                        itemHeight = itemView.getBottom() - itemView.getTop();
+                        iconTop = itemView.getTop() + (itemHeight - icon.getIntrinsicHeight())/2;
+                        iconBottom = iconTop + icon.getIntrinsicHeight();
+
+                        if (dX > 0) {
+                            iconLeft = itemView.getLeft() + iconMargin;
+                            iconRight = iconLeft + icon.getIntrinsicWidth();
+                            background.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                        } else {
+                            iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
+                            iconRight = itemView.getRight() - iconMargin;
+                            background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                        }
+
+                        background.draw(c);
+                        icon.draw(c);
+
+                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                    }
                 }
             };
             ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
