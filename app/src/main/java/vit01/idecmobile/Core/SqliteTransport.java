@@ -314,6 +314,32 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return msgidsBySelection("isunread=1", null, null);
     }
 
+    @Override
+    public echoStat getUnreadStats(String echo) {
+        echoStat result = new echoStat();
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(tableName, new String[]{"count(*)"},
+                "echoarea = ? and isunread=1", new String[]{echo}, null, null, null);
+
+        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+            result.unread_count = cursor.getInt(0);
+        }
+
+        cursor.close();
+
+        cursor = db.query(tableName, new String[]{"count(*)"},
+                "echoarea = ?", new String[]{echo}, null, null, null);
+
+        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+            result.total_count = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return result;
+    }
+
     public ArrayList<String> getUnreadEchoareas() {
         SQLiteDatabase db = getReadableDatabase();
 

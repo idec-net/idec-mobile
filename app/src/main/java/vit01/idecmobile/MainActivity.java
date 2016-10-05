@@ -1,15 +1,14 @@
 package vit01.idecmobile;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -40,6 +35,7 @@ import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 
@@ -47,17 +43,18 @@ public class MainActivity extends AppCompatActivity {
     private static final int ADD_NODE = 100000;
     private static final int MANAGE_NODE = 100001;
     public Station currentStation;
-    public ListView echoList;
-    public ArrayAdapter echoListAdapter;
+    public EcholistFragment offline_echoareas;
+    public EcholistFragment echolist;
     public int currentStationIndex = 0;
+    public boolean is_offline_list_now = false;
     public Drawer drawer;
     public AccountHeader drawerHeader;
-    public boolean is_offline_list_now = false;
     public SharedPreferences sharedPref;
     public SharedPreferences.Editor prefEditor;
+    public AbstractTransport transport;
+    FragmentManager fm;
     int MY_PERMISSION_WRITE_STORAGE;
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,11 +156,18 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra("nodeindex", -1);
                                 startActivity(intent);
                             } else if (identifier == 1) {
-                                is_offline_list_now = false;
-                                updateEcholist();
+                                if (is_offline_list_now) {
+                                    fm.popBackStack();
+                                    is_offline_list_now = false;
+                                    updateEcholist();
+                                }
                             } else if (identifier == 6) {
-                                is_offline_list_now = true;
-                                updateEcholist();
+                                if (!is_offline_list_now) {
+                                    fm.beginTransaction().replace(swipeRefresh.getId(), offline_echoareas)
+                                            .addToBackStack(null).commit();
+                                    is_offline_list_now = true;
+                                    updateEcholist();
+                                }
                             } else if (identifier == 9) {
                                 startActivity(new Intent(MainActivity.this, HelpActivity.class));
                             } else if (identifier == 2) {
@@ -182,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra("unsent", true);
                                 startActivity(intent);
                             } else if (identifier == 10) {
-                                AbstractTransport transport = new SqliteTransport(MainActivity.this);
                                 ArrayList<String> unread = transport.getAllUnreadMessages();
 
                                 if (unread.size() == 0) {
@@ -200,39 +203,24 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 
-        echoList = (ListView) findViewById(R.id.echolist);
-        echoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String echoarea = ((TextView) view).getText().toString();
-                Intent viewEcho = new Intent(MainActivity.this, EchoView.class);
-                viewEcho.putExtra("echoarea", echoarea);
-
-                if (is_offline_list_now) {
-                    viewEcho.putExtra("nodeindex", -1);
-                } else {
-                    viewEcho.putExtra("nodeindex", currentStationIndex);
-                }
-                startActivity(viewEcho);
-            }
-        });
-
-        echoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                editEchoList();
-                return true;
-            }
-        });
-
+        GlobalTransport.transport = new SqliteTransport(this);
+        transport = GlobalTransport.transport;
         updateStationsList();
-        updateEcholist();
+
+        offline_echoareas = EcholistFragment.newInstance(Config.values.offlineEchoareas, -1);
+        echolist = EcholistFragment.newInstance(currentStation.echoareas, currentStationIndex);
+
+        fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .add(swipeRefresh.getId(), echolist)
+                .commit();
+
+        is_offline_list_now = false;
 
         if (Config.values.firstRun) {
             Config.values.firstRun = false;
             startActivity(new Intent(this, StationsActivity.class));
         }
-
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -290,33 +278,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateEcholist() {
-        if (is_offline_list_now) {
-            echoListAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, Config.values.offlineEchoareas);
-        } else {
-            echoListAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, currentStation.echoareas);
-        }
-        echoList.setAdapter(echoListAdapter);
+        if (offline_echoareas.mAdapter != null)
+            offline_echoareas.mAdapter.notifyDataSetChanged();
+
+        if (echolist.mAdapter != null)
+            echolist.mAdapter.notifyDataSetChanged();
     }
 
     public void saveCurrentStationPosition(int position) {
         prefEditor = sharedPref.edit();
         prefEditor.putInt("nodeindex_current", position);
         prefEditor.apply();
-    }
-
-    public void editEchoList() {
-        Intent intent = new Intent(MainActivity.this, ListEditActivity.class);
-
-        if (is_offline_list_now) {
-            intent.putExtra("type", "offline");
-            intent.putExtra("index", -1);
-        } else {
-            intent.putExtra("type", "fromstation");
-            intent.putExtra("index", currentStationIndex);
-        }
-        startActivity(intent);
     }
 
     @Override
@@ -358,11 +330,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_stations) {
             startActivity(new Intent(this, StationsActivity.class));
             return true;
-        } else if (id == R.id.action_edit_echoareas) {
-            editEchoList();
-            return true;
         } else if (id == R.id.action_mark_all_base_read) {
-            SqliteTransport transport = new SqliteTransport(this);
             transport.setUnread(false, (String) null);
             updateEcholist();
         }

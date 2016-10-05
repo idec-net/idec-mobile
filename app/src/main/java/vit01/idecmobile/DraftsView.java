@@ -1,10 +1,8 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -323,7 +321,6 @@ public class DraftsView extends AppCompatActivity {
                 msglist.remove(position);
                 total_count--;
                 notifyItemRemoved(position);
-                Toast.makeText(callingActivity, "Мы здесь", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(callingActivity, "Удалить не получилось :(", Toast.LENGTH_SHORT).show();
             }
@@ -343,38 +340,6 @@ public class DraftsView extends AppCompatActivity {
                 draft_subj = (TextView) myLayout.findViewById(R.id.draft_subj);
                 draft_to = (TextView) myLayout.findViewById(R.id.draft_to);
                 draft_text = (TextView) myLayout.findViewById(R.id.draft_text);
-            }
-        }
-    }
-
-    public class DividerItemDecoration extends RecyclerView.ItemDecoration {
-
-        private final int[] ATTRS = new int[]{android.R.attr.listDivider};
-
-        private Drawable divider;
-
-        public DividerItemDecoration(Context context) {
-            final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
-            divider = styledAttributes.getDrawable(0);
-            styledAttributes.recycle();
-        }
-
-        @Override
-        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            int left = parent.getPaddingLeft();
-            int right = parent.getWidth() - parent.getPaddingRight();
-
-            int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int top = child.getBottom() + params.bottomMargin + Math.round(child.getTranslationY());
-                int bottom = top + divider.getIntrinsicHeight();
-
-                divider.setBounds(left, top, right, bottom);
-                divider.draw(c);
             }
         }
     }

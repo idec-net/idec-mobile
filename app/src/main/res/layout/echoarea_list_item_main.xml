@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/echoarea_clickable_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingBottom="16dp"
+    android:paddingLeft="@dimen/list_horizontal_margin"
+    android:paddingRight="@dimen/list_horizontal_margin"
+    android:paddingTop="16dp">
+
+    <TextView
+        android:id="@+id/echoarea_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/echoarea_unread_count"
+        android:layout_toStartOf="@+id/echoarea_unread_count"
+        android:lines="1"
+        android:text="echoarea.none"
+        android:textColor="@color/md_black_1000"
+        android:textSize="@dimen/material_text_subhead" />
+
+    <TextView
+        android:id="@+id/echoarea_unread_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_toLeftOf="@+id/echoarea_total_count"
+        android:layout_toStartOf="@+id/echoarea_total_count"
+        android:text="5"
+        android:textColor="@color/md_black_1000"
+        android:textSize="@dimen/material_text_subhead"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/echoarea_total_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="/900"
+        android:textSize="@dimen/material_text_subhead" />
+</RelativeLayout>

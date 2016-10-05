@@ -44,11 +44,16 @@ public interface AbstractTransport {
     ArrayList<String> getUnreadMessages(String echoarea);
     ArrayList<String> getAllUnreadMessages();
 
+    echoStat getUnreadStats(String echoarea);
+
     ArrayList<String> getUnreadFavorites();
 
     void setUnread(boolean unread, List<String> msgids);
-
     void setUnread(boolean unread, String area);
 
     void setFavorite(boolean favorite, List<String> msgids);
+
+    class echoStat {
+        public int total_count = 0, unread_count = 0;
+    }
 }

@@ -1,10 +1,7 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -366,38 +363,6 @@ public class EchoView extends AppCompatActivity {
                 msg_text = (TextView) myLayout.findViewById(R.id.msg_text);
                 msg_date = (TextView) myLayout.findViewById(R.id.msg_date);
                 msg_star = (ImageView) myLayout.findViewById(R.id.msg_star);
-            }
-        }
-    }
-
-    public class DividerItemDecoration extends RecyclerView.ItemDecoration {
-
-        private final int[] ATTRS = new int[]{android.R.attr.listDivider};
-
-        private Drawable divider;
-
-        public DividerItemDecoration(Context context) {
-            final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
-            divider = styledAttributes.getDrawable(0);
-            styledAttributes.recycle();
-        }
-
-        @Override
-        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            int left = parent.getPaddingLeft();
-            int right = parent.getWidth() - parent.getPaddingRight();
-
-            int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int top = child.getBottom() + params.bottomMargin;
-                int bottom = top + divider.getIntrinsicHeight();
-
-                divider.setBounds(left, top, right, bottom);
-                divider.draw(c);
             }
         }
     }
