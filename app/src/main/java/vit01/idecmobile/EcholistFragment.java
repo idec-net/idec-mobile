@@ -50,6 +50,7 @@ public class EcholistFragment extends Fragment {
             nodeindex = getArguments().getInt("nodeindex");
         } else echoareas = new ArrayList<>();
         transport = GlobalTransport.transport;
+        setHasOptionsMenu(true);
     }
 
     @Override
