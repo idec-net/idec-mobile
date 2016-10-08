@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -81,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header)
                 .withCompactStyle(true)
-                .withProfileImagesVisible(false)
+                .withProfileImagesVisible(true)
+                .withProfileImagesClickable(false)
+                .withNameTypeface(Typeface.DEFAULT_BOLD)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
@@ -95,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
                                 editNew.putExtra("index", countStations);
                                 startActivity(editNew);
                             } else if (identifier == MANAGE_NODE) {
-                                startActivity(new Intent(MainActivity.this, StationsActivity.class));
+                                Intent manageIntent = new Intent(MainActivity.this, StationsActivity.class);
+                                manageIntent.putExtra("index", currentStationIndex);
+                                startActivity(manageIntent);
                             } else if (identifier < countStations) {
                                 // Выбрали другую станцию, обновляем список
                                 currentStationIndex = (int) identifier;
@@ -238,9 +245,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+        super.onResume();
         updateStationsList();
         updateEcholist();
-        super.onResume();
     }
 
     public void updateStationsList() {
@@ -254,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
 
             drawerHeader.addProfile(new ProfileDrawerItem()
                     .withName(nodename)
+                    .withIcon(getStationIcon(nodename))
                     .withIdentifier(i), i);
         }
 
@@ -264,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
         currentStationIndex = sharedPref.getInt("nodeindex_current", 0);
 
-        if (currentStationIndex >= Config.values.stations.size()) {
+        if (currentStationIndex > Config.values.stations.size() - 1) {
             currentStationIndex = 0;
             saveCurrentStationPosition(0);
         }
@@ -285,6 +293,22 @@ public class MainActivity extends AppCompatActivity {
         prefEditor.apply();
     }
 
+    public Drawable getStationIcon(String stationName) {
+        int hash = stationName.hashCode();
+        int colors[] = new int[3];
+
+        colors[0] = (hash & 0xFF0000) >> 16;
+        colors[1] = (hash & 0x00FF00) >> 8;
+        colors[2] = (hash & 0x0000FF);
+
+        for (int i = 0; i < 3; i++) if (colors[i] > 200) colors[i] -= 50;
+
+        Drawable icon = getResources().getDrawable(R.drawable.ic_station);
+        assert icon != null;
+        icon.mutate().setColorFilter(Color.rgb(colors[0], colors[1], colors[2]), PorterDuff.Mode.OVERLAY);
+        return icon;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -302,12 +326,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, CommonSettings.class));
             return true;
@@ -322,7 +342,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         } else if (id == R.id.action_stations) {
-            startActivity(new Intent(this, StationsActivity.class));
+            Intent manageIntent = new Intent(MainActivity.this, StationsActivity.class);
+            manageIntent.putExtra("index", currentStationIndex);
+            startActivity(manageIntent);
             return true;
         } else if (id == R.id.action_mark_all_base_read) {
             transport.setUnread(false, (String) null);
