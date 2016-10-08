@@ -204,7 +204,7 @@ public class AdditionalActivity extends AppCompatActivity {
                 }
             });
 
-            EditText truncate_echoarea = (EditText) rootView.findViewById(R.id.additional_truncate_echoarea_limit);
+            final EditText truncate_echoarea = (EditText) rootView.findViewById(R.id.additional_truncate_echoarea_limit);
             truncate_echoarea.setText("50");
 
             echoareas_spinner = (Spinner) rootView.findViewById(R.id.additional_full_echolist);
@@ -223,6 +223,22 @@ public class AdditionalActivity extends AppCompatActivity {
                         Toast.makeText(getContext(), "Эха удалена", Toast.LENGTH_SHORT).show();
                         updateEchoList();
                     }
+                }
+            });
+
+            Button truncate_start = (Button) rootView.findViewById(R.id.additional_truncate_echo);
+            truncate_start.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int topLimit = Integer.parseInt(truncate_echoarea.getText().toString());
+                    if (topLimit > 0) {
+                        Intent intent = new Intent(getActivity(), DebugActivity.class);
+                        intent.putExtra("task", "truncate_echo");
+                        intent.putExtra("echoarea", ((TextView) echoareas_spinner.getSelectedView()).getText().toString());
+                        intent.putExtra("limit", topLimit);
+                        startActivity(intent);
+                    } else
+                        Toast.makeText(getContext(), "Чё-то ты не то ввёл", Toast.LENGTH_SHORT).show();
                 }
             });
 

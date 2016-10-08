@@ -17,6 +17,7 @@ import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftStorage;
 import vit01.idecmobile.Core.Fetcher;
+import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
@@ -54,6 +55,15 @@ public class DebugActivity extends AppCompatActivity {
             xfile_load.filename = intent.getStringExtra("filename");
 
             new Thread(xfile_load).start();
+        } else if (task.equals("truncate_echo")) {
+            String echoarea = intent.getStringExtra("echoarea");
+            int limit = intent.getIntExtra("limit", 50);
+
+            truncate_echo truncate = new truncate_echo();
+            truncate.echoarea = echoarea;
+            truncate.limit = limit;
+
+            new Thread(truncate).start();
         }
     }
 
@@ -66,6 +76,22 @@ public class DebugActivity extends AppCompatActivity {
     public void onDestroy() {
         SimpleFunctions.debugTaskFinished = true;
         super.onDestroy();
+    }
+
+    public void finishTask() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        SimpleFunctions.debugMessages.clear();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        });
     }
 
     class updateDebug implements Runnable {
@@ -116,19 +142,7 @@ public class DebugActivity extends AppCompatActivity {
                     }
                 });
 
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                SimpleFunctions.debugMessages.clear();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                });
+                finishTask();
             }
         }
     }
@@ -179,20 +193,7 @@ public class DebugActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Получено сообщений: " + finalFetched, Toast.LENGTH_SHORT).show();
                     }
                 });
-
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                SimpleFunctions.debugMessages.clear();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                });
+                finishTask();
             }
         }
     }
@@ -225,20 +226,49 @@ public class DebugActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                     }
                 });
+                finishTask();
+            }
+        }
+    }
 
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+    class truncate_echo implements Runnable {
+        public String echoarea = "no.echo";
+        public int limit = 50;
+
+        @Override
+        public void run() {
+            SimpleFunctions.debugTaskFinished = false;
+
+            boolean needTruncate = true;
+
+            try {
+                AbstractTransport transport = GlobalTransport.transport;
+                int countMessages = transport.countMessages(echoarea);
+
+                SimpleFunctions.debug("Выбранный лимит: " + String.valueOf(limit) + " сообщений, исходное количество: " + String.valueOf(countMessages));
+                if (countMessages <= limit) needTruncate = false;
+                else {
+                    int deleteLength = countMessages - limit;
+                    SimpleFunctions.debug("Составляется список...");
+                    ArrayList<String> deleteThem = transport.getMsgList(echoarea, 0, deleteLength);
+                    SimpleFunctions.debug("Удаляем лишние сообщения...");
+                    transport.deleteMessages(deleteThem, echoarea);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+            } finally {
+                SimpleFunctions.debugTaskFinished = true;
 
-                SimpleFunctions.debugMessages.clear();
+                final boolean finalNeedTruncate = needTruncate;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        finish();
+                        String answer = (finalNeedTruncate) ? "Эха подчищена" : "Здесь приемлемое количество сообщений!";
+                        Toast.makeText(getApplicationContext(), answer, Toast.LENGTH_SHORT).show();
                     }
                 });
+                finishTask();
             }
         }
     }

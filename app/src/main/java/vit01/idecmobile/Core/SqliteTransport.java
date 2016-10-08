@@ -162,7 +162,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         SQLiteDatabase db = getReadableDatabase();
 
         String limitstr;
-        if (offset > 0 && length > 0) {
+        if (offset >= 0 && length > 0) {
             limitstr = String.valueOf(offset) + ", " + String.valueOf(length);
         } else limitstr = null;
 
