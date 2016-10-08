@@ -63,10 +63,18 @@ public class EcholistFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        mAdapter = new MyAdapter(getActivity(), recyclerView, echoareas, transport, nodeindex);
+        mAdapter = new MyAdapter(getActivity(), echoareas, transport, nodeindex);
         recyclerView.setAdapter(mAdapter);
 
         return rootView;
+    }
+
+    public void updateState(ArrayList<String> echolist, int stationIndex) {
+        mAdapter.echolist = echolist;
+        mAdapter.nodeindex = stationIndex;
+        nodeindex = stationIndex;
+
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -87,13 +95,12 @@ public class EcholistFragment extends Fragment {
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+        public ArrayList<String> echolist;
         AbstractTransport transport;
         Activity callingActivity;
-        int count_items, nodeindex;
-        private ArrayList<String> echolist;
+        int nodeindex;
 
         public MyAdapter(Activity activity,
-                         RecyclerView recyclerView,
                          ArrayList<String> list,
                          AbstractTransport db,
                          int stationIndex
@@ -102,10 +109,6 @@ public class EcholistFragment extends Fragment {
             transport = db;
             nodeindex = stationIndex;
             callingActivity = activity;
-
-            count_items = echolist.size();
-
-            final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         }
 
         @Override
@@ -152,6 +155,7 @@ public class EcholistFragment extends Fragment {
             holder.echoarea_unread.setTypeface(null, font_style);
 
             if (stat.unread_count > 0) {
+                holder.echoarea_unread.setVisibility(View.VISIBLE);
                 holder.echoarea_unread.setText(String.valueOf(stat.unread_count));
                 holder.echoarea_total_count.setText("/" + String.valueOf(stat.total_count));
             } else {
@@ -163,7 +167,7 @@ public class EcholistFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return count_items;
+            return echolist.size();
         }
 
         public void editEchoList() {

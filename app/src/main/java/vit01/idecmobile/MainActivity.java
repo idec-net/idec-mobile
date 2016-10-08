@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int ADD_NODE = 100000;
     private static final int MANAGE_NODE = 100001;
     public Station currentStation;
-    public EcholistFragment offline_echoareas;
     public EcholistFragment echolist;
     public int currentStationIndex = 0;
     public boolean is_offline_list_now = false;
@@ -157,14 +156,11 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                             } else if (identifier == 1) {
                                 if (is_offline_list_now) {
-                                    fm.popBackStack();
                                     is_offline_list_now = false;
                                     updateEcholist();
                                 }
                             } else if (identifier == 6) {
                                 if (!is_offline_list_now) {
-                                    fm.beginTransaction().replace(swipeRefresh.getId(), offline_echoareas)
-                                            .addToBackStack(null).commit();
                                     is_offline_list_now = true;
                                     updateEcholist();
                                 }
@@ -207,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
         transport = GlobalTransport.transport;
         updateStationsList();
 
-        offline_echoareas = EcholistFragment.newInstance(Config.values.offlineEchoareas, -1);
         echolist = EcholistFragment.newInstance(currentStation.echoareas, currentStationIndex);
 
         fm = getSupportFragmentManager();
@@ -278,11 +273,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateEcholist() {
-        if (offline_echoareas.mAdapter != null)
-            offline_echoareas.mAdapter.notifyDataSetChanged();
-
-        if (echolist.mAdapter != null)
-            echolist.mAdapter.notifyDataSetChanged();
+        if (!is_offline_list_now)
+            echolist.updateState(currentStation.echoareas, currentStationIndex);
+        else
+            echolist.updateState(Config.values.offlineEchoareas, -1);
     }
 
     public void saveCurrentStationPosition(int position) {
