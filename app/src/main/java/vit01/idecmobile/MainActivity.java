@@ -27,6 +27,7 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
@@ -120,14 +121,14 @@ public class MainActivity extends AppCompatActivity {
 
         PrimaryDrawerItem echoItem = new PrimaryDrawerItem().withIdentifier(1).withName("Эхоконференции").withIcon(GoogleMaterial.Icon.gmd_message);
         PrimaryDrawerItem carbonItem = new PrimaryDrawerItem().withIdentifier(2).withName("Карбонка").withIcon(GoogleMaterial.Icon.gmd_input).withSelectable(false);
-        PrimaryDrawerItem sentItem = new PrimaryDrawerItem().withIdentifier(3).withName("Отправленные").withIcon(GoogleMaterial.Icon.gmd_send).withSelectable(false);
-        final PrimaryDrawerItem draftsItem = new PrimaryDrawerItem().withIdentifier(4).withName("Черновики").withIcon(GoogleMaterial.Icon.gmd_drafts).withSelectable(false);
-        PrimaryDrawerItem starredItem = new PrimaryDrawerItem().withIdentifier(5).withName("Избранные").withIcon(GoogleMaterial.Icon.gmd_star).withSelectable(false);
-        final PrimaryDrawerItem offlineItem = new PrimaryDrawerItem().withIdentifier(6).withName("Offline-эхи").withIcon(GoogleMaterial.Icon.gmd_signal_wifi_off);
-        PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(7).withName("Дополнительно").withIcon(GoogleMaterial.Icon.gmd_extension).withSelectable(false);
-        PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(8).withName("Настройки").withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
-        PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(9).withName("Помощь").withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
-        PrimaryDrawerItem unreadItem = new PrimaryDrawerItem().withIdentifier(10).withName("Непрочитанные").withIcon(GoogleMaterial.Icon.gmd_remove_red_eye).withSelectable(false);
+        PrimaryDrawerItem unreadItem = new PrimaryDrawerItem().withIdentifier(3).withName("Непрочитанные").withIcon(GoogleMaterial.Icon.gmd_remove_red_eye).withSelectable(false);
+        PrimaryDrawerItem sentItem = new PrimaryDrawerItem().withIdentifier(4).withName("Отправленные").withIcon(GoogleMaterial.Icon.gmd_send).withSelectable(false);
+        final PrimaryDrawerItem draftsItem = new PrimaryDrawerItem().withIdentifier(5).withName("Черновики").withIcon(GoogleMaterial.Icon.gmd_drafts).withSelectable(false);
+        PrimaryDrawerItem starredItem = new PrimaryDrawerItem().withIdentifier(6).withName("Избранные").withIcon(GoogleMaterial.Icon.gmd_star).withSelectable(false);
+        final PrimaryDrawerItem offlineItem = new PrimaryDrawerItem().withIdentifier(7).withName("Offline-эхи").withIcon(GoogleMaterial.Icon.gmd_signal_wifi_off);
+        PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(8).withName("Дополнительно").withIcon(GoogleMaterial.Icon.gmd_extension).withSelectable(false);
+        PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(9).withName("Настройки").withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
+        PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(10).withName("Помощь").withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -151,55 +152,62 @@ public class MainActivity extends AppCompatActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        if (drawerItem != null) {
-                            long identifier = drawerItem.getIdentifier();
-
-                            if (identifier == 8) {
-                                startActivity(new Intent(MainActivity.this, CommonSettings.class));
-                            } else if (identifier == 5) {
-                                Intent intent = new Intent(MainActivity.this, EchoView.class);
-                                intent.putExtra("echoarea", "_favorites");
-                                intent.putExtra("nodeindex", -1);
-                                startActivity(intent);
-                            } else if (identifier == 1) {
+                        if (drawerItem != null) switch ((int) drawerItem.getIdentifier()) {
+                            case 1:
                                 if (is_offline_list_now) {
                                     is_offline_list_now = false;
                                     updateEcholist();
                                 }
-                            } else if (identifier == 6) {
-                                if (!is_offline_list_now) {
-                                    is_offline_list_now = true;
-                                    updateEcholist();
-                                }
-                            } else if (identifier == 9) {
-                                startActivity(new Intent(MainActivity.this, HelpActivity.class));
-                            } else if (identifier == 2) {
+                                break;
+                            case 2:
                                 Intent intent = new Intent(MainActivity.this, EchoView.class);
                                 intent.putExtra("echoarea", "_carbon_classic");
                                 intent.putExtra("nodeindex", -1);
                                 startActivity(intent);
-                            } else if (identifier == 7) {
-                                startActivity(new Intent(MainActivity.this, AdditionalActivity.class));
-                            } else if (identifier == 3) {
-                                Intent intent = new Intent(MainActivity.this, DraftsView.class);
-                                intent.putExtra("unsent", false);
-                                startActivity(intent);
-                            } else if (identifier == 4) {
-                                Intent intent = new Intent(MainActivity.this, DraftsView.class);
-                                intent.putExtra("unsent", true);
-                                startActivity(intent);
-                            } else if (identifier == 10) {
+                                break;
+                            case 3:
                                 ArrayList<String> unread = transport.getAllUnreadMessages();
 
                                 if (unread.size() == 0) {
                                     Toast.makeText(MainActivity.this, "Непрочитанных сообщений нет!", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Intent intent = new Intent(MainActivity.this, MessageSlideActivity.class);
-                                    intent.putExtra("msglist", unread);
-                                    intent.putExtra("position", 0);
-                                    startActivity(intent);
+                                    Intent unreadIntent = new Intent(MainActivity.this, MessageSlideActivity.class);
+                                    unreadIntent.putExtra("msglist", unread);
+                                    unreadIntent.putExtra("position", 0);
+                                    startActivity(unreadIntent);
                                 }
-                            }
+                                break;
+                            case 4:
+                                Intent sent = new Intent(MainActivity.this, DraftsView.class);
+                                sent.putExtra("unsent", false);
+                                startActivity(sent);
+                                break;
+                            case 5:
+                                Intent unsent = new Intent(MainActivity.this, DraftsView.class);
+                                unsent.putExtra("unsent", true);
+                                startActivity(unsent);
+                                break;
+                            case 6:
+                                Intent favorites = new Intent(MainActivity.this, EchoView.class);
+                                favorites.putExtra("echoarea", "_favorites");
+                                favorites.putExtra("nodeindex", -1);
+                                startActivity(favorites);
+                                break;
+                            case 7:
+                                if (!is_offline_list_now) {
+                                    is_offline_list_now = true;
+                                    updateEcholist();
+                                }
+                                break;
+                            case 8:
+                                startActivity(new Intent(MainActivity.this, AdditionalActivity.class));
+                                break;
+                            case 9:
+                                startActivity(new Intent(MainActivity.this, CommonSettings.class));
+                                break;
+                            case 10:
+                                startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                                break;
                         }
                         return false;
                     }
@@ -218,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         is_offline_list_now = false;
+        updateNavDrawerCounters();
 
         if (Config.values.firstRun) {
             Config.values.firstRun = false;
@@ -248,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         updateStationsList();
         updateEcholist();
+        updateNavDrawerCounters();
     }
 
     public void updateStationsList() {
@@ -285,6 +295,14 @@ public class MainActivity extends AppCompatActivity {
             echolist.updateState(currentStation.echoareas, currentStationIndex);
         else
             echolist.updateState(Config.values.offlineEchoareas, -1);
+    }
+
+    public void updateNavDrawerCounters() {
+        int countUnread = transport.countUnread();
+        int countFavorites = transport.countFavorites();
+
+        drawer.updateBadge(3, new StringHolder(String.valueOf(countUnread)));
+        drawer.updateBadge(6, new StringHolder(String.valueOf(countFavorites)));
     }
 
     public void saveCurrentStationPosition(int position) {

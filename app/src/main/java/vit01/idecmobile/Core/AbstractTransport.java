@@ -23,29 +23,26 @@ public interface AbstractTransport {
     void FuckDeleteEverything();
 
     String getRawMessage(String msgid);
-
     Hashtable<String, String> getRawMessages(ArrayList<String> msgids);
 
     IIMessage getMessage(String msgid);
-
     Hashtable<String, IIMessage> getMessages(ArrayList<String> msgids);
 
     ArrayList<String> fullEchoList();
 
     int countMessages(String echo);
-    int countUnread(String echo);
-
-    ArrayList<String> getFavorites();
+    int countUnread();
+    int countFavorites();
 
     // Это для работы карбонки (классической)!
     ArrayList<String> messagesToUsers(List<String> users, int limit, boolean unread);
 
-    ArrayList<String> getUnreadEchoareas();
     ArrayList<String> getUnreadMessages(String echoarea);
     ArrayList<String> getAllUnreadMessages();
 
     echoStat getUnreadStats(String echoarea);
 
+    ArrayList<String> getFavorites();
     ArrayList<String> getUnreadFavorites();
 
     void setUnread(boolean unread, List<String> msgids);

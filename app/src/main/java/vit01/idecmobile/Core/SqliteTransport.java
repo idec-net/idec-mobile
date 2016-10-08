@@ -263,10 +263,27 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return result;
     }
 
-    public int countUnread(String echo) {
+    public int countUnread() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(tableName, new String[]{"count(*)"},
-                "echoarea = ? and isunread=1", new String[]{echo}, null, null, null);
+                "isunread=1", null, null, null, null);
+
+        int result = 0;
+
+        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+            result = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return result;
+    }
+
+    @Override
+    public int countFavorites() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(tableName, new String[]{"count(*)"},
+                "isfavorite=1", null, null, null, null);
 
         int result = 0;
 
@@ -336,16 +353,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
 
         cursor.close();
-        db.close();
-        return result;
-    }
-
-    public ArrayList<String> getUnreadEchoareas() {
-        SQLiteDatabase db = getReadableDatabase();
-
-        Cursor cursor = db.query(true, tableName, new String[]{"echoarea"}, "isunread=1", null, null, null, null, null);
-
-        ArrayList<String> result = fetch_rows(cursor);
         db.close();
         return result;
     }

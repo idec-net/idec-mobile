@@ -119,9 +119,8 @@ public class DraftStorage {
     public static int getAndIncrementNumber(String outbox_id) {
         File directory = getStationStorageDir(outbox_id);
         if (directory == null) return -1;
-        FilenameFilter filter = draftsFilter;
 
-        String[] inside = directory.list(filter);
+        String[] inside = directory.list();
         ArrayList<String> contents = new ArrayList<>();
 
         if (inside != null) {
