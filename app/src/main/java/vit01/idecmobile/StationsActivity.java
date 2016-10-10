@@ -38,6 +38,7 @@ import java.util.List;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftStorage;
 import vit01.idecmobile.Core.Network;
+import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 
 public class StationsActivity extends AppCompatActivity {
@@ -144,6 +145,7 @@ public class StationsActivity extends AppCompatActivity {
                                             Toast.makeText(StationsActivity.this, "Чё-то не заработало :(", Toast.LENGTH_SHORT).show();
                                     }
 
+                                    SimpleFunctions.delete_xc_from_station(Config.values.stations.get(currentIndex));
                                     Config.values.stations.remove(currentIndex);
                                     currentIndex = 0;
                                     updateSpinner();
