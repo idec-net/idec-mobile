@@ -166,7 +166,7 @@ public class DebugActivity extends AppCompatActivity {
                     }
 
                     String xc_id = (station.xc_enable) ?
-                            SimpleFunctions.hsh(station.nodename) : null;
+                            station.outbox_storage_id : null;
                     int ue_limit = (station.advanced_ue) ? station.ue_limit : 0;
 
                     fetched = fetcher.fetch_messages(appContext,

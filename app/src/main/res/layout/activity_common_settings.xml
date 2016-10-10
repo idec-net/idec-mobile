@@ -67,6 +67,20 @@
                 android:checked="false"
                 android:text="Подключаться через прокси" />
 
+            <CheckBox
+                android:id="@+id/notifications_enabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Включить уведомления" />
+
+            <CheckBox
+                android:id="@+id/notification_vibrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Вибрация в уведомлениях" />
+
             <TextView
                 android:id="@+id/textView"
                 style="@style/AppTheme.MyCaption"
@@ -86,7 +100,7 @@
                 style="@style/AppTheme.MyCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Таймаут сетевого соединения" />
+                android:text="Таймаут сетевого соединения (в секундах)" />
 
             <EditText
                 android:id="@+id/editText2"
@@ -124,6 +138,19 @@
                 android:layout_gravity="center_horizontal"
                 android:ems="10"
                 android:inputType="numberDecimal" />
+
+            <TextView
+                android:id="@+id/textView5"
+                style="@style/AppTheme.MyCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Уведомлять о новых сообщениях раз в N минут" />
+
+            <EditText
+                android:id="@+id/notifications_time_interval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
 
             <Button
                 android:id="@+id/edit_offline_echoareas"

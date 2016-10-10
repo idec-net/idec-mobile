@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -241,6 +242,16 @@ public class SimpleFunctions {
 
             return nodeindex;
         }
+    }
+
+    public static boolean delete_xc_from_station(Station station) {
+        File xc_name = new File("xc_" + station.outbox_storage_id);
+        File xc_notify_name = new File("xc_tmp_" + station.outbox_storage_id);
+
+        boolean deleted1 = xc_name.delete();
+        boolean deleted2 = xc_notify_name.delete();
+
+        return (deleted1 | deleted2);
     }
 
     public static void debug(String message) {

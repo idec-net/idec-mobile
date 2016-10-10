@@ -41,15 +41,22 @@ public class Config {
     }
 
     public static void configUpdate(Context context) {
+        boolean needForWrite = false;
+
         if (Config.values.carbon_to == null) {
             Config.values.carbon_to = "All";
+            needForWrite = true;
         }
 
         if (Config.values.carbon_limit <= 0) {
             Config.values.carbon_limit = 50;
+            needForWrite = true;
         }
 
-        boolean needForWrite = false;
+        if (Config.values.notifyFireDuration <= 0) {
+            Config.values.notifyFireDuration = 15;
+            needForWrite = true;
+        }
 
         for (Station station : Config.values.stations) {
             if (station.outbox_storage_id == null) {

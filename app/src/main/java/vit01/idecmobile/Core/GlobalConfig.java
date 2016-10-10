@@ -9,11 +9,14 @@ public class GlobalConfig implements Serializable {
             defaultEditor = true,
             firstRun = true,
             useProxy = false,
-            oldQuote = false; // упрощённое (старое) цитирование
+            oldQuote = false, // упрощённое (старое) цитирование
+            notificationsEnabled = false,
+            notificationsVibrate = true;
     public int
             oneRequestLimit = 20,
             connectionTimeout = 20,
-            carbon_limit = 50; // максимальное количество сообщений в карбонке
+            carbon_limit = 50, // максимальное количество сообщений в карбонке
+            notifyFireDuration = 15; // интервал проверки для уведомлений
     public ArrayList<String> offlineEchoareas = new ArrayList<>();
     public ArrayList<Station> stations = new ArrayList<>();
 

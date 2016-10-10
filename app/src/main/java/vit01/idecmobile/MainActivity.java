@@ -233,6 +233,16 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, StationsActivity.class));
         }
 
+        String task = getIntent().getStringExtra("task");
+
+        if (task != null && task.equals("fetch")) {
+            Intent fetcher = new Intent(MainActivity.this, DebugActivity.class);
+            fetcher.putExtra("task", "fetch");
+            startActivity(fetcher);
+
+            setIntent(new Intent()); // убиваем это дело, чтобы после поворота экрана снова не запустился фетчер
+        }
+
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {

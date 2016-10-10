@@ -89,7 +89,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
-        <activity android:name=".DraftsView"></activity>
+        <activity android:name=".DraftsView" />
+
+        <receiver android:name=".notify.boot_completed_receiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".notify.workerJob" />
+
+        <service android:name=".notify.AlarmService" />
     </application>
 
 </manifest>

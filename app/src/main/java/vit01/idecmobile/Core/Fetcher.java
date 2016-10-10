@@ -120,6 +120,8 @@ public class Fetcher {
 
         if (xc_id != null) {
             String xc_cell_name = "xc_" + xc_id;
+            String tmp_xc_cell_name = "xc_tmp_" + xc_id;
+
             String xc_url = address + "x/c/" + SimpleFunctions.join(
                     SimpleFunctions.List2Arr(firstEchoesToFetch), "/");
 
@@ -180,6 +182,7 @@ public class Fetcher {
                 }
             }
             SimpleFunctions.write_internal_file(context, xc_cell_name, remote_xc_data);
+            SimpleFunctions.write_internal_file(context, tmp_xc_cell_name, remote_xc_data); // чтобы лишний раз не выводить уведомления
             echoesToFetch = SimpleFunctions.ListDifference(echoesToFetch, excluded_echoareas);
         }
 
@@ -309,7 +312,7 @@ public class Fetcher {
                     String message;
                     String echo = echoForMsgid.get(msgid);
 
-                    SimpleFunctions.debug("savemsg " + msgid + " to echo " + echo);
+                    SimpleFunctions.debug("savemsg " + msgid + " to " + echo);
                     try {
                         byte[] rawmsg = Base64.decode(pieces[1], Base64.DEFAULT);
                         message = new String(rawmsg, "UTF-8");

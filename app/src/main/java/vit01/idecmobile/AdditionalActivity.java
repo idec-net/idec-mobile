@@ -197,8 +197,9 @@ public class AdditionalActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     for (Station station : Config.values.stations) {
-                        String xc_name = "xc_" + SimpleFunctions.hsh(station.nodename);
-                        SimpleFunctions.write_internal_file(getContext(), xc_name, "");
+                        boolean deleted = SimpleFunctions.delete_xc_from_station(station);
+                        if (!deleted)
+                            SimpleFunctions.debug("Ошибка удаления для станции " + station.nodename + " & " + station.outbox_storage_id);
                     }
                     Toast.makeText(getContext(), "Кэш /x/c очищен", Toast.LENGTH_SHORT).show();
                 }
