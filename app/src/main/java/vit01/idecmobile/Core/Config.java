@@ -58,6 +58,10 @@ public class Config {
             needForWrite = true;
         }
 
+        if (Config.values.proxyAddress == null) {
+            Config.values.proxyAddress = "127.0.0.1:8118";
+        }
+
         for (Station station : Config.values.stations) {
             if (station.outbox_storage_id == null) {
                 station.outbox_storage_id = SimpleFunctions.getRandomUUID();

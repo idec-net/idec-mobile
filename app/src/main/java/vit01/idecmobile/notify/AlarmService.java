@@ -31,8 +31,16 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        jobPendingIntent = PendingIntent.getBroadcast(
+                this.getApplicationContext(),
+                666, // У секты должны быть соответствующие id уведомлений
+                jobIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
         SimpleFunctions.debug("IDEC notifications enabled: " + String.valueOf(Config.values.notificationsEnabled));
+
         if (Config.values.notificationsEnabled) {
+            SimpleFunctions.checkTorRunning(getApplicationContext(), false);
             startAlarm();
         } else {
             stopAlarm();
@@ -41,12 +49,6 @@ public class AlarmService extends Service {
     }
 
     public void startAlarm() {
-        jobPendingIntent = PendingIntent.getBroadcast(
-                this.getApplicationContext(),
-                666, // У секты должны быть соответствующие id уведомлений
-                jobIntent,
-                0);
-
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + 1000 * 60,       // запустится после одной минуты
                 Config.values.notifyFireDuration * 1000 * 60, // интервал обновления
@@ -58,5 +60,6 @@ public class AlarmService extends Service {
 
     public void stopAlarm() {
         alarmManager.cancel(jobPendingIntent);
+        jobPendingIntent.cancel();
     }
 }

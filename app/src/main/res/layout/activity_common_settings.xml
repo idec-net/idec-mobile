@@ -18,8 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-        </android.support.v7.widget.Toolbar>
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -66,6 +65,12 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="Подключаться через прокси" />
+
+            <CheckBox
+                android:id="@+id/useTor"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Интеграция с Tor (Orbot)" />
 
             <CheckBox
                 android:id="@+id/notifications_enabled"
@@ -152,12 +157,32 @@
                 android:layout_height="wrap_content"
                 android:inputType="number" />
 
+            <TextView
+                style="@style/AppTheme.MyCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Настройки прокси-сервера" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Формат записи: user:pass@host:port. Прокси Orbot обычно запущен на порту 8118, i2p - 4444" />
+
+            <EditText
+                android:id="@+id/proxy_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textUri"
+                android:singleLine="true" />
+
             <Button
                 android:id="@+id/edit_offline_echoareas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="openEchoEdit"
                 android:text="Править offline-эхи" />
+
         </LinearLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

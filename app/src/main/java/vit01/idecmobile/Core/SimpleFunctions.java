@@ -27,6 +27,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import info.guardianproject.netcipher.proxy.OrbotHelper;
+
 public class SimpleFunctions {
     public static String appName = "IDECMobile";
     public static ArrayList<String> emptyList = new ArrayList<>();
@@ -252,6 +254,18 @@ public class SimpleFunctions {
         boolean deleted2 = xc_notify_name.delete();
 
         return (deleted1 | deleted2);
+    }
+
+    public static boolean checkTorRunning(Context context, boolean notifyUser) {
+        if (Config.values.useProxy
+                && Config.values.useTor
+                && OrbotHelper.isOrbotInstalled(context)
+                && !OrbotHelper.isOrbotRunning(context)) {
+            if (!notifyUser) {
+                OrbotHelper.requestStartTor(context);
+                return true;
+            } else return false;
+        } else return true;
     }
 
     public static void debug(String message) {

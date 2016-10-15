@@ -9,6 +9,7 @@ public class GlobalConfig implements Serializable {
             defaultEditor = true,
             firstRun = true,
             useProxy = false,
+            useTor = false,
             oldQuote = false, // упрощённое (старое) цитирование
             notificationsEnabled = false,
             notificationsVibrate = true;
@@ -16,12 +17,14 @@ public class GlobalConfig implements Serializable {
             oneRequestLimit = 20,
             connectionTimeout = 20,
             carbon_limit = 50, // максимальное количество сообщений в карбонке
-            notifyFireDuration = 15; // интервал проверки для уведомлений
+            notifyFireDuration = 15, // интервал проверки для уведомлений
+            proxyType = 1; // 0 - Socks, 1 - HTTP
     public ArrayList<String> offlineEchoareas = new ArrayList<>();
     public ArrayList<Station> stations = new ArrayList<>();
 
     // Сообщения какого пользователя слать в карбонку
-    public String carbon_to = "All"; // разделять двоеточием
+    public String carbon_to = "All", // разделять двоеточием
+            proxyAddress = "127.0.0.1:9050"; // аутентификация тоже будет
 
     GlobalConfig() {
         offlineEchoareas.add("lenta.rss");

@@ -37,9 +37,11 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.util.ArrayList;
 
+import info.guardianproject.netcipher.proxy.OrbotHelper;
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 
@@ -250,6 +252,12 @@ public class MainActivity extends AppCompatActivity {
 
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_WRITE_STORAGE);
+        }
+
+        boolean tor_is_fine = SimpleFunctions.checkTorRunning(this, true);
+        if (!tor_is_fine) {
+            Intent showStart = OrbotHelper.getShowOrbotStartIntent();
+            startActivity(showStart);
         }
     }
 

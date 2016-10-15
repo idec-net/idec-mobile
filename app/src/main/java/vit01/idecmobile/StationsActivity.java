@@ -407,6 +407,12 @@ public class StationsActivity extends AppCompatActivity {
 
             List<HashMap<String, String>> adapter_data = new ArrayList<>();
 
+            if (rawfile == null) {
+                SimpleFunctions.debug("installEchoList: rawfile = null");
+                Toast.makeText(getActivity(), "Ошибка: список эх не получен!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String[] lines = rawfile.split("\n");
 
             for (String line : lines) {
