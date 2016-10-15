@@ -67,6 +67,9 @@ public class DraftsView extends AppCompatActivity {
         Intent intent = getIntent();
         unsent_only = intent.getBooleanExtra("unsent", true);
 
+        if (unsent_only) getSupportActionBar().setTitle("Черновики");
+        else getSupportActionBar().setTitle("Отправленные");
+
         loadContent(unsent_only);
     }
 
