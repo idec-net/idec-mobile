@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public AbstractTransport transport;
     FragmentManager fm;
     int MY_PERMISSION_WRITE_STORAGE;
+    SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final SwipeRefreshLayout swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_fetch);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_fetch);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -276,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         updateStationsList();
         updateEcholist();
         updateNavDrawerCounters();
+        swipeRefresh.setEnabled(Config.values.swipeToFetch);
     }
 
     public void updateStationsList() {

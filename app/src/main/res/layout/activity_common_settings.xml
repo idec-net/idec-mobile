@@ -42,28 +42,30 @@
                 android:id="@+id/checkBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="false"
                 android:text="Внутренний редактор сообщений" />
 
             <CheckBox
                 android:id="@+id/old_quote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="false"
                 android:text="Упрощённое (старое) цитирование" />
+
+            <CheckBox
+                android:id="@+id/swipe_to_fetch_enable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Включить обновление свайпом на главном экране" />
 
             <CheckBox
                 android:id="@+id/checkBox2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="false"
                 android:text="Показать настройки при следующем запуске" />
 
             <CheckBox
                 android:id="@+id/checkBox3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="false"
                 android:text="Подключаться через прокси" />
 
             <CheckBox
@@ -76,14 +78,12 @@
                 android:id="@+id/notifications_enabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="false"
                 android:text="Включить уведомления" />
 
             <CheckBox
                 android:id="@+id/notification_vibrate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="Вибрация в уведомлениях" />
 
             <TextView

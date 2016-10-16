@@ -92,7 +92,8 @@ public class Network {
         if (!Config.values.useProxy) {
             SimpleFunctions.debug("(Прокси сервер: не используется)");
             Authenticator.setDefault(null);
-            NetCipher.setProxy(Proxy.NO_PROXY);
+            proxy = Proxy.NO_PROXY;
+            NetCipher.setProxy(proxy);
             return;
         }
 

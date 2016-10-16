@@ -12,7 +12,8 @@ public class GlobalConfig implements Serializable {
             useTor = false,
             oldQuote = false, // упрощённое (старое) цитирование
             notificationsEnabled = false,
-            notificationsVibrate = true;
+            notificationsVibrate = true,
+            swipeToFetch = true;
     public int
             oneRequestLimit = 20,
             connectionTimeout = 20,
@@ -36,5 +37,6 @@ public class GlobalConfig implements Serializable {
         Station secondStation = stations.get(1);
         secondStation.nodename = "tavern";
         secondStation.echoareas.add(0, "spline.local.14");
+        swipeToFetch = true;
     }
 }

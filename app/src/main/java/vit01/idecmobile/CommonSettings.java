@@ -17,7 +17,7 @@ import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.notify.AlarmService;
 
 public class CommonSettings extends AppCompatActivity {
-    CheckBox defaultEditor, firstrun, useProxy, oldQuote, notifyEnabled, notifyVibrate, useTor;
+    CheckBox defaultEditor, firstrun, useProxy, oldQuote, notifyEnabled, notifyVibrate, useTor, swipeToFetch;
     EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit, notifyInterval, proxyAddress;
     Intent alarmIntent;
 
@@ -38,6 +38,7 @@ public class CommonSettings extends AppCompatActivity {
         firstrun = (CheckBox) findViewById(R.id.checkBox2);
         useProxy = (CheckBox) findViewById(R.id.checkBox3);
         oldQuote = (CheckBox) findViewById(R.id.old_quote);
+        swipeToFetch = (CheckBox) findViewById(R.id.swipe_to_fetch_enable);
         notifyEnabled = (CheckBox) findViewById(R.id.notifications_enabled);
         notifyVibrate = (CheckBox) findViewById(R.id.notification_vibrate);
         useTor = (CheckBox) findViewById(R.id.useTor);
@@ -83,6 +84,7 @@ public class CommonSettings extends AppCompatActivity {
         firstrun.setChecked(Config.values.firstRun);
         useProxy.setChecked(Config.values.useProxy);
         oldQuote.setChecked(Config.values.oldQuote);
+        swipeToFetch.setChecked(Config.values.swipeToFetch);
         notifyEnabled.setChecked(Config.values.notificationsEnabled);
         notifyVibrate.setChecked(Config.values.notificationsVibrate);
         useTor.setChecked(Config.values.useTor);
@@ -104,6 +106,7 @@ public class CommonSettings extends AppCompatActivity {
         Config.values.firstRun = firstrun.isChecked();
         Config.values.useProxy = useProxy.isChecked();
         Config.values.oldQuote = oldQuote.isChecked();
+        Config.values.swipeToFetch = swipeToFetch.isChecked();
         Config.values.notificationsEnabled = notifyEnabled.isChecked();
         Config.values.notificationsVibrate = notifyVibrate.isChecked();
 
@@ -129,11 +132,17 @@ public class CommonSettings extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    public void onBackPressed() {
         fetchValues();
         Config.writeConfig(this);
         startService(alarmIntent);
         Network.proxy = null; // сбрасываем значение, чтобы оно распарсилось и пересчиталось заново
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
