@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="navdrawer_picture" />
+    <attr name="menuIconColor" />
+
+    <attr name="quoteColor" />
+    <attr name="commentColor" />
+    <attr name="PSColor" />
+</resources>

@@ -40,6 +40,7 @@ import vit01.idecmobile.Core.Station;
 public class AdditionalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_additional);
 

@@ -1,15 +1,24 @@
 package vit01.idecmobile;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Arrays;
+import java.util.List;
 
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 import vit01.idecmobile.Core.Config;
@@ -19,10 +28,16 @@ import vit01.idecmobile.notify.AlarmService;
 public class CommonSettings extends AppCompatActivity {
     CheckBox defaultEditor, firstrun, useProxy, oldQuote, notifyEnabled, notifyVibrate, useTor, swipeToFetch;
     EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit, notifyInterval, proxyAddress;
+    Spinner selected_theme;
     Intent alarmIntent;
+    Resources res;
+    List<String> realThemeNames; // те имена, которые пишутся в конфиг
+    boolean showThemeChangeAlert = true;
+    AdapterView.OnItemSelectedListener spinnerListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_common_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,6 +64,13 @@ public class CommonSettings extends AppCompatActivity {
         carbon_limit = (EditText) findViewById(R.id.editText4);
         notifyInterval = (EditText) findViewById(R.id.notifications_time_interval);
         proxyAddress = (EditText) findViewById(R.id.proxy_address);
+
+        res = getResources();
+        realThemeNames = Arrays.asList(res.getStringArray(R.array.themes));
+
+        ArrayAdapter themeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, res.getStringArray(R.array.themes_names));
+        selected_theme = (Spinner) findViewById(R.id.selected_theme);
+        selected_theme.setAdapter(themeAdapter);
 
         alarmIntent = new Intent(this, AlarmService.class);
         notifyEnabled.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +99,28 @@ public class CommonSettings extends AppCompatActivity {
                 }
             }
         });
+
+        spinnerListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!showThemeChangeAlert) return; // два раза предупреждение не показываем
+
+                new AlertDialog.Builder(CommonSettings.this)
+                        .setTitle("Предупреждение")
+                        .setMessage("Для применения тем требуется перезапуск приложения!")
+                        .setPositiveButton("Ясно", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                showThemeChangeAlert = false;
+                            }
+                        })
+                        .show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
     }
 
     protected void installValues() {
@@ -99,6 +143,14 @@ public class CommonSettings extends AppCompatActivity {
         notifyInterval.setText(
                 String.valueOf(Config.values.notifyFireDuration), TextView.BufferType.EDITABLE);
         proxyAddress.setText(Config.values.proxyAddress);
+
+        int themeIndex = realThemeNames.indexOf(Config.values.applicationTheme);
+        if (themeIndex < 0) themeIndex = 0;
+
+        selected_theme.setSelection(themeIndex, false);
+
+        if (selected_theme.getOnItemSelectedListener() == null)
+            selected_theme.setOnItemSelectedListener(spinnerListener);
     }
 
     protected void fetchValues() {
@@ -123,6 +175,9 @@ public class CommonSettings extends AppCompatActivity {
         Config.values.proxyAddress = proxyAddress.getText().toString();
         Config.values.proxyType = 1; // всегда HTTP-прокси
         Config.values.useTor = useTor.isChecked();
+
+        int themeIndex = selected_theme.getSelectedItemPosition();
+        Config.values.applicationTheme = realThemeNames.get(themeIndex);
     }
 
     public void openEchoEdit(View view) {

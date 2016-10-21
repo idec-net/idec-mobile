@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -16,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,9 +65,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Config.loadConfig(this);
+        setTheme(Config.appTheme);
+        getApplicationContext().setTheme(R.style.AppTheme_Dark);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Config.loadConfig(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         drawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(R.drawable.header)
+                .withHeaderBackground(getHeaderDrawable())
                 .withCompactStyle(true)
                 .withProfileImagesVisible(true)
                 .withProfileImagesClickable(false)
@@ -347,18 +352,28 @@ public class MainActivity extends AppCompatActivity {
         return icon;
     }
 
+    public Drawable getHeaderDrawable() {
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.navdrawer_picture});
+        Drawable drawable = a.getDrawable(0);
+        a.recycle();
+        return drawable;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
+        int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
+
         menu.findItem(R.id.action_fetch).setIcon(
                 new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_get_app)
-                        .actionBar().color(Color.WHITE));
+                        .actionBar().color(iconColor));
 
         menu.findItem(R.id.action_send).setIcon(
                 new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_cloud_upload)
-                        .actionBar().color(Color.WHITE));
+                        .actionBar().color(iconColor));
         return true;
     }
 

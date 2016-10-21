@@ -29,6 +29,7 @@ public class DebugActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

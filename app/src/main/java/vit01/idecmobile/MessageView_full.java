@@ -2,7 +2,6 @@ package vit01.idecmobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -87,7 +86,7 @@ public class MessageView_full extends Fragment {
 
         messageStarred = message.is_favorite;
         full_subj.setText(message.subj);
-        full_msg.setText(Html.fromHtml(SimpleFunctions.reparseMessage(message.msg)));
+        full_msg.setText(Html.fromHtml(SimpleFunctions.reparseMessage(inflater.getContext(), message.msg)));
         full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
         full_msgid.setText("msgid: " + msgid);
 
@@ -102,9 +101,11 @@ public class MessageView_full extends Fragment {
         full_msg.setMovementMethod(LinkMovementMethod.getInstance());
 
         Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
-        fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(24).color(Color.GRAY), null, null);
+
+        int secondaryColor = SimpleFunctions.colorFromTheme(getActivity(), android.R.attr.textColorSecondary);
+
+        fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(24).color(secondaryColor), null, null);
         fullAnswerBtn.setCompoundDrawablePadding(30);
-        fullAnswerBtn.setTextColor(Color.GRAY);
 
         fullAnswerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,9 +122,8 @@ public class MessageView_full extends Fragment {
         });
 
         Button fullQuoteAnswerBtn = (Button) rootLayout.findViewById(R.id.full_quote_answer_button);
-        fullQuoteAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_format_quote).sizeDp(24).color(Color.GRAY), null, null);
+        fullQuoteAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_format_quote).sizeDp(24).color(secondaryColor), null, null);
         fullQuoteAnswerBtn.setCompoundDrawablePadding(30);
-        fullQuoteAnswerBtn.setTextColor(Color.GRAY);
 
         fullQuoteAnswerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,12 +170,16 @@ public class MessageView_full extends Fragment {
 
     private void setStarredIcon(boolean isStarred, MenuItem item) {
         Drawable icon;
+        Context context = getContext();
+
+        int iconColor = SimpleFunctions.colorFromTheme(context, R.attr.menuIconColor);
+
         if (isStarred) {
-            icon = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_star)
-                    .actionBar().color(Color.WHITE);
+            icon = new IconicsDrawable(context, GoogleMaterial.Icon.gmd_star)
+                    .actionBar().color(iconColor);
         } else {
-            icon = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_star)
-                    .actionBar().color(Color.WHITE).alpha(80);
+            icon = new IconicsDrawable(context, GoogleMaterial.Icon.gmd_star)
+                    .actionBar().color(iconColor).alpha(80);
         }
         item.setIcon(icon);
     }

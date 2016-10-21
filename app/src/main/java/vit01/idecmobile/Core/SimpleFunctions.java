@@ -2,10 +2,12 @@ package vit01.idecmobile.Core;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import info.guardianproject.netcipher.proxy.OrbotHelper;
+import vit01.idecmobile.R;
 
 public class SimpleFunctions {
     public static String appName = "IDECMobile";
@@ -44,6 +47,7 @@ public class SimpleFunctions {
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
     public static Pattern mailto_pattern = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+    public static String commentColor, PSColor, quoteColor;
 
     public static String join(String[] array, String delimiter) {
         String result = "";
@@ -133,16 +137,27 @@ public class SimpleFunctions {
         return full_date.format(new Date(unixtime * 1000));
     }
 
-    public static String reparseMessage(String msg) {
+    public static String reparseMessage(Context context, String msg) {
+        // Вот эти первые строки - костыль
+
+        if (quoteColor == null)
+            quoteColor = String.format("#%06X", (0xFFFFFF & SimpleFunctions.colorFromTheme(context, R.attr.quoteColor)));
+
+        if (PSColor == null)
+            PSColor = String.format("#%06X", (0xFFFFFF & SimpleFunctions.colorFromTheme(context, R.attr.PSColor)));
+
+        if (commentColor == null)
+            commentColor = String.format("#%06X", (0xFFFFFF & SimpleFunctions.colorFromTheme(context, R.attr.commentColor)));
+
         msg = msg.replaceAll("<", "&lt;");
         Matcher quote_match = quote_pattern.matcher(msg);
-        msg = quote_match.replaceAll("<font color='#189818'>$0</font>");
+        msg = quote_match.replaceAll(String.format("<font color='%s'>$0</font>", quoteColor));
 
         Matcher comment_match = comment_pattern.matcher(msg);
-        msg = comment_match.replaceAll("$1<font color='#bb0000'>$3$4</font>");
+        msg = comment_match.replaceAll(String.format("$1<font color='%s'>$3$4</font>", commentColor));
 
         Matcher PS_match = PS_pattern.matcher(msg);
-        msg = PS_match.replaceAll("<font color='#bb0000'>$0</font>");
+        msg = PS_match.replaceAll(String.format("<font color='%s'>$0</font>", PSColor));
 
         Matcher ii_link_match = ii_link_pattern.matcher(msg);
         msg = ii_link_match.replaceAll("<a href=\"$0\">$0</a>");
@@ -170,6 +185,13 @@ public class SimpleFunctions {
         }
 
         return TextUtils.join("<br>", result);
+    }
+
+    public static void resetIDECParserColors() {
+        // Следующие строчки нужны, чтобы парсер перезагрузил цвета из темы оформления
+        SimpleFunctions.commentColor = null;
+        SimpleFunctions.PSColor = null;
+        SimpleFunctions.quoteColor = null;
     }
 
     public static String messagePreview(String text) {
@@ -266,6 +288,14 @@ public class SimpleFunctions {
                 return true;
             } else return false;
         } else return true;
+    }
+
+    public static int colorFromTheme(Context callingActivity, int id) {
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = callingActivity.obtainStyledAttributes(typedValue.data, new int[]{id});
+        int color = a.getColor(0, 0);
+        a.recycle();
+        return color;
     }
 
     public static void debug(String message) {

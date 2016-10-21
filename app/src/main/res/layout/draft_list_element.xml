@@ -17,7 +17,6 @@
         android:layout_alignParentTop="true"
         android:lines="1"
         android:text="Re: Тема сообщения"
-        android:textColor="@color/md_black_1000"
         android:textSize="@dimen/material_text_subhead" />
 
     <TextView
@@ -28,7 +27,6 @@
         android:layout_below="@+id/draft_subj"
         android:lines="1"
         android:text="to All"
-        android:textColor="@color/md_black_1000"
         android:textSize="@dimen/material_text_body2" />
 
     <TextView

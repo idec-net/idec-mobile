@@ -14,7 +14,6 @@
         android:layout_margin="@dimen/text_margin"
         android:autoLink="web|email"
         android:text="@string/help_text"
-        android:textColor="@color/md_black_1000"
         android:textIsSelectable="true"
         android:textSize="@dimen/material_text_body1" />
 

@@ -50,6 +50,7 @@ public class EchoView extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_echo_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -195,6 +196,7 @@ public class EchoView extends AppCompatActivity {
         int visibleItems = 5;
         int lastVisibleItem;
         boolean loading;
+        int primaryColor, secondaryColor;
         private ArrayList<String> msglist;
         private ArrayList<String> visible_msglist;
         private Handler handler;
@@ -249,13 +251,17 @@ public class EchoView extends AppCompatActivity {
                 }
             });
 
+            int accentColor = SimpleFunctions.colorFromTheme(callingActivity, R.attr.colorAccent);
+            secondaryColor = SimpleFunctions.colorFromTheme(callingActivity, android.R.attr.textColorSecondary);
+            primaryColor = SimpleFunctions.colorFromTheme(callingActivity, android.R.attr.textColorPrimary);
+
             starredDrawable = new IconicsDrawable(activity)
                     .icon(GoogleMaterial.Icon.gmd_star)
-                    .color(activity.getResources().getColor(R.color.accent))
+                    .color(accentColor)
                     .sizeDp(20);
             unstarredDrawable = new IconicsDrawable(activity)
                     .icon(GoogleMaterial.Icon.gmd_star_border)
-                    .color(activity.getResources().getColor(R.color.md_grey_500))
+                    .color(secondaryColor)
                     .sizeDp(20);
         }
 
@@ -330,9 +336,9 @@ public class EchoView extends AppCompatActivity {
             int font_style = (message.is_unread) ? Typeface.BOLD : Typeface.NORMAL;
 
             if (message.is_unread) {
-                holder.msg_text.setTextColor(Color.BLACK);
+                holder.msg_text.setTextColor(primaryColor);
             } else {
-                holder.msg_text.setTextColor(Color.GRAY);
+                holder.msg_text.setTextColor(secondaryColor);
             }
 
             holder.msg_subj.setTypeface(null, font_style);

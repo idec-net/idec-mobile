@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
+import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
 
 public class MessageSlideActivity extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class MessageSlideActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_slide);
 
@@ -33,6 +36,8 @@ public class MessageSlideActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        SimpleFunctions.resetIDECParserColors();
 
         Intent gotInfo = getIntent();
         msglist = gotInfo.getStringArrayListExtra("msglist");

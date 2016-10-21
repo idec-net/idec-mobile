@@ -18,7 +18,6 @@
         android:layout_toLeftOf="@+id/msg_date"
         android:lines="1"
         android:text="Re: Новые какие-то обсуждения каких-то людей о чём-то"
-        android:textColor="@color/md_black_1000"
         android:textSize="@dimen/material_text_subhead" />
 
     <TextView
@@ -29,7 +28,6 @@
         android:layout_below="@+id/msg_subj"
         android:lines="1"
         android:text="someuser -> All"
-        android:textColor="@color/md_black_1000"
         android:textSize="@dimen/material_text_body2" />
 
     <TextView

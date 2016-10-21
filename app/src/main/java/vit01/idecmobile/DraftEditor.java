@@ -2,7 +2,6 @@ package vit01.idecmobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -43,6 +42,7 @@ public class DraftEditor extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draft_editor);
 
@@ -110,10 +110,12 @@ public class DraftEditor extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
+        int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
+
         menu.findItem(R.id.action_compose_send).setIcon(new IconicsDrawable
-                (context, GoogleMaterial.Icon.gmd_send).actionBar().color(Color.WHITE));
+                (context, GoogleMaterial.Icon.gmd_send).actionBar().color(iconColor));
         menu.findItem(R.id.action_compose_delete).setIcon(new IconicsDrawable
-                (context, GoogleMaterial.Icon.gmd_delete).actionBar().color(Color.WHITE));
+                (context, GoogleMaterial.Icon.gmd_delete).actionBar().color(iconColor));
         return true;
     }
 

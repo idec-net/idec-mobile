@@ -87,7 +87,19 @@
                 android:text="Вибрация в уведомлениях" />
 
             <TextView
-                android:id="@+id/textView"
+                style="@style/AppTheme.MyCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Тема оформления клиента" />
+
+            <Spinner
+                android:id="@+id/selected_theme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/themes_names"
+                android:entryValues="@array/themes" />
+
+            <TextView
                 style="@style/AppTheme.MyCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,7 +113,6 @@
                 android:inputType="numberDecimal" />
 
             <TextView
-                android:id="@+id/textView2"
                 style="@style/AppTheme.MyCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,7 +126,6 @@
                 android:inputType="numberDecimal" />
 
             <TextView
-                android:id="@+id/textView3"
                 style="@style/AppTheme.MyCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,7 +140,6 @@
                 android:inputType="textAutoComplete|textPersonName" />
 
             <TextView
-                android:id="@+id/textView4"
                 style="@style/AppTheme.MyCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,7 +154,6 @@
                 android:inputType="numberDecimal" />
 
             <TextView
-                android:id="@+id/textView5"
                 style="@style/AppTheme.MyCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -164,7 +172,6 @@
                 android:text="Настройки прокси-сервера" />
 
             <TextView
-                android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Формат записи: user:pass@host:port. Прокси Orbot обычно запущен на порту 8118, i2p - 4444" />

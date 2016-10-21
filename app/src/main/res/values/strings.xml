@@ -13,6 +13,16 @@
         <item>Удалить эху</item>
     </string-array>
 
+    <string-array name="themes">
+        <item>default</item>
+        <item>dark</item>
+    </string-array>
+
+    <string-array name="themes_names">
+        <item>Twi-Light (по умолчанию)</item>
+        <item>Friendly Darkness</item>
+    </string-array>
+
     <string name="title_activity_stations">StationsActivity</string>
     <string name="title_activity_help">Помощь</string>
     <string name="help_text">

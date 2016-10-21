@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!-- Сюда складываются цвета, которые не могут пойти напрямую в styles.xml -->
 
-    <color name="colorPrimary">#9C27B0</color>
-    <color name="colorPrimaryDark">#7B1FA2</color>
-    -->
     <color name="colorPrimary">#7B1FA2</color>
     <color name="colorPrimaryDark">#53156e</color>
     <color name="colorPrimaryLight">#E1BEE7</color>
     <color name="colorAccent">#FF5252</color>
+
+    <color name="theme2_colorAccent">#09AD9F</color>
+    <color name="theme2_activityBackground">#161D3F</color>
+    <color name="theme2_listDivider">#2a3778</color>
 </resources>

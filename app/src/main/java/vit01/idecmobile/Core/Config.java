@@ -7,9 +7,12 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import vit01.idecmobile.R;
+
 public class Config {
     public static GlobalConfig values;
     public static String filename = "config.obj";
+    public static int appTheme = R.style.AppTheme;
 
     public static void loadConfig(Context context) {
         try {
@@ -25,6 +28,7 @@ public class Config {
 
             values = new GlobalConfig();
         }
+        select_gui_theme();
     }
 
     public static void writeConfig(Context context) {
@@ -62,6 +66,11 @@ public class Config {
             Config.values.proxyAddress = "127.0.0.1:8118";
         }
 
+        if (Config.values.applicationTheme == null) {
+            Config.values.applicationTheme = "default";
+            needForWrite = true;
+        }
+
         for (Station station : Config.values.stations) {
             if (station.outbox_storage_id == null) {
                 station.outbox_storage_id = SimpleFunctions.getRandomUUID();
@@ -70,5 +79,18 @@ public class Config {
         }
 
         if (needForWrite) writeConfig(context);
+    }
+
+    private static void select_gui_theme() {
+        switch (Config.values.applicationTheme) {
+            case "dark":
+                appTheme = R.style.AppTheme_Dark;
+                break;
+
+            case "default":
+            default:
+                appTheme = R.style.AppTheme;
+                break;
+        }
     }
 }

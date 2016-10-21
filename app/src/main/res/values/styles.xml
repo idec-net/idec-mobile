@@ -1,22 +1,72 @@
 <resources>
+    <!-- Смотрящим в этот файл надо обязательно заглянуть в colors.xml -->
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="navdrawer_picture">@drawable/header_light</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textColorSecondary">@color/md_grey_600</item>
+        <item name="divider">@color/md_grey_200</item>
+        <item name="menuIconColor">#FFFFFF</item> <!-- ставить обязательно -->
+
+        <!-- Цвета для оформления цитат, постскриптумов и комментариев -->
+        <item name="quoteColor">#189818</item>
+        <item name="commentColor">#bb0000</item>
+        <item name="PSColor">#bb0000</item>
     </style>
 
-    <style name="AppTheme.Light" parent="AppTheme" />
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="navdrawer_picture">@drawable/header_dark</item>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+        <!--
+        Цвета для темы в своей основе взяты отсюда:
+            http://90sigma.deviantart.com/art/Princess-Luna-s-Season-2-Colour-Palette-327397959
+        Правда, пришлось поменять некоторое для лучшего отображения и контраста
+        -->
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+        <item name="colorPrimary">#404680</item>
+        <item name="colorPrimaryDark">#161D3F</item>
+        <item name="colorAccent">@color/theme2_colorAccent</item>
+        <item name="android:colorBackground">#070913</item>
+        <item name="android:windowBackground">@color/theme2_activityBackground</item>
+        <item name="android:itemBackground">#161D3F</item>
+        <item name="colorControlHighlight">#396CC8</item>
+        <item name="divider">@color/theme2_listDivider</item>
+        <item name="menuIconColor">?android:attr/colorForeground</item>
 
-    <style name="AppTheme.MyCaption">
-        <item name="android:textSize">17sp</item>
-        <item name="android:paddingTop">10sp</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="material_drawer_background">#161D3F</item>
+        <item name="material_drawer_primary_text">#eafffd</item>
+        <item name="material_drawer_secondary_text">#eafffd</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
+        <item name="material_drawer_divider">@color/theme2_listDivider</item>
+        <item name="material_drawer_selected">#2F55C3</item>
+        <item name="material_drawer_selected_text">#eafffd</item>
+        <item name="material_drawer_header_selection_text">
+            @color/material_drawer_dark_header_selection_text
+        </item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
+
+        <item name="android:colorForeground">#eafffd</item>
+        <item name="android:editTextColor">#eafffd</item>
+        <item name="android:textColor">#eafffd</item>
+        <item name="android:textColorPrimary">#eafffd</item>
+        <item name="android:textColorPrimaryInverse">@android:color/primary_text_light</item>
+        <item name="android:textColorSecondary">#C7D0FF</item>
+        <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
+
+        <item name="quoteColor">#81FADC</item>
+        <item name="commentColor">#d47cbd</item>
+        <item name="PSColor">#d47cbd</item>
     </style>
+
+
+    <!--
+        Всё, что идёт далее, править не имеет смысла.
+        Реальные темы оформления и цвета находятся наверху
+    -->
 
     <style name="AppTheme.EditTextFullWidth" parent="Widget.AppCompat.EditText">
         <item name="android:paddingLeft">16dp</item>
@@ -27,13 +77,29 @@
         <item name="android:textSize">@dimen/material_text_subhead</item>
     </style>
 
+    <!-- Стиль для разделителя по типу <hr> -->
+
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="AppTheme.Light.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <!-- Стиль для заголовков (используется в GUI настроек, например) -->
 
+    <style name="AppTheme.MyCaption">
+        <item name="android:textSize">17sp</item>
+        <item name="android:paddingTop">10sp</item>
+        <item name="android:textColor">?attr/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.Light.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.Light.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.Light" parent="AppTheme" />
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
