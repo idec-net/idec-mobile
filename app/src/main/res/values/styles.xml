@@ -95,7 +95,7 @@
         <item name="android:textColorSecondary">#7CA99F</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_dark</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="theme">@style/WhiteToolbar</item>
+        <item name="android:theme">@style/WhiteToolbar</item>
 
         <item name="quoteColor">#7CA99F</item>
         <item name="commentColor">#42ACD3</item>
@@ -108,7 +108,7 @@
         <item name="colorControlHighlight">#fff676</item>
         <item name="android:colorControlHighlight">#fff676</item>
     </style>
-    
+
     <!--
         Всё, что идёт далее, править не имеет смысла.
         Реальные темы оформления и цвета находятся выше
