@@ -16,11 +16,13 @@
     <string-array name="themes">
         <item>default</item>
         <item>dark</item>
+        <item>white</item>
     </string-array>
 
     <string-array name="themes_names">
         <item>Twi-Light (по умолчанию)</item>
         <item>Friendly Darkness</item>
+        <item>Sunny Skies</item>
     </string-array>
 
     <string name="title_activity_stations">StationsActivity</string>

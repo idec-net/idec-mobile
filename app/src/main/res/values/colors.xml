@@ -10,4 +10,8 @@
     <color name="theme2_colorAccent">#09AD9F</color>
     <color name="theme2_activityBackground">#161D3F</color>
     <color name="theme2_listDivider">#2a3778</color>
+
+    <color name="theme3_colorAccent">#a35dc7</color>
+    <color name="theme3_activityBackground">#FFFFFF</color>
+    <color name="theme3_listDivider">#7CA99F</color>
 </resources>

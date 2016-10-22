@@ -62,10 +62,56 @@
         <item name="PSColor">#d47cbd</item>
     </style>
 
+    <style name="AppTheme.TheWhite" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="navdrawer_picture">@drawable/header_c</item>
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorPrimaryDark">#FFFFFF</item>
+        <item name="colorAccent">@color/theme3_colorAccent</item>
+        <item name="android:colorBackground">#ffffff</item>
+        <item name="android:windowBackground">@color/theme3_activityBackground</item>
+        <item name="android:itemBackground">#fcf7fd</item>
+        <item name="colorControlHighlight">#fff676</item>
+        <item name="android:colorControlHighlight">#fff676</item>
+        <item name="divider">@color/theme3_listDivider</item>
+        <item name="menuIconColor">?android:attr/colorForeground</item>
 
+        <item name="material_drawer_background">?android:attr/colorBackground</item>
+        <item name="material_drawer_primary_text">#000000</item>
+        <item name="material_drawer_secondary_text">#49484A</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
+        <item name="material_drawer_divider">@color/theme3_listDivider</item>
+        <item name="material_drawer_selected">#5dc3b2</item>
+        <item name="material_drawer_selected_text">#FFFFFF</item>
+        <item name="material_drawer_header_selection_text">
+            @color/material_drawer_header_selection_text
+        </item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
+
+        <item name="android:colorForeground">@color/md_blue_grey_900</item>
+        <item name="android:editTextColor">@color/md_blue_grey_900</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textColorPrimary">@color/md_blue_grey_900</item>
+        <item name="android:textColorPrimaryInverse">@android:color/primary_text_dark</item>
+        <item name="android:textColorSecondary">#7CA99F</item>
+        <item name="android:textColorSecondaryInverse">@android:color/secondary_text_dark</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="theme">@style/WhiteToolbar</item>
+
+        <item name="quoteColor">#7CA99F</item>
+        <item name="commentColor">#42ACD3</item>
+        <item name="PSColor">#42ACD3</item>
+    </style>
+
+    <style name="WhiteToolbar" parent="ThemeOverlay.AppCompat.Light">
+        <!-- Это также относится к последней теме-->
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="colorControlHighlight">#fff676</item>
+        <item name="android:colorControlHighlight">#fff676</item>
+    </style>
+    
     <!--
         Всё, что идёт далее, править не имеет смысла.
-        Реальные темы оформления и цвета находятся наверху
+        Реальные темы оформления и цвета находятся выше
     -->
 
     <style name="AppTheme.EditTextFullWidth" parent="Widget.AppCompat.EditText">
