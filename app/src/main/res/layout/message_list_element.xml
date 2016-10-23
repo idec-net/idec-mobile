@@ -18,6 +18,7 @@
         android:layout_toLeftOf="@+id/msg_date"
         android:lines="1"
         android:text="Re: Новые какие-то обсуждения каких-то людей о чём-то"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/material_text_subhead" />
 
     <TextView
@@ -28,6 +29,7 @@
         android:layout_below="@+id/msg_subj"
         android:lines="1"
         android:text="someuser -> All"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/material_text_body2" />
 
     <TextView
@@ -52,6 +54,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="16dp"
         android:text="03.09.16, 17:18"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/material_text_caption" />
 
     <ImageView

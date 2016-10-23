@@ -7,7 +7,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">#000000</item>
         <item name="android:textColorSecondary">@color/md_grey_600</item>
         <item name="divider">@color/md_grey_200</item>
         <item name="menuIconColor">#FFFFFF</item> <!-- ставить обязательно -->
@@ -69,11 +68,11 @@
         <item name="colorAccent">@color/theme3_colorAccent</item>
         <item name="android:colorBackground">#ffffff</item>
         <item name="android:windowBackground">@color/theme3_activityBackground</item>
-        <item name="android:itemBackground">#fcf7fd</item>
+        <item name="android:itemBackground">?attr/colorPrimary</item>
         <item name="colorControlHighlight">#fff676</item>
         <item name="android:colorControlHighlight">#fff676</item>
         <item name="divider">@color/theme3_listDivider</item>
-        <item name="menuIconColor">?android:attr/colorForeground</item>
+        <item name="menuIconColor">#333333</item>
 
         <item name="material_drawer_background">?android:attr/colorBackground</item>
         <item name="material_drawer_primary_text">#000000</item>
@@ -87,26 +86,22 @@
         </item>
         <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
 
-        <item name="android:colorForeground">@color/md_blue_grey_900</item>
+        <item name="android:colorForeground">@color/md_grey_600</item>
         <item name="android:editTextColor">@color/md_blue_grey_900</item>
-        <item name="android:textColor">#000000</item>
-        <item name="android:textColorPrimary">@color/md_blue_grey_900</item>
+        <item name="android:textColorPrimary">#000000</item>
         <item name="android:textColorPrimaryInverse">@android:color/primary_text_dark</item>
         <item name="android:textColorSecondary">#7CA99F</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_dark</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:theme">@style/WhiteToolbar</item>
+        <item name="android:theme">@style/WhiteActionBar</item>
 
         <item name="quoteColor">#7CA99F</item>
         <item name="commentColor">#42ACD3</item>
         <item name="PSColor">#42ACD3</item>
     </style>
 
-    <style name="WhiteToolbar" parent="ThemeOverlay.AppCompat.Light">
-        <!-- Это также относится к последней теме-->
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="colorControlHighlight">#fff676</item>
-        <item name="android:colorControlHighlight">#fff676</item>
+    <style name="WhiteActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">?attr/menuIconColor</item>
     </style>
 
     <!--
@@ -141,11 +136,7 @@
 
     <style name="AppTheme.Light.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.Light.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="AppTheme.Light" parent="AppTheme" />
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

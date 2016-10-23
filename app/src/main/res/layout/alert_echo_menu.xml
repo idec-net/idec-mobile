@@ -14,5 +14,5 @@
         android:id="@+id/echo_menu_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/echo_menu_options"></ListView>
+        android:entries="@array/echo_menu_options" />
 </LinearLayout>

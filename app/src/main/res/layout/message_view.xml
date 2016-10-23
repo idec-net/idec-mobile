@@ -38,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Re: Большой текст темы сообщения"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/material_text_title" />
 
         <TextView
@@ -75,6 +76,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
             android:text="Очень большой текст с большим содержанием"
+            android:textColor="?android:attr/textColorPrimary"
             android:textIsSelectable="true"
             android:textSize="@dimen/material_text_subhead" />
 

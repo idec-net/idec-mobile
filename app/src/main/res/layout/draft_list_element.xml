@@ -17,6 +17,7 @@
         android:layout_alignParentTop="true"
         android:lines="1"
         android:text="Re: Тема сообщения"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/material_text_subhead" />
 
     <TextView
@@ -27,6 +28,7 @@
         android:layout_below="@+id/draft_subj"
         android:lines="1"
         android:text="to All"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="@dimen/material_text_body2" />
 
     <TextView
@@ -40,6 +42,7 @@
         android:maxLength="250"
         android:maxLines="2"
         android:text="Большой и длинный текст на много строк, в котором куча разных цитат, мыслей и всего такого"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="@dimen/material_text_body1" />
 
 </RelativeLayout>

@@ -20,6 +20,7 @@
         android:layout_toStartOf="@+id/echoarea_unread_count"
         android:lines="1"
         android:text="echoarea.none"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/material_text_subhead" />
 
     <TextView
@@ -32,6 +33,7 @@
         android:layout_toLeftOf="@+id/echoarea_total_count"
         android:layout_toStartOf="@+id/echoarea_total_count"
         android:text="5"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/material_text_subhead"
         android:textStyle="bold" />
 
@@ -43,5 +45,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="/900"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/material_text_subhead" />
 </RelativeLayout>
