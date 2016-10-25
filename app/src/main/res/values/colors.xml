@@ -14,4 +14,8 @@
     <color name="theme3_colorAccent">#a35dc7</color>
     <color name="theme3_activityBackground">#FFFFFF</color>
     <color name="theme3_listDivider">#7CA99F</color>
+
+    <color name="theme_tomorrow_night_eighties_colorAccent">#f2777a</color>
+    <color name="theme_tomorrow_night_eighties_activityBackground">#2d2d2d</color>
+    <color name="theme_tomorrow_night_eighties_listDivider">#393939</color>
 </resources>

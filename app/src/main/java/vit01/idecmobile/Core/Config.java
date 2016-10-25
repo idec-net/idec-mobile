@@ -91,6 +91,10 @@ public class Config {
                 appTheme = R.style.AppTheme_TheWhite;
                 break;
 
+            case "tomorrow_night_eighties":
+                appTheme = R.style.AppTheme_TomorrowNightEighties;
+                break;
+
             case "default":
             default:
                 appTheme = R.style.AppTheme;
