@@ -104,6 +104,45 @@
         <item name="android:textColorPrimary">?attr/menuIconColor</item>
     </style>
 
+    <style name="AppTheme.TomorrowNightEighties" parent="Theme.AppCompat.NoActionBar">
+        <!-- Цвета взяты из темы https://github.com/chriskempson/tomorrow-theme -->
+        <item name="navdrawer_picture">@drawable/header_tomorrow_night_eighties</item>
+
+        <item name="colorPrimary">#393939</item>
+        <item name="colorPrimaryDark">#2d2d2d</item>
+        <item name="colorAccent">@color/theme_tomorrow_night_eighties_colorAccent</item>
+        <item name="android:colorBackground">#393939</item>
+        <item name="android:windowBackground">@color/theme_tomorrow_night_eighties_activityBackground</item>
+        <item name="android:itemBackground">#2d2d2d</item>
+        <item name="colorControlHighlight">#515151</item>
+        <item name="divider">@color/theme_tomorrow_night_eighties_listDivider</item>
+        <item name="menuIconColor">?android:attr/colorForeground</item>
+
+        <item name="material_drawer_background">#2d2d2d</item>
+        <item name="material_drawer_primary_text">#cccccc</item>
+        <item name="material_drawer_secondary_text">#999999</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
+        <item name="material_drawer_divider">@color/theme_tomorrow_night_eighties_listDivider</item>
+        <item name="material_drawer_selected">#515151</item>
+        <item name="material_drawer_selected_text">#eafffd</item>
+        <item name="material_drawer_header_selection_text">
+            @color/material_drawer_dark_header_selection_text
+        </item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
+
+        <item name="android:colorForeground">#eafffd</item>
+        <item name="android:editTextColor">#eafffd</item>
+        <item name="android:textColor">#eafffd</item>
+        <item name="android:textColorPrimary">#eafffd</item>
+        <item name="android:textColorPrimaryInverse">@android:color/primary_text_light</item>
+        <item name="android:textColorSecondary">#cccccc</item>
+        <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
+
+        <item name="quoteColor">#6699cc</item>
+        <item name="commentColor">#999999</item>
+        <item name="PSColor">#99cc99</item>
+    </style>
+
     <!--
         Всё, что идёт далее, править не имеет смысла.
         Реальные темы оформления и цвета находятся выше
