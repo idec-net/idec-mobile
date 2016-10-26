@@ -193,7 +193,7 @@ public class EchoView extends AppCompatActivity {
         AbstractTransport transport;
         Activity callingActivity;
         int total_count;
-        int visibleItems = 5;
+        int visibleItems = 20;
         int lastVisibleItem;
         boolean loading;
         int primaryColor, secondaryColor;
