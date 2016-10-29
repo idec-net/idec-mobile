@@ -1,6 +1,18 @@
 <resources>
 
-    <style name="AppTheme.Light">
+    <style name="AppTheme.Light" parent="AppTheme.Light">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="AppTheme._Dark">
+        <item name="android:colorControlHighlight">#396CC8</item>
+    </style>
+
+    <style name="AppTheme.TheWhite" parent="AppTheme._TheWhite">
+        <item name="android:colorControlHighlight">#fff676</item>
+    </style>
+
+    <style name="AppTheme.TomorrowNightEighties" parent="AppTheme._TomorrowNightEighties">
+        <item name="android:colorControlHighlight">#515151</item>
     </style>
 </resources>

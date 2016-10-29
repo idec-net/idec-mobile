@@ -15,9 +15,11 @@
         <item name="quoteColor">#189818</item>
         <item name="commentColor">#bb0000</item>
         <item name="PSColor">#bb0000</item>
+
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
-    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme._Dark" parent="Theme.AppCompat.NoActionBar">
         <item name="navdrawer_picture">@drawable/header_dark</item>
 
         <!--
@@ -59,18 +61,21 @@
         <item name="quoteColor">#81FADC</item>
         <item name="commentColor">#d47cbd</item>
         <item name="PSColor">#d47cbd</item>
+
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
     </style>
 
-    <style name="AppTheme.TheWhite" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.Dark" parent="AppTheme._Dark" />
+
+    <style name="AppTheme._TheWhite" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="navdrawer_picture">@drawable/header_c</item>
         <item name="colorPrimary">#FFFFFF</item>
-        <item name="colorPrimaryDark">#FFFFFF</item>
+        <item name="colorPrimaryDark">?android:attr/textColorSecondary</item>
         <item name="colorAccent">@color/theme3_colorAccent</item>
         <item name="android:colorBackground">#ffffff</item>
         <item name="android:windowBackground">@color/theme3_activityBackground</item>
         <item name="android:itemBackground">?attr/colorPrimary</item>
         <item name="colorControlHighlight">#fff676</item>
-        <item name="android:colorControlHighlight">#fff676</item>
         <item name="divider">@color/theme3_listDivider</item>
         <item name="menuIconColor">#333333</item>
 
@@ -86,25 +91,29 @@
         </item>
         <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
 
+        <item name="android:textColor">@color/md_black_1000</item>
         <item name="android:colorForeground">@color/md_grey_600</item>
-        <item name="android:editTextColor">@color/md_blue_grey_900</item>
+        <item name="android:editTextColor">@color/md_grey_900</item>
         <item name="android:textColorPrimary">#000000</item>
-        <item name="android:textColorPrimaryInverse">@android:color/primary_text_dark</item>
         <item name="android:textColorSecondary">#7CA99F</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_dark</item>
-        <item name="android:windowLightStatusBar">true</item>
         <item name="android:theme">@style/WhiteActionBar</item>
 
         <item name="quoteColor">#7CA99F</item>
         <item name="commentColor">#42ACD3</item>
         <item name="PSColor">#42ACD3</item>
+
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="WhiteActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">?attr/menuIconColor</item>
+        <item name="android:textColorSecondary">#7CA99F</item>
     </style>
 
-    <style name="AppTheme.TomorrowNightEighties" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.TheWhite" parent="AppTheme._TheWhite" />
+
+    <style name="AppTheme._TomorrowNightEighties" parent="Theme.AppCompat.NoActionBar">
         <!-- Цвета взяты из темы https://github.com/chriskempson/tomorrow-theme -->
         <item name="navdrawer_picture">@drawable/header_tomorrow_night_eighties</item>
 
@@ -138,10 +147,14 @@
         <item name="android:textColorSecondary">#cccccc</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
 
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+
         <item name="quoteColor">#6699cc</item>
         <item name="commentColor">#999999</item>
         <item name="PSColor">#99cc99</item>
     </style>
+
+    <style name="AppTheme.TomorrowNightEighties" parent="AppTheme._TomorrowNightEighties" />
 
     <!--
         Всё, что идёт далее, править не имеет смысла.
@@ -174,6 +187,4 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>
