@@ -1,5 +1,6 @@
 package vit01.idecmobile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +57,27 @@ public class AdditionalActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            File file = (File) data.getSerializableExtra("selected_file");
+            Toast.makeText(AdditionalActivity.this, "Выбрал файл " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+
+            // TODO: внимание, доделать фичи
+            if (requestCode == 1) {
+                Toast.makeText(AdditionalActivity.this, "Пока что копирование ЧС не работает", Toast.LENGTH_SHORT).show();
+            } else if (requestCode == 2) {
+                Toast.makeText(AdditionalActivity.this, "Здесь должен быть импорт бандлов, но я ещё это не сделал", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(AdditionalActivity.this, "Что-то ещё не предусмотренное заранее", Toast.LENGTH_SHORT).show();
+            }
+        } else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(AdditionalActivity.this, "Неа, не выбрал", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static class xfile_Fragment extends Fragment {
@@ -244,6 +267,15 @@ public class AdditionalActivity extends AppCompatActivity {
                 }
             });
 
+            Button selectFile = (Button) rootView.findViewById(R.id.additional_select_file_bundle_import);
+            selectFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Activity callingActivity = getActivity();
+                    callingActivity.startActivityForResult(new Intent(callingActivity, FileChooserActivity.class), 2);
+                }
+            });
+
             return rootView;
         }
 
@@ -273,6 +305,15 @@ public class AdditionalActivity extends AppCompatActivity {
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, stationNames);
             spinner.setAdapter(adapter);
+
+            Button selectFile = (Button) rootView.findViewById(R.id.additional_select_file_blacklist);
+            selectFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Activity callingActivity = getActivity();
+                    callingActivity.startActivityForResult(new Intent(callingActivity, FileChooserActivity.class), 1);
+                }
+            });
 
             return rootView;
         }

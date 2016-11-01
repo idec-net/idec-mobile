@@ -170,45 +170,6 @@ public class DraftsView extends AppCompatActivity {
         loadContent(unsent_only);
     }
 
-    /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_echoview, menu);
-
-        menu.findItem(R.id.action_display_unread_only).setOnMenuItemClickListener(
-                new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        boolean display_unread_only = !item.isChecked();
-
-                        if (loadContent(display_unread_only)) {
-                            item.setChecked(display_unread_only);
-                        }
-                        return false;
-                    }
-                }
-        );
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_mark_all_read) {
-            if (echoarea.equals("_carbon_classic")) {
-                transport.setUnread(false, msglist);
-            } else {
-                transport.setUnread(false, echoarea);
-            }
-
-            if (mAdapter != null) {
-                mAdapter.notifyDataSetChanged();
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Activity callingActivity;
         int total_count;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/file_clickable_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingBottom="8dp"
+    android:paddingLeft="@dimen/list_horizontal_margin"
+    android:paddingRight="@dimen/list_horizontal_margin"
+    android:paddingTop="8dp">
+
+    <ImageView
+        android:id="@+id/file_item_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp" />
+
+    <TextView
+        android:id="@+id/file_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/file_item_icon"
+        android:layout_toRightOf="@id/file_item_icon"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="null file name.txt"
+        android:textColor="?android:attr/textColorPrimary" />
+
+    <TextView
+        android:id="@+id/file_item_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="false"
+        android:layout_below="@id/file_item_name"
+        android:layout_toEndOf="@id/file_item_icon"
+        android:layout_toRightOf="@id/file_item_icon"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="12345 MB"
+        android:textColor="?android:attr/textColorSecondary" />
+</RelativeLayout>

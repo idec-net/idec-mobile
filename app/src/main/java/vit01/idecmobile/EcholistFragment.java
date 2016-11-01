@@ -164,7 +164,6 @@ public class EcholistFragment extends Fragment {
             }
         }
 
-
         @Override
         public int getItemCount() {
             return echolist.size();

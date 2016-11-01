@@ -90,6 +90,7 @@
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
         <activity android:name=".DraftsView" />
+        <activity android:name=".FileChooserActivity" />
 
         <receiver android:name=".notify.boot_completed_receiver">
             <intent-filter>
