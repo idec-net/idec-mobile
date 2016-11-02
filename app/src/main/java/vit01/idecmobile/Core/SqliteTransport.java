@@ -126,7 +126,15 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     public boolean deleteMessage(String msgid, String echo) {
         SQLiteDatabase db = getWritableDatabase();
 
-        int result = db.delete(tableName, "id = ? and echoarea = ?", new String[]{msgid, echo});
+        String whereClause = "id = ?";
+        String[] whereArgs;
+
+        if (echo != null) {
+            whereClause += " and echoarea = ?";
+            whereArgs = new String[]{msgid, echo};
+        } else whereArgs = new String[]{msgid};
+
+        int result = db.delete(tableName, whereClause, whereArgs);
         db.close();
 
         return result > 0;

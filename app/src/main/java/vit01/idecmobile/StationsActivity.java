@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import vit01.idecmobile.Core.Config;
-import vit01.idecmobile.Core.DraftStorage;
+import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
@@ -90,7 +90,7 @@ public class StationsActivity extends AppCompatActivity {
         });
 
         spinner.setSelection(currentIndex);
-        DraftStorage.initStorage();
+        ExternalStorage.initStorage();
     }
 
     @Override
@@ -126,9 +126,9 @@ public class StationsActivity extends AppCompatActivity {
             } else {
                 currentIndex = spinner.getSelectedItemPosition();
 
-                final File draftsDir = DraftStorage.getStationStorageDir(Config.values.stations.get(currentIndex).outbox_storage_id);
-                final ArrayList<File> contents = DraftStorage.getFilesInside(draftsDir, true);
-                contents.addAll(DraftStorage.getFilesInside(draftsDir, false));
+                final File draftsDir = ExternalStorage.getStationStorageDir(Config.values.stations.get(currentIndex).outbox_storage_id);
+                final ArrayList<File> contents = ExternalStorage.getDraftsInside(draftsDir, true);
+                contents.addAll(ExternalStorage.getDraftsInside(draftsDir, false));
 
                 if (contents.size() > 0) {
                     new AlertDialog.Builder(this)

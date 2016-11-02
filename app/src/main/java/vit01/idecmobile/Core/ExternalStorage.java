@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class DraftStorage {
+public class ExternalStorage {
     public static File rootStorage;
     static String dataDirectory = "idecMobile";
     static FilenameFilter draftsFilter;
     static FilenameFilter sentFilter;
 
-    DraftStorage() {
+    ExternalStorage() {
     }
 
     public static void initStorage() {
@@ -59,7 +59,7 @@ public class DraftStorage {
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    public static ArrayList<File> getFilesInside(File directory, boolean unsent) {
+    public static ArrayList<File> getDraftsInside(File directory, boolean unsent) {
         FilenameFilter filter = (unsent) ? draftsFilter : sentFilter;
 
         File[] contents = directory.listFiles(filter);
@@ -72,20 +72,20 @@ public class DraftStorage {
         return result;
     }
 
-    public static ArrayList<File> getAllEntries(boolean unsent) {
+    public static ArrayList<File> getAllDrafts(boolean unsent) {
         ArrayList<File> result = new ArrayList<>();
 
         for (Station station : Config.values.stations) {
             File stationDir = getStationStorageDir(station.outbox_storage_id);
             if (stationDir == null) continue;
-            ArrayList<File> current = getFilesInside(stationDir, unsent);
+            ArrayList<File> current = getDraftsInside(stationDir, unsent);
             result.addAll(current);
         }
 
         return result;
     }
 
-    public static DraftMessage readFromFile(File file) {
+    public static DraftMessage readDraft(File file) {
         String contents;
         try {
             FileInputStream fis = new FileInputStream(file);
@@ -100,7 +100,7 @@ public class DraftStorage {
         return new DraftMessage(contents);
     }
 
-    public static boolean writeToFile(File file, DraftMessage message) {
+    public static boolean writeDraftToFile(File file, DraftMessage message) {
         String contents = message.raw();
 
         try {
@@ -158,7 +158,7 @@ public class DraftStorage {
             SimpleFunctions.debug(e.toString());
             return null;
         }
-        if (!writeToFile(file, message)) return null;
+        if (!writeDraftToFile(file, message)) return null;
         return file;
     }
 }

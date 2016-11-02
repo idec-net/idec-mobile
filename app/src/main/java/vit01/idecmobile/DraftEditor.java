@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftMessage;
-import vit01.idecmobile.Core.DraftStorage;
+import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
@@ -55,7 +55,7 @@ public class DraftEditor extends AppCompatActivity {
         getControls();
         Intent incoming = getIntent();
 
-        DraftStorage.initStorage();
+        ExternalStorage.initStorage();
 
         nodeindex = incoming.getIntExtra("nodeindex", 0);
         outbox_id = Config.values.stations.get(nodeindex).outbox_storage_id;
@@ -65,7 +65,7 @@ public class DraftEditor extends AppCompatActivity {
         if (task.equals("new_in_echo")) {
             message = new DraftMessage();
             message.echo = incoming.getStringExtra("echoarea");
-            fileToSave = DraftStorage.newMessage(outbox_id, message);
+            fileToSave = ExternalStorage.newMessage(outbox_id, message);
         } else if (task.equals("new_answer")) {
             message = new DraftMessage();
             IIMessage to_which = (IIMessage) incoming.getSerializableExtra("message");
@@ -77,10 +77,10 @@ public class DraftEditor extends AppCompatActivity {
             if (incoming.getBooleanExtra("quote", false)) {
                 message.msg = SimpleFunctions.quoteAnswer(to_which.msg, message.to, Config.values.oldQuote);
             }
-            fileToSave = DraftStorage.newMessage(outbox_id, message);
+            fileToSave = ExternalStorage.newMessage(outbox_id, message);
         } else if (task.equals("edit_existing")) {
             fileToSave = (File) incoming.getSerializableExtra("file");
-            message = DraftStorage.readFromFile(fileToSave);
+            message = ExternalStorage.readDraft(fileToSave);
         }
 
         if (fileToSave == null) {
@@ -182,7 +182,7 @@ public class DraftEditor extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (nodeindex != position) {
                     String secondOutbox_id = Config.values.stations.get(position).outbox_storage_id;
-                    File newDirectory = DraftStorage.getStationStorageDir(secondOutbox_id);
+                    File newDirectory = ExternalStorage.getStationStorageDir(secondOutbox_id);
 
                     File newFile = new File(newDirectory, fileToSave.getName());
                     boolean renamed = fileToSave.renameTo(newFile);
@@ -229,7 +229,7 @@ public class DraftEditor extends AppCompatActivity {
     }
 
     public void saveMessage() {
-        boolean result = DraftStorage.writeToFile(fileToSave, message);
+        boolean result = ExternalStorage.writeDraftToFile(fileToSave, message);
         if (!result) {
             SimpleFunctions.debug("Проблемсы!");
             Toast.makeText(DraftEditor.this, "Файл как-то не сохранён. Сожалею :(", Toast.LENGTH_SHORT).show();

@@ -31,7 +31,7 @@ import java.util.Collections;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftMessage;
-import vit01.idecmobile.Core.DraftStorage;
+import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 
@@ -54,7 +54,7 @@ public class DraftsView extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        DraftStorage.initStorage();
+        ExternalStorage.initStorage();
 
         for (Station station : Config.values.stations) {
             stations_outbox_id_list.add(station.outbox_storage_id);
@@ -75,7 +75,7 @@ public class DraftsView extends AppCompatActivity {
     }
 
     boolean loadContent(boolean unsent) {
-        msglist = DraftStorage.getAllEntries(unsent);
+        msglist = ExternalStorage.getAllDrafts(unsent);
         countMessages = msglist.size();
 
         if (countMessages == 0 && mAdapter == null) {
@@ -262,7 +262,7 @@ public class DraftsView extends AppCompatActivity {
                 onItemDismiss(position);
                 return;
             }
-            DraftMessage message = DraftStorage.readFromFile(file);
+            DraftMessage message = ExternalStorage.readDraft(file);
             if (message == null) message = new DraftMessage();
 
             String storage_id = file.getParentFile().getName();

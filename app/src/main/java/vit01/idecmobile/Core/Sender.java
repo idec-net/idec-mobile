@@ -58,8 +58,8 @@ public class Sender {
         int countsent = 0;
 
         for (Station station : Config.values.stations) {
-            File tossesDir = DraftStorage.getStationStorageDir(station.outbox_storage_id);
-            ArrayList<File> contents = DraftStorage.getFilesInside(tossesDir, true);
+            File tossesDir = ExternalStorage.getStationStorageDir(station.outbox_storage_id);
+            ArrayList<File> contents = ExternalStorage.getDraftsInside(tossesDir, true);
 
             if (contents.size() == 0) continue;
 

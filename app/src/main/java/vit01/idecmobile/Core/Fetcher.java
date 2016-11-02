@@ -27,7 +27,7 @@ public class Fetcher {
     public static ArrayList<String> xfile_list_download(Context context, Station station) {
         ArrayList<String> result = new ArrayList<>();
 
-        String toServer = "";
+        String toServer;
 
         try {
             toServer = "pauth=" + URLEncoder.encode(station.authstr, "UTF-8");
@@ -50,7 +50,7 @@ public class Fetcher {
     }
 
     public static boolean xfile_download(Context context, Station station, String filename, File fileToSave) {
-        String toServer = "";
+        String toServer;
 
         try {
             toServer = "pauth=" + URLEncoder.encode(station.authstr, "UTF-8") +
@@ -61,11 +61,17 @@ public class Fetcher {
             return false;
         }
 
-        if (!fileToSave.exists()) try {
-            fileToSave.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-            SimpleFunctions.debug("Failed to create new file" + fileToSave.getAbsolutePath());
+        if (!fileToSave.exists()) {
+            boolean created;
+            try {
+                created = fileToSave.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                SimpleFunctions.debug("Error while creating new file " + fileToSave.getAbsolutePath() + ": " + e.toString());
+                return false;
+            }
+            if (!created)
+                SimpleFunctions.debug("Failed to create new file" + fileToSave.getAbsolutePath());
             return false;
         }
 

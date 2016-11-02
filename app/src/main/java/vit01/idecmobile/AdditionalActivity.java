@@ -1,6 +1,7 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
@@ -67,11 +69,16 @@ public class AdditionalActivity extends AppCompatActivity {
             File file = (File) data.getSerializableExtra("selected_file");
             Toast.makeText(AdditionalActivity.this, "Выбрал файл " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 
-            // TODO: внимание, доделать фичи
             if (requestCode == 1) {
-                Toast.makeText(AdditionalActivity.this, "Пока что копирование ЧС не работает", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AdditionalActivity.this, DebugActivity.class);
+                intent.putExtra("task", "import_blacklist");
+                intent.putExtra("file", file);
+                startActivity(intent);
             } else if (requestCode == 2) {
-                Toast.makeText(AdditionalActivity.this, "Здесь должен быть импорт бандлов, но я ещё это не сделал", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AdditionalActivity.this, DebugActivity.class);
+                intent.putExtra("task", "import_bundle");
+                intent.putExtra("file", file);
+                startActivity(intent);
             } else {
                 Toast.makeText(AdditionalActivity.this, "Что-то ещё не предусмотренное заранее", Toast.LENGTH_SHORT).show();
             }
@@ -247,6 +254,31 @@ public class AdditionalActivity extends AppCompatActivity {
                         transport.deleteEchoarea(current_echo, true);
                         Toast.makeText(getContext(), "Эха удалена", Toast.LENGTH_SHORT).show();
                         updateEchoList();
+                    }
+                }
+            });
+
+            Button export_echoarea = (Button) rootView.findViewById(R.id.additional_database_export_echoarea);
+            export_echoarea.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String current_echo = ((TextView) echoareas_spinner.getSelectedView()).getText().toString();
+
+                    if (!current_echo.equals("")) {
+                        String filename = current_echo + "_" + String.valueOf(AlarmManager.ELAPSED_REALTIME);
+                        ExternalStorage.initStorage();
+                        
+                        File target = new File(ExternalStorage.rootStorage.getParentFile(), filename);
+
+                        Intent intent = new Intent(getActivity(), DebugActivity.class);
+                        intent.putExtra("task", "export_bundle");
+                        intent.putExtra("file", target);
+
+                        ArrayList<String> args = new ArrayList<>();
+                        args.add(current_echo);
+
+                        intent.putExtra("echoareas", args);
+                        startActivity(intent);
                     }
                 }
             });
