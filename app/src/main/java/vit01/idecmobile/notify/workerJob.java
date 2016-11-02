@@ -42,10 +42,13 @@ public class workerJob extends BroadcastReceiver {
 
         vibrate = Config.values.notificationsVibrate;
 
+        Hashtable<String, Integer> result = new Hashtable<>();
+
         for (Station station : Config.values.stations) {
             if (station.fetch_enabled && station.xc_enable)
-                pass_to_xc_api(context, station);
+                addToHashTable(result, pass_to_xc_api(context, station));
         }
+        handleResult(context, result);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -78,13 +81,13 @@ public class workerJob extends BroadcastReceiver {
         mNotificationManager.notify(getNotificationID(), mBuilder.build());
     }
 
-    public void pass_to_xc_api(Context context, Station station) {
+    public Hashtable<String, Integer> pass_to_xc_api(Context context, Station station) {
         String server_answer = Network.getFile(context,
                 station.address + "x/c/" + TextUtils.join("/", station.echoareas), null, 10);
 
         if (server_answer == null) {
             SimpleFunctions.debug("Error getting server info (xc api)");
-            return;
+            return null;
         }
 
         String xc_cell_name = "xc_tmp_" + station.outbox_storage_id;
@@ -94,14 +97,14 @@ public class workerJob extends BroadcastReceiver {
 
         if (local_xc_data.equals("")) {
             // Если получили данные в первый раз, то отслеживание не нужно: выходим
-            return;
+            return null;
         }
 
         String[] local_xc_lines = local_xc_data.split("\n");
         String[] remote_xc_lines = server_answer.split("\n");
 
         if (local_xc_lines.length != remote_xc_lines.length) {
-            return;
+            return null;
             // Значит пользователь просто обновил список эх. Продолжать не следует
         }
 
@@ -113,11 +116,13 @@ public class workerJob extends BroadcastReceiver {
             xc_parse_values(local_xc_dict, local_xc_lines);
         } catch (Exception e) {
             SimpleFunctions.debug("Exception: " + e);
-            return;
+            return null;
         }
 
-        Hashtable difference = assoc_difference(local_xc_dict, remote_xc_dict);
+        return assoc_difference(local_xc_dict, remote_xc_dict);
+    }
 
+    private void handleResult(Context context, Hashtable difference) {
         if (difference.size() > 0) {
             Enumeration result_echoareas = difference.keys();
 
@@ -151,7 +156,7 @@ public class workerJob extends BroadcastReceiver {
         }
     }
 
-    private Hashtable assoc_difference(Hashtable<String, Integer> first, Hashtable<String, Integer> second) {
+    private Hashtable<String, Integer> assoc_difference(Hashtable<String, Integer> first, Hashtable<String, Integer> second) {
         Hashtable<String, Integer> result = new Hashtable<>();
 
         Enumeration keys_local = first.keys();
@@ -171,5 +176,16 @@ public class workerJob extends BroadcastReceiver {
         }
 
         return result;
+    }
+
+    public void addToHashTable(Hashtable<String, Integer> first, Hashtable<String, Integer> second) {
+        Enumeration<String> secondKeys = second.keys();
+
+        while (secondKeys.hasMoreElements()) {
+            String current = secondKeys.nextElement();
+            if (first.containsKey(current)) {
+                first.put(current, first.get(current) + second.get(current));
+            } else first.put(current, second.get(current));
+        }
     }
 }
