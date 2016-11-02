@@ -29,14 +29,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import vit01.idecmobile.Core.AbstractTransport;
+import vit01.idecmobile.Core.Blacklist;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
+import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
@@ -265,7 +269,7 @@ public class AdditionalActivity extends AppCompatActivity {
                     String current_echo = ((TextView) echoareas_spinner.getSelectedView()).getText().toString();
 
                     if (!current_echo.equals("")) {
-                        String filename = current_echo + "_" + String.valueOf(AlarmManager.ELAPSED_REALTIME);
+                        String filename = current_echo + "_" + String.valueOf(AlarmManager.ELAPSED_REALTIME) + ".bundle";
                         ExternalStorage.initStorage();
                         
                         File target = new File(ExternalStorage.rootStorage.getParentFile(), filename);
@@ -344,6 +348,111 @@ public class AdditionalActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Activity callingActivity = getActivity();
                     callingActivity.startActivityForResult(new Intent(callingActivity, FileChooserActivity.class), 1);
+                }
+            });
+
+            Button clearButton = (Button) rootView.findViewById(R.id.additional_blacklist_clear);
+            clearButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent debugIntent = new Intent(getActivity(), DebugActivity.class);
+                    debugIntent.putExtra("task", "blacklist_clear");
+                    startActivity(debugIntent);
+                }
+            });
+
+            Button downloadBlacklist = (Button) rootView.findViewById(R.id.additional_load_blacklist);
+            downloadBlacklist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Station station = Config.values.stations.get(spinner.getSelectedItemPosition());
+                    final String url = station.address + "blacklist.txt";
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Activity mContext = getActivity();
+                            String blacklist = Network.getFile(mContext, url, null, Config.values.connectionTimeout);
+
+                            if (blacklist == null) {
+                                mContext.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mContext, "Ошибка скачивания ЧС со станции", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                return;
+                            }
+
+                            ExternalStorage.initStorage();
+
+                            File blacklist_file = new File(ExternalStorage.rootStorage, Blacklist.filename);
+                            if (!blacklist_file.exists()) try {
+                                boolean created = blacklist_file.createNewFile();
+                                if (!created) throw new IOException("Файл ЧС не был создан");
+                            } catch (IOException e) {
+                                SimpleFunctions.debug(e.toString());
+                                e.printStackTrace();
+                                mContext.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mContext, "Ошибка создани файла", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                return;
+                            }
+
+                            try {
+                                FileOutputStream fos = new FileOutputStream(blacklist_file);
+                                fos.write(blacklist.getBytes());
+                                fos.close();
+
+                                mContext.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mContext, "Чёрный список сохранён", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                final String error = "Ошибка записи ЧС в файл " + e.toString();
+                                SimpleFunctions.debug(error);
+
+                                mContext.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mContext, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                return;
+                            }
+                            Blacklist.loadBlacklist();
+                            mContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext, "ЧС загружен в ОЗУ", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }).start();
+                }
+            });
+
+            Button deleteBlacklistFile = (Button) rootView.findViewById(R.id.additional_delete_blacklist_file);
+            deleteBlacklistFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExternalStorage.initStorage();
+                    File blacklist_file = new File(ExternalStorage.rootStorage, Blacklist.filename);
+                    String result;
+
+                    if (blacklist_file.exists()) {
+                        boolean deleted = blacklist_file.delete();
+                        if (deleted) result = "ЧС успешно удалён";
+                        else result = "Ошибка удаления чёрного списка";
+                    } else result = "Удалять нечего";
+
+                    Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
                 }
             });
 

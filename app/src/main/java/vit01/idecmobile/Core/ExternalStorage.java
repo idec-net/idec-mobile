@@ -12,6 +12,7 @@ import java.util.Collections;
 
 public class ExternalStorage {
     public static File rootStorage;
+    public static boolean filtersPresent = false;
     static String dataDirectory = "idecMobile";
     static FilenameFilter draftsFilter;
     static FilenameFilter sentFilter;
@@ -30,6 +31,8 @@ public class ExternalStorage {
             SimpleFunctions.debug("Root directory for drafts not created!");
         }
 
+        if (filtersPresent) return;
+
         draftsFilter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
@@ -43,6 +46,8 @@ public class ExternalStorage {
                 return filename.endsWith(".out");
             }
         };
+
+        filtersPresent = true;
     }
 
     public static File getStationStorageDir(String outbox_id) {

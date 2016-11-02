@@ -22,6 +22,7 @@ public class Fetcher {
     public Fetcher(AbstractTransport db) {
         transport = db;
         emptyList = SimpleFunctions.emptyList;
+        if (!Blacklist.loaded) Blacklist.loadBlacklist();
     }
 
     public static ArrayList<String> xfile_list_download(Context context, Station station) {
@@ -293,6 +294,8 @@ public class Fetcher {
             }
         }
 
+        SimpleFunctions.debug("Применяем чёрный список к индексу...");
+        difference.removeAll(Blacklist.badMsgids);
         List<List<String>> difference2d = SimpleFunctions.chunks_divide(difference, one_request_limit);
 
         ArrayList<String> savedMessages = new ArrayList<>();

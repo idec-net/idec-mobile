@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
+import vit01.idecmobile.Core.Blacklist;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
@@ -316,27 +317,16 @@ public class DebugActivity extends AppCompatActivity {
             int deleted = 0;
 
             try {
-                ExternalStorage.initStorage();
-                File blacklist = new File(ExternalStorage.rootStorage, "blacklist.txt");
+                Blacklist.loadBlacklist();
 
-                if (!blacklist.exists()) {
-                    SimpleFunctions.debug("\nФайл чёрного списка пуст!");
-                } else {
-                    if (!blacklist.canRead()) {
-                        SimpleFunctions.debug("Файл чёрного списка недоступен на чтение!");
-                    } else {
-                        FileInputStream fis = new FileInputStream(blacklist);
-                        String[] entries = SimpleFunctions.readIt(fis).split("\n");
-                        if (entries.length == 0) SimpleFunctions.debug("ЧС пуст!");
-                        else {
-                            SimpleFunctions.debug("Начинаем удалять " + entries.length + " сообщений...");
-                            for (String entry : entries) {
-                                boolean success = GlobalTransport.transport.deleteMessage(entry, null);
-                                if (success) {
-                                    deleted++;
-                                    SimpleFunctions.debug("Deleted " + entry);
-                                }
-                            }
+                if (Blacklist.badMsgids.size() == 0) SimpleFunctions.debug("ЧС пуст!");
+                else {
+                    SimpleFunctions.debug("Начинаем удалять " + Blacklist.badMsgids.size() + " сообщений...");
+                    for (String entry : Blacklist.badMsgids) {
+                        boolean success = GlobalTransport.transport.deleteMessage(entry, null);
+                        if (success) {
+                            deleted++;
+                            SimpleFunctions.debug("Deleted " + entry);
                         }
                     }
                 }
@@ -373,10 +363,16 @@ public class DebugActivity extends AppCompatActivity {
             FileOutputStream fos = null;
 
             try {
+                if (!where.exists()) {
+                    boolean created = where.createNewFile();
+                    if (!created)
+                        SimpleFunctions.debug("Не могу создать файл " + where.getAbsolutePath());
+                }
                 if (where.canWrite()) {
                     if (!where.exists()) {
                         boolean created = where.createNewFile();
-                        if (!created) SimpleFunctions.debug("Файл невозможно создать!");
+                        if (!created)
+                            SimpleFunctions.debug("Файл " + where.getAbsolutePath() + " невозможно создать!");
                     }
 
                     fos = new FileOutputStream(where);
@@ -411,9 +407,10 @@ public class DebugActivity extends AppCompatActivity {
                             }
                         }
                     }
-                }
+                } else
+                    SimpleFunctions.debug("Файл " + where.getAbsolutePath() + " недоступен для записи!");
 
-                SimpleFunctions.debug("Экспортировано: " + String.valueOf(exported));
+                SimpleFunctions.debug("Экспортировано: " + String.valueOf(exported) + " в файл " + where.getAbsolutePath());
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
@@ -479,7 +476,7 @@ public class DebugActivity extends AppCompatActivity {
                     }
                 } else SimpleFunctions.debug("Файл не существует или недоступен для чтения!");
 
-                SimpleFunctions.debug("Результат: " + String.valueOf(savedMessages));
+                SimpleFunctions.debug("Сообщений импортировано: " + String.valueOf(savedMessages));
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
@@ -490,7 +487,7 @@ public class DebugActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Результат: " + finalResult, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Сообщений: " + finalResult, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -511,17 +508,19 @@ public class DebugActivity extends AppCompatActivity {
                 if (!where.exists() || !where.canRead()) {
                     SimpleFunctions.debug("Не могу прочитать файл. Может быть, его нет?");
                 } else {
-                    long oneMB = 8 * 1024 * 1024;
+                    long oneMB = 1024 * 1024;
                     if (where.length() > oneMB) {
                         SimpleFunctions.debug("Чёрный список больше одного мегабайта? Ну тебя нафиг!");
                         Thread.sleep(3000);
                     } else {
-                        SimpleFunctions.debug("Пробуем скопировать в blacklist.txt рабочего каталога...");
-                        FileOutputStream fos = new FileOutputStream(new File(ExternalStorage.rootStorage, "blacklist.txt"));
+                        SimpleFunctions.debug("Пробуем скопировать в " + Blacklist.filename + " рабочего каталога...");
+                        FileOutputStream fos = new FileOutputStream(new File(ExternalStorage.rootStorage, Blacklist.filename));
                         String info = SimpleFunctions.readIt(new FileInputStream(where));
                         fos.write(info.getBytes());
                         fos.close();
 
+                        SimpleFunctions.debug("Загружаем ЧС в ОЗУ");
+                        Blacklist.loadBlacklist();
                         SimpleFunctions.debug("\nВроде бы, всё прошло нормально. Можно чистить");
                     }
                 }

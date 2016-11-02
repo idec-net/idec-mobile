@@ -13,6 +13,12 @@
         android:orientation="vertical">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Файл чёрного списка сообщений расположен в рабочем каталоге клиента в корне внутренней памяти"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,5 +60,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Очистить cообщения по ЧС" />
+
+        <TextView
+            style="@style/AppTheme.MyCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Очистить локальный чёрный список" />
+
+        <Button
+            android:id="@+id/additional_delete_blacklist_file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Удалить файл" />
     </LinearLayout>
 </ScrollView>
