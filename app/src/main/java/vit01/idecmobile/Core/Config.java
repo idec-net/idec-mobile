@@ -14,7 +14,7 @@ public class Config {
     public static String filename = "config.obj";
     public static int appTheme = R.style.AppTheme;
 
-    public static void loadConfig(Context context) {
+    public static void loadConfig(Context context, String filename) {
         try {
             FileInputStream is = context.openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(is);
@@ -29,6 +29,10 @@ public class Config {
             values = new GlobalConfig();
         }
         select_gui_theme();
+    }
+
+    public static void loadConfig(Context context) {
+        loadConfig(context, filename);
     }
 
     public static void writeConfig(Context context) {

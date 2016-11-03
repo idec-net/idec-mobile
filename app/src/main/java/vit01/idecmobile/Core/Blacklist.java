@@ -26,7 +26,6 @@ public class Blacklist {
                 e.printStackTrace();
                 SimpleFunctions.debug(e.toString());
             }
-        }
-        SimpleFunctions.debug("ЧС пуст, либо недоступен на чтение");
+        } else SimpleFunctions.debug("ЧС пуст, либо недоступен на чтение");
     }
 }

@@ -1,7 +1,6 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,8 +28,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +42,8 @@ import vit01.idecmobile.Core.Blacklist;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
+import vit01.idecmobile.Core.GlobalConfig;
+import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
@@ -70,7 +74,7 @@ public class AdditionalActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            File file = (File) data.getSerializableExtra("selected_file");
+            final File file = (File) data.getSerializableExtra("selected_file");
             Toast.makeText(AdditionalActivity.this, "Выбрал файл " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 
             if (requestCode == 1) {
@@ -83,6 +87,44 @@ public class AdditionalActivity extends AppCompatActivity {
                 intent.putExtra("task", "import_bundle");
                 intent.putExtra("file", file);
                 startActivity(intent);
+            } else if (requestCode == 3) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String result;
+                        if (!file.exists() || !file.canRead())
+                            result = "Файл не существует или недоступен для чтения";
+                        else {
+                            if (file.length() > (1024 * 1024))
+                                result = "Конфиг больше мегабайта? НЕ ВЕРЮ! (c)";
+                            else {
+                                try {
+                                    FileInputStream is = new FileInputStream(file);
+                                    ObjectInputStream ois = new ObjectInputStream(is);
+                                    Config.values = (GlobalConfig) ois.readObject();
+                                    ois.close();
+                                    is.close();
+                                    Config.configUpdate(getApplicationContext());
+                                    result = "Вроде бы, всё прошло нормально";
+                                } catch (Exception e) {
+                                    result = "Конфиг не найден/ошибка, подгружаем обыкновенный: " + e.toString();
+                                    SimpleFunctions.debug(result);
+                                    e.printStackTrace();
+
+                                    Config.loadConfig(getApplicationContext());
+                                }
+                                Config.writeConfig(getApplicationContext());
+                            }
+                        }
+                        final String finalResult = result;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AdditionalActivity.this, finalResult, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).start();
             } else {
                 Toast.makeText(AdditionalActivity.this, "Что-то ещё не предусмотренное заранее", Toast.LENGTH_SHORT).show();
             }
@@ -269,9 +311,9 @@ public class AdditionalActivity extends AppCompatActivity {
                     String current_echo = ((TextView) echoareas_spinner.getSelectedView()).getText().toString();
 
                     if (!current_echo.equals("")) {
-                        String filename = current_echo + "_" + String.valueOf(AlarmManager.ELAPSED_REALTIME) + ".bundle";
+                        String filename = current_echo + "_" + String.valueOf(System.currentTimeMillis()) + ".bundle";
                         ExternalStorage.initStorage();
-                        
+
                         File target = new File(ExternalStorage.rootStorage.getParentFile(), filename);
 
                         Intent intent = new Intent(getActivity(), DebugActivity.class);
@@ -309,6 +351,77 @@ public class AdditionalActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Activity callingActivity = getActivity();
                     callingActivity.startActivityForResult(new Intent(callingActivity, FileChooserActivity.class), 2);
+                }
+            });
+
+            Button exportAll = (Button) rootView.findViewById(R.id.additional_database_export_all);
+            exportAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> echoareas = GlobalTransport.transport.fullEchoList();
+                    if (echoareas.size() == 0) {
+                        Toast.makeText(getActivity(), "Экспортировать нечего!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String filename = "idecDatabase_full_" + String.valueOf(System.currentTimeMillis()) + ".bundle";
+                    ExternalStorage.initStorage();
+
+                    File target = new File(ExternalStorage.rootStorage.getParentFile(), filename);
+
+                    Intent intent = new Intent(getActivity(), DebugActivity.class);
+                    intent.putExtra("task", "export_bundle");
+                    intent.putExtra("file", target);
+                    intent.putExtra("echoareas", echoareas);
+                    startActivity(intent);
+                }
+            });
+
+            Button importConfig = (Button) rootView.findViewById(R.id.additional_database_import_config);
+            importConfig.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Activity callingActivity = getActivity();
+                    callingActivity.startActivityForResult(new Intent(callingActivity, FileChooserActivity.class), 3);
+                }
+            });
+
+            Button exportConfig = (Button) rootView.findViewById(R.id.additional_database_export_config);
+            exportConfig.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ExternalStorage.initStorage();
+                            String result;
+                            try {
+                                File toExport = new File(ExternalStorage.rootStorage.getParentFile(), "idecConfig_" + String.valueOf(System.currentTimeMillis()) + ".obj");
+                                if (!toExport.exists() && !toExport.createNewFile())
+                                    throw new IOException("Ошибка: не удалось создать файл " + toExport.getAbsolutePath());
+
+                                FileOutputStream os = new FileOutputStream(toExport);
+                                ObjectOutputStream oos = new ObjectOutputStream(os);
+                                oos.writeObject(Config.values);
+                                oos.close();
+                                os.close();
+
+                                result = "Конфиг сохранён в файл " + toExport.getAbsolutePath();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                SimpleFunctions.debug(e.toString());
+                                result = "Ошибка: " + e.toString();
+                            }
+
+                            final String finalResult = result;
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), finalResult, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }).start();
                 }
             });
 
