@@ -15,7 +15,6 @@ import android.text.TextUtils;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.Network;
@@ -24,12 +23,12 @@ import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.R;
 
 public class workerJob extends BroadcastReceiver {
-    private final static AtomicInteger c = new AtomicInteger(0);
+    public static Hashtable<String, Integer> lastDifference = null;
     long[] vibrate_pattern = {1000, 1000};
     boolean vibrate = false;
 
     public static int getNotificationID() {
-        return c.incrementAndGet();
+        return 42;
     }
 
     @Override
@@ -38,17 +37,22 @@ public class workerJob extends BroadcastReceiver {
                 .permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        if (intent.getAction() != null && intent.getAction().equals("notify_cancel")) {
+            lastDifference = null;
+            return;
+        }
+
         if (Config.values == null) Config.loadConfig(context);
 
         vibrate = Config.values.notificationsVibrate;
 
-        Hashtable<String, Integer> result = new Hashtable<>();
+        if (lastDifference == null) lastDifference = new Hashtable<>();
 
         for (Station station : Config.values.stations) {
             if (station.fetch_enabled && station.xc_enable)
-                addToHashTable(result, pass_to_xc_api(context, station));
+                addToHashTable(lastDifference, pass_to_xc_api(context, station));
         }
-        handleResult(context, result);
+        handleResult(context, lastDifference);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -77,6 +81,11 @@ public class workerJob extends BroadcastReceiver {
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent navigateIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(navigateIntent);
+
+        Intent deleteIntent = new Intent(context, workerJob.class);
+        deleteIntent.setAction("notify_cancel");
+        mBuilder.setDeleteIntent(PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(getNotificationID(), mBuilder.build());
     }

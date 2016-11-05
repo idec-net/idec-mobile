@@ -46,6 +46,7 @@ import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.notify.workerJob;
 
 public class MainActivity extends AppCompatActivity {
     private static final int ADD_NODE = 100000;
@@ -247,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
             fetcher.putExtra("task", "fetch");
             startActivity(fetcher);
 
+            workerJob.lastDifference = null; // чистим данные уведомлений, сбрасывая счётчик непрочитанных
             setIntent(new Intent()); // убиваем это дело, чтобы после поворота экрана снова не запустился фетчер
         }
 

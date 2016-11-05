@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:http="http://schemas.android.com/tools">
     <string name="app_name">IDEC mobile</string>
 
     <string name="action_settings">Настройки клиента</string>
@@ -31,10 +31,8 @@
     <string name="title_activity_help">Помощь</string>
     <string name="help_text">
         Это очень большой текст. И очень важный для клиента. Я пока что не знаю, что сюда запихать.
+        Но зато я знаю, что клиент распространяется под GNU GPL.
     </string>
     <string name="title_activity_additional">AdditionalActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

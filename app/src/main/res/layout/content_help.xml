@@ -8,14 +8,29 @@
     tools:context="vit01.idecmobile.HelpActivity"
     tools:showIn="@layout/activity_help">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:autoLink="web|email"
-        android:text="@string/help_text"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textIsSelectable="true"
-        android:textSize="@dimen/material_text_body1" />
+        android:orientation="vertical"
+        android:padding="@dimen/text_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web|email"
+            android:text="@string/help_text"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/material_text_body1" />
+
+        <TextView
+            android:id="@+id/text_GPL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web|email"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textIsSelectable="true"
+            android:textSize="14sp" />
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
