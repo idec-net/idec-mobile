@@ -188,6 +188,7 @@ public class workerJob extends BroadcastReceiver {
     }
 
     public void addToHashTable(Hashtable<String, Integer> first, Hashtable<String, Integer> second) {
+        if (first == null || second == null) return;
         Enumeration<String> secondKeys = second.keys();
 
         while (secondKeys.hasMoreElements()) {
