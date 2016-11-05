@@ -174,7 +174,7 @@ public class Fetcher {
                     int local_ts = local_xc_dict.get(echo);
 
                     if (remote_ts == local_ts) {
-                        excluded_echoareas.remove(echo);
+                        excluded_echoareas.add(echo);
                         SimpleFunctions.debug("Removed " + echo);
                     } else if (remote_ts > local_ts) {
                         if (remote_ts <= 0 || local_ts <= 0) continue;
