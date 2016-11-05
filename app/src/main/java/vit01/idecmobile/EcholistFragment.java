@@ -65,7 +65,6 @@ public class EcholistFragment extends Fragment {
 
         mAdapter = new MyAdapter(getActivity(), echoareas, transport, nodeindex);
         recyclerView.setAdapter(mAdapter);
-
         return rootView;
     }
 

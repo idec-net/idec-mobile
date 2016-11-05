@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fm;
     int MY_PERMISSION_WRITE_STORAGE;
     SwipeRefreshLayout swipeRefresh;
+    OnSwipeTouchListener swipeDrawerListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,6 +268,23 @@ public class MainActivity extends AppCompatActivity {
             Intent showStart = OrbotHelper.getShowOrbotStartIntent();
             startActivity(showStart);
         }
+
+        swipeDrawerListener = new OnSwipeTouchListener(this) {
+            @Override
+            public boolean onSwipeRight() {
+                if (!drawer.isDrawerOpen()) {
+                    drawer.openDrawer();
+                    return true;
+                }
+                return false;
+            }
+        };
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        boolean status = swipeDrawerListener.gestureDetector.onTouchEvent(ev);
+        return (status || super.dispatchTouchEvent(ev));
     }
 
     @Override
