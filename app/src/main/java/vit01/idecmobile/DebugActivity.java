@@ -192,6 +192,7 @@ public class DebugActivity extends AppCompatActivity {
             AbstractTransport db = new SqliteTransport(appContext);
 
             ArrayList<String> fetched = new ArrayList<>();
+            int fetchedCount = 0;
 
             try {
                 Fetcher fetcher = new Fetcher(db);
@@ -216,13 +217,15 @@ public class DebugActivity extends AppCompatActivity {
                             station.cut_remote_index,
                             Config.values.connectionTimeout
                     );
+
+                    fetchedCount += fetched.size();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
-                final String finalFetched = String.valueOf(fetched.size());
+                final String finalFetched = String.valueOf(fetchedCount);
 
                 runOnUiThread(new Runnable() {
                     @Override
