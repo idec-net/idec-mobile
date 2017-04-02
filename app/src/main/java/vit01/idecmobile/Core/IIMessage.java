@@ -107,7 +107,7 @@ public class IIMessage implements Serializable {
         return SimpleFunctions.join(SimpleFunctions.List2Arr(fragments), "/");
     }
 
-    String raw() {
+    public String raw() {
         if (repto != null) tags.put("repto", repto);
 
         String stringTags = collectTags(tags);

@@ -403,10 +403,11 @@ public class DebugActivity extends AppCompatActivity {
                         SimpleFunctions.debug("Количество: " + String.valueOf(msgids.size()));
 
                         for (String msgid : msgids) {
-                            String rawMessage = GlobalTransport.transport.getRawMessage(msgid);
+                            IIMessage message = GlobalTransport.transport.getMessage(msgid);
 
-                            if (rawMessage != null) {
-                                String bundleStr = msgid + ":" + Base64.encodeToString(rawMessage.getBytes(), Base64.NO_WRAP) + "\n";
+                            if (message != null && message.id != null) {
+                                if (message.is_favorite) message.tags.put("idecmobile-favorite", "true");
+                                String bundleStr = msgid + ":" + Base64.encodeToString(message.raw().getBytes(), Base64.NO_WRAP) + "\n";
                                 fos.write(bundleStr.getBytes());
                                 exported++;
                             }
@@ -419,10 +420,11 @@ public class DebugActivity extends AppCompatActivity {
                             SimpleFunctions.debug(echoarea + ": " + String.valueOf(msglist.size()));
 
                             for (String msgid : msglist) {
-                                String rawMessage = GlobalTransport.transport.getRawMessage(msgid);
+                                IIMessage message = GlobalTransport.transport.getMessage(msgid);
 
-                                if (rawMessage != null) {
-                                    String bundleStr = msgid + ":" + Base64.encodeToString(rawMessage.getBytes(), Base64.NO_WRAP) + "\n";
+                                if (message != null && message.id != null) {
+                                    if (message.is_favorite) message.tags.put("idecmobile-favorite", "true");
+                                    String bundleStr = msgid + ":" + Base64.encodeToString(message.raw().getBytes(), Base64.NO_WRAP) + "\n";
                                     fos.write(bundleStr.getBytes());
                                     exported++;
                                 }
@@ -490,6 +492,11 @@ public class DebugActivity extends AppCompatActivity {
 
                             IIMessage toSave = new IIMessage(message);
                             SimpleFunctions.debug("savemsg " + msgid + " to " + toSave.echo);
+
+                            if (toSave.tags.get("idecmobile-favorite").equals("true")) {
+                                toSave.is_favorite = true;
+                                toSave.tags.remove("idecmobile-favorite");
+                            }
                             GlobalTransport.transport.saveMessage(msgid, toSave.echo, toSave);
                             savedMessages++;
                         } else {
