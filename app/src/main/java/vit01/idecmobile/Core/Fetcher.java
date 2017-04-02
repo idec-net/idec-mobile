@@ -282,7 +282,11 @@ public class Fetcher {
 
             Hashtable<String, ArrayList<String>> msgsDict = parseRemoteIndex(echoBundle);
 
-            for (String echo : nextfetch) {
+            // Нельзя удалять элементы списка во время его итерации, иначе будет
+            // ConcurrentModificationException, поэтому список nextfetch копируем
+
+            List<String> nextfetch_copy = new ArrayList<>(nextfetch);
+            for (String echo : nextfetch_copy) {
                 ArrayList<String> localMessages = localIndex.get(echo);
                 ArrayList<String> remoteMessages = msgsDict.get(echo);
 
