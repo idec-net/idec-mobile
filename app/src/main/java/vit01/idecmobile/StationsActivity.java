@@ -437,6 +437,7 @@ public class StationsActivity extends AppCompatActivity {
 
             for (String line : lines) {
                 echoarea_entry entry = new echoarea_entry(line);
+                if (entry.corrupted) continue;
 
                 HashMap<String, String> entryMap = new HashMap<>(2);
                 entryMap.put("First Line", entry.name);
@@ -505,6 +506,7 @@ public class StationsActivity extends AppCompatActivity {
     public static class echoarea_entry {
         String name = "null", description = "null";
         int count = 0;
+        boolean corrupted = false;
 
         echoarea_entry(String rawline) {
             String[] values = rawline.split(":");
@@ -512,7 +514,7 @@ public class StationsActivity extends AppCompatActivity {
                 name = values[0];
                 count = Integer.parseInt(values[1]);
                 description = values[2];
-            }
+            } else corrupted = true;
         }
     }
 }

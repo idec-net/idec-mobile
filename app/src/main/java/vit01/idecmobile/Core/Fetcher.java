@@ -351,14 +351,13 @@ public class Fetcher {
                     try {
                         byte[] rawmsg = Base64.decode(pieces[1], Base64.DEFAULT);
                         message = new String(rawmsg, "UTF-8");
+                        transport.saveMessage(msgid, echo, message);
+                        savedMessages.add(msgid);
                     } catch (Exception e) {
                         e.printStackTrace();
                         SimpleFunctions.debug("Invalid decoded message: " + pieces[1]);
                         continue;
                     }
-
-                    transport.saveMessage(msgid, echo, message);
-                    savedMessages.add(msgid);
                 } else {
                     SimpleFunctions.debug("Wrong message bundle: " + bundle);
                 }
