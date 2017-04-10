@@ -493,7 +493,8 @@ public class DebugActivity extends AppCompatActivity {
                             IIMessage toSave = new IIMessage(message);
                             SimpleFunctions.debug("savemsg " + msgid + " to " + toSave.echo);
 
-                            if (toSave.tags.get("idecmobile-favorite").equals("true")) {
+                            String favorite = toSave.tags.get("idecmobile-favorite");
+                            if (favorite != null && favorite.equals("true")) {
                                 toSave.is_favorite = true;
                                 toSave.tags.remove("idecmobile-favorite");
                             }
