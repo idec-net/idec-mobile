@@ -360,6 +360,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
     @Override
     public echoStat getUnreadStats(String echo) {
+        // TODO: сделать запрос списка целиком
         echoStat result = new echoStat();
 
         SQLiteDatabase db = getReadableDatabase();

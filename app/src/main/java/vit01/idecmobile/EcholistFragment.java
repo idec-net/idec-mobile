@@ -40,6 +40,7 @@ import vit01.idecmobile.Core.GlobalTransport;
 
 public class EcholistFragment extends Fragment {
     ArrayList<String> echoareas;
+    ArrayList<AbstractTransport.echoStat> statisticsCache;
     int nodeindex = -1;
     AbstractTransport transport;
 
@@ -69,6 +70,7 @@ public class EcholistFragment extends Fragment {
             nodeindex = getArguments().getInt("nodeindex");
         } else echoareas = new ArrayList<>();
         transport = GlobalTransport.transport;
+        statisticsCache = new ArrayList<>();
         setHasOptionsMenu(true);
     }
 
@@ -81,8 +83,9 @@ public class EcholistFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setHasFixedSize(true);
 
-        mAdapter = new MyAdapter(getActivity(), echoareas, transport, nodeindex);
+        mAdapter = new MyAdapter(getActivity(), statisticsCache, echoareas, nodeindex);
         recyclerView.setAdapter(mAdapter);
         return rootView;
     }
@@ -92,13 +95,24 @@ public class EcholistFragment extends Fragment {
         mAdapter.nodeindex = stationIndex;
         nodeindex = stationIndex;
 
+        updateStatisticsCache();
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void updateStatisticsCache() {
+        statisticsCache.clear();
+        for (String echoarea : mAdapter.echolist) {
+            statisticsCache.add(transport.getUnreadStats(echoarea));
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null) mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            updateStatisticsCache();
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -113,18 +127,18 @@ public class EcholistFragment extends Fragment {
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        public ArrayList<String> echolist;
-        AbstractTransport transport;
+        ArrayList<AbstractTransport.echoStat> statCache;
+        ArrayList<String> echolist;
         Activity callingActivity;
         int nodeindex;
 
         public MyAdapter(Activity activity,
+                         ArrayList<AbstractTransport.echoStat> stats,
                          ArrayList<String> list,
-                         AbstractTransport db,
                          int stationIndex
         ) {
+            statCache = stats;
             echolist = list;
-            transport = db;
             nodeindex = stationIndex;
             callingActivity = activity;
         }
@@ -165,7 +179,7 @@ public class EcholistFragment extends Fragment {
             String echoarea = echolist.get(position);
             holder.echoarea_name.setText(echoarea);
 
-            AbstractTransport.echoStat stat = transport.getUnreadStats(echoarea);
+            AbstractTransport.echoStat stat = statCache.get(position);
 
             int font_style = (stat.unread_count > 0) ? Typeface.BOLD : Typeface.NORMAL;
 
