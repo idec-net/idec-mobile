@@ -101,9 +101,7 @@ public class EcholistFragment extends Fragment {
 
     public void updateStatisticsCache() {
         statisticsCache.clear();
-        for (String echoarea : mAdapter.echolist) {
-            statisticsCache.add(transport.getUnreadStats(echoarea));
-        }
+        transport.getUnreadStats(mAdapter.echolist, statisticsCache);
     }
 
     @Override

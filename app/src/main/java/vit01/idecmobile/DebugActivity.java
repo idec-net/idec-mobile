@@ -33,6 +33,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
@@ -44,7 +45,6 @@ import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
-import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 
 public class DebugActivity extends AppCompatActivity {
@@ -208,13 +208,13 @@ public class DebugActivity extends AppCompatActivity {
         public void run() {
             SimpleFunctions.debugTaskFinished = false;
             Context appContext = getApplicationContext();
-            AbstractTransport db = new SqliteTransport(appContext);
 
-            ArrayList<String> fetched = new ArrayList<>();
+            ArrayList<String> fetched;
             int fetchedCount = 0;
+            boolean error_flag = false;
 
             try {
-                Fetcher fetcher = new Fetcher(db);
+                Fetcher fetcher = new Fetcher(GlobalTransport.transport);
 
                 for (Station station : Config.values.stations) {
                     if (!station.fetch_enabled) {
@@ -237,19 +237,25 @@ public class DebugActivity extends AppCompatActivity {
                             Config.values.connectionTimeout
                     );
 
-                    fetchedCount += fetched.size();
+                    if (fetched != null) fetchedCount += fetched.size();
+                    else error_flag = true;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                error_flag = true;
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
                 final String finalFetched = String.valueOf(fetchedCount);
+                final boolean finalErrorFlag = error_flag;
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Получено сообщений: " + finalFetched, Toast.LENGTH_SHORT).show();
+                        if (finalFetched.equals("0") && finalErrorFlag)
+                            Toast.makeText(getApplicationContext(), "Проблема c загрузкой сообщений\nПроверьте подключение к интернету", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getApplicationContext(), "Получено сообщений: " + finalFetched, Toast.LENGTH_SHORT).show();
                     }
                 });
                 finishTask();
@@ -398,39 +404,25 @@ public class DebugActivity extends AppCompatActivity {
                     }
 
                     fos = new FileOutputStream(where);
-                    if (msgids != null) {
+
+                    if (msgids == null) msgids = new ArrayList<>();
+                    if (msgids.size() > 0) {
                         SimpleFunctions.debug("Экспорт отдельных сообщений...");
                         SimpleFunctions.debug("Количество: " + String.valueOf(msgids.size()));
-
-                        for (String msgid : msgids) {
-                            IIMessage message = GlobalTransport.transport.getMessage(msgid);
-
-                            if (message != null && message.id != null) {
-                                if (message.is_favorite) message.tags.put("idecmobile-favorite", "true");
-                                String bundleStr = msgid + ":" + Base64.encodeToString(message.raw().getBytes(), Base64.NO_WRAP) + "\n";
-                                fos.write(bundleStr.getBytes());
-                                exported++;
-                            }
-                        }
+                        exported += exportThese(fos, msgids);
                     } else if (echoareas != null) {
                         SimpleFunctions.debug("Экспорт по эхоконференциям...");
 
                         for (String echoarea : echoareas) {
-                            ArrayList<String> msglist = GlobalTransport.transport.getMsgList(echoarea, 0, 0);
-                            SimpleFunctions.debug(echoarea + ": " + String.valueOf(msglist.size()));
+                            msgids.addAll(GlobalTransport.transport.getMsgList(echoarea, 0, 0));
+                            exported += exportThese(fos, msgids);
 
-                            for (String msgid : msglist) {
-                                IIMessage message = GlobalTransport.transport.getMessage(msgid);
-
-                                if (message != null && message.id != null) {
-                                    if (message.is_favorite) message.tags.put("idecmobile-favorite", "true");
-                                    String bundleStr = msgid + ":" + Base64.encodeToString(message.raw().getBytes(), Base64.NO_WRAP) + "\n";
-                                    fos.write(bundleStr.getBytes());
-                                    exported++;
-                                }
-                            }
+                            SimpleFunctions.debug(echoarea + ": " + String.valueOf(msgids.size()));
+                            msgids.clear();
                         }
                     }
+                    SimpleFunctions.debug("Готово!");
+
                 } else
                     SimpleFunctions.debug("Файл " + where.getAbsolutePath() + " недоступен для записи!");
 
@@ -459,6 +451,24 @@ public class DebugActivity extends AppCompatActivity {
 
                 finishTask();
             }
+        }
+
+        public int exportThese(FileOutputStream fos, ArrayList<String> msgids) throws IOException {
+            int exported = 0;
+            for (String msgid : msgids) {
+                IIMessage message = GlobalTransport.transport.getMessage(msgid);
+
+                if (message != null && message.id != null) {
+                    // Это нужно, чтобы сисоп станции не мог навязать поинту добавление сообщения в избранное
+                    if (message.tags.containsKey("idecmobile-favorite"))
+                        message.tags.remove("idecmobile-favorite");
+                    if (message.is_favorite) message.tags.put("idecmobile-favorite", "true");
+                    String bundleStr = msgid + ":" + Base64.encodeToString(message.raw().getBytes(), Base64.NO_WRAP) + "\n";
+                    fos.write(bundleStr.getBytes());
+                    exported++;
+                }
+            }
+            return exported;
         }
     }
 

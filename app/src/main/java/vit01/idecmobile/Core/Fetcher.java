@@ -156,7 +156,7 @@ public class Fetcher {
 
             if (remote_xc_data == null) {
                 SimpleFunctions.debug("Похоже, на станции проблема с /x/c");
-                return emptyList;
+                return null;
             }
             if (local_xc_data.equals(remote_xc_data)) return emptyList;
 
@@ -337,7 +337,8 @@ public class Fetcher {
 
             if (fullBundle == null) {
                 SimpleFunctions.debug("Ошибка получения бандла сообщений. Проверь интернет");
-                return savedMessages;
+                if (savedMessages.size() > 0) return savedMessages;
+                else return null;
             }
 
             ArrayList<String> bundles = new ArrayList<>();
@@ -360,7 +361,6 @@ public class Fetcher {
                     } catch (Exception e) {
                         e.printStackTrace();
                         SimpleFunctions.debug("Invalid decoded message: " + pieces[1]);
-                        continue;
                     }
                 } else {
                     SimpleFunctions.debug("Wrong message bundle: " + bundle);

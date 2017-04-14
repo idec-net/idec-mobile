@@ -59,7 +59,7 @@ public interface AbstractTransport {
     ArrayList<String> getUnreadMessages(String echoarea);
     ArrayList<String> getAllUnreadMessages();
 
-    echoStat getUnreadStats(String echoarea);
+    void getUnreadStats(ArrayList<String> echoareas, ArrayList<echoStat> result);
 
     ArrayList<String> getFavorites();
     ArrayList<String> getUnreadFavorites();
@@ -71,5 +71,9 @@ public interface AbstractTransport {
 
     class echoStat {
         public int total_count = 0, unread_count = 0;
+        echoStat(int total, int unread) {
+            total_count = total;
+            unread_count = unread;
+        }
     }
 }

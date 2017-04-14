@@ -359,30 +359,35 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     @Override
-    public echoStat getUnreadStats(String echo) {
-        // TODO: сделать запрос списка целиком
-        echoStat result = new echoStat();
-
+    public void getUnreadStats(ArrayList<String> echoareas, ArrayList<echoStat> result) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(tableName, new String[]{"count(*)"},
-                "echoarea = ? and isunread=1", new String[]{echo}, null, null, null);
+        Cursor cursor;
+        int unread_count, total_count;
 
-        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            result.unread_count = cursor.getInt(0);
+        for (String echo : echoareas) {
+            unread_count = 0;
+            total_count = 0;
+
+            cursor = db.query(tableName, new String[]{"count(*)"},
+                    "echoarea = ? and isunread=1", new String[]{echo}, null, null, null);
+
+            if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+                unread_count = cursor.getInt(0);
+            }
+
+            cursor.close();
+
+            cursor = db.query(tableName, new String[]{"count(*)"},
+                    "echoarea = ?", new String[]{echo}, null, null, null);
+
+            if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+                total_count = cursor.getInt(0);
+            }
+
+            cursor.close();
+            result.add(new echoStat(total_count, unread_count));
         }
-
-        cursor.close();
-
-        cursor = db.query(tableName, new String[]{"count(*)"},
-                "echoarea = ?", new String[]{echo}, null, null, null);
-
-        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            result.total_count = cursor.getInt(0);
-        }
-
-        cursor.close();
         db.close();
-        return result;
     }
 
     public ArrayList<String> getUnreadFavorites() {
