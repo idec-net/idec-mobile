@@ -28,6 +28,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(8).withName("Дополнительно").withIcon(GoogleMaterial.Icon.gmd_extension).withSelectable(false);
         PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(9).withName("Настройки").withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
         PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(10).withName("Помощь").withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
+        PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName("Обновиться").withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -176,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
                         extItem,
                         new DividerDrawerItem(),
                         settingsItem,
-                        helpItem
+                        helpItem,
+                        updateItem
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -236,6 +239,9 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case 10:
                                 startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                                break;
+                            case 11:
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://ii-net.tk/ii/files/app-debug.apk")));
                                 break;
                         }
                         return false;
