@@ -69,7 +69,7 @@ public class Fetcher {
         return result;
     }
 
-    public static boolean xfile_download(Context context, Station station, String filename, File fileToSave) {
+    public static boolean xfile_download(final Context context, Station station, String filename, File fileToSave) {
         String toServer;
 
         try {
@@ -106,13 +106,41 @@ public class Fetcher {
 
             int read;
 
+            class progress implements Runnable {
+                int currentvalue = 0;
+                boolean joined = false;
+
+                public void setCurrentvalue(int val) {
+                    currentvalue = val;
+                }
+
+                @Override
+                public void run() {
+                    while (!joined) {
+                        SimpleFunctions.debug(android.text.format.Formatter.formatFileSize(context, currentvalue));
+                        try {
+                            Thread.sleep(1500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            progress prgr = new progress();
+            Thread progressThread = new Thread(prgr);
+            progressThread.start();
+
             do {
                 read = inputStream.read(buffer, 0, buffer.length);
                 if (read > 0) os.write(buffer, 0, read);
                 totalRead += read;
-                SimpleFunctions.debug(android.text.format.Formatter.formatFileSize(context, totalRead));
+                prgr.setCurrentvalue(totalRead);
             }
             while (read >= 0);
+
+            prgr.joined = true;
+            progressThread.join();
 
             os.close();
             inputStream.close();

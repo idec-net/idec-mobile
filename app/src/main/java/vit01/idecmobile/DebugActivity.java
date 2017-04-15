@@ -288,7 +288,7 @@ public class DebugActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         String result = (finalSuccess) ? "Файл загружен в " + new_file.getAbsolutePath() : "Были ошибки";
-                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                     }
                 });
                 finishTask();
