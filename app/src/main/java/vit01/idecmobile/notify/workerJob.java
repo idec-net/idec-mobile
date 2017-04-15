@@ -78,7 +78,7 @@ public class workerJob extends BroadcastReceiver {
     public void Show_Notification(Context context, String title, String text, boolean big_text) {
         android.support.v4.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_launcher_notify)
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setContentTitle(title)
                         .setContentText(text)

@@ -157,6 +157,8 @@ public class StationsActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     for (File file : contents) {
                                         boolean result = file.delete();
+                                        if (!result)
+                                            SimpleFunctions.debug("Error deleting file " + file.getName());
                                     }
 
                                     if (draftsDir != null) {
@@ -510,10 +512,12 @@ public class StationsActivity extends AppCompatActivity {
 
         echoarea_entry(String rawline) {
             String[] values = rawline.split(":");
-            if (values.length == 3) {
+            if (values.length >= 2) {
                 name = values[0];
                 count = Integer.parseInt(values[1]);
-                description = values[2];
+
+                if (values.length > 2) description = values[2];
+                else description = "<null>";
             } else corrupted = true;
         }
     }
