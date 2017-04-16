@@ -74,7 +74,7 @@ public class ListEditActivity extends AppCompatActivity {
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_ev);
-        IconicsDrawable add_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_add).color(Color.WHITE).sizeDp(24);
+        IconicsDrawable add_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_add).color(Color.WHITE).sizeDp(16);
         fab.setImageDrawable(add_icon);
 
         contents_adapter = new ArrayAdapter<>(this,

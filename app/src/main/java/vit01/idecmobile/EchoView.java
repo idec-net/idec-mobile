@@ -88,7 +88,7 @@ public class EchoView extends AppCompatActivity {
             }
         });
 
-        IconicsDrawable create_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_create).color(Color.WHITE).sizeDp(24);
+        IconicsDrawable create_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_create).color(Color.WHITE).sizeDp(19);
         fab.setImageDrawable(create_icon);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
