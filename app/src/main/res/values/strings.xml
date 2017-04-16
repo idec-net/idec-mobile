@@ -35,4 +35,16 @@
     </string>
     <string name="title_activity_additional">AdditionalActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="permission_grant_top">Предоставьте приложению права на доступ к карте памяти</string>
+
+    <string name="permission_grant_text">Что клиент записывает на SD-карту:
+        \n\n
+        1. <b>Исходящие</b> (черновики) и <b>отправленные</b> сообщения.\n
+        Во-первых, чтобы их можно было править с помощью внешнего редактора.
+        Во-вторых, дабы они были в целости и сохранности после переустановки (удаления) приложения.\n\n
+
+        2. <b>Чёрный список.</b> По тем же причинам.\n\n
+
+        3. <b>Последние просмотренные</b> сообщения в эхах (чтобы можно было продолжить чтение с того же места).\n\n
+    </string>
 </resources>
