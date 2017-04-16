@@ -69,7 +69,6 @@ public class EcholistFragment extends Fragment {
             echoareas = getArguments().getStringArrayList("echolist");
             nodeindex = getArguments().getInt("nodeindex");
         } else echoareas = new ArrayList<>();
-        transport = GlobalTransport.transport(getActivity());
         statisticsCache = new ArrayList<>();
         setHasOptionsMenu(true);
     }
@@ -101,6 +100,7 @@ public class EcholistFragment extends Fragment {
 
     public void updateStatisticsCache() {
         statisticsCache.clear();
+        transport = GlobalTransport.transport(getActivity());
         transport.getUnreadStats(mAdapter.echolist, statisticsCache);
     }
 

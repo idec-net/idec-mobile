@@ -167,9 +167,14 @@ public class EchoView extends AppCompatActivity {
                 readNow.putExtra("echoarea", echoarea);
 
                 int gotPosition = EchoReadingPosition.getPosition(echoarea);
-                if (gotPosition == -1)
+                if (gotPosition < 0)
                     gotPosition = 0; // исправить эту строку, если при первом заходе
                 // в эху хочется читать не первое сообщение, а какое-то другое
+
+                if (gotPosition > 0 && gotPosition > (normalMsgList.size() - 1))
+                    gotPosition = normalMsgList.size() - 1;
+                // это предотвратит клиент от падения, если произошла чистка по ЧС или уменьшение количество мессаг в эхе
+                
                 readNow.putExtra("position", gotPosition);
                 startActivity(readNow);
             }
