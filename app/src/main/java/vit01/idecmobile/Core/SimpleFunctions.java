@@ -20,9 +20,7 @@
 package vit01.idecmobile.Core;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -268,9 +266,8 @@ public class SimpleFunctions {
         return TextUtils.join("\n", pieces);
     }
 
-    public static int getPreferredOutboxId(Context context, String echoarea) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        int nodeindex = sharedPref.getInt("nodeindex_current", 0);
+    public static int getPreferredOutboxId(String echoarea) {
+        int nodeindex = Config.currentSelectedStation;
 
         if (Config.values.stations.get(nodeindex).echoareas.contains(echoarea)) {
             return nodeindex;

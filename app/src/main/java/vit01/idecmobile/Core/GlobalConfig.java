@@ -32,7 +32,8 @@ public class GlobalConfig implements Serializable {
             oldQuote = false, // упрощённое (старое) цитирование
             notificationsEnabled = false,
             notificationsVibrate = true,
-            swipeToFetch = true;
+            swipeToFetch = true,
+            disableMsglist = false; // начать читать эху сразу с того же места
     public int
             oneRequestLimit = 20,
             connectionTimeout = 20,

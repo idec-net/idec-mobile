@@ -20,17 +20,15 @@
 package vit01.idecmobile;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
-import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 
 public class OpenLinkActivity extends AppCompatActivity {
@@ -56,8 +54,7 @@ public class OpenLinkActivity extends AppCompatActivity {
             }
 
             if (nodeindex == -1) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-                nodeindex = sharedPref.getInt("nodeindex_current", 0);
+                nodeindex = Config.currentSelectedStation;
             }
 
             intent.putExtra("echoarea", ii_link);
@@ -66,7 +63,7 @@ public class OpenLinkActivity extends AppCompatActivity {
         } else {
             // иначе сообщение
             Intent intent = new Intent(OpenLinkActivity.this, MessageSlideActivity.class);
-            AbstractTransport transport = new SqliteTransport(this);
+            AbstractTransport transport = GlobalTransport.transport;
 
             IIMessage message = transport.getMessage(ii_link);
             if (message == null) message = new IIMessage();
@@ -76,6 +73,7 @@ public class OpenLinkActivity extends AppCompatActivity {
                 int position = msglist.lastIndexOf(ii_link);
 
                 intent.putExtra("msglist", msglist);
+                intent.putExtra("echoarea", message.echo);
                 intent.putExtra("position", position);
             } else {
                 msglist = new ArrayList<>();

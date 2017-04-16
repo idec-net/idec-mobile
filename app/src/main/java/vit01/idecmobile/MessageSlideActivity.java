@@ -35,14 +35,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.EchoReadingPosition;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
 
 public class MessageSlideActivity extends AppCompatActivity {
     ActionBar actionBar;
     ViewPager mPager;
     private int msgCount;
+    private int nodeIndex;
     private ArrayList<String> msglist;
+    private String echoarea = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,10 @@ public class MessageSlideActivity extends AppCompatActivity {
 
         Intent gotInfo = getIntent();
         msglist = gotInfo.getStringArrayListExtra("msglist");
+        nodeIndex = gotInfo.getIntExtra("nodeindex", Config.currentSelectedStation);
         msgCount = msglist.size();
         int firstPosition = gotInfo.getIntExtra("position", msgCount - 1);
+        if (gotInfo.hasExtra("echoarea")) echoarea = gotInfo.getStringExtra("echoarea");
 
         mPager = (ViewPager) findViewById(R.id.swipe_pager);
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -70,6 +76,8 @@ public class MessageSlideActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 updateActionBar(position);
+                if (Config.values.disableMsglist && echoarea != null)
+                    EchoReadingPosition.setPosition(echoarea, position);
                 final String msgid = msglist.get(position);
 
                 // Помечаем сообщение прочитанным
@@ -85,6 +93,8 @@ public class MessageSlideActivity extends AppCompatActivity {
         // помечаем прочитанным первое сообщение
         GlobalTransport.transport.setUnread(false, Collections.singletonList(msglist.get(firstPosition)));
         updateActionBar(firstPosition);
+        if (Config.values.disableMsglist && echoarea != null)
+            EchoReadingPosition.setPosition(echoarea, firstPosition);
     }
 
     public void updateActionBar(int position) {
@@ -103,6 +113,16 @@ public class MessageSlideActivity extends AppCompatActivity {
             case R.id.action_last_item:
                 mPager.setCurrentItem(msgCount - 1, false);
                 return true;
+            case R.id.action_new_message:
+                IIMessage msg = GlobalTransport.transport.getMessage
+                        (msglist.get(mPager.getCurrentItem()));
+
+                Intent intent = new Intent(MessageSlideActivity.this, DraftEditor.class);
+                intent.putExtra("task", "new_in_echo");
+                intent.putExtra("echoarea", msg.echo);
+                intent.putExtra("nodeindex", nodeIndex);
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -111,6 +131,20 @@ public class MessageSlideActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (Config.values.disableMsglist && echoarea != null)
+            EchoReadingPosition.writePositionCache();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (Config.values.disableMsglist && echoarea != null)
+            EchoReadingPosition.writePositionCache();
+        super.onDestroy();
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

@@ -21,14 +21,12 @@ package vit01.idecmobile;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -288,8 +286,7 @@ public class DraftsView extends AppCompatActivity {
             if (outbox_storage_list.contains(storage_id)) {
                 holder.draft_storage_index = outbox_storage_list.indexOf(storage_id);
             } else {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(callingActivity);
-                holder.draft_storage_index = sharedPref.getInt("nodeindex_current", 0);
+                holder.draft_storage_index = Config.currentSelectedStation;
             }
 
             holder.draft_subj.setText(message.subj);

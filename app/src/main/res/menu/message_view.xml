@@ -10,6 +10,11 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/action_new_message"
+        android:title="Новое сообщение в эху"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_first_item"
         android:title="В начало"
         app:showAsAction="never" />

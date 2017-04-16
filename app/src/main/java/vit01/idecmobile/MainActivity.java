@@ -21,7 +21,6 @@ package vit01.idecmobile;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -67,7 +66,6 @@ import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SimpleFunctions;
-import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.notify.workerJob;
 
@@ -76,12 +74,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int MANAGE_NODE = 100001;
     public Station currentStation;
     public EcholistFragment echolist;
-    public int currentStationIndex = 0;
     public boolean is_offline_list_now = false;
     public Drawer drawer;
     public AccountHeader drawerHeader;
-    public SharedPreferences sharedPref;
-    public SharedPreferences.Editor prefEditor;
     public AbstractTransport transport;
     FragmentManager fm;
     int MY_PERMISSION_WRITE_STORAGE;
@@ -111,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Config.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         drawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -134,13 +129,13 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(editNew);
                             } else if (identifier == MANAGE_NODE) {
                                 Intent manageIntent = new Intent(MainActivity.this, StationsActivity.class);
-                                manageIntent.putExtra("index", currentStationIndex);
+                                manageIntent.putExtra("index", Config.currentSelectedStation);
                                 startActivity(manageIntent);
                             } else if (identifier < countStations) {
                                 // Выбрали другую станцию, обновляем список
-                                currentStationIndex = (int) identifier;
-                                currentStation = Config.values.stations.get(currentStationIndex);
-                                saveCurrentStationPosition(currentStationIndex);
+                                Config.currentSelectedStation = (int) identifier;
+                                currentStation = Config.values.stations.get(Config.currentSelectedStation);
+                                Config.saveCurrentStationPosition();
                                 updateEcholist();
                                 return true;
                             }
@@ -251,11 +246,10 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 
-        GlobalTransport.transport = new SqliteTransport(this);
-        transport = GlobalTransport.transport;
+        transport = GlobalTransport.transport(this);
         updateStationsList();
 
-        echolist = EcholistFragment.newInstance(currentStation.echoareas, currentStationIndex);
+        echolist = EcholistFragment.newInstance(currentStation.echoareas, Config.currentSelectedStation);
 
         fm = getSupportFragmentManager();
         fm.beginTransaction()
@@ -350,19 +344,17 @@ public class MainActivity extends AppCompatActivity {
                 new ProfileSettingDrawerItem().withName("Управление станциями").withIdentifier(MANAGE_NODE).withIcon(GoogleMaterial.Icon.gmd_settings)
         );
 
-        currentStationIndex = sharedPref.getInt("nodeindex_current", 0);
-
-        if (currentStationIndex > Config.values.stations.size() - 1) {
-            currentStationIndex = 0;
-            saveCurrentStationPosition(0);
+        if (Config.currentSelectedStation > Config.values.stations.size() - 1) {
+            Config.currentSelectedStation = 0;
+            Config.saveCurrentSelectedStation();
         }
-        currentStation = Config.values.stations.get(currentStationIndex);
-        drawerHeader.setActiveProfile(currentStationIndex);
+        currentStation = Config.values.stations.get(Config.currentSelectedStation);
+        drawerHeader.setActiveProfile(Config.currentSelectedStation);
     }
 
     public void updateEcholist() {
         if (!is_offline_list_now)
-            echolist.updateState(currentStation.echoareas, currentStationIndex);
+            echolist.updateState(currentStation.echoareas, Config.currentSelectedStation);
         else
             echolist.updateState(Config.values.offlineEchoareas, -1);
     }
@@ -373,12 +365,6 @@ public class MainActivity extends AppCompatActivity {
 
         drawer.updateBadge(3, new StringHolder(String.valueOf(countUnread)));
         drawer.updateBadge(6, new StringHolder(String.valueOf(countFavorites)));
-    }
-
-    public void saveCurrentStationPosition(int position) {
-        prefEditor = sharedPref.edit();
-        prefEditor.putInt("nodeindex_current", position);
-        prefEditor.apply();
     }
 
     public Drawable getStationIcon(String stationName) {
@@ -441,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_stations) {
             Intent manageIntent = new Intent(MainActivity.this, StationsActivity.class);
-            manageIntent.putExtra("index", currentStationIndex);
+            manageIntent.putExtra("index", Config.currentSelectedStation);
             startActivity(manageIntent);
             return true;
         } else if (id == R.id.action_mark_all_base_read) {

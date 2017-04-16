@@ -20,6 +20,7 @@
 package vit01.idecmobile.Core;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,6 +33,9 @@ public class Config {
     public static GlobalConfig values;
     public static String filename = "config.obj";
     public static int appTheme = R.style.AppTheme;
+    public static int currentSelectedStation;
+    public static SharedPreferences sharedPref;
+    public static SharedPreferences.Editor prefEditor;
 
     public static void loadConfig(Context context, String filename) {
         try {
@@ -123,5 +127,15 @@ public class Config {
                 appTheme = R.style.AppTheme;
                 break;
         }
+    }
+
+    public static void saveCurrentStationPosition() {
+        prefEditor = sharedPref.edit();
+        prefEditor.putInt("nodeindex_current", currentSelectedStation);
+        prefEditor.apply();
+    }
+
+    public static void saveCurrentSelectedStation() {
+        currentSelectedStation = sharedPref.getInt("nodeindex_current", 0);
     }
 }

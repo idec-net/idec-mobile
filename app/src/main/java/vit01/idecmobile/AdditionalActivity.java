@@ -65,7 +65,6 @@ import vit01.idecmobile.Core.GlobalConfig;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
-import vit01.idecmobile.Core.SqliteTransport;
 import vit01.idecmobile.Core.Station;
 
 public class AdditionalActivity extends AppCompatActivity {
@@ -261,7 +260,7 @@ public class AdditionalActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            transport = new SqliteTransport(getContext());
+            transport = GlobalTransport.transport;
 
             View rootView = inflater.inflate(R.layout.fragment_additional_database, container, false);
 

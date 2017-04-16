@@ -45,7 +45,7 @@ import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.notify.AlarmService;
 
 public class CommonSettings extends AppCompatActivity {
-    CheckBox defaultEditor, firstrun, useProxy, oldQuote, notifyEnabled, notifyVibrate, useTor, swipeToFetch;
+    CheckBox defaultEditor, firstrun, useProxy, oldQuote, notifyEnabled, notifyVibrate, useTor, swipeToFetch, disable_msglist;
     EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit, notifyInterval, proxyAddress;
     Spinner selected_theme;
     Intent alarmIntent;
@@ -73,6 +73,7 @@ public class CommonSettings extends AppCompatActivity {
         useProxy = (CheckBox) findViewById(R.id.checkBox3);
         oldQuote = (CheckBox) findViewById(R.id.old_quote);
         swipeToFetch = (CheckBox) findViewById(R.id.swipe_to_fetch_enable);
+        disable_msglist = (CheckBox) findViewById(R.id.echoview_disable_messages_list);
         notifyEnabled = (CheckBox) findViewById(R.id.notifications_enabled);
         notifyVibrate = (CheckBox) findViewById(R.id.notification_vibrate);
         useTor = (CheckBox) findViewById(R.id.useTor);
@@ -148,6 +149,7 @@ public class CommonSettings extends AppCompatActivity {
         useProxy.setChecked(Config.values.useProxy);
         oldQuote.setChecked(Config.values.oldQuote);
         swipeToFetch.setChecked(Config.values.swipeToFetch);
+        disable_msglist.setChecked(Config.values.disableMsglist);
         notifyEnabled.setChecked(Config.values.notificationsEnabled);
         notifyVibrate.setChecked(Config.values.notificationsVibrate);
         useTor.setChecked(Config.values.useTor);
@@ -178,6 +180,7 @@ public class CommonSettings extends AppCompatActivity {
         Config.values.useProxy = useProxy.isChecked();
         Config.values.oldQuote = oldQuote.isChecked();
         Config.values.swipeToFetch = swipeToFetch.isChecked();
+        Config.values.disableMsglist = disable_msglist.isChecked();
         Config.values.notificationsEnabled = notifyEnabled.isChecked();
         Config.values.notificationsVibrate = notifyVibrate.isChecked();
 

@@ -39,23 +39,21 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 import vit01.idecmobile.Core.AbstractTransport;
+import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
-import vit01.idecmobile.Core.SqliteTransport;
 
 public class MessageView_full extends Fragment {
-    private AbstractTransport transport;
+    public AbstractTransport transport = GlobalTransport.transport;
     private ArrayList<String> msglist;
     private int position;
     private String msgid;
     private IIMessage message;
 
     private boolean messageStarred = false;
-
-    private Context mListener;
 
     public MessageView_full() {
         // Required empty public constructor
@@ -77,7 +75,6 @@ public class MessageView_full extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            transport = new SqliteTransport(mListener);
             msglist = getArguments().getStringArrayList("msglist");
             position = getArguments().getInt("position");
         }
@@ -132,7 +129,7 @@ public class MessageView_full extends Fragment {
                 Intent intent = new Intent(getActivity(), DraftEditor.class);
                 intent.putExtra("task", "new_answer");
                 intent.putExtra("nodeindex",
-                        SimpleFunctions.getPreferredOutboxId(getActivity(), message.echo));
+                        SimpleFunctions.getPreferredOutboxId(message.echo));
                 intent.putExtra("message", message);
                 intent.putExtra("quote", false);
 
@@ -150,7 +147,7 @@ public class MessageView_full extends Fragment {
                 Intent intent = new Intent(getActivity(), DraftEditor.class);
                 intent.putExtra("task", "new_answer");
                 intent.putExtra("nodeindex",
-                        SimpleFunctions.getPreferredOutboxId(getActivity(), message.echo));
+                        SimpleFunctions.getPreferredOutboxId(message.echo));
                 intent.putExtra("message", message);
                 intent.putExtra("quote", true);
 
@@ -180,7 +177,7 @@ public class MessageView_full extends Fragment {
             case R.id.action_starred:
                 messageStarred = !messageStarred;
                 setStarredIcon(messageStarred, item);
-                transport.setFavorite(messageStarred, Arrays.asList(msgid));
+                transport.setFavorite(messageStarred, Collections.singletonList(msgid));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -201,17 +198,5 @@ public class MessageView_full extends Fragment {
                     .actionBar().color(iconColor).alpha(80);
         }
         item.setIcon(icon);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mListener = context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 }

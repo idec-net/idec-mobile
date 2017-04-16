@@ -52,9 +52,10 @@ import java.util.List;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.EchoReadingPosition;
+import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
-import vit01.idecmobile.Core.SqliteTransport;
 
 public class EchoView extends AppCompatActivity {
     String echoarea;
@@ -105,7 +106,7 @@ public class EchoView extends AppCompatActivity {
             fab.setVisibility(View.INVISIBLE);
         }
 
-        transport = new SqliteTransport(getApplicationContext());
+        transport = GlobalTransport.transport;
         loadContent(false);
     }
 
@@ -153,8 +154,25 @@ public class EchoView extends AppCompatActivity {
         } else {
             Collections.reverse(msglist);
 
-            mAdapter = new MyAdapter(this, recyclerView, msglist, transport);
+            mAdapter = new MyAdapter(this, recyclerView, msglist, transport, echoarea, nodeIndex, unread_only);
             recyclerView.setAdapter(mAdapter);
+
+            if (Config.values.disableMsglist &&
+                    !echoarea.equals("_carbon_classic") && !echoarea.equals("_favorites")) {
+                Intent readNow = new Intent(EchoView.this, MessageSlideActivity.class);
+                ArrayList<String> normalMsgList = new ArrayList<>(msglist);
+                Collections.reverse(normalMsgList);
+                readNow.putExtra("msglist", normalMsgList);
+                readNow.putExtra("nodeindex", nodeIndex);
+                readNow.putExtra("echoarea", echoarea);
+
+                int gotPosition = EchoReadingPosition.getPosition(echoarea);
+                if (gotPosition == -1)
+                    gotPosition = 0; // исправить эту строку, если при первом заходе
+                // в эху хочется читать не первое сообщение, а какое-то другое
+                readNow.putExtra("position", gotPosition);
+                startActivity(readNow);
+            }
         }
 
         return true;
@@ -211,10 +229,12 @@ public class EchoView extends AppCompatActivity {
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         AbstractTransport transport;
         Activity callingActivity;
+        String echoarea = "no.echo";
         int total_count;
         int visibleItems = 20;
         int lastVisibleItem;
-        boolean loading;
+        int nodeIndex;
+        boolean loading, unread_only;
         int primaryColor, secondaryColor;
         private ArrayList<String> msglist;
         private ArrayList<String> visible_msglist;
@@ -225,10 +245,16 @@ public class EchoView extends AppCompatActivity {
         public MyAdapter(Activity activity,
                          RecyclerView recyclerView,
                          ArrayList<String> hashes,
-                         AbstractTransport db) {
+                         AbstractTransport db,
+                         String echo,
+                         int nodeindex,
+                         boolean _unread_only) {
             msglist = hashes;
             transport = db;
+            nodeIndex = nodeindex;
+            echoarea = echo;
             callingActivity = activity;
+            unread_only = _unread_only;
 
             total_count = msglist.size();
 
@@ -305,6 +331,11 @@ public class EchoView extends AppCompatActivity {
 
                     Intent intent = new Intent(callingActivity, MessageSlideActivity.class);
                     intent.putExtra("msglist", normalMsglist);
+
+                    if (!echoarea.equals("_carbon_classic") && !echoarea.equals("_favorites") && !unread_only) {
+                        intent.putExtra("echoarea", echoarea);
+                        intent.putExtra("nodeindex", nodeIndex);
+                    }
                     int pos = total_count - holder.position - 1;
                     intent.putExtra("position", pos);
                     callingActivity.startActivity(intent);
@@ -324,7 +355,7 @@ public class EchoView extends AppCompatActivity {
                         star.setImageDrawable(unstarredDrawable);
                     }
 
-                    transport.setFavorite(message.is_favorite, Arrays.asList(holder.msgid));
+                    transport.setFavorite(message.is_favorite, Collections.singletonList(holder.msgid));
                 }
             });
 
