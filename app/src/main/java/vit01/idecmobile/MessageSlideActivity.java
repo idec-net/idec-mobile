@@ -29,7 +29,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,8 +97,9 @@ public class MessageSlideActivity extends AppCompatActivity {
         // помечаем прочитанным первое сообщение
         GlobalTransport.transport.setUnread(false, Collections.singletonList(msglist.get(firstPosition)));
         updateActionBar(firstPosition);
-        if (Config.values.disableMsglist && echoarea != null)
+        if (Config.values.disableMsglist && echoarea != null) {
             EchoReadingPosition.setPosition(echoarea, firstPosition);
+        }
     }
 
     public void updateActionBar(int position) {
@@ -123,6 +128,11 @@ public class MessageSlideActivity extends AppCompatActivity {
                 intent.putExtra("nodeindex", nodeIndex);
                 startActivity(intent);
                 return true;
+            case R.id.action_msglist_return:
+                EchoReadingPosition.writePositionCache();
+                setResult(0);
+                finish();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -135,8 +145,10 @@ public class MessageSlideActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (Config.values.disableMsglist && echoarea != null)
+        if (Config.values.disableMsglist && echoarea != null) {
             EchoReadingPosition.writePositionCache();
+            setResult(1);
+        } else setResult(0); // return to list
         super.onBackPressed();
     }
 
@@ -145,6 +157,39 @@ public class MessageSlideActivity extends AppCompatActivity {
         if (Config.values.disableMsglist && echoarea != null)
             EchoReadingPosition.writePositionCache();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.message_view, menu);
+        MenuItem return_msglist = menu.findItem(R.id.action_msglist_return);
+
+        int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
+
+        if (Config.values.disableMsglist && echoarea != null) {
+            return_msglist.setVisible(true);
+            return_msglist.setIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_format_list_bulleted).actionBar().color(iconColor));
+        }
+
+        MenuItem tostart = menu.findItem(R.id.action_first_item);
+        MenuItem toend = menu.findItem(R.id.action_last_item);
+
+        if (msgCount == 1) {
+            tostart.setVisible(false);
+            toend.setVisible(false);
+        } else {
+            IconicsDrawable startIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_keyboard_arrow_left).actionBar().color(iconColor);
+            IconicsDrawable endIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_keyboard_arrow_right).actionBar().color(iconColor);
+
+            tostart.setIcon(startIcon);
+            toend.setIcon(endIcon);
+        }
+
+        IconicsDrawable newMsg = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_create).actionBar().color(iconColor);
+        MenuItem compose = menu.findItem(R.id.action_new_message);
+        compose.setIcon(newMsg);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

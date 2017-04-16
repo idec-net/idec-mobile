@@ -176,7 +176,7 @@ public class EchoView extends AppCompatActivity {
                 // это предотвратит клиент от падения, если произошла чистка по ЧС или уменьшение количество мессаг в эхе
 
                 readNow.putExtra("position", gotPosition);
-                startActivity(readNow);
+                startActivityForResult(readNow, 1);
             }
         }
 
@@ -229,6 +229,13 @@ public class EchoView extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == 1) finish();
+        }
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {

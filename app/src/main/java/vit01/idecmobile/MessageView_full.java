@@ -159,8 +159,6 @@ public class MessageView_full extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.message_view, menu);
-
         MenuItem starredItem = menu.findItem(R.id.action_starred);
         if (messageStarred) {
             setStarredIcon(true, starredItem);

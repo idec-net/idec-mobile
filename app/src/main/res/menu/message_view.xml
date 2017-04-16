@@ -5,22 +5,34 @@
     tools:context="vit01.idecmobile.MessageSlideActivity">
 
     <item
-        android:id="@+id/action_starred"
-        android:title="В избранное"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/action_new_message"
-        android:title="Новое сообщение в эху"
-        app:showAsAction="never" />
+        android:orderInCategory="1"
+        android:title="Новое сообщение"
+        app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_first_item"
-        android:title="В начало"
-        app:showAsAction="never" />
+        android:id="@+id/action_starred"
+        android:orderInCategory="2"
+        android:title="В избранное"
+        app:showAsAction="always" />
+
+    <group android:orderInCategory="3">
+
+        <item
+            android:id="@+id/action_first_item"
+            android:title="В начало"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_last_item"
+            android:title="В конец"
+            app:showAsAction="ifRoom" />
+    </group>
 
     <item
-        android:id="@+id/action_last_item"
-        android:title="В конец"
-        app:showAsAction="never" />
+        android:id="@+id/action_msglist_return"
+        android:orderInCategory="4"
+        android:title="К списку сообщений"
+        android:visible="false"
+        app:showAsAction="always" />
 </menu>
