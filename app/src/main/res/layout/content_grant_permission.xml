@@ -14,6 +14,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
             android:contentDescription="@string/gmd_error" />
 
         <TextView
@@ -29,7 +30,7 @@
             android:id="@+id/grant_permission_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="14dp"
+            android:padding="25dp"
             android:text="@string/permission_grant_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>

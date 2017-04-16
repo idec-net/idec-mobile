@@ -174,7 +174,7 @@ public class EchoView extends AppCompatActivity {
                 if (gotPosition > 0 && gotPosition > (normalMsgList.size() - 1))
                     gotPosition = normalMsgList.size() - 1;
                 // это предотвратит клиент от падения, если произошла чистка по ЧС или уменьшение количество мессаг в эхе
-                
+
                 readNow.putExtra("position", gotPosition);
                 startActivity(readNow);
             }

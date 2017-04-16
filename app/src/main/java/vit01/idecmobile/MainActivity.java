@@ -444,7 +444,8 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.content_grant_permission);
             ImageView v = (ImageView) findViewById(R.id.imageView);
 
-            IconicsDrawable icon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_warning).color(Color.LTGRAY);
+            int secondaryText = SimpleFunctions.colorFromTheme(this, android.R.attr.textColorSecondary);
+            IconicsDrawable icon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_warning).color(secondaryText);
             v.setImageDrawable(icon);
         }
     }
