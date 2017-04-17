@@ -29,7 +29,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Config.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Config.getCurrentStationPosition(this);
 
         drawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -319,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         updateStationsList();
+        Config.getCurrentStationPosition(this);
         updateEcholist();
         updateNavDrawerCounters();
         swipeRefresh.setEnabled(Config.values.swipeToFetch);

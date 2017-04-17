@@ -21,6 +21,7 @@ package vit01.idecmobile.Core;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -127,6 +128,15 @@ public class Config {
                 appTheme = R.style.AppTheme;
                 break;
         }
+    }
+
+    public static int getCurrentStationPosition(Context context) {
+        if (sharedPref == null) {
+            sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        }
+
+        currentSelectedStation = sharedPref.getInt("nodeindex_current", 0);
+        return currentSelectedStation;
     }
 
     public static void saveCurrentStationPosition() {
