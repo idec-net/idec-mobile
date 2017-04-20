@@ -76,8 +76,8 @@ public class AdditionalActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Дополнительно");
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
+        SimpleFunctions.setActivityTitle(this, "Дополнительно");
 
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);

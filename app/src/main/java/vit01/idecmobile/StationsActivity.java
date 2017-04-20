@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ThemedSpinnerAdapter;
@@ -75,8 +76,9 @@ public class StationsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) ab.setDisplayShowTitleEnabled(false);
 
         Intent intent = getIntent();
         currentIndex = intent.getIntExtra("index", 0);

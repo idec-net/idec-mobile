@@ -69,8 +69,8 @@ public class DraftsView extends AppCompatActivity {
         setContentView(R.layout.activity_draft_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ExternalStorage.initStorage();
 
         for (Station station : Config.values.stations) {
@@ -85,8 +85,8 @@ public class DraftsView extends AppCompatActivity {
         Intent intent = getIntent();
         unsent_only = intent.getBooleanExtra("unsent", true);
 
-        if (unsent_only) getSupportActionBar().setTitle("Черновики");
-        else getSupportActionBar().setTitle("Отправленные");
+        if (unsent_only) SimpleFunctions.setActivityTitle(this, "Черновики");
+        else SimpleFunctions.setActivityTitle(this, "Отправленные");
 
         loadContent(unsent_only);
     }

@@ -21,6 +21,8 @@ package vit01.idecmobile.Core;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -320,5 +322,17 @@ public class SimpleFunctions {
         if (!debugTaskFinished) {
             debugMessages.add(message);
         }
+    }
+
+    public static void setActivityTitle(AppCompatActivity activity, String title) {
+        ActionBar ab = activity.getSupportActionBar();
+        if (ab != null) ab.setTitle(title);
+        else SimpleFunctions.debug("Can't set activity title: " + title);
+    }
+
+    public static void setDisplayHomeAsUpEnabled(AppCompatActivity activity) {
+        ActionBar ab = activity.getSupportActionBar();
+        if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
+        else SimpleFunctions.debug("Can't set displayHomeAsUpEnabled");
     }
 }

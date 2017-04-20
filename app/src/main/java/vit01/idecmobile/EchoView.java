@@ -91,7 +91,7 @@ public class EchoView extends AppCompatActivity {
         IconicsDrawable create_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_create).color(Color.WHITE).sizeDp(19);
         fab.setImageDrawable(create_icon);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.msglist_view);
         mLayoutManager = new LinearLayoutManager(this);
@@ -111,28 +111,32 @@ public class EchoView extends AppCompatActivity {
     }
 
     boolean loadContent(boolean unread_only) {
-        if (echoarea.equals("_favorites")) {
-            getSupportActionBar().setTitle("Избранные");
-            msglist = (unread_only) ? transport.getUnreadFavorites() : transport.getFavorites();
-            countMessages = msglist.size();
-        } else if (echoarea.equals("_carbon_classic")) {
-            getSupportActionBar().setTitle("Карбонка");
-
-            List<String> carbon_users = Arrays.asList(Config.values.carbon_to.split(":"));
-            msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit, unread_only);
-            countMessages = msglist.size();
-        } else {
-            getSupportActionBar().setTitle(echoarea);
-
-            if (unread_only) {
-                msglist = transport.getUnreadMessages(echoarea);
+        switch (echoarea) {
+            case "_favorites":
+                SimpleFunctions.setActivityTitle(this, "Избранные");
+                msglist = (unread_only) ? transport.getUnreadFavorites() : transport.getFavorites();
                 countMessages = msglist.size();
-            } else {
-                countMessages = transport.countMessages(echoarea);
+                break;
+            case "_carbon_classic":
+                SimpleFunctions.setActivityTitle(this, "Карбонка");
 
-                msglist = (countMessages > 0) ?
-                        transport.getMsgList(echoarea, 0, 0) : SimpleFunctions.emptyList;
-            }
+                List<String> carbon_users = Arrays.asList(Config.values.carbon_to.split(":"));
+                msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit, unread_only);
+                countMessages = msglist.size();
+                break;
+            default:
+                SimpleFunctions.setActivityTitle(this, echoarea);
+
+                if (unread_only) {
+                    msglist = transport.getUnreadMessages(echoarea);
+                    countMessages = msglist.size();
+                } else {
+                    countMessages = transport.countMessages(echoarea);
+
+                    msglist = (countMessages > 0) ?
+                            transport.getMsgList(echoarea, 0, 0) : SimpleFunctions.emptyList;
+                }
+                break;
         }
 
         if (countMessages == 0) {

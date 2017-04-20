@@ -42,6 +42,7 @@ import java.util.List;
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.Network;
+import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.notify.AlarmService;
 
 public class CommonSettings extends AppCompatActivity {
@@ -61,8 +62,8 @@ public class CommonSettings extends AppCompatActivity {
         setContentView(R.layout.activity_common_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Настройки клиента");
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
+        SimpleFunctions.setActivityTitle(this, "Настройки клиента");
         getControls();
         installValues();
     }

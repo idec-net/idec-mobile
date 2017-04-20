@@ -79,7 +79,8 @@ public class FileChooserActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Выбор файла");
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
+        SimpleFunctions.setActivityTitle(this, "Выбор файла");
 
         textColorPrimary = SimpleFunctions.colorFromTheme(this, android.R.attr.textColorPrimary);
         currentDir = getExternalOrRoot();
@@ -107,6 +108,12 @@ public class FileChooserActivity extends AppCompatActivity {
             setResult(RESULT_CANCELED);
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public static class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> {

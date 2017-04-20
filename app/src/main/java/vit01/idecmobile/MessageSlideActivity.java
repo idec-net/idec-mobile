@@ -61,7 +61,7 @@ public class MessageSlideActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
 
         SimpleFunctions.resetIDECParserColors();
 

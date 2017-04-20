@@ -58,7 +58,7 @@ public class DebugActivity extends AppCompatActivity {
         setContentView(R.layout.activity_debug);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Окно отладки");
+        SimpleFunctions.setActivityTitle(this, "Окно отладки");
         debugLayout = (ScrollView) findViewById(R.id.debugLayout);
         textView = (TextView) findViewById(R.id.debug_view);
         textView.setText("");

@@ -68,8 +68,8 @@ public class DraftEditor extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Написать");
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
+        SimpleFunctions.setActivityTitle(this, "Написать");
 
         getControls();
         Intent incoming = getIntent();
@@ -81,25 +81,29 @@ public class DraftEditor extends AppCompatActivity {
 
         String task = incoming.getStringExtra("task");
 
-        if (task.equals("new_in_echo")) {
-            message = new DraftMessage();
-            message.echo = incoming.getStringExtra("echoarea");
-            fileToSave = ExternalStorage.newMessage(outbox_id, message);
-        } else if (task.equals("new_answer")) {
-            message = new DraftMessage();
-            IIMessage to_which = (IIMessage) incoming.getSerializableExtra("message");
-            message.echo = to_which.echo;
-            message.to = to_which.from;
-            message.subj = SimpleFunctions.subjAnswer(to_which.subj);
-            message.repto = to_which.id;
+        switch (task) {
+            case "new_in_echo":
+                message = new DraftMessage();
+                message.echo = incoming.getStringExtra("echoarea");
+                fileToSave = ExternalStorage.newMessage(outbox_id, message);
+                break;
+            case "new_answer":
+                message = new DraftMessage();
+                IIMessage to_which = (IIMessage) incoming.getSerializableExtra("message");
+                message.echo = to_which.echo;
+                message.to = to_which.from;
+                message.subj = SimpleFunctions.subjAnswer(to_which.subj);
+                message.repto = to_which.id;
 
-            if (incoming.getBooleanExtra("quote", false)) {
-                message.msg = SimpleFunctions.quoteAnswer(to_which.msg, message.to, Config.values.oldQuote);
-            }
-            fileToSave = ExternalStorage.newMessage(outbox_id, message);
-        } else if (task.equals("edit_existing")) {
-            fileToSave = (File) incoming.getSerializableExtra("file");
-            message = ExternalStorage.readDraft(fileToSave);
+                if (incoming.getBooleanExtra("quote", false)) {
+                    message.msg = SimpleFunctions.quoteAnswer(to_which.msg, message.to, Config.values.oldQuote);
+                }
+                fileToSave = ExternalStorage.newMessage(outbox_id, message);
+                break;
+            case "edit_existing":
+                fileToSave = (File) incoming.getSerializableExtra("file");
+                message = ExternalStorage.readDraft(fileToSave);
+                break;
         }
 
         if (fileToSave == null) {
@@ -226,7 +230,7 @@ public class DraftEditor extends AppCompatActivity {
         for (Station station : Config.values.stations) {
             station_names.add(station.nodename);
         }
-        spinnerAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, station_names);
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, station_names);
         compose_stations.setAdapter(spinnerAdapter);
         compose_stations.setSelection(nodeindex);
 
