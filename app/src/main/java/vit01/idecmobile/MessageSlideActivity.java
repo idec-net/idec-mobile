@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -47,9 +48,11 @@ import vit01.idecmobile.Core.SimpleFunctions;
 public class MessageSlideActivity extends AppCompatActivity {
     ActionBar actionBar;
     ViewPager mPager;
+    boolean stackUpdate = false;
     private int msgCount;
     private int nodeIndex;
     private ArrayList<String> msglist;
+    private ArrayList<Integer> discussionStack = new ArrayList<>();
     private String echoarea = null;
 
     @Override
@@ -82,9 +85,16 @@ public class MessageSlideActivity extends AppCompatActivity {
                 updateActionBar(position);
                 if (Config.values.disableMsglist && echoarea != null)
                     EchoReadingPosition.setPosition(echoarea, position);
-                final String msgid = msglist.get(position);
+
+                if ((discussionStack.size() > 0) && discussionStack.get(0).equals(position) && !stackUpdate) {
+                    discussionStack.remove(0);
+                } else {
+                    if (!stackUpdate) discussionStack.clear();
+                    else stackUpdate = false;
+                }
 
                 // Помечаем сообщение прочитанным
+                final String msgid = msglist.get(position);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -133,6 +143,31 @@ public class MessageSlideActivity extends AppCompatActivity {
                 setResult(0);
                 finish();
                 return true;
+            case R.id.action_discussion_previous:
+                int pos = mPager.getCurrentItem();
+                String repto = GlobalTransport.transport
+                        .getMessage(msglist.get(pos)).tags.get("repto");
+
+                if (repto == null) {
+                    Toast.makeText(MessageSlideActivity.this, "Этот пользователь никому не отвечал!", Toast.LENGTH_SHORT).show();
+                    break;
+                } else {
+                    if (msglist.contains(repto)) {
+                        int newindex = msglist.indexOf(repto);
+                        discussionStack.add(0, pos);
+                        stackUpdate = true;
+                        mPager.setCurrentItem(newindex);
+                    } else {
+                        Toast.makeText(MessageSlideActivity.this, "В данном списке сообщений нет того, на которое отвечали.\nМожет быть, надо сначала зайти в саму эху?", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            case R.id.action_discussion_next:
+                if (discussionStack.size() > 0) {
+                    stackUpdate = true;
+                    mPager.setCurrentItem(discussionStack.remove(0));
+                } else
+                    Toast.makeText(MessageSlideActivity.this, "Стек дискуссии пуст!", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -178,11 +213,14 @@ public class MessageSlideActivity extends AppCompatActivity {
             tostart.setVisible(false);
             toend.setVisible(false);
         } else {
-            IconicsDrawable startIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_keyboard_arrow_left).actionBar().color(iconColor);
-            IconicsDrawable endIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_keyboard_arrow_right).actionBar().color(iconColor);
+            IconicsDrawable startIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_first_page).actionBar().color(iconColor);
+            IconicsDrawable endIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_last_page).actionBar().color(iconColor);
 
             tostart.setIcon(startIcon);
             toend.setIcon(endIcon);
+
+            menu.findItem(R.id.action_discussion_next).setVisible(true);
+            menu.findItem(R.id.action_discussion_previous).setVisible(true);
         }
 
         IconicsDrawable newMsg = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_create).actionBar().color(iconColor);
