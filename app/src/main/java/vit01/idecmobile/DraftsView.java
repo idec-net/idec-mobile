@@ -117,8 +117,8 @@ public class DraftsView extends AppCompatActivity {
             recyclerView.setAdapter(mAdapter);
 
             ItemTouchHelper.Callback touchCallback = new ItemTouchHelper.Callback() {
-                Drawable background = new ColorDrawable(getResources().getColor(R.color.accent));
-                Drawable icon = new IconicsDrawable(getBaseContext())
+                Drawable background = new ColorDrawable(SimpleFunctions.colorFromTheme(DraftsView.this, R.attr.colorAccent));
+                Drawable icon = new IconicsDrawable(DraftsView.this)
                         .icon(GoogleMaterial.Icon.gmd_delete)
                         .color(Color.WHITE)
                         .sizeDp(20);

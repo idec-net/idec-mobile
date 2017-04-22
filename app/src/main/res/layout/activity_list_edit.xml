@@ -20,11 +20,21 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ListView
-        android:id="@+id/contents"
+    <RelativeLayout
+        android:id="@+id/echolist_edit_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="vit01.idecmobile.ListEditActivity"
+        tools:showIn="@layout/activity_list_edit">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contents"
+            style="@style/Widget.AppCompat.ListView.DropDown"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_ev"

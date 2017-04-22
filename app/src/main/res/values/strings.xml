@@ -7,8 +7,6 @@
 
     <string-array name="echo_menu_options">
         <item>В начало</item>
-        <item>Выше</item>
-        <item>Ниже</item>
         <item>В конец</item>
         <item>Удалить эху</item>
     </string-array>

@@ -8,6 +8,8 @@
         android:id="@+id/edit_echoarea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/list_horizontal_margin"
+        android:layout_marginStart="@dimen/list_horizontal_margin"
         android:inputType="text"
         android:singleLine="true" />
 

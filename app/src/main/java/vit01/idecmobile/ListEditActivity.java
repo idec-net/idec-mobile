@@ -19,17 +19,25 @@
 
 package vit01.idecmobile;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,11 +49,14 @@ import com.mikepenz.iconics.IconicsDrawable;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.SimpleFunctions;
 
 public class ListEditActivity extends AppCompatActivity {
     ArrayList<String> contents;
-    ArrayAdapter<String> contents_adapter;
-    ListView listView, action;
+    EchoListEditAdapter contents_adapter;
+    LinearLayoutManager mLayoutManager;
+    RecyclerView recyclerView;
+    ListView action;
     EditText echoEdit;
     AlertDialog editEchoarea;
     int echoPosition;
@@ -57,8 +68,8 @@ public class ListEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_edit);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Правка списка эх");
+        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
+        SimpleFunctions.setActivityTitle(this, "Правка списка эх");
 
         Intent in = getIntent();
         String listType = in.getStringExtra("type");
@@ -73,15 +84,112 @@ public class ListEditActivity extends AppCompatActivity {
                 break;
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_ev);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_ev);
         IconicsDrawable add_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_add).color(Color.WHITE).sizeDp(16);
         fab.setImageDrawable(add_icon);
 
-        contents_adapter = new ArrayAdapter<>(this,
+
+        recyclerView = (RecyclerView) findViewById(R.id.contents);
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this));
+        contents_adapter = new EchoListEditAdapter(this, recyclerView,
                 android.R.layout.simple_list_item_1, contents);
 
-        listView = (ListView) findViewById(R.id.contents);
-        listView.setAdapter(contents_adapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(contents_adapter);
+
+        ItemTouchHelper.Callback touchCallback = new ItemTouchHelper.Callback() {
+            int itemHeight, iconTop, iconBottom, iconLeft, iconRight;
+            boolean viewBeingCleared = false;
+
+            Drawable background = new ColorDrawable(SimpleFunctions.colorFromTheme(ListEditActivity.this, R.attr.colorAccent));
+            Drawable icon = new IconicsDrawable(ListEditActivity.this)
+                    .icon(GoogleMaterial.Icon.gmd_delete)
+                    .color(Color.WHITE)
+                    .sizeDp(20);
+            int iconMargin = (int) getResources().getDimension(R.dimen.list_horizontal_margin);
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END,
+                        ItemTouchHelper.START | ItemTouchHelper.END);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return true;
+            }
+
+            @Override
+            public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+                contents_adapter.onItemMove(fromPos, toPos);
+            }
+
+            @Override
+            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                viewBeingCleared = true;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                return true;
+            }
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                contents_adapter.onItemDismiss(viewHolder.getAdapterPosition());
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    View itemView = viewHolder.itemView;
+
+                    itemHeight = itemView.getBottom() - itemView.getTop();
+                    iconTop = itemView.getTop() + (itemHeight - icon.getIntrinsicHeight()) / 2;
+                    iconBottom = iconTop + icon.getIntrinsicHeight();
+
+                    if (dX > 0) {
+                        iconLeft = itemView.getLeft() + iconMargin;
+                        iconRight = iconLeft + icon.getIntrinsicWidth();
+                        background.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                        icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                    } else {
+                        iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
+                        iconRight = itemView.getRight() - iconMargin;
+                        background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                        icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                    }
+
+                    background.draw(c);
+                    icon.draw(c);
+                } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    viewHolder.itemView.setAlpha(0.4f);
+                }
+
+                if (viewBeingCleared) {
+                    viewBeingCleared = false;
+                    viewHolder.itemView.setAlpha(1f);
+                }
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                viewHolder.itemView.setScaleY(1f);
+            }
+        };
+        ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
+        touchHelper.attachToRecyclerView(recyclerView);
 
         final View alertView = getLayoutInflater().inflate(R.layout.alert_echo_menu, null);
 
@@ -95,6 +203,7 @@ public class ListEditActivity extends AppCompatActivity {
                                        contents.add(gotText);
                                        contents_adapter.notifyDataSetChanged();
                                        echoPosition = contents.size() - 1;
+                                       recyclerView.smoothScrollToPosition(echoPosition);
 
                                        echoEdit.setText(gotText);
                                        editEchoarea.show();
@@ -108,7 +217,7 @@ public class ListEditActivity extends AppCompatActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String gotText = echoEdit.getText().toString();
+                        String gotText = echoEdit.getText().toString().trim();
                         if (!gotText.equals("")) {
                             contents.set(echoPosition, gotText);
                             contents_adapter.notifyDataSetChanged();
@@ -128,25 +237,11 @@ public class ListEditActivity extends AppCompatActivity {
                         echoPosition = 0;
                         break;
                     case 1:
-                        if (echoPosition > 0) {
-                            element = contents.remove(echoPosition);
-                            echoPosition--;
-                            contents.add(echoPosition, element);
-                        }
-                        break;
-                    case 2:
-                        if (echoPosition < contents.size() - 1) {
-                            element = contents.remove(echoPosition);
-                            echoPosition++;
-                            contents.add(echoPosition, element);
-                        }
-                        break;
-                    case 3:
                         element = contents.remove(echoPosition);
                         contents.add(element);
                         echoPosition = contents.size() - 1;
                         break;
-                    case 4:
+                    case 2:
                         if (contents.size() > 1) {
                             contents.remove(echoPosition);
                             editEchoarea.cancel();
@@ -160,15 +255,7 @@ public class ListEditActivity extends AppCompatActivity {
                 contents_adapter.notifyDataSetChanged();
             }
         });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                echoPosition = position;
-                echoEdit.setText(((TextView) view).getText());
-                editEchoarea.show();
-            }
-        });
+        Toast.makeText(ListEditActivity.this, "Перемещаем и удяляем эхи через drag&drop!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -181,5 +268,66 @@ public class ListEditActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public class EchoListEditAdapter extends RecyclerView.Adapter<EchoListEditAdapter.ViewHolder> {
+        int layout_inflate_id;
+        RecyclerView recyclerView;
+        Activity callingActivity;
+        ArrayList<String> elements;
+
+        public EchoListEditAdapter(Activity activity,
+                                   RecyclerView rv,
+                                   int layout_id,
+                                   ArrayList<String> contents) {
+            callingActivity = activity;
+            layout_inflate_id = layout_id;
+            elements = contents;
+            recyclerView = rv;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(layout_inflate_id, parent, false);
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    echoPosition = recyclerView.getChildAdapterPosition(view);
+                    echoEdit.setText(((TextView) view).getText());
+                    editEchoarea.show();
+                }
+            });
+
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            TextView t1 = (TextView) holder.itemView.findViewById(android.R.id.text1);
+            t1.setText(elements.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return elements.size();
+        }
+
+        public void onItemDismiss(int position) {
+            elements.remove(position);
+            notifyItemRemoved(position);
+        }
+
+        public void onItemMove(int from, int to) {
+            elements.add(to, elements.remove(from));
+            notifyItemMoved(from, to);
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public ViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
     }
 }
