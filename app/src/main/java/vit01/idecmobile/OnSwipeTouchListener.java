@@ -20,29 +20,29 @@
 package vit01.idecmobile;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class OnSwipeTouchListener implements View.OnTouchListener {
     public final GestureDetector gestureDetector;
+    public Fragment ef;
 
-    public OnSwipeTouchListener(Context context) {
+    public OnSwipeTouchListener(Context context, Fragment echolist) {
         gestureDetector = new GestureDetector(context, new GestureListener());
+        ef = echolist;
     }
 
     public boolean onSwipeLeft() {
         return false;
     }
-
     public boolean onSwipeRight() {
         return false;
     }
-
     public boolean onSwipeBottom() {
         return false;
     }
-
     public boolean onSwipeTop() {
         return false;
     }
@@ -53,7 +53,7 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
 
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
         private static final int SWIPE_DISTANCE_THRESHOLD = 100;
-        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 60;
 
         @Override
         public boolean onDown(MotionEvent e) {
@@ -62,6 +62,8 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            View v = ef.getView();
+            if (v != null) v.setEnabled(false);
             boolean result = false;
             try {
                 float diffY = e2.getY() - e1.getY();
@@ -86,6 +88,7 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
+            if (v != null) v.setEnabled(true);
             return result;
         }
     }

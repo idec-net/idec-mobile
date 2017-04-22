@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(showStart);
         }
 
-        swipeDrawerListener = new OnSwipeTouchListener(this) {
+        swipeDrawerListener = new OnSwipeTouchListener(this, echolist) {
             @Override
             public boolean onSwipeRight() {
                 if (!drawer.isDrawerOpen()) {
