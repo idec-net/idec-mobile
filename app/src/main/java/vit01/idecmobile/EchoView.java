@@ -20,6 +20,8 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -27,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -200,19 +203,13 @@ public class EchoView extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_echoview, menu);
 
-        menu.findItem(R.id.action_display_unread_only).setOnMenuItemClickListener(
-                new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        boolean display_unread_only = !item.isChecked();
-
-                        if (loadContent(display_unread_only)) {
-                            item.setChecked(display_unread_only);
-                        }
-                        return false;
-                    }
-                }
-        );
+        if (echoarea.equals("_favorites")) {
+            MenuItem favItem = menu.findItem(R.id.action_favorites_remove_all);
+            favItem.setVisible(true);
+            favItem.setIcon(new IconicsDrawable(getApplicationContext(),
+                    GoogleMaterial.Icon.gmd_clear_all).actionBar()
+                    .color(SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor)));
+        }
         return true;
     }
 
@@ -220,16 +217,59 @@ public class EchoView extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_mark_all_read) {
-            if (echoarea.equals("_carbon_classic")) {
-                transport.setUnread(false, msglist);
-            } else {
-                transport.setUnread(false, echoarea);
-            }
+        switch (id) {
+            case R.id.action_mark_all_read:
+                if (echoarea.equals("_carbon_classic")) {
+                    transport.setUnread(false, msglist);
+                } else {
+                    transport.setUnread(false, echoarea);
+                }
 
-            if (mAdapter != null) {
-                mAdapter.notifyDataSetChanged();
-            }
+                if (mAdapter != null) {
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.action_display_unread_only:
+                boolean display_unread_only = !item.isChecked();
+
+                if (loadContent(display_unread_only)) {
+                    item.setChecked(display_unread_only);
+                }
+                break;
+            case R.id.action_favorites_remove_all:
+                new AlertDialog.Builder(this)
+                        .setTitle("Очистить избранные")
+                        .setMessage("Снять со всех сообщений данную метку?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                final ProgressDialog progress = ProgressDialog.show(EchoView.this, "Подождите", "Сообщения удаляются...", true);
+                                progress.show();
+
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ArrayList<String> favorites = GlobalTransport.transport.getFavorites();
+                                        GlobalTransport.transport.setFavorite(false, favorites);
+                                        progress.dismiss();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getApplicationContext(), "Выполнено!", Toast.LENGTH_SHORT).show();
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getApplicationContext(),
+                                        "Правильно, пусть останутся!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
+                break;
         }
 
         return super.onOptionsItemSelected(item);

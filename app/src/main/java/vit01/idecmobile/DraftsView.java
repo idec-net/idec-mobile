@@ -20,6 +20,8 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -27,12 +29,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -146,7 +151,7 @@ public class DraftsView extends AppCompatActivity {
                         View itemView = viewHolder.itemView;
 
                         itemHeight = itemView.getBottom() - itemView.getTop();
-                        iconTop = itemView.getTop() + (itemHeight - icon.getIntrinsicHeight())/2;
+                        iconTop = itemView.getTop() + (itemHeight - icon.getIntrinsicHeight()) / 2;
                         iconBottom = iconTop + icon.getIntrinsicHeight();
 
                         if (dX > 0) {
@@ -185,6 +190,64 @@ public class DraftsView extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadContent(unsent_only);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_drafts_view, menu);
+        MenuItem delete_all = menu.findItem(R.id.action_drafts_remove_all);
+        IconicsDrawable deleteDrawable = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_delete_forever).
+                actionBar().color(SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor));
+
+        delete_all.setIcon(deleteDrawable);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_drafts_remove_all:
+                new AlertDialog.Builder(this)
+                        .setTitle("Очистка сообщений")
+                        .setMessage((unsent_only) ? "Удалить все черновики?" : "Удалить все отправленные?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                final ProgressDialog progress = ProgressDialog.show(DraftsView.this, "Подождите", "Сообщения удаляются...", true);
+                                progress.show();
+
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ArrayList<File> drafts = ExternalStorage.getAllDrafts(unsent_only);
+                                        for (File file : drafts) {
+                                            boolean r = file.delete();
+                                            if (!r) SimpleFunctions
+                                                    .debug("Error deleting file " + file.getName());
+                                        }
+                                        progress.dismiss();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getApplicationContext(), "Выполнено!", Toast.LENGTH_SHORT).show();
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(DraftsView.this,
+                                        "Правильно, пусть останутся!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_mark_all_read"
         android:title="Пометить всё как прочитанное" />
@@ -9,4 +10,10 @@
         android:checkable="true"
         android:checked="false"
         android:title="Вид: только непрочитанные" />
+
+    <item
+        android:id="@+id/action_favorites_remove_all"
+        android:title="Удалить все избранные"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
 </menu>
