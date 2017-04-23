@@ -7,8 +7,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/md_black_1000</item>
         <item name="android:textColorSecondary">@color/md_grey_600</item>
         <item name="divider">@color/md_grey_200</item>
+        <item name="listItemBGColor">#FFFFFF
+        </item> <!-- это нужно для некоторых элементов списков -->
         <item name="menuIconColor">#FFFFFF</item> <!-- ставить обязательно -->
 
         <!-- Цвета для оформления цитат, постскриптумов и комментариев -->
@@ -57,6 +60,7 @@
         <item name="android:textColorPrimaryInverse">@android:color/primary_text_light</item>
         <item name="android:textColorSecondary">#C7D0FF</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
+        <item name="listItemBGColor">?android:attr/itemBackground</item>
 
         <item name="quoteColor">#81FADC</item>
         <item name="commentColor">#d47cbd</item>
@@ -97,6 +101,7 @@
         <item name="android:textColorPrimary">#000000</item>
         <item name="android:textColorSecondary">#7CA99F</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_dark</item>
+        <item name="listItemBGColor">?android:attr/itemBackground</item>
         <item name="android:theme">@style/WhiteActionBar</item>
 
         <item name="quoteColor">#7CA99F</item>
@@ -146,6 +151,7 @@
         <item name="android:textColorPrimaryInverse">@android:color/primary_text_light</item>
         <item name="android:textColorSecondary">#cccccc</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
+        <item name="listItemBGColor">?android:attr/itemBackground</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
 

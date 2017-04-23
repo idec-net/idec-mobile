@@ -101,14 +101,7 @@ public class DraftsView extends AppCompatActivity {
         countMessages = msglist.size();
 
         if (countMessages == 0 && mAdapter == null) {
-            TextView this_is_empty = new TextView(this);
-            this_is_empty.setText("Здесь пусто!");
-            this_is_empty.setTextSize(20);
-            this_is_empty.setPadding(10, 10, 10, 10);
-            RelativeLayout currentLayout = (RelativeLayout)
-                    findViewById(R.id.draftslist_view_layout);
-
-            currentLayout.addView(this_is_empty, 0);
+            setContentView(R.layout.content_empty);
             return false;
         } else {
             Collections.reverse(msglist);
@@ -165,12 +158,12 @@ public class DraftsView extends AppCompatActivity {
                             background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
                             icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
                         }
-
-                        background.draw(c);
-                        icon.draw(c);
-
-                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                        if (dX != 0) {
+                            background.draw(c);
+                            icon.draw(c);
+                        }
                     }
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
             };
             ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
@@ -323,7 +316,7 @@ public class DraftsView extends AppCompatActivity {
 
             l.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     Intent intent = new Intent(callingActivity, DraftEditor.class);
                     intent.putExtra("task", "edit_existing");
                     intent.putExtra("file", msglist.get(holder.getAdapterPosition()));

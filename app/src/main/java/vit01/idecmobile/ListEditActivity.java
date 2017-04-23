@@ -40,6 +40,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,8 +94,7 @@ public class ListEditActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
-        contents_adapter = new EchoListEditAdapter(this, recyclerView,
-                android.R.layout.simple_list_item_1, contents);
+        contents_adapter = new EchoListEditAdapter(this, recyclerView, contents);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(contents_adapter);
@@ -168,18 +168,16 @@ public class ListEditActivity extends AppCompatActivity {
                         background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
                         icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
                     }
-
-                    background.draw(c);
-                    icon.draw(c);
+                    if (dX != 0) {
+                        background.draw(c);
+                        icon.draw(c);
+                    }
                 } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-                    viewHolder.itemView.setAlpha(0.4f);
+                    if (viewBeingCleared) {
+                        viewBeingCleared = false;
+                        viewHolder.itemView.setAlpha(1f);
+                    } else viewHolder.itemView.setAlpha(0.4f);
                 }
-
-                if (viewBeingCleared) {
-                    viewBeingCleared = false;
-                    viewHolder.itemView.setAlpha(1f);
-                }
-
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 
@@ -201,8 +199,8 @@ public class ListEditActivity extends AppCompatActivity {
                                    public void onClick(View v) {
                                        String gotText = "echoarea.new";
                                        contents.add(gotText);
-                                       contents_adapter.notifyDataSetChanged();
                                        echoPosition = contents.size() - 1;
+                                       contents_adapter.notifyItemInserted(echoPosition);
                                        recyclerView.smoothScrollToPosition(echoPosition);
 
                                        echoEdit.setText(gotText);
@@ -220,7 +218,7 @@ public class ListEditActivity extends AppCompatActivity {
                         String gotText = echoEdit.getText().toString().trim();
                         if (!gotText.equals("")) {
                             contents.set(echoPosition, gotText);
-                            contents_adapter.notifyDataSetChanged();
+                            contents_adapter.notifyItemChanged(echoPosition);
                         }
                     }
                 }).create();
@@ -271,17 +269,14 @@ public class ListEditActivity extends AppCompatActivity {
     }
 
     public class EchoListEditAdapter extends RecyclerView.Adapter<EchoListEditAdapter.ViewHolder> {
-        int layout_inflate_id;
         RecyclerView recyclerView;
         Activity callingActivity;
         ArrayList<String> elements;
 
         public EchoListEditAdapter(Activity activity,
                                    RecyclerView rv,
-                                   int layout_id,
                                    ArrayList<String> contents) {
             callingActivity = activity;
-            layout_inflate_id = layout_id;
             elements = contents;
             recyclerView = rv;
         }
@@ -289,23 +284,26 @@ public class ListEditActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(layout_inflate_id, parent, false);
+                    .inflate(R.layout.echoarea_list_item_edit, parent, false);
 
-            v.setOnClickListener(new View.OnClickListener() {
+            RelativeLayout l = (RelativeLayout) v.findViewById(R.id.echoarea_edit_clickable_layout);
+
+            final ViewHolder holder = new ViewHolder(v);
+            l.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    echoPosition = recyclerView.getChildAdapterPosition(view);
-                    echoEdit.setText(((TextView) view).getText());
+                    echoPosition = holder.getAdapterPosition();
+                    TextView content = (TextView) view.findViewById(R.id.echoarea_edit_name);
+                    echoEdit.setText(content.getText());
                     editEchoarea.show();
                 }
             });
-
-            return new ViewHolder(v);
+            return holder;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            TextView t1 = (TextView) holder.itemView.findViewById(android.R.id.text1);
+            TextView t1 = (TextView) holder.itemView.findViewById(R.id.echoarea_edit_name);
             t1.setText(elements.get(position));
         }
 

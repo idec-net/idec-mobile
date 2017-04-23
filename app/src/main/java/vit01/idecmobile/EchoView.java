@@ -144,15 +144,7 @@ public class EchoView extends AppCompatActivity {
 
         if (countMessages == 0) {
             if (mAdapter == null) {
-                // если мы только зашли в эху
-                TextView this_is_empty = new TextView(this);
-                this_is_empty.setText("Здесь пусто!");
-                this_is_empty.setTextSize(20);
-                this_is_empty.setPadding(10, 10, 10, 10);
-                RelativeLayout currentLayout = (RelativeLayout)
-                        findViewById(R.id.msglist_view_layout);
-
-                currentLayout.addView(this_is_empty, 0);
+                setContentView(R.layout.content_empty);
             } else {
                 Toast.makeText(EchoView.this, "Таких сообщений нет!", Toast.LENGTH_SHORT).show();
             }

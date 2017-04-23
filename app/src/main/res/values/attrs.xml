@@ -2,6 +2,7 @@
 <resources>
     <attr name="navdrawer_picture" />
     <attr name="menuIconColor" />
+    <attr name="listItemBGColor" />
 
     <attr name="quoteColor" />
     <attr name="commentColor" />

@@ -37,11 +37,12 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 
         int childCount = parent.getChildCount();
+
         for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);
 
@@ -51,7 +52,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             int bottom = top + divider.getIntrinsicHeight();
 
             divider.setBounds(left, top, right, bottom);
-            divider.draw(c);
+            if (child.getAlpha() > 0.6f) divider.draw(c);
         }
     }
 }

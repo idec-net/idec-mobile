@@ -3,46 +3,54 @@
     android:id="@+id/draft_clickable_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:paddingBottom="8dp"
-    android:paddingLeft="@dimen/list_horizontal_margin"
-    android:paddingRight="@dimen/list_horizontal_margin"
-    android:paddingTop="8dp">
+    android:background="?attr/listItemBGColor">
 
-    <TextView
-        android:id="@+id/draft_subj"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:lines="1"
-        android:text="Re: Тема сообщения"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/material_text_subhead" />
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingBottom="8dp"
+        android:paddingLeft="@dimen/list_horizontal_margin"
+        android:paddingRight="@dimen/list_horizontal_margin"
+        android:paddingTop="8dp">
 
-    <TextView
-        android:id="@+id/draft_to"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/draft_subj"
-        android:lines="1"
-        android:text="to All"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="@dimen/material_text_body2" />
+        <TextView
+            android:id="@+id/draft_subj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:lines="1"
+            android:text="Re: Тема сообщения"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/material_text_subhead" />
 
-    <TextView
-        android:id="@+id/draft_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="false"
-        android:layout_below="@+id/draft_to"
-        android:maxLength="250"
-        android:maxLines="2"
-        android:text="Большой и длинный текст на много строк, в котором куча разных цитат, мыслей и всего такого"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="@dimen/material_text_body1" />
+        <TextView
+            android:id="@+id/draft_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/draft_subj"
+            android:lines="1"
+            android:text="to All"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/material_text_body2" />
 
+        <TextView
+            android:id="@+id/draft_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="false"
+            android:layout_below="@+id/draft_to"
+            android:maxLength="250"
+            android:maxLines="2"
+            android:text="Большой и длинный текст на много строк, в котором куча разных цитат, мыслей и всего такого"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/material_text_body1" />
+    </RelativeLayout>
 </RelativeLayout>
