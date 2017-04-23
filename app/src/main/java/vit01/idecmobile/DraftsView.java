@@ -29,6 +29,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -101,7 +102,14 @@ public class DraftsView extends AppCompatActivity {
         countMessages = msglist.size();
 
         if (countMessages == 0 && mAdapter == null) {
-            setContentView(R.layout.content_empty);
+            // Отображаем окошечко, что здесь пусто
+            View view = getLayoutInflater().inflate(R.layout.content_empty, null);
+            RelativeLayout l = (RelativeLayout) view.findViewById(R.id.content_empty_layout);
+            ((CoordinatorLayout) view.getRootView()).removeAllViews();
+
+            RelativeLayout current = (RelativeLayout) findViewById(R.id.draftslist_view_layout);
+            current.removeAllViews();
+            current.addView(l);
             return false;
         } else {
             Collections.reverse(msglist);

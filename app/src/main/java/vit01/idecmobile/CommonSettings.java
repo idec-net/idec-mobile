@@ -46,7 +46,7 @@ import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.notify.AlarmService;
 
 public class CommonSettings extends AppCompatActivity {
-    CheckBox defaultEditor, firstrun, useProxy, oldQuote, notifyEnabled, notifyVibrate, useTor, swipeToFetch, disable_msglist;
+    CheckBox defaultEditor, useProxy, oldQuote, notifyEnabled, notifyVibrate, useTor, swipeToFetch, disable_msglist;
     EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit, notifyInterval, proxyAddress;
     Spinner selected_theme;
     Intent alarmIntent;
@@ -70,7 +70,6 @@ public class CommonSettings extends AppCompatActivity {
 
     protected void getControls() {
         defaultEditor = (CheckBox) findViewById(R.id.checkBox);
-        firstrun = (CheckBox) findViewById(R.id.checkBox2);
         useProxy = (CheckBox) findViewById(R.id.checkBox3);
         oldQuote = (CheckBox) findViewById(R.id.old_quote);
         swipeToFetch = (CheckBox) findViewById(R.id.swipe_to_fetch_enable);
@@ -146,7 +145,6 @@ public class CommonSettings extends AppCompatActivity {
 
     protected void installValues() {
         defaultEditor.setChecked(Config.values.defaultEditor);
-        firstrun.setChecked(Config.values.firstRun);
         useProxy.setChecked(Config.values.useProxy);
         oldQuote.setChecked(Config.values.oldQuote);
         swipeToFetch.setChecked(Config.values.swipeToFetch);
@@ -177,7 +175,6 @@ public class CommonSettings extends AppCompatActivity {
 
     protected void fetchValues() {
         Config.values.defaultEditor = defaultEditor.isChecked();
-        Config.values.firstRun = firstrun.isChecked();
         Config.values.useProxy = useProxy.isChecked();
         Config.values.oldQuote = oldQuote.isChecked();
         Config.values.swipeToFetch = swipeToFetch.isChecked();
@@ -201,12 +198,6 @@ public class CommonSettings extends AppCompatActivity {
 
         int themeIndex = selected_theme.getSelectedItemPosition();
         Config.values.applicationTheme = realThemeNames.get(themeIndex);
-    }
-
-    public void openEchoEdit(View view) {
-        Intent intent = new Intent(CommonSettings.this, ListEditActivity.class);
-        intent.putExtra("type", "offline");
-        startActivity(intent);
     }
 
     @Override

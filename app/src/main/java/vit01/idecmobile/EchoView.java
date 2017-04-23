@@ -28,6 +28,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -144,7 +145,14 @@ public class EchoView extends AppCompatActivity {
 
         if (countMessages == 0) {
             if (mAdapter == null) {
-                setContentView(R.layout.content_empty);
+                // Отображаем окошечко, что здесь пусто
+                View view = getLayoutInflater().inflate(R.layout.content_empty, null);
+                RelativeLayout l = (RelativeLayout) view.findViewById(R.id.content_empty_layout);
+                ((CoordinatorLayout) view.getRootView()).removeAllViews();
+
+                RelativeLayout current = (RelativeLayout) findViewById(R.id.msglist_view_layout);
+                current.removeAllViews();
+                current.addView(l);
             } else {
                 Toast.makeText(EchoView.this, "Таких сообщений нет!", Toast.LENGTH_SHORT).show();
             }

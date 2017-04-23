@@ -62,12 +62,6 @@
                 android:text="Сразу открывать последнее прочитанное сообщение при переходе в эху" />
 
             <CheckBox
-                android:id="@+id/checkBox2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Показать настройки при следующем запуске" />
-
-            <CheckBox
                 android:id="@+id/checkBox3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -187,13 +181,6 @@
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
                 android:singleLine="true" />
-
-            <Button
-                android:id="@+id/edit_offline_echoareas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="openEchoEdit"
-                android:text="Править offline-эхи" />
 
         </LinearLayout>
     </ScrollView>
