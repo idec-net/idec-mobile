@@ -16,36 +16,36 @@
         android:title="В избранное"
         app:showAsAction="always" />
 
-    <group>
-        <item
-            android:id="@+id/action_first_item"
-            android:orderInCategory="3"
-            android:title="В начало"
-            app:showAsAction="ifRoom" />
-
-        <item
-            android:id="@+id/action_last_item"
-            android:orderInCategory="4"
-            android:title="В конец"
-            app:showAsAction="ifRoom" />
-    </group>
-
     <item
-        android:id="@+id/action_msglist_return"
-        android:orderInCategory="5"
-        android:title="К списку сообщений"
+        android:id="@+id/action_discussion_previous"
+        android:orderInCategory="3"
+        android:title="Выше по обсуждению"
         android:visible="false"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_discussion_previous"
-        android:title="Выше по обсуждению"
+        android:id="@+id/action_discussion_next"
+        android:orderInCategory="4"
+        android:title="Вернуться на ранее прочитанное"
         android:visible="false"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_discussion_next"
-        android:title="Вернуться на ранее прочитанное"
+        android:id="@+id/action_first_item"
+        android:orderInCategory="5"
+        android:title="В начало"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_last_item"
+        android:orderInCategory="6"
+        android:title="В конец"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_msglist_return"
+        android:orderInCategory="100"
+        android:title="К списку сообщений"
         android:visible="false"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>
