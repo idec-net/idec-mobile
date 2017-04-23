@@ -28,7 +28,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -281,14 +280,11 @@ public class SimpleFunctions {
         }
     }
 
-    public static boolean delete_xc_from_station(Station station) {
-        File xc_name = new File("xc_" + station.outbox_storage_id);
-        File xc_notify_name = new File("xc_tmp_" + station.outbox_storage_id);
+    public static boolean delete_xc_from_station(Context context, Station station) {
+        write_internal_file(context, "xc_" + station.outbox_storage_id, "");
+        write_internal_file(context, "xc_tmp_" + station.outbox_storage_id, "");
 
-        boolean deleted1 = xc_name.delete();
-        boolean deleted2 = xc_notify_name.delete();
-
-        return (deleted1 | deleted2);
+        return true;
     }
 
     public static boolean checkTorRunning(Context context, boolean notifyUser) {

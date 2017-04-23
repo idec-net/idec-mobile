@@ -292,7 +292,7 @@ public class AdditionalActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     for (Station station : Config.values.stations) {
-                        boolean deleted = SimpleFunctions.delete_xc_from_station(station);
+                        boolean deleted = SimpleFunctions.delete_xc_from_station(getContext(), station);
                         if (!deleted)
                             SimpleFunctions.debug("Ошибка удаления для станции " + station.nodename + " & " + station.outbox_storage_id);
                     }

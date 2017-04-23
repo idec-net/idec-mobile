@@ -170,7 +170,7 @@ public class StationsActivity extends AppCompatActivity {
                                             Toast.makeText(StationsActivity.this, "Чё-то не заработало :(", Toast.LENGTH_SHORT).show();
                                     }
 
-                                    SimpleFunctions.delete_xc_from_station(Config.values.stations.get(currentIndex));
+                                    SimpleFunctions.delete_xc_from_station(getApplicationContext(), Config.values.stations.get(currentIndex));
                                     Config.values.stations.remove(currentIndex);
                                     currentIndex = 0;
                                     updateSpinner();

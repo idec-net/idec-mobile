@@ -32,6 +32,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -158,22 +159,22 @@ public class Fetcher {
             Context context,
             String address,
             ArrayList<String> firstEchoesToFetch,
-            Hashtable<String, Object> params
+            String xc_id,
+            int one_request_limit,
+            int fetch_limit,
+            boolean pervasive_ue,
+            int cut_remote_index,
+            int timeout
     ) {
         // Слабо прочитать код всей этой функции на трезвую голову?
         // В общем, запасайтесь попкорном и алкоголем, ребята
-
-        String xc_id = (String) params.get("xc_id");
-        int one_request_limit = (int) params.get("one_request_limit");
-        int fetch_limit = (int) params.get("fetch_limit");
-        boolean pervasive_ue = (boolean) params.get("pervasive_ue");
-        int cut_remote_index = (int) params.get("cut_remote_index");
-        int timeout = (int) params.get("timeout");
 
         if (firstEchoesToFetch.size() == 0) return emptyList;
 
         ArrayList<String> echoesToFetch = new ArrayList<>();
         echoesToFetch.addAll(firstEchoesToFetch);
+
+        Hashtable<String, Integer> maxEconomy = new Hashtable<>();
 
         if (xc_id != null) {
             String xc_cell_name = "xc_" + xc_id;
@@ -194,6 +195,7 @@ public class Fetcher {
             ArrayList<String> excluded_echoareas = new ArrayList<>();
 
             if (local_xc_data.equals("")) {
+                SimpleFunctions.debug("Фетчим в первый раз...");
                 use_xc_now = false;
                 // Если получили данные в первый раз, то /x/c пока не нужен
             }
@@ -202,6 +204,7 @@ public class Fetcher {
             String[] remote_xc_lines = remote_xc_data.split("\n");
 
             if (local_xc_lines.length != remote_xc_lines.length) {
+                SimpleFunctions.debug("Не используем /x/c в этот раз...");
                 use_xc_now = false;
                 // Значит пользователь просто обновил список эх. Продолжать не следует
             }
@@ -229,6 +232,11 @@ public class Fetcher {
                         remote_ts = remote_xc_dict.get(echo);
                     }
 
+                    if (local_ts == 0) {
+                        maxEconomy.put(echo, fetch_limit);
+                        continue;
+                    }
+
                     if (remote_ts == local_ts) {
                         excluded_echoareas.add(echo);
                         SimpleFunctions.debug("Removed " + echo);
@@ -237,11 +245,8 @@ public class Fetcher {
 
                         int residual = remote_ts - local_ts;
 
-                        if (fetch_limit > 0 && (residual > fetch_limit)) {
-                            if (cut_remote_index > 0 && residual > cut_remote_index) {
-                                cut_remote_index = residual;
-                            }
-                            fetch_limit = residual;
+                        if (fetch_limit > 0 && (residual < fetch_limit)) {
+                            maxEconomy.put(echo, residual);
                         }
                     }
 
@@ -256,6 +261,17 @@ public class Fetcher {
 
         String echoBundle;
         int bottomOffset = 0;
+
+        if (maxEconomy.size() > 0) {
+            Enumeration<Integer> elements = maxEconomy.elements();
+            int maxEconomyKey = 0;
+            while (elements.hasMoreElements()) {
+                Integer currentKey = elements.nextElement();
+                if (currentKey > maxEconomyKey) maxEconomyKey = currentKey;
+            }
+
+            if (maxEconomyKey > 0 && fetch_limit > maxEconomyKey) fetch_limit = maxEconomyKey;
+        }
 
         if (fetch_limit != 0) {
             bottomOffset = fetch_limit;
