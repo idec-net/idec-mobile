@@ -39,11 +39,11 @@ public class Station implements Serializable {
             pervasive_ue = false;
     public int
             ue_limit = 25,
-            cut_remote_index = 0;
+            cut_remote_index = 50;
 
     public Station() {
         String[] default_echoareas = new String[]{"pipe.2032", "ii.14", "mlp.15", "ii.test.14", "piratemedia.rss.15",
-                "habra.16", "test.15", "develop.16", "linux.14"};
+                "habra.16", "develop.16", "linux.14"};
 
         Collections.addAll(echoareas, default_echoareas);
         outbox_storage_id = SimpleFunctions.getRandomUUID();

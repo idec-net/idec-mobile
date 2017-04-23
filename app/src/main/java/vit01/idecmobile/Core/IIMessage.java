@@ -19,6 +19,8 @@
 
 package vit01.idecmobile.Core;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,11 +73,6 @@ public class IIMessage implements Serializable {
         }
     }
 
-    IIMessage(String rawmsg, String msgid) {
-        this(rawmsg);
-        id = msgid;
-    }
-
     static Hashtable<String, String> parseTags(String str) {
         if (str == null) return new Hashtable<>();
 
@@ -104,7 +101,7 @@ public class IIMessage implements Serializable {
             if (value != null) fragments.add(key + "/" + value);
         }
 
-        return SimpleFunctions.join(SimpleFunctions.List2Arr(fragments), "/");
+        return TextUtils.join("/", fragments);
     }
 
     public String raw() {

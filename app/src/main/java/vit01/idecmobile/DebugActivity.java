@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Blacklist;
@@ -226,16 +227,16 @@ public class DebugActivity extends AppCompatActivity {
                             station.outbox_storage_id : null;
                     int ue_limit = (station.advanced_ue) ? station.ue_limit : 0;
 
-                    fetched = fetcher.fetch_messages(appContext,
-                            station.address,
-                            station.echoareas,
-                            xc_id,
-                            Config.values.oneRequestLimit,
-                            ue_limit,
-                            station.pervasive_ue,
-                            station.cut_remote_index,
-                            Config.values.connectionTimeout
-                    );
+                    Hashtable<String, Object> params = new Hashtable<>();
+                    params.put("xc_id", xc_id);
+                    params.put("one_request_limit", Config.values.oneRequestLimit);
+                    params.put("fetch_limit", ue_limit);
+                    params.put("pervasive_ue", station.pervasive_ue);
+                    params.put("cut_remote_index", station.cut_remote_index);
+                    params.put("timeout", Config.values.connectionTimeout);
+
+                    fetched = fetcher.fetch_messages
+                            (appContext, station.address, station.echoareas, params);
 
                     if (fetched != null) fetchedCount += fetched.size();
                     else error_flag = true;

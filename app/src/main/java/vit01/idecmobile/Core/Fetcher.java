@@ -20,6 +20,7 @@
 package vit01.idecmobile.Core;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import java.io.File;
@@ -157,17 +158,19 @@ public class Fetcher {
             Context context,
             String address,
             ArrayList<String> firstEchoesToFetch,
-            String xc_id,
-            int one_request_limit,
-            int fetch_limit,
-            boolean pervasive_ue,
-            int cut_remote_index,
-            int timeout
+            Hashtable<String, Object> params
     ) {
         // Слабо прочитать код всей этой функции на трезвую голову?
         // В общем, запасайтесь попкорном и алкоголем, ребята
 
-        if (firstEchoesToFetch.size() == 0) return new ArrayList<>();
+        String xc_id = (String) params.get("xc_id");
+        int one_request_limit = (int) params.get("one_request_limit");
+        int fetch_limit = (int) params.get("fetch_limit");
+        boolean pervasive_ue = (boolean) params.get("pervasive_ue");
+        int cut_remote_index = (int) params.get("cut_remote_index");
+        int timeout = (int) params.get("timeout");
+
+        if (firstEchoesToFetch.size() == 0) return emptyList;
 
         ArrayList<String> echoesToFetch = new ArrayList<>();
         echoesToFetch.addAll(firstEchoesToFetch);
@@ -176,8 +179,7 @@ public class Fetcher {
             String xc_cell_name = "xc_" + xc_id;
             String tmp_xc_cell_name = "xc_tmp_" + xc_id;
 
-            String xc_url = address + "x/c/" + SimpleFunctions.join(
-                    SimpleFunctions.List2Arr(firstEchoesToFetch), "/");
+            String xc_url = address + "x/c/" + TextUtils.join("/", firstEchoesToFetch);
 
             String remote_xc_data = Network.getFile(context, xc_url, null, timeout);
             String local_xc_data = SimpleFunctions.read_internal_file(context, xc_cell_name);
@@ -235,7 +237,10 @@ public class Fetcher {
 
                         int residual = remote_ts - local_ts;
 
-                        if (fetch_limit > 0 && pervasive_ue && (residual > fetch_limit)) {
+                        if (fetch_limit > 0 && (residual > fetch_limit)) {
+                            if (cut_remote_index > 0 && residual > cut_remote_index) {
+                                cut_remote_index = residual;
+                            }
                             fetch_limit = residual;
                         }
                     }
@@ -257,14 +262,11 @@ public class Fetcher {
             String offset = String.valueOf(bottomOffset);
 
             echoBundle = Network.getFile(context,
-                    address + "u/e/" + SimpleFunctions.join(
-                            SimpleFunctions.List2Arr(echoesToFetch), "/") +
+                    address + "u/e/" + TextUtils.join("/", echoesToFetch) +
                             "/-" + offset + ":" + offset, null, timeout);
         } else {
             echoBundle = Network.getFile(context,
-                    address + "u/e/" + SimpleFunctions.join(
-                            SimpleFunctions.List2Arr(echoesToFetch), "/"),
-                    null, timeout);
+                    address + "u/e/" + TextUtils.join("/", echoesToFetch), null, timeout);
         }
 
         Hashtable<String, ArrayList<String>> localIndex = new Hashtable<>();
@@ -279,6 +281,12 @@ public class Fetcher {
 
         Hashtable<String, ArrayList<String>> commonDiff = new Hashtable<>();
         ArrayList<String> nextfetch = new ArrayList<>();
+
+        if (fetch_limit > 0 && cut_remote_index == 0 && !pervasive_ue) {
+            cut_remote_index = fetch_limit;
+            // Если сисоп мудак, и станция отдала сообщений больше, чем мы запрашиваем,
+            // то это условие защитит фетчер от чрезмерного скачивания
+        }
 
         for (String echo : echoesToFetch) {
             ArrayList<String> localMessages = localIndex.get(echo);
@@ -302,11 +310,10 @@ public class Fetcher {
 
         while (nextfetch.size() > 0) {
             bottomOffset += fetch_limit;
-            echoBundle = Network.getFile(context,
-                    address + "u/e/" +
-                            SimpleFunctions.join(SimpleFunctions.List2Arr(nextfetch), "/") +
-                            "/-" + String.valueOf(bottomOffset) + ":" + String.valueOf(fetch_limit)
-                    , null, timeout);
+            echoBundle = Network.getFile(context, address + "u/e/"
+                            + TextUtils.join("/", nextfetch) + "/-"
+                            + String.valueOf(bottomOffset) + ":" + String.valueOf(fetch_limit),
+                    null, timeout);
 
             Hashtable<String, ArrayList<String>> msgsDict = parseRemoteIndex(echoBundle);
 
@@ -327,9 +334,17 @@ public class Fetcher {
                 diff = SimpleFunctions.ListDifference(diff, commonDiff.get(echo));
 
                 ArrayList<String> sumdiff = new ArrayList<>(diff);
-
-                sumdiff.addAll(diff);
                 sumdiff.addAll(commonDiff.get(echo));
+
+                if (cut_remote_index > 0 && sumdiff.size() > cut_remote_index) {
+                    // защищаемся от "перескачивания" при включенном pervasive_ue
+                    int remLength = sumdiff.size();
+                    sumdiff = new ArrayList<>(
+                            sumdiff.subList(remLength - cut_remote_index, remLength));
+                    nextfetch.remove(echo);
+                    commonDiff.put(echo, sumdiff);
+                    continue;
+                }
 
                 commonDiff.put(echo, sumdiff);
 
@@ -360,8 +375,7 @@ public class Fetcher {
 
         for (List<String> diff : difference2d) {
             String fullBundle = Network.getFile(context,
-                    address + "u/m/" + SimpleFunctions.join(
-                            SimpleFunctions.List2Arr(diff), "/"), null, timeout);
+                    address + "u/m/" + TextUtils.join("/", diff), null, timeout);
 
             if (fullBundle == null) {
                 SimpleFunctions.debug("Ошибка получения бандла сообщений. Проверь интернет");

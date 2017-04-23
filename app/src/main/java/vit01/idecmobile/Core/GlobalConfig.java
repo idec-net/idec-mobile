@@ -38,14 +38,14 @@ public class GlobalConfig implements Serializable {
             oneRequestLimit = 20,
             connectionTimeout = 20,
             carbon_limit = 50, // максимальное количество сообщений в карбонке
-            notifyFireDuration = 15, // интервал проверки для уведомлений
+            notifyFireDuration = 15, // интервал проверки для уведомлений (минуты)
             proxyType = 1; // 0 - Socks, 1 - HTTP
     public ArrayList<String> offlineEchoareas = new ArrayList<>();
     public ArrayList<Station> stations = new ArrayList<>();
 
     // Сообщения какого пользователя слать в карбонку
     public String carbon_to = "All", // разделять двоеточием
-            proxyAddress = "127.0.0.1:9050", // аутентификация для http-прокси поддерживается
+            proxyAddress = "127.0.0.1:8118", // аутентификация для http-прокси поддерживается
             applicationTheme = "default"; // тема оформления
 
     GlobalConfig() {
@@ -57,7 +57,10 @@ public class GlobalConfig implements Serializable {
 
         Station secondStation = stations.get(1);
         secondStation.nodename = "tavern";
-        secondStation.echoareas.add(0, "spline.local.14");
+        secondStation.address = "http://idec.spline-online.tk/";
+
+        secondStation.echoareas.add("spline.local.14");
+        secondStation.echoareas.add("game.rogue.14");
         swipeToFetch = true;
     }
 }

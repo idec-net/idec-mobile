@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -56,7 +57,7 @@ public class SimpleFunctions {
     public static ArrayList<String> emptyList = new ArrayList<>();
     public static Queue<String> debugMessages = new LinkedList<>();
     public static boolean debugTaskFinished = true;
-    public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), HH:mm");
+    public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), HH:mm", Locale.getDefault());
     public static Pattern quote_pattern = Pattern.compile("(^\\s?[\\w_а-яА-Я\\-]{0,20})((>)+)(.+$)",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
     public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(//|#)(.+$)", Pattern.MULTILINE);
@@ -129,7 +130,7 @@ public class SimpleFunctions {
     }
 
     public static ArrayList<String> ListDifference(ArrayList<String> first, ArrayList<String> second) {
-        ArrayList<String> copy = (ArrayList<String>) first.clone();
+        ArrayList<String> copy = new ArrayList<>(first);
         copy.removeAll(second);
 
         return copy;
@@ -144,12 +145,6 @@ public class SimpleFunctions {
             );
         }
         return parts;
-    }
-
-    public static String[] List2Arr(List<String> list) {
-        String[] newString = new String[list.size()];
-        list.toArray(newString);
-        return newString;
     }
 
     public static String timestamp2date(long unixtime) {

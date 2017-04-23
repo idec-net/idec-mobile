@@ -62,6 +62,7 @@ import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 
 public class StationsActivity extends AppCompatActivity {
+    public static boolean download_all_warning = true;
     Spinner spinner;
     ArrayList<String> stationNames;
     ArrayAdapter nodenamesAdapter;
@@ -398,6 +399,21 @@ public class StationsActivity extends AppCompatActivity {
                     }).start();
                 }
             });
+
+            pervasive_ue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b && download_all_warning) {
+                        download_all_warning = false;
+
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Предупреждение")
+                                .setMessage("Эта опция довольно неприятная, потому что в некоторых случаях она может выкачать всю эху целиком (до нескольких тысяч сообщений!). Рекомендуется включить принудительную обрезку индекса, чтобы не напороться на эти грабли.")
+                                .setPositiveButton("Я знаю, что делаю", null)
+                                .show();
+                    }
+                }
+            });
         }
 
         public void xfeatures_configure(String xfinfo) {
@@ -411,15 +427,12 @@ public class StationsActivity extends AppCompatActivity {
 
                 if (ue) {
                     pervasive_ue.setChecked(false);
-                    cut_remote_index.setText("0");
-                } else {
-                    cut_remote_index.setText("30");
                 }
             } else {
                 xc_enable.setChecked(false);
                 advanced_ue.setChecked(false);
-                cut_remote_index.setText("30");
             }
+            cut_remote_index.setText("50");
 
             Toast.makeText(getContext(), "Автоконфигурация выполнена", Toast.LENGTH_SHORT).show();
         }
