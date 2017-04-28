@@ -19,6 +19,8 @@
 
 package vit01.idecmobile;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -34,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -48,11 +51,11 @@ import vit01.idecmobile.Core.SimpleFunctions;
 
 public class MessageView_full extends Fragment {
     public AbstractTransport transport = GlobalTransport.transport;
+    MenuItem discussionBack;
     private ArrayList<String> msglist;
     private int position;
     private String msgid;
     private IIMessage message;
-
     private boolean messageStarred = false;
 
     public MessageView_full() {
@@ -106,9 +109,41 @@ public class MessageView_full extends Fragment {
         full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
         full_msgid.setText("msgid: " + msgid);
 
+        full_msgid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager)
+                        getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("idec msgid", message.id);
+                clipboard.setPrimaryClip(clip);
+
+                Toast.makeText(getActivity(), "id сообщения скопирован в буфер обмена", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         if (message.repto == null) {
             full_repto.setVisibility(View.GONE);
-        } else full_repto.setText("Ответ: " + message.repto);
+        } else {
+            full_repto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onOptionsItemSelected(discussionBack);
+                }
+            });
+            full_repto.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    ClipboardManager clipboard = (ClipboardManager)
+                            getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("idec msgid", message.repto);
+                    clipboard.setPrimaryClip(clip);
+
+                    Toast.makeText(getActivity(), "msgid ответа скопирован в буфер обмена", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+            full_repto.setText("Ответ: " + message.repto);
+        }
 
         full_date.setText(SimpleFunctions.timestamp2date(message.time));
         full_echo.setText(message.echo);
@@ -160,6 +195,7 @@ public class MessageView_full extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem starredItem = menu.findItem(R.id.action_starred);
+        discussionBack = menu.findItem(R.id.action_discussion_previous);
         if (messageStarred) {
             setStarredIcon(true, starredItem);
         } else {

@@ -18,23 +18,22 @@
 
     <item
         android:id="@+id/action_discussion_previous"
-        android:orderInCategory="3"
         android:title="Выше по обсуждению"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_discussion_next"
         android:orderInCategory="4"
         android:title="Вернуться на ранее прочитанное"
         android:visible="false"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_first_item"
         android:orderInCategory="5"
         android:title="В начало"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_last_item"

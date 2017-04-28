@@ -216,13 +216,12 @@ public class MessageSlideActivity extends AppCompatActivity {
             IconicsDrawable startIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_first_page).actionBar().color(iconColor);
             IconicsDrawable endIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_last_page).actionBar().color(iconColor);
 
-            IconicsDrawable discussionPreviousIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_chevron_left).actionBar().color(iconColor);
             IconicsDrawable discussionNextIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_chevron_right).actionBar().color(iconColor);
 
             tostart.setIcon(startIcon);
             toend.setIcon(endIcon);
 
-            menu.findItem(R.id.action_discussion_previous).setVisible(true).setIcon(discussionPreviousIcon);
+            menu.findItem(R.id.action_discussion_previous).setVisible(false);
             menu.findItem(R.id.action_discussion_next).setVisible(true).setIcon(discussionNextIcon);
         }
 

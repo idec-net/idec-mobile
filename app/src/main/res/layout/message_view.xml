@@ -53,19 +53,20 @@
             android:id="@+id/full_msgid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
             android:text="msgid: XXXXXXXXXXXXXX"
             android:textColor="?attr/android:textColorSecondary"
-            android:textIsSelectable="true"
             android:textSize="@dimen/material_text_body1" />
 
         <TextView
             android:id="@+id/full_repto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
             android:text="Ответ на: YYYYYYYYYYYYYYYY"
             android:textColor="?attr/android:textColorSecondary"
-            android:textIsSelectable="true"
-            android:textSize="@dimen/material_text_body1" />
+            android:textSize="@dimen/material_text_body1"
+            android:textStyle="bold" />
 
         <include layout="@layout/divider" />
 

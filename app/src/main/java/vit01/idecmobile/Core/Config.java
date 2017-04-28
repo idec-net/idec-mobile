@@ -109,7 +109,7 @@ public class Config {
         if (needForWrite) writeConfig(context);
     }
 
-    private static void select_gui_theme() {
+    public static void select_gui_theme() {
         switch (Config.values.applicationTheme) {
             case "dark":
                 appTheme = R.style.AppTheme_Dark;
