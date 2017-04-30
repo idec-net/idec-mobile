@@ -23,5 +23,5 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="material_drawer_account_header_text">22sp</dimen>
-    <dimen name="material_drawer_item_profile_description">11sp</dimen>
+    <dimen name="material_drawer_item_profile_description">0sp</dimen>
 </resources>
