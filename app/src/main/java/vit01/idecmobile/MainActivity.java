@@ -42,6 +42,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -111,8 +112,9 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(getHeaderDrawable())
                 .withCompactStyle(true)
-                .withProfileImagesVisible(true)
+                .withProfileImagesVisible(false)
                 .withProfileImagesClickable(false)
+                .withHeaderBackgroundScaleType(ImageView.ScaleType.FIT_XY)
                 .withNameTypeface(Typeface.DEFAULT_BOLD)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -144,6 +146,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .build();
+
+        int textColor2 = SimpleFunctions.colorFromTheme(this, android.R.attr.textColorPrimaryInverse);
+        TextView headerText = (TextView) drawerHeader.getView().findViewById(R.id.material_drawer_account_header_name);
+        TextView emailText = (TextView) drawerHeader.getView().findViewById(R.id.material_drawer_account_header_email);
+        headerText.setShadowLayer(5, 2, 2, textColor2);
+        emailText.setShadowLayer(5, 2, 2, textColor2);
+        emailText.setTextSize(15f);
+        emailText.setAlpha(0.8f);
 
         PrimaryDrawerItem echoItem = new PrimaryDrawerItem().withIdentifier(1).withName("Эхоконференции").withIcon(GoogleMaterial.Icon.gmd_message);
         PrimaryDrawerItem carbonItem = new PrimaryDrawerItem().withIdentifier(2).withName("Карбонка").withIcon(GoogleMaterial.Icon.gmd_input).withSelectable(false);
@@ -333,10 +343,14 @@ public class MainActivity extends AppCompatActivity {
             Station station = Config.values.stations.get(i);
             String nodename = station.nodename;
 
-            drawerHeader.addProfile(new ProfileDrawerItem()
+            ProfileDrawerItem dritem = new ProfileDrawerItem()
+                    .withEmail(station.address)
                     .withName(nodename)
+                    .withNameShown(true)
                     .withIcon(getStationIcon(nodename))
-                    .withIdentifier(i), i);
+                    .withIdentifier(i);
+
+            drawerHeader.addProfile(dritem, i);
         }
 
         drawerHeader.addProfiles(
