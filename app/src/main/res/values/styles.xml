@@ -13,6 +13,7 @@
         <item name="listItemBGColor">#FFFFFF
         </item> <!-- это нужно для некоторых элементов списков -->
         <item name="menuIconColor">#FFFFFF</item> <!-- ставить обязательно -->
+        <item name="material_drawer_header_text_shadow">#00000000</item> <!-- И это тоже! -->
 
         <!-- Цвета для оформления цитат, постскриптумов и комментариев -->
         <item name="quoteColor">#189818</item>
@@ -52,6 +53,7 @@
             @color/material_drawer_dark_header_selection_text
         </item>
         <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
+        <item name="material_drawer_header_text_shadow">?attr/colorPrimaryDark</item>
 
         <item name="android:colorForeground">#eafffd</item>
         <item name="android:editTextColor">#eafffd</item>
@@ -90,10 +92,9 @@
         <item name="material_drawer_divider">@color/theme3_listDivider</item>
         <item name="material_drawer_selected">#5dc3b2</item>
         <item name="material_drawer_selected_text">#FFFFFF</item>
-        <item name="material_drawer_header_selection_text">
-            @color/material_drawer_header_selection_text
-        </item>
+        <item name="material_drawer_header_selection_text">?attr/material_drawer_primary_text</item>
         <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
+        <item name="material_drawer_header_text_shadow">#FFFFFF</item>
 
         <item name="android:textColor">@color/md_black_1000</item>
         <item name="android:colorForeground">@color/md_grey_600</item>
@@ -143,6 +144,7 @@
             @color/material_drawer_dark_header_selection_text
         </item>
         <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
+        <item name="material_drawer_header_text_shadow">#00000000</item>
 
         <item name="android:colorForeground">#eafffd</item>
         <item name="android:editTextColor">#eafffd</item>

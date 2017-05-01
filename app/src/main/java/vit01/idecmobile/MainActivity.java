@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
                 .withCompactStyle(true)
                 .withProfileImagesVisible(false)
                 .withProfileImagesClickable(false)
-                .withHeaderBackgroundScaleType(ImageView.ScaleType.FIT_XY)
                 .withNameTypeface(Typeface.DEFAULT_BOLD)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -147,11 +146,11 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 
-        int textColor2 = SimpleFunctions.colorFromTheme(this, android.R.attr.textColorPrimaryInverse);
+        int shadowColor = SimpleFunctions.colorFromTheme(this, R.attr.material_drawer_header_text_shadow);
         TextView headerText = (TextView) drawerHeader.getView().findViewById(R.id.material_drawer_account_header_name);
         TextView emailText = (TextView) drawerHeader.getView().findViewById(R.id.material_drawer_account_header_email);
-        headerText.setShadowLayer(5, 2, 2, textColor2);
-        emailText.setShadowLayer(5, 2, 2, textColor2);
+        headerText.setShadowLayer(5, 2, 2, shadowColor);
+        emailText.setShadowLayer(5, 2, 2, shadowColor);
         emailText.setTextSize(15f);
         emailText.setAlpha(0.8f);
 
