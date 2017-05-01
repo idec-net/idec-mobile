@@ -26,7 +26,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.GlobalTransport;
 
 public class SearchActivity extends AppCompatActivity {
     @Override
@@ -67,7 +70,16 @@ public class SearchActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(SearchActivity.this, "Запрос: " + query + "\nNot Implemented :)", Toast.LENGTH_SHORT).show();
+                        ArrayList<String> msgids = GlobalTransport.transport.searchQuery(
+                                query, null, null, null, null, null, null, null);
+
+                        if (msgids.size() > 0) {
+                            Intent intent = new Intent(SearchActivity.this, MessageSlideActivity.class);
+                            intent.putExtra("msglist", msgids);
+                            intent.putExtra("position", 0);
+                            startActivity(intent);
+                        } else
+                            Toast.makeText(SearchActivity.this, "Ничего не найдено!", Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });

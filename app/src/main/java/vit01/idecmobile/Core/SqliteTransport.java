@@ -458,4 +458,35 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     public void setFavorite(boolean favorite, List<String> msgids) {
         updateBooleanField("isfavorite", favorite, msgids);
     }
+
+    public ArrayList<String> searchQuery(
+            String messageKey, String subjKey,
+            List<String> echoareas, List<String> senders, List<String> receivers, List<String> addresses,
+            Long time1, Long time2) {
+
+        ArrayList<String> selectionKeys = new ArrayList<>();
+
+        if (echoareas != null && echoareas.size() > 0)
+            selectionKeys.add("echoarea='" + TextUtils.join("' or echoarea='", echoareas) + "'");
+
+        if (senders != null && senders.size() > 0)
+            selectionKeys.add("msgfrom like '%" + TextUtils.join("%' or msgfrom like '%", senders) + "%'");
+
+        if (receivers != null && receivers.size() > 0)
+            selectionKeys.add("msgto like '%" + TextUtils.join("%' or msgto like '%", receivers) + "%'");
+
+        if (addresses != null && addresses.size() > 0)
+            selectionKeys.add("addr like '%" + TextUtils.join("' or addr like '%", addresses) + "%'");
+
+        if (subjKey != null)
+            selectionKeys.add("subj like '%" + subjKey + "%'");
+
+        if (messageKey != null)
+            selectionKeys.add("msg like '%" + messageKey + "%'");
+
+        if (time1 != null && time2 != null)
+            selectionKeys.add("date >= " + String.valueOf(time1) + " and date <= " + String.valueOf(time2));
+
+        return msgidsBySelection("(" + TextUtils.join(") and (", selectionKeys) + ")", "number", null);
+    }
 }

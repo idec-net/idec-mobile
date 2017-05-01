@@ -69,6 +69,11 @@ public interface AbstractTransport {
 
     void setFavorite(boolean favorite, List<String> msgids);
 
+    ArrayList<String> searchQuery(
+            String messageKey, String subjKey,
+            List<String> echoareas, List<String> senders, List<String> receivers, List<String> addresses,
+            Long time1, Long time2);
+
     class echoStat {
         public int total_count = 0, unread_count = 0;
         echoStat(int total, int unread) {

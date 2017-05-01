@@ -100,7 +100,8 @@
         <activity android:name=".FileChooserActivity" />
         <activity
             android:name=".SearchActivity"
-            android:label="Поиск сообщений">
+            android:label="Поиск сообщений"
+            android:launchMode="singleTop">
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
