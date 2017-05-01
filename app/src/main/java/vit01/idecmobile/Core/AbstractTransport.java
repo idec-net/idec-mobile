@@ -72,7 +72,7 @@ public interface AbstractTransport {
     ArrayList<String> searchQuery(
             String messageKey, String subjKey,
             List<String> echoareas, List<String> senders, List<String> receivers, List<String> addresses,
-            Long time1, Long time2);
+            Long time1, Long time2, boolean is_favorite);
 
     class echoStat {
         public int total_count = 0, unread_count = 0;

@@ -462,7 +462,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     public ArrayList<String> searchQuery(
             String messageKey, String subjKey,
             List<String> echoareas, List<String> senders, List<String> receivers, List<String> addresses,
-            Long time1, Long time2) {
+            Long time1, Long time2, boolean is_favorite) {
 
         ArrayList<String> selectionKeys = new ArrayList<>();
 
@@ -486,6 +486,9 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
         if (time1 != null && time2 != null)
             selectionKeys.add("date >= " + String.valueOf(time1) + " and date <= " + String.valueOf(time2));
+
+        if (is_favorite)
+            selectionKeys.add("isfavorite=1");
 
         return msgidsBySelection("(" + TextUtils.join(") and (", selectionKeys) + ")", "number", null);
     }

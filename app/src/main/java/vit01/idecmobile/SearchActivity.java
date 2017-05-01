@@ -71,7 +71,7 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         ArrayList<String> msgids = GlobalTransport.transport.searchQuery(
-                                query, null, null, null, null, null, null, null);
+                                query, null, null, null, null, null, null, null, false);
 
                         if (msgids.size() > 0) {
                             Intent intent = new Intent(SearchActivity.this, MessageSlideActivity.class);
