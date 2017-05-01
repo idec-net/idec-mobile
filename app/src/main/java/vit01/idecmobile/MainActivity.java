@@ -20,6 +20,8 @@
 package vit01.idecmobile;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -35,6 +37,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -411,6 +414,10 @@ public class MainActivity extends AppCompatActivity {
 
         int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
 
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         menu.findItem(R.id.action_fetch).setIcon(
                 new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_get_app)
                         .actionBar().color(iconColor));
@@ -418,6 +425,11 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.action_send).setIcon(
                 new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_cloud_upload)
                         .actionBar().color(iconColor));
+
+        menu.findItem(R.id.action_search).setIcon(
+                new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_search)
+                        .actionBar().color(iconColor));
+
         return true;
     }
 
@@ -425,27 +437,35 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, CommonSettings.class));
-            return true;
-        } else if (id == R.id.action_fetch) {
-            Intent intent = new Intent(this, DebugActivity.class);
-            intent.putExtra("task", "fetch");
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_send) {
-            Intent intent = new Intent(this, DebugActivity.class);
-            intent.putExtra("task", "send");
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_stations) {
-            Intent manageIntent = new Intent(MainActivity.this, StationsActivity.class);
-            manageIntent.putExtra("index", Config.currentSelectedStation);
-            startActivity(manageIntent);
-            return true;
-        } else if (id == R.id.action_mark_all_base_read) {
-            transport.setUnread(false, (String) null);
-            updateEcholist();
+        switch (id) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, CommonSettings.class));
+                return true;
+            case R.id.action_fetch: {
+                Intent intent = new Intent(this, DebugActivity.class);
+                intent.putExtra("task", "fetch");
+                startActivity(intent);
+                return true;
+            }
+            case R.id.action_send: {
+                Intent intent = new Intent(this, DebugActivity.class);
+                intent.putExtra("task", "send");
+                startActivity(intent);
+                return true;
+            }
+            case R.id.action_stations:
+                Intent manageIntent = new Intent(MainActivity.this, StationsActivity.class);
+                manageIntent.putExtra("index", Config.currentSelectedStation);
+                startActivity(manageIntent);
+                return true;
+            case R.id.action_mark_all_base_read:
+                transport.setUnread(false, (String) null);
+                updateEcholist();
+                return true;
+            case R.id.action_search:
+                if (!item.isActionViewExpanded()) item.expandActionView();
+                Toast.makeText(MainActivity.this, "Здесь надо открывать popupWindow с расширенными настройками", Toast.LENGTH_SHORT).show();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
