@@ -32,7 +32,7 @@ public class EchoReadingPosition {
 
     public static String filename = "positions.cache";
     public static File positions_file;
-    public static HashMap<String, Integer> positions = null;
+    public static HashMap<String, String> positions = null;
 
     public static void getPositionCache() {
         if (positions == null) positions = new HashMap<>();
@@ -48,8 +48,7 @@ public class EchoReadingPosition {
                     for (String line : rawLines) {
                         String[] pieces = line.split(":");
                         if (pieces.length > 1) {
-                            Integer pos = Integer.parseInt(pieces[1]);
-                            positions.put(pieces[0], pos);
+                            positions.put(pieces[0], pieces[1]);
                         }
                     }
                 }
@@ -80,7 +79,7 @@ public class EchoReadingPosition {
                 os = new FileOutputStream(positions_file);
 
                 for (String echo : positions.keySet()) {
-                    String value = positions.get(echo).toString();
+                    String value = positions.get(echo);
                     os.write((echo + ":" + value + "\n").getBytes());
                 }
 
@@ -91,13 +90,13 @@ public class EchoReadingPosition {
         }
     }
 
-    public static int getPosition(String echoarea) {
+    public static String getPosition(String echoarea) {
         if (positions == null) getPositionCache();
         if (positions.containsKey(echoarea)) return positions.get(echoarea);
-        else return -1;
+        else return null;
     }
 
-    public static void setPosition(String echoarea, int number) {
-        positions.put(echoarea, number);
+    public static void setPosition(String echoarea, String msgid) {
+        positions.put(echoarea, msgid);
     }
 }

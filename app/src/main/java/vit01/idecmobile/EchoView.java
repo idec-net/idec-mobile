@@ -125,7 +125,9 @@ public class EchoView extends AppCompatActivity {
                 SimpleFunctions.setActivityTitle(this, "Карбонка");
 
                 List<String> carbon_users = Arrays.asList(Config.values.carbon_to.split(":"));
-                msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit, unread_only);
+
+                String sort = Config.values.sortByDate ? "date" : "number";
+                msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit, unread_only, sort);
                 countMessages = msglist.size();
                 break;
             default:
@@ -138,7 +140,8 @@ public class EchoView extends AppCompatActivity {
                     countMessages = transport.countMessages(echoarea);
 
                     msglist = (countMessages > 0) ?
-                            transport.getMsgList(echoarea, 0, 0) : SimpleFunctions.emptyList;
+                            transport.getMsgList(echoarea, 0, 0, Config.values.sortByDate ? "date" : "number")
+                            : SimpleFunctions.emptyList;
                 }
                 break;
         }
@@ -173,7 +176,13 @@ public class EchoView extends AppCompatActivity {
                 readNow.putExtra("nodeindex", nodeIndex);
                 readNow.putExtra("echoarea", echoarea);
 
-                int gotPosition = EchoReadingPosition.getPosition(echoarea);
+                String lastMsgid = EchoReadingPosition.getPosition(echoarea);
+                int gotPosition = 0;
+
+                if (lastMsgid != null && normalMsgList.contains(lastMsgid)) {
+                    gotPosition = normalMsgList.lastIndexOf(lastMsgid);
+                }
+
                 if (gotPosition < 0)
                     gotPosition = 0; // исправить эту строку, если при первом заходе
                 // в эху хочется читать не первое сообщение, а какое-то другое

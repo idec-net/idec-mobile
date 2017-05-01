@@ -46,7 +46,8 @@ import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.notify.AlarmService;
 
 public class CommonSettings extends AppCompatActivity {
-    CheckBox defaultEditor, useProxy, oldQuote, notifyEnabled, notifyVibrate, useTor, swipeToFetch, disable_msglist;
+    CheckBox defaultEditor, useProxy, oldQuote, notifyEnabled,
+            notifyVibrate, useTor, swipeToFetch, disable_msglist, sort_by_date;
     EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit, notifyInterval, proxyAddress;
     Spinner selected_theme;
     Intent alarmIntent;
@@ -74,6 +75,7 @@ public class CommonSettings extends AppCompatActivity {
         oldQuote = (CheckBox) findViewById(R.id.old_quote);
         swipeToFetch = (CheckBox) findViewById(R.id.swipe_to_fetch_enable);
         disable_msglist = (CheckBox) findViewById(R.id.echoview_disable_messages_list);
+        sort_by_date = (CheckBox) findViewById(R.id.echoview_sort_by_date);
         notifyEnabled = (CheckBox) findViewById(R.id.notifications_enabled);
         notifyVibrate = (CheckBox) findViewById(R.id.notification_vibrate);
         useTor = (CheckBox) findViewById(R.id.useTor);
@@ -149,6 +151,7 @@ public class CommonSettings extends AppCompatActivity {
         oldQuote.setChecked(Config.values.oldQuote);
         swipeToFetch.setChecked(Config.values.swipeToFetch);
         disable_msglist.setChecked(Config.values.disableMsglist);
+        sort_by_date.setChecked(Config.values.sortByDate);
         notifyEnabled.setChecked(Config.values.notificationsEnabled);
         notifyVibrate.setChecked(Config.values.notificationsVibrate);
         useTor.setChecked(Config.values.useTor);
@@ -179,6 +182,7 @@ public class CommonSettings extends AppCompatActivity {
         Config.values.oldQuote = oldQuote.isChecked();
         Config.values.swipeToFetch = swipeToFetch.isChecked();
         Config.values.disableMsglist = disable_msglist.isChecked();
+        Config.values.sortByDate = sort_by_date.isChecked();
         Config.values.notificationsEnabled = notifyEnabled.isChecked();
         Config.values.notificationsVibrate = notifyVibrate.isChecked();
 

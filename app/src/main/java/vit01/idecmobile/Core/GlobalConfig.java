@@ -33,7 +33,8 @@ public class GlobalConfig implements Serializable {
             notificationsEnabled = false,
             notificationsVibrate = true,
             swipeToFetch = true,
-            disableMsglist = true; // начать читать эху сразу с того же места
+            disableMsglist = true, // начать читать эху сразу с того же места
+            sortByDate = true;
     public int
             oneRequestLimit = 20,
             connectionTimeout = 20,

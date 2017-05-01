@@ -36,7 +36,7 @@ public interface AbstractTransport {
 
     void deleteMessages(ArrayList<String> msgids, String echo);
 
-    ArrayList<String> getMsgList(String echo, int offset, int length);
+    ArrayList<String> getMsgList(String echo, int offset, int length, String sort);
 
     void deleteEchoarea(String echo, boolean with_contents);
     void FuckDeleteEverything();
@@ -54,7 +54,7 @@ public interface AbstractTransport {
     int countFavorites();
 
     // Это для работы карбонки (классической)!
-    ArrayList<String> messagesToUsers(List<String> users, int limit, boolean unread);
+    ArrayList<String> messagesToUsers(List<String> users, int limit, boolean unread, String sort);
 
     ArrayList<String> getUnreadMessages(String echoarea);
     ArrayList<String> getAllUnreadMessages();

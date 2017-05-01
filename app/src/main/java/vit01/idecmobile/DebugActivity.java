@@ -316,7 +316,7 @@ public class DebugActivity extends AppCompatActivity {
                 else {
                     int deleteLength = countMessages - limit;
                     SimpleFunctions.debug("Составляется список...");
-                    ArrayList<String> deleteThem = transport.getMsgList(echoarea, 0, deleteLength);
+                    ArrayList<String> deleteThem = transport.getMsgList(echoarea, 0, deleteLength, "number");
                     SimpleFunctions.debug("Удаляем лишние сообщения...");
                     transport.deleteMessages(deleteThem, echoarea);
                 }
@@ -415,7 +415,7 @@ public class DebugActivity extends AppCompatActivity {
                         SimpleFunctions.debug("Экспорт по эхоконференциям...");
 
                         for (String echoarea : echoareas) {
-                            msgids.addAll(GlobalTransport.transport.getMsgList(echoarea, 0, 0));
+                            msgids.addAll(GlobalTransport.transport.getMsgList(echoarea, 0, 0, "number"));
                             exported += exportThese(fos, msgids);
 
                             SimpleFunctions.debug(echoarea + ": " + String.valueOf(msgids.size()));

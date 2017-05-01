@@ -67,7 +67,7 @@ public class OpenLinkActivity extends AppCompatActivity {
 
             IIMessage message = transport.getMessage(ii_link);
             if (message == null) message = new IIMessage();
-            ArrayList<String> msglist = transport.getMsgList(message.echo, 0, 0);
+            ArrayList<String> msglist = transport.getMsgList(message.echo, 0, 0, Config.values.sortByDate ? "date" : "number");
 
             if (msglist.contains(ii_link)) {
                 int position = msglist.lastIndexOf(ii_link);

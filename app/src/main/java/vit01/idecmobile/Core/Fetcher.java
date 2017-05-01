@@ -290,7 +290,7 @@ public class Fetcher {
         for (String echo : echoesToFetch) {
             SimpleFunctions.debug("Загрузка локальной эхи " + echo);
 
-            localIndex.put(echo, transport.getMsgList(echo, 0, 0));
+            localIndex.put(echo, transport.getMsgList(echo, 0, 0, "number"));
         }
 
         Hashtable<String, ArrayList<String>> remoteIndex = parseRemoteIndex(echoBundle);

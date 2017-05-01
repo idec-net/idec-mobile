@@ -84,7 +84,7 @@ public class MessageSlideActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 updateActionBar(position);
                 if (Config.values.disableMsglist && echoarea != null)
-                    EchoReadingPosition.setPosition(echoarea, position);
+                    EchoReadingPosition.setPosition(echoarea, msglist.get(position));
 
                 if ((discussionStack.size() > 0) && discussionStack.get(0).equals(position) && !stackUpdate) {
                     discussionStack.remove(0);
@@ -108,7 +108,7 @@ public class MessageSlideActivity extends AppCompatActivity {
         GlobalTransport.transport.setUnread(false, Collections.singletonList(msglist.get(firstPosition)));
         updateActionBar(firstPosition);
         if (Config.values.disableMsglist && echoarea != null) {
-            EchoReadingPosition.setPosition(echoarea, firstPosition);
+            EchoReadingPosition.setPosition(echoarea, msglist.get(firstPosition));
         }
     }
 

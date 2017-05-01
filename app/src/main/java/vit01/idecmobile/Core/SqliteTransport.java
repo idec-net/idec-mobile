@@ -185,7 +185,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return result;
     }
 
-    public ArrayList<String> getMsgList(String echo, int offset, int length) {
+    public ArrayList<String> getMsgList(String echo, int offset, int length, String sort) {
         SQLiteDatabase db = getReadableDatabase();
 
         String limitstr;
@@ -194,7 +194,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         } else limitstr = null;
 
         Cursor cursor = db.query(tableName, new String[]{"id", "number"}, "echoarea = ?",
-                new String[]{echo}, null, null, "number", limitstr);
+                new String[]{echo}, null, null, sort, limitstr);
 
         ArrayList<String> result = fetch_rows(cursor);
         db.close();
@@ -332,11 +332,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     public ArrayList<String> msgidsBySelection(String selection_block, String sort, String limit) {
         SQLiteDatabase db = getReadableDatabase();
 
-        if (sort != null) sort = " " + sort;
-        else sort = "";
+        if (sort == null) sort = "";
 
         Cursor cursor = db.query(true, tableName, new String[]{"id, number"},
-                selection_block, null, null, null, "number" + sort, limit);
+                selection_block, null, null, null, sort, limit);
 
         ArrayList<String> result = fetch_rows(cursor);
         db.close();
@@ -344,18 +343,18 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     public ArrayList<String> getFavorites() {
-        return msgidsBySelection("isfavorite=1", null, null);
+        return msgidsBySelection("isfavorite=1", "number", null);
     }
 
     public ArrayList<String> getUnreadMessages(String echoarea) {
         String selection_block = (echoarea != null) ? "echoarea='" + echoarea + "'" : null;
         selection_block += " and isunread=1";
 
-        return msgidsBySelection(selection_block, null, null);
+        return msgidsBySelection(selection_block, "number", null);
     }
 
     public ArrayList<String> getAllUnreadMessages() {
-        return msgidsBySelection("isunread=1", null, null);
+        return msgidsBySelection("isunread=1", "number", null);
     }
 
     @Override
@@ -392,10 +391,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
     public ArrayList<String> getUnreadFavorites() {
         String selection_block = "isfavorite=1 and isunread=1";
-        return msgidsBySelection(selection_block, null, null);
+        return msgidsBySelection(selection_block, "number", null);
     }
 
-    public ArrayList<String> messagesToUsers(List<String> users_to, int limit, boolean unread) {
+    public ArrayList<String> messagesToUsers(List<String> users_to, int limit, boolean unread, String sort) {
         if (users_to.size() == 0) return new ArrayList<>();
 
         String selection_block;
@@ -411,7 +410,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
 
         // получаем последние limit сообщений к нужным юзерам в порядке по возрастанию id
-        ArrayList<String> selected = msgidsBySelection(selection_block, "desc", "0," + String.valueOf(limit));
+        ArrayList<String> selected = msgidsBySelection(selection_block, sort + " desc", "0," + String.valueOf(limit));
         Collections.reverse(selected);
         return selected;
     }
