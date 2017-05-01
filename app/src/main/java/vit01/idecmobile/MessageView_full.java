@@ -148,7 +148,6 @@ public class MessageView_full extends Fragment {
         full_date.setText(SimpleFunctions.timestamp2date(message.time));
         full_echo.setText(message.echo);
 
-        full_msg.setClickable(true);
         full_msg.setMovementMethod(LinkMovementMethod.getInstance());
 
         Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);

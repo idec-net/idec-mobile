@@ -20,8 +20,10 @@
             android:id="@+id/full_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:text="1970-01-01 (Понедельник), 00:00"
             android:textColor="?attr/android:textColorSecondary"
+            android:textIsSelectable="true"
             android:textSize="@dimen/material_text_body1" />
 
         <TextView
@@ -72,7 +74,7 @@
 
         <TextView
             android:id="@+id/full_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
