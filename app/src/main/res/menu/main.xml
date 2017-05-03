@@ -10,6 +10,12 @@
         app:showAsAction="collapseActionView|ifRoom" />
 
     <item
+        android:id="@+id/action_advancedsearch"
+        android:title="Расширенный поиск"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_fetch"
         android:title="Скачать сообщения"
         app:showAsAction="ifRoom" />

@@ -35,6 +35,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
     int MY_PERMISSION_WRITE_STORAGE;
     SwipeRefreshLayout swipeRefresh;
     OnSwipeTouchListener swipeDrawerListener;
+    SearchAdvancedFragment advsearch;
+    MenuItem fetchItem, sendItem, advancedSearchItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,6 +312,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         };
+
+        advsearch = SearchAdvancedFragment.newInstance();
     }
 
     @Override
@@ -415,20 +420,63 @@ public class MainActivity extends AppCompatActivity {
         int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        menu.findItem(R.id.action_fetch).setIcon(
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                triggerSearch(query, new Bundle());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // показывать значок поиска в расширенном окне
+                advsearch.showButton = newText.isEmpty();
+                return false;
+            }
+        });
+
+        fetchItem = menu.findItem(R.id.action_fetch);
+        sendItem = menu.findItem(R.id.action_send);
+        advancedSearchItem = menu.findItem(R.id.action_advancedsearch);
+
+        fetchItem.setIcon(
                 new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_get_app)
                         .actionBar().color(iconColor));
 
-        menu.findItem(R.id.action_send).setIcon(
+        sendItem.setIcon(
                 new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_cloud_upload)
                         .actionBar().color(iconColor));
 
-        menu.findItem(R.id.action_search).setIcon(
+        searchItem.setIcon(
                 new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_search)
                         .actionBar().color(iconColor));
+
+        advancedSearchItem.setIcon(
+                new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_expand_more)
+                        .actionBar().color(iconColor));
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                fetchItem.setVisible(false);
+                sendItem.setVisible(false);
+                advancedSearchItem.setVisible(true);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                advancedSearchItem.setVisible(false);
+                fetchItem.setVisible(true);
+                sendItem.setVisible(true);
+                invalidateOptionsMenu();
+                return true;
+            }
+        });
 
         return true;
     }
@@ -464,7 +512,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.action_search:
                 if (!item.isActionViewExpanded()) item.expandActionView();
-                Toast.makeText(MainActivity.this, "Здесь надо открывать popupWindow с расширенными настройками", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_advancedsearch:
+                advsearch.show(fm, advsearch.getTag());
                 return true;
         }
 
@@ -481,5 +531,11 @@ public class MainActivity extends AppCompatActivity {
             IconicsDrawable icon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_warning).color(secondaryText);
             v.setImageDrawable(icon);
         }
+    }
+
+    @Override
+    public void triggerSearch(String initialQuery, Bundle bundle) {
+        bundle.putAll(advsearch.getDataBundle());
+        super.triggerSearch(initialQuery, bundle);
     }
 }

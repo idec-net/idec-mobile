@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.GlobalTransport;
@@ -50,11 +51,22 @@ public class SearchActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            showResults(query);
+            Bundle bundle = intent.getBundleExtra(SearchManager.APP_DATA);
+            if (query.equals("___query_empty")) query = null;
+            showResults(query, bundle);
         }
     }
 
-    private void showResults(final String query) {
+    private void showResults(final String query, Bundle bundle) {
+        final String subjKey = bundle.getString("subj");
+        final List<String> echoareas = bundle.getStringArrayList("echoareas");
+        final List<String> senders = bundle.getStringArrayList("senders");
+        final List<String> receivers = bundle.getStringArrayList("receivers");
+        final List<String> addresses = bundle.getStringArrayList("addresses");
+        final Long time1 = (Long) bundle.getSerializable("time1");
+        final Long time2 = (Long) bundle.getSerializable("time2");
+        final boolean is_favorite = bundle.getBoolean("is_favorite");
+
         final ProgressDialog progress = ProgressDialog.show(SearchActivity.this, "Идёт поиск", "Подождите-ка...", true);
         progress.show();
 
@@ -71,7 +83,8 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         ArrayList<String> msgids = GlobalTransport.transport.searchQuery(
-                                query, null, null, null, null, null, null, null, false);
+                                query, subjKey, echoareas, senders, receivers, addresses,
+                                time1, time2, is_favorite);
 
                         if (msgids.size() > 0) {
                             Intent intent = new Intent(SearchActivity.this, MessageSlideActivity.class);
