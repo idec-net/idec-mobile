@@ -485,11 +485,13 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
             selectionKeys.add("msg like '%" + messageKey + "%'");
 
         if (time1 != null && time2 != null)
-            selectionKeys.add("date >= " + String.valueOf(time1) + " and date <= " + String.valueOf(time2));
+            selectionKeys.add("date>=" + String.valueOf(time1) + " and date<=" + String.valueOf(time2));
 
         if (is_favorite)
             selectionKeys.add("isfavorite=1");
 
-        return msgidsBySelection("(" + TextUtils.join(") and (", selectionKeys) + ")", "number", null);
+        String clause_part = "(" + TextUtils.join(") and (", selectionKeys) + ")";
+        SimpleFunctions.debug(clause_part);
+        return msgidsBySelection(clause_part, "number", null);
     }
 }

@@ -41,8 +41,8 @@ import com.mikepenz.iconics.IconicsDrawable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -162,19 +162,14 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
 
     public Bundle getDataBundle() {
         Bundle bundle = new Bundle();
+        if (subjKey != null && subjKey.equals("")) subjKey = null;
+
         bundle.putString("subj", subjKey);
 
-        if (!TextUtils.isEmpty(echoareas))
-            bundle.putStringArrayList("echoareas", new ArrayList<>(Arrays.asList(echoareas.split("||"))));
-
-        if (!TextUtils.isEmpty(senders))
-            bundle.putStringArrayList("senders", new ArrayList<>(Arrays.asList(senders.split("||"))));
-
-        if (!TextUtils.isEmpty(receivers))
-            bundle.putStringArrayList("receivers", new ArrayList<>(Arrays.asList(receivers.split("||"))));
-
-        if (!TextUtils.isEmpty(addresses))
-            bundle.putStringArrayList("addresses", new ArrayList<>(Arrays.asList(addresses.split("||"))));
+        bundle.putStringArrayList("echoareas", splitToList(echoareas));
+        bundle.putStringArrayList("senders", splitToList(senders));
+        bundle.putStringArrayList("receivers", splitToList(receivers));
+        bundle.putStringArrayList("addresses", splitToList(addresses));
 
         Long[] timekeys = getTimeKeys(time1_string, time2_string);
         bundle.putSerializable("time1", timekeys[0]);
@@ -238,8 +233,8 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
             date2_calendar = tmp;
         }
 
-        keys[0] = date1_calendar.getTime().getTime();
-        keys[1] = date2_calendar.getTime().getTime();
+        keys[0] = date1_calendar.getTime().getTime() / 1000;
+        keys[1] = date2_calendar.getTime().getTime() / 1000;
 
         return keys;
     }
@@ -259,6 +254,17 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
             c.setTime(new Date(0));
         }
         return c;
+    }
+
+    ArrayList<String> splitToList(String str) {
+        if (str == null || TextUtils.isEmpty(str)) return SimpleFunctions.emptyList;
+
+        if (!str.contains("||")) return new ArrayList<>(Collections.singletonList(str));
+        String[] keys = str.split("||");
+        ArrayList<String> result = new ArrayList<>();
+        Collections.addAll(result, keys);
+        if (result.size() > 0) return result;
+        else return SimpleFunctions.emptyList;
     }
 
     @Override
