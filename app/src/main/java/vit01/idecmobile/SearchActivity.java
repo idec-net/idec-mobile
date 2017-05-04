@@ -67,6 +67,20 @@ public class SearchActivity extends AppCompatActivity {
         final Long time2 = (Long) bundle.getSerializable("time2");
         final boolean is_favorite = bundle.getBoolean("is_favorite");
 
+        if (query == null && subjKey == null &&
+                (echoareas == null || echoareas.size() == 0) &&
+                (senders == null || senders.size() == 0) &&
+                (receivers == null || receivers.size() == 0) &&
+                (addresses == null || addresses.size() == 0) &&
+                (time1 == null || time2 == null) &&
+                !is_favorite) {
+
+            Toast.makeText(SearchActivity.this, "Введены пустые параметры! Искать нечего", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+
         final ProgressDialog progress = ProgressDialog.show(SearchActivity.this, "Идёт поиск", "Подождите-ка...", true);
         progress.show();
 

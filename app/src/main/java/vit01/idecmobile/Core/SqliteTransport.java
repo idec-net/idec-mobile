@@ -491,7 +491,12 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
             selectionKeys.add("isfavorite=1");
 
         String clause_part = "(" + TextUtils.join(") and (", selectionKeys) + ")";
-        SimpleFunctions.debug(clause_part);
+
+        if (clause_part.equals("()")) {
+            SimpleFunctions.debug("Error: empty query");
+            return new ArrayList<>();
+        } else SimpleFunctions.debug(clause_part);
+
         return msgidsBySelection(clause_part, "number", null);
     }
 }

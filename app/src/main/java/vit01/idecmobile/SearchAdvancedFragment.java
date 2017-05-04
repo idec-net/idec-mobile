@@ -21,6 +21,7 @@ package vit01.idecmobile;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -259,8 +260,8 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
     ArrayList<String> splitToList(String str) {
         if (str == null || TextUtils.isEmpty(str)) return SimpleFunctions.emptyList;
 
-        if (!str.contains("||")) return new ArrayList<>(Collections.singletonList(str));
-        String[] keys = str.split("||");
+        if (!str.contains(":")) return new ArrayList<>(Collections.singletonList(str));
+        String[] keys = str.split(":");
         ArrayList<String> result = new ArrayList<>();
         Collections.addAll(result, keys);
         if (result.size() > 0) return result;
@@ -271,5 +272,10 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
     public void dismiss() {
         getData();
         super.dismiss();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        dismiss();
     }
 }
