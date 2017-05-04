@@ -2,17 +2,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_search"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        android:title="Поиск"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+    <item
+        android:id="@+id/action_advancedsearch"
+        android:title="Расширенный поиск"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_mark_all_read"
-        android:title="Пометить всё как прочитанное" />
+        android:title="Пометить всё как прочитанное"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_display_unread_only"
         android:checkable="true"
         android:checked="false"
-        android:title="Вид: только непрочитанные" />
+        android:title="Вид: только непрочитанные"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_favorites_remove_all"
+        android:orderInCategory="100"
         android:title="Удалить все избранные"
         android:visible="false"
         app:showAsAction="ifRoom" />

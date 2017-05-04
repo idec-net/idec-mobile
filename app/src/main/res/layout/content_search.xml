@@ -7,115 +7,126 @@
     android:fitsSystemWindows="false"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="25dp">
-
-        <TextView
-            style="@style/AppTheme.MyCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Расширенные параметры" />
-
-        <Button
-            android:id="@+id/search_advanced_start_search"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Начать поиск" />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/search_advanced_echoareas"
-            style="@style/AppTheme.EditTextFullWidth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Эха"
-            android:inputType="text"
-            android:singleLine="true" />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/search_advanced_senders"
-            style="@style/AppTheme.EditTextFullWidth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Отправители"
-            android:inputType="text"
-            android:singleLine="true" />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/search_advanced_receivers"
-            style="@style/AppTheme.EditTextFullWidth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Получатели"
-            android:inputType="text"
-            android:singleLine="true" />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/search_advanced_addresses"
-            style="@style/AppTheme.EditTextFullWidth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Адреса отправителей"
-            android:inputType="text"
-            android:singleLine="true" />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/search_advanced_subj"
-            style="@style/AppTheme.EditTextFullWidth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Тема сообщения"
-            android:inputType="text"
-            android:singleLine="true" />
+        android:clipToPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="25dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                style="@style/AppTheme.MyCaption"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="От: " />
+                android:text="Расширенные параметры поиска" />
 
-            <Button
-                android:id="@+id/search_advanced_date_first"
-                android:layout_width="0dp"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/search_advanced_echoareas"
+                style="@style/AppTheme.EditTextFullWidth"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="50"
-                android:text="select date" />
+                android:hint="Эха"
+                android:inputType="text"
+                android:singleLine="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/search_advanced_senders"
+                style="@style/AppTheme.EditTextFullWidth"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="До: " />
+                android:hint="Отправители"
+                android:inputType="text"
+                android:singleLine="true" />
 
-            <Button
-                android:id="@+id/search_advanced_date_second"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="50"
-                android:text="select date" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/search_advanced_receivers"
+                style="@style/AppTheme.EditTextFullWidth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Получатели"
+                android:inputType="text"
+                android:singleLine="true" />
 
-            <ImageView
-                android:id="@+id/search_advanced_date_clear"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:clickable="true" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/search_advanced_addresses"
+                style="@style/AppTheme.EditTextFullWidth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Станции отправителей"
+                android:inputType="text"
+                android:singleLine="true" />
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/search_advanced_subj"
+                style="@style/AppTheme.EditTextFullWidth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Тема сообщения"
+                android:inputType="text"
+                android:singleLine="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="От: " />
+
+                <Button
+                    android:id="@+id/search_advanced_date_first"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:text="select date" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="До: " />
+
+                <Button
+                    android:id="@+id/search_advanced_date_second"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:text="select date" />
+
+                <ImageView
+                    android:id="@+id/search_advanced_date_clear"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:clickable="true" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/search_advanced_favorites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Содержится в избранных сообщениях" />
+
         </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-        <CheckBox
-            android:id="@+id/search_advanced_favorites"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="Содержится в избранных сообщениях" />
-
-    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/search_advanced_start_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="-26dp"
+        android:clickable="true"
+        app:layout_anchor="@+id/bottom_sheet"
+        app:layout_anchorGravity="top|right|end" />
 </android.support.design.widget.CoordinatorLayout>

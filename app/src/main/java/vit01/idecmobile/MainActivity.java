@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
@@ -314,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         advsearch = SearchAdvancedFragment.newInstance();
+        ExternalStorage.initStorage();
     }
 
     @Override
@@ -433,8 +435,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // показывать значок поиска в расширенном окне
-                advsearch.showButton = newText.isEmpty();
                 return false;
             }
         });

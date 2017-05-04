@@ -42,6 +42,11 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_save_in_file"
+        android:title="Сохранить в файл"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_msglist_return"
         android:orderInCategory="100"
         android:title="К списку сообщений"

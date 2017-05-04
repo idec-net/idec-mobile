@@ -53,6 +53,8 @@ public class SearchActivity extends AppCompatActivity {
 
             Bundle bundle = intent.getBundleExtra(SearchManager.APP_DATA);
             if (query.equals("___query_empty")) query = null;
+
+            if (bundle == null) bundle = new Bundle();
             showResults(query, bundle);
         }
     }

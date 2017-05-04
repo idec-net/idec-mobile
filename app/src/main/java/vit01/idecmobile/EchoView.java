@@ -21,6 +21,8 @@ package vit01.idecmobile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,10 +32,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -67,6 +71,8 @@ public class EchoView extends AppCompatActivity {
     int countMessages;
     AbstractTransport transport;
     int nodeIndex;
+    MenuItem advancedSearchItem;
+    SearchAdvancedFragment advsearch;
 
     RecyclerView recyclerView;
     RecyclerView.Adapter mAdapter = null;
@@ -112,6 +118,16 @@ public class EchoView extends AppCompatActivity {
 
         transport = GlobalTransport.transport;
         loadContent(false);
+
+        advsearch = SearchAdvancedFragment.newInstance();
+
+        if (echoarea.equals("_carbon_classic")) {
+            advsearch.receivers = Config.values.carbon_to;
+        } else if (echoarea.equals("_favorites")) {
+            advsearch.is_favorite = true;
+        } else {
+            advsearch.echoareas = echoarea;
+        }
     }
 
     boolean loadContent(boolean unread_only) {
@@ -212,13 +228,58 @@ public class EchoView extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_echoview, menu);
 
+        int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
         if (echoarea.equals("_favorites")) {
             MenuItem favItem = menu.findItem(R.id.action_favorites_remove_all);
             favItem.setVisible(true);
             favItem.setIcon(new IconicsDrawable(getApplicationContext(),
                     GoogleMaterial.Icon.gmd_clear_all).actionBar()
-                    .color(SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor)));
+                    .color(iconColor));
         }
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                triggerSearch(query, new Bundle());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        advancedSearchItem = menu.findItem(R.id.action_advancedsearch);
+
+
+        searchItem.setIcon(
+                new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_search)
+                        .actionBar().color(iconColor));
+
+        advancedSearchItem.setIcon(
+                new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_expand_more)
+                        .actionBar().color(iconColor));
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                advancedSearchItem.setVisible(true);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                advancedSearchItem.setVisible(false);
+                invalidateOptionsMenu();
+                return true;
+            }
+        });
         return true;
     }
 
@@ -279,6 +340,12 @@ public class EchoView extends AppCompatActivity {
                         })
                         .show();
                 break;
+            case R.id.action_search:
+                if (!item.isActionViewExpanded()) item.expandActionView();
+                return true;
+            case R.id.action_advancedsearch:
+                advsearch.show(getSupportFragmentManager(), advsearch.getTag());
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -289,6 +356,12 @@ public class EchoView extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == 1) finish();
         }
+    }
+
+    @Override
+    public void triggerSearch(String initialQuery, Bundle bundle) {
+        bundle.putAll(advsearch.getDataBundle());
+        super.triggerSearch(initialQuery, bundle);
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {

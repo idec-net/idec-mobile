@@ -27,6 +27,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -36,11 +37,15 @@ import android.widget.Toast;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.EchoReadingPosition;
+import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
@@ -168,6 +173,45 @@ public class MessageSlideActivity extends AppCompatActivity {
                     mPager.setCurrentItem(discussionStack.remove(0));
                 } else
                     Toast.makeText(MessageSlideActivity.this, "Стек дискуссии пуст!", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_save_in_file:
+                String msgid = msglist.get(mPager.getCurrentItem());
+                String msgRaw = GlobalTransport.transport.getMessage(msgid).raw();
+                File file = new File(ExternalStorage.rootStorage.getParentFile(), msgid + ".txt");
+
+                if (!file.exists()) try {
+                    boolean create = file.createNewFile();
+
+                    if (!create) {
+                        String debug = "Не могу создать файл " + file.getName();
+                        Toast.makeText(MessageSlideActivity.this, debug, Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    SimpleFunctions.debug(e.getMessage());
+                    break;
+                }
+                if (file.canWrite()) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        fos.write(msgRaw.getBytes("UTF-8"));
+                        fos.close();
+                    } catch (Exception e) {
+                        SimpleFunctions.debug(e.getMessage());
+                        Toast.makeText(MessageSlideActivity.this, "Ошибка: " +
+                                e.getMessage(), Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                        break;
+                    }
+
+                    new AlertDialog.Builder(MessageSlideActivity.this)
+                            .setMessage("Сообщение сохранено в файл " + file.getAbsolutePath())
+                            .setPositiveButton("Ясно", null)
+                            .show();
+                } else {
+                    Toast.makeText(MessageSlideActivity.this, "Файл " + file.getAbsolutePath() + " недоступен для записи.", Toast.LENGTH_SHORT).show();
+                }
         }
         return super.onOptionsItemSelected(item);
     }

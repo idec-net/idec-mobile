@@ -181,7 +181,6 @@ public class DebugActivity extends AppCompatActivity {
             int sent = 0;
 
             try {
-                ExternalStorage.initStorage();
                 sent = Sender.sendMessages(getApplicationContext());
                 SimpleFunctions.debug("Отправлено сообщений: " + String.valueOf(sent));
             } catch (Exception e) {
@@ -273,7 +272,6 @@ public class DebugActivity extends AppCompatActivity {
             SimpleFunctions.debugTaskFinished = false;
             boolean success = false;
 
-            ExternalStorage.initStorage();
             final File new_file = new File(ExternalStorage.rootStorage.getParentFile(), filename);
 
             try {
@@ -545,7 +543,6 @@ public class DebugActivity extends AppCompatActivity {
             SimpleFunctions.debugTaskFinished = false;
 
             try {
-                ExternalStorage.initStorage();
                 if (!where.exists() || !where.canRead()) {
                     SimpleFunctions.debug("Не могу прочитать файл. Может быть, его нет?");
                 } else {
