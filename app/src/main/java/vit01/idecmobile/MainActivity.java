@@ -40,6 +40,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     OnSwipeTouchListener swipeDrawerListener;
     SearchAdvancedFragment advsearch;
     MenuItem fetchItem, sendItem, advancedSearchItem;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -423,13 +425,13 @@ public class MainActivity extends AppCompatActivity {
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                triggerSearch(query, new Bundle());
+                triggerSearch(null, new Bundle());
                 return true;
             }
 
@@ -535,6 +537,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void triggerSearch(String initialQuery, Bundle bundle) {
+        String query = searchView.getQuery().toString();
+
+        if (TextUtils.isEmpty(query)) initialQuery = "___query_empty";
+        else initialQuery = query;
+
         bundle.putAll(advsearch.getDataBundle());
         super.triggerSearch(initialQuery, bundle);
     }

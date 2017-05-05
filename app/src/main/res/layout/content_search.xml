@@ -20,60 +20,151 @@
             android:padding="25dp">
 
             <TextView
-                style="@style/AppTheme.MyCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Расширенные параметры поиска" />
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/search_advanced_echoareas"
-                style="@style/AppTheme.EditTextFullWidth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Эха"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/search_advanced_senders"
-                style="@style/AppTheme.EditTextFullWidth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Отправители"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/search_advanced_receivers"
-                style="@style/AppTheme.EditTextFullWidth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Получатели"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/search_advanced_addresses"
-                style="@style/AppTheme.EditTextFullWidth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Станции отправителей"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/search_advanced_subj"
-                style="@style/AppTheme.EditTextFullWidth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Тема сообщения"
-                android:inputType="text"
-                android:singleLine="true" />
+                android:paddingBottom="10dp"
+                android:text="Расширенные параметры поиска"
+                android:textColor="?attr/colorAccent"
+                android:textSize="17sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/search_advanced_image_echoareas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="-9dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <EditText
+                        android:id="@+id/search_advanced_echoareas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Эха"
+                        android:inputType="text"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/search_advanced_image_senders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="-9dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <EditText
+                        android:id="@+id/search_advanced_senders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Отправители"
+                        android:inputType="text"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/search_advanced_image_receivers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="-9dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <EditText
+                        android:id="@+id/search_advanced_receivers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Получатели"
+                        android:inputType="text"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/search_advanced_image_stations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="-9dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <EditText
+                        android:id="@+id/search_advanced_addresses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Станции отправителей"
+                        android:inputType="text"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <EditText
+                    android:id="@+id/search_advanced_subj"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Тема сообщения"
+                    android:inputType="text"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:textAlignment="center">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -86,6 +177,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
+                    android:background="@null"
                     android:text="select date" />
 
                 <TextView
@@ -99,13 +191,14 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="50"
+                    android:background="@null"
                     android:text="select date" />
 
                 <ImageView
                     android:id="@+id/search_advanced_date_clear"
-                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:clickable="true" />
             </LinearLayout>
 
@@ -114,6 +207,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
+                android:padding="8dp"
                 android:text="Содержится в избранных сообщениях" />
 
         </LinearLayout>
@@ -125,7 +219,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="-26dp"
+        android:layout_marginTop="16dp"
         android:clickable="true"
         app:layout_anchor="@+id/bottom_sheet"
         app:layout_anchorGravity="top|right|end" />

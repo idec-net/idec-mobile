@@ -29,12 +29,12 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,7 +52,7 @@ import java.util.Locale;
 import vit01.idecmobile.Core.SimpleFunctions;
 
 public class SearchAdvancedFragment extends BottomSheetDialogFragment {
-    String DATE_FORMAT = "dd-MM-yyyy";
+    String DATE_FORMAT = "dd.MM.yyyy";
 
     FloatingActionButton advSearchButton;
     Button date1, date2;
@@ -65,7 +65,7 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
     int mMonth;
     int mDay;
 
-    TextInputEditText edit_echoareas, edit_senders, edit_receivers, edit_addresses, edit_subj;
+    EditText edit_echoareas, edit_senders, edit_receivers, edit_addresses, edit_subj;
     CheckBox is_favorite_checkbox;
 
     private android.support.design.widget.BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
@@ -131,13 +131,23 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 getData();
-                getActivity().triggerSearch("___query_empty", new Bundle());
+                getActivity().triggerSearch(null, new Bundle());
             }
         });
 
         ImageView clearDateButton = (ImageView) v.findViewById(R.id.search_advanced_date_clear);
         clearDateButton.setImageDrawable(new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_close)
-                .sizeDp(24).color(buttonColor));
+                .sizeDp(19).color(buttonColor));
+
+        int imgColor = SimpleFunctions.colorFromTheme(getActivity(), android.R.attr.textColorSecondary);
+        ((ImageView) v.findViewById(R.id.search_advanced_image_echoareas)).setImageDrawable(
+                new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_message).sizeDp(24).color(imgColor));
+        ((ImageView) v.findViewById(R.id.search_advanced_image_senders)).setImageDrawable(
+                new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_people).sizeDp(24).color(imgColor));
+        ((ImageView) v.findViewById(R.id.search_advanced_image_receivers)).setImageDrawable(
+                new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_call_received).sizeDp(24).color(imgColor));
+        ((ImageView) v.findViewById(R.id.search_advanced_image_stations)).setImageDrawable(
+                new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_dns).sizeDp(24).color(imgColor));
 
         clearDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,11 +157,11 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
             }
         });
 
-        edit_echoareas = (TextInputEditText) v.findViewById(R.id.search_advanced_echoareas);
-        edit_senders = (TextInputEditText) v.findViewById(R.id.search_advanced_senders);
-        edit_receivers = (TextInputEditText) v.findViewById(R.id.search_advanced_receivers);
-        edit_addresses = (TextInputEditText) v.findViewById(R.id.search_advanced_addresses);
-        edit_subj = (TextInputEditText) v.findViewById(R.id.search_advanced_subj);
+        edit_echoareas = (EditText) v.findViewById(R.id.search_advanced_echoareas);
+        edit_senders = (EditText) v.findViewById(R.id.search_advanced_senders);
+        edit_receivers = (EditText) v.findViewById(R.id.search_advanced_receivers);
+        edit_addresses = (EditText) v.findViewById(R.id.search_advanced_addresses);
+        edit_subj = (EditText) v.findViewById(R.id.search_advanced_subj);
         is_favorite_checkbox = (CheckBox) v.findViewById(R.id.search_advanced_favorites);
 
         dialog.setContentView(v);
@@ -210,8 +220,8 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
 
     String formatDateString(int day, int month, int year) {
         return ((day < 10) ? "0" : "") + String.valueOf(day)
-                + "-" + ((month < 9) ? "0" : "") + String.valueOf(month + 1)
-                + "-" + String.valueOf(year);
+                + "." + ((month < 9) ? "0" : "") + String.valueOf(month + 1)
+                + "." + String.valueOf(year);
     }
 
     Long[] getTimeKeys(String date1, String date2) {
