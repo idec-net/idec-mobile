@@ -30,6 +30,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -539,10 +540,19 @@ public class MainActivity extends AppCompatActivity {
     public void triggerSearch(String initialQuery, Bundle bundle) {
         String query = searchView.getQuery().toString();
 
-        if (TextUtils.isEmpty(query)) initialQuery = "___query_empty";
+        if (query.equals("") || TextUtils.isEmpty(query)) initialQuery = "___query_empty";
         else initialQuery = query;
 
         bundle.putAll(advsearch.getDataBundle());
-        super.triggerSearch(initialQuery, bundle);
+
+        if (Build.VERSION.SDK_INT < 21) {
+            Intent searchIntent = new Intent(this, SearchActivity.class);
+            searchIntent.setAction(Intent.ACTION_SEARCH);
+            searchIntent.putExtra(SearchManager.QUERY, query);
+            searchIntent.putExtra(SearchManager.APP_DATA, bundle);
+            startActivity(searchIntent);
+        } else {
+            super.triggerSearch(initialQuery, bundle);
+        }
     }
 }

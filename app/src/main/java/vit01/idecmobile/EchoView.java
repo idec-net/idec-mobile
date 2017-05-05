@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
@@ -123,12 +124,16 @@ public class EchoView extends AppCompatActivity {
 
         advsearch = SearchAdvancedFragment.newInstance();
 
-        if (echoarea.equals("_carbon_classic")) {
-            advsearch.receivers = Config.values.carbon_to;
-        } else if (echoarea.equals("_favorites")) {
-            advsearch.is_favorite = true;
-        } else {
-            advsearch.echoareas = echoarea;
+        switch (echoarea) {
+            case "_carbon_classic":
+                advsearch.receivers = Config.values.carbon_to;
+                break;
+            case "_favorites":
+                advsearch.is_favorite = true;
+                break;
+            default:
+                advsearch.echoareas = echoarea;
+                break;
         }
     }
 
@@ -364,11 +369,20 @@ public class EchoView extends AppCompatActivity {
     public void triggerSearch(String initialQuery, Bundle bundle) {
         String query = searchView.getQuery().toString();
 
-        if (TextUtils.isEmpty(query)) initialQuery = "___query_empty";
+        if (query.equals("") || TextUtils.isEmpty(query)) initialQuery = "___query_empty";
         else initialQuery = query;
 
         bundle.putAll(advsearch.getDataBundle());
-        super.triggerSearch(initialQuery, bundle);
+
+        if (Build.VERSION.SDK_INT < 21) {
+            Intent searchIntent = new Intent(this, SearchActivity.class);
+            searchIntent.setAction(Intent.ACTION_SEARCH);
+            searchIntent.putExtra(SearchManager.QUERY, query);
+            searchIntent.putExtra(SearchManager.APP_DATA, bundle);
+            startActivity(searchIntent);
+        } else {
+            super.triggerSearch(initialQuery, bundle);
+        }
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
