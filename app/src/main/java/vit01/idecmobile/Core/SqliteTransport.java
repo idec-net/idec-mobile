@@ -32,8 +32,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
+    public static SQLiteDatabase db_static = null;
     public String tableName = "idecMessages";
-
     public SqliteTransport(Context context) {
         super(context, "idec-db", null, 2);
     }
@@ -71,6 +71,21 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
             db.execSQL("alter table " + tableName + " add isfavorite integer default 0");
             db.execSQL("alter table " + tableName + " add isunread integer default 1");
         }
+    }
+
+    public SQLiteDatabase getDb() {
+        if (db_static == null) db_static = getWritableDatabase();
+        while (db_static.isDbLockedByCurrentThread()) {
+            try {
+                SimpleFunctions.debug("Locked");
+                wait(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                SimpleFunctions.debug("db locked by current thread");
+            }
+        }
+
+        return db_static;
     }
 
     public ContentValues getContentValues(IIMessage message) {
@@ -112,11 +127,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     public boolean saveMessage(String msgid, String echo, IIMessage message) {
         message.id = msgid;
 
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getDb();
         ContentValues readyToInsert = getContentValues(message);
 
         long result = db.insert(tableName, null, readyToInsert);
-        db.close();
 
         if (result == -1) {
             SimpleFunctions.debug("Cannot save msgid " + msgid);
@@ -131,9 +145,8 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     public boolean updateMessage(String msgid, IIMessage message) {
         ContentValues cv = getContentValues(message);
 
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getDb();
         int result = db.update(tableName, cv, "id = ?", new String[]{msgid});
-        db.close();
 
         return result > 0;
     }
@@ -143,7 +156,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     public boolean deleteMessage(String msgid, String echo) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getDb();
 
         String whereClause = "id = ?";
         String[] whereArgs;
@@ -154,18 +167,16 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         } else whereArgs = new String[]{msgid};
 
         int result = db.delete(tableName, whereClause, whereArgs);
-        db.close();
 
         return result > 0;
     }
 
     public void deleteMessages(ArrayList<String> msgids, String echo) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getDb();
 
         for (String msgid : msgids) {
             db.delete(tableName, "id = ? and echoarea = ?", new String[]{msgid, echo});
         }
-        db.close();
     }
 
     public ArrayList<String> fetch_rows(Cursor cursor) {
@@ -196,15 +207,12 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         Cursor cursor = db.query(tableName, new String[]{"id", "number"}, "echoarea = ?",
                 new String[]{echo}, null, null, sort, limitstr);
 
-        ArrayList<String> result = fetch_rows(cursor);
-        db.close();
-        return result;
+        return fetch_rows(cursor);
     }
 
     public void deleteEchoarea(String echo, boolean with_contents) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getDb();
         db.delete(tableName, "echoarea = ?", new String[]{echo});
-        db.close();
     }
 
     public String getRawMessage(String msgid) {
@@ -257,7 +265,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
 
         cursor.close();
-        db.close();
         return result;
     }
 
@@ -267,10 +274,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         Cursor cursor = db.query(true, tableName, new String[]{"echoarea"},
                 null, null, null, null, null, null);
 
-        ArrayList<String> results = fetch_rows(cursor);
-
-        db.close();
-        return results;
+        return fetch_rows(cursor);
     }
 
     public int countMessages(String echo) {
@@ -286,7 +290,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
 
         cursor.close();
-        db.close();
         return result;
     }
 
@@ -302,7 +305,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
 
         cursor.close();
-        db.close();
         return result;
     }
 
@@ -319,14 +321,12 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
 
         cursor.close();
-        db.close();
         return result;
     }
 
     public void FuckDeleteEverything() {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getDb();
         db.delete(tableName, null, null);
-        db.close();
     }
 
     public ArrayList<String> msgidsBySelection(String selection_block, String sort, String limit) {
@@ -337,9 +337,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         Cursor cursor = db.query(true, tableName, new String[]{"id, number"},
                 selection_block, null, null, null, sort, limit);
 
-        ArrayList<String> result = fetch_rows(cursor);
-        db.close();
-        return result;
+        return fetch_rows(cursor);
     }
 
     public ArrayList<String> getFavorites() {
@@ -386,7 +384,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
             cursor.close();
             result.add(new echoStat(total_count, unread_count));
         }
-        db.close();
     }
 
     public ArrayList<String> getUnreadFavorites() {
@@ -418,7 +415,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     public void updateBooleanField(String field, boolean value, List<String> msgids) {
         if (msgids.size() == 0) SimpleFunctions.debug(field + " update failed: empty input!");
 
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getDb();
         int value_to_insert = (value) ? 1 : 0;
         String clause_part;
 
@@ -430,7 +427,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
         db.execSQL("update " + tableName + " set " + field + "="
                 + String.valueOf(value_to_insert) + " where " + clause_part);
-        db.close();
     }
 
     public void setUnread(boolean unread, List<String> msgids) {
@@ -438,7 +434,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     public void setUnread(boolean unread, String area) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getDb();
         int value_to_insert = (unread) ? 1 : 0;
         String clause_part;
 
@@ -452,7 +448,6 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
         db.execSQL("update " + tableName + " set isunread="
                 + String.valueOf(value_to_insert) + " where " + clause_part);
-        db.close();
     }
 
     public void setFavorite(boolean favorite, List<String> msgids) {

@@ -189,13 +189,18 @@ public class SimpleFunctions {
             if (piece.equals("====")) {
                 if (!pre_flag) {
                     pre_flag = true;
-                    result.add("<pre style='font-family: monospace;'>====");
+                    result.add("<font face='monospace'>====");
                 } else {
                     pre_flag = false;
-                    result.add("====</pre>");
+                    result.add("====</font>");
                 }
-            } else result.add(piece);
+            } else {
+                if (pre_flag) result.add(piece.replaceAll(" ", "&#160;")
+                        .replaceAll("\t", "&#160;&#160;&#160;&#160;"));
+                else result.add(piece);
+            }
         }
+        if (pre_flag) strings[strings.length - 1] += "</font>";
 
         return TextUtils.join("<br>", result);
     }
