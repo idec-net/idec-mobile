@@ -3,9 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_fetch"
+        android:title="Скачать сообщения"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_send"
+        android:title="Отправить всё"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_search"
         android:actionViewClass="android.support.v7.widget.SearchView"
-        android:title="Поиск"
+        android:title="Поиск по базе"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
 
@@ -14,16 +24,6 @@
         android:title="Расширенный поиск"
         android:visible="false"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_fetch"
-        android:title="Скачать сообщения"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_send"
-        android:title="Отправить всё"
-        app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/action_edit_echoareas"
         android:title="Править список эх"
