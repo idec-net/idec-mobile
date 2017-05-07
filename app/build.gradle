@@ -32,4 +32,5 @@ dependencies {
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'info.guardianproject.netcipher:netcipher:1.2'
+    compile 'ch.acra:acra:4.9.2'
 }
