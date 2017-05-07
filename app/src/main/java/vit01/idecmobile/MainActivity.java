@@ -370,15 +370,17 @@ public class MainActivity extends AppCompatActivity {
                 new ProfileSettingDrawerItem().withName("Управление станциями").withIdentifier(MANAGE_NODE).withIcon(GoogleMaterial.Icon.gmd_settings)
         );
 
-        if (Config.currentSelectedStation > Config.values.stations.size() - 1) {
+        if (Config.currentSelectedStation > (Config.values.stations.size() - 1)) {
             Config.currentSelectedStation = 0;
-            Config.saveCurrentSelectedStation();
+            Config.saveCurrentStationPosition();
         }
+
         currentStation = Config.values.stations.get(Config.currentSelectedStation);
         drawerHeader.setActiveProfile(Config.currentSelectedStation);
     }
 
     public void updateEcholist() {
+        //Toast.makeText(MainActivity.this, "Debug: update echolist", Toast.LENGTH_SHORT).show();
         if (!is_offline_list_now)
             echolist.updateState(currentStation.echoareas, Config.currentSelectedStation);
         else
