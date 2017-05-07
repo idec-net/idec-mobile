@@ -33,6 +33,7 @@ public class GlobalConfig implements Serializable {
             notificationsEnabled = false,
             notificationsVibrate = true,
             swipeToFetch = true,
+            hide_toolbar_when_scrolling = false,
             disableMsglist = true, // начать читать эху сразу с того же места
             sortByDate = true;
     public int

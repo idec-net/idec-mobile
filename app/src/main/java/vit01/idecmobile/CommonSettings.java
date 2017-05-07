@@ -47,7 +47,7 @@ import vit01.idecmobile.notify.AlarmService;
 
 public class CommonSettings extends AppCompatActivity {
     CheckBox defaultEditor, useProxy, oldQuote, notifyEnabled,
-            notifyVibrate, useTor, swipeToFetch, disable_msglist, sort_by_date;
+            notifyVibrate, useTor, swipeToFetch, disable_msglist, sort_by_date, hide_toolbar;
     EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit, notifyInterval, proxyAddress;
     Spinner selected_theme;
     Intent alarmIntent;
@@ -74,6 +74,7 @@ public class CommonSettings extends AppCompatActivity {
         useProxy = (CheckBox) findViewById(R.id.checkBox3);
         oldQuote = (CheckBox) findViewById(R.id.old_quote);
         swipeToFetch = (CheckBox) findViewById(R.id.swipe_to_fetch_enable);
+        hide_toolbar = (CheckBox) findViewById(R.id.hide_actionbar_when_scrolling);
         disable_msglist = (CheckBox) findViewById(R.id.echoview_disable_messages_list);
         sort_by_date = (CheckBox) findViewById(R.id.echoview_sort_by_date);
         notifyEnabled = (CheckBox) findViewById(R.id.notifications_enabled);
@@ -150,6 +151,7 @@ public class CommonSettings extends AppCompatActivity {
         useProxy.setChecked(Config.values.useProxy);
         oldQuote.setChecked(Config.values.oldQuote);
         swipeToFetch.setChecked(Config.values.swipeToFetch);
+        hide_toolbar.setChecked(Config.values.hide_toolbar_when_scrolling);
         disable_msglist.setChecked(Config.values.disableMsglist);
         sort_by_date.setChecked(Config.values.sortByDate);
         notifyEnabled.setChecked(Config.values.notificationsEnabled);
@@ -181,6 +183,7 @@ public class CommonSettings extends AppCompatActivity {
         Config.values.useProxy = useProxy.isChecked();
         Config.values.oldQuote = oldQuote.isChecked();
         Config.values.swipeToFetch = swipeToFetch.isChecked();
+        Config.values.hide_toolbar_when_scrolling = hide_toolbar.isChecked();
         Config.values.disableMsglist = disable_msglist.isChecked();
         Config.values.sortByDate = sort_by_date.isChecked();
         Config.values.notificationsEnabled = notifyEnabled.isChecked();

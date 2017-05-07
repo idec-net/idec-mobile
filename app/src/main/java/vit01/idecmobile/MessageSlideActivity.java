@@ -21,6 +21,7 @@ package vit01.idecmobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -67,6 +68,12 @@ public class MessageSlideActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message_slide);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        
+        if (Config.values.hide_toolbar_when_scrolling) {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        }
+
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
