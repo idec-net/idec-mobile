@@ -413,7 +413,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < 3; i++) if (colors[i] > 200) colors[i] -= 50;
 
-        Drawable icon = getResources().getDrawable(R.drawable.ic_station);
+        Drawable icon = ContextCompat.getDrawable(this, R.drawable.ic_station);
         assert icon != null;
         icon.mutate().setColorFilter(Color.rgb(colors[0], colors[1], colors[2]), PorterDuff.Mode.OVERLAY);
         return icon;
@@ -520,8 +520,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(manageIntent);
                 return true;
             case R.id.action_mark_all_base_read:
-                transport.setUnread(false, (String) null);
-                updateEcholist();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "Подождите...", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        transport.setUnread(false, (String) null);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateEcholist();
+                                updateNavDrawerCounters();
+                            }
+                        });
+                    }
+                }).start();
                 return true;
             case R.id.action_search:
                 if (!item.isActionViewExpanded()) item.expandActionView();

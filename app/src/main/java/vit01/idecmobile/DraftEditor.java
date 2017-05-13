@@ -43,6 +43,7 @@ import java.util.ArrayList;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftMessage;
+import vit01.idecmobile.Core.DraftsValidator;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.Sender;
@@ -56,6 +57,7 @@ public class DraftEditor extends AppCompatActivity {
     File fileToSave;
     ArrayList<String> station_names = new ArrayList<>();
     ArrayAdapter<String> spinnerAdapter;
+    String generatedHash;
     int nodeindex = 0;
     String outbox_id;
 
@@ -112,6 +114,10 @@ public class DraftEditor extends AppCompatActivity {
             finish();
         }
 
+        // Если алгоритм сохранил файл, то он сгенерировал и хэш для черновика
+        // И этот хэш нам нужен
+        generatedHash = DraftsValidator.hashes.get(DraftsValidator.hashes.size() - 1);
+
         if (!Config.values.defaultEditor) {
             Intent intent = new Intent();
             intent.setAction(android.content.Intent.ACTION_VIEW);
@@ -153,9 +159,11 @@ public class DraftEditor extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    boolean sent = Sender.sendOneMessage(DraftEditor.this,
-                            Config.values.stations.get(nodeindex), fileToSave);
+                    Boolean sent = Sender.sendOneMessage(DraftEditor.this,
+                            Config.values.stations.get(nodeindex), fileToSave, true);
 
+                    assert sent != null;
+                    DraftsValidator.deleteHash(generatedHash);
                     final String statusText = (sent) ? "Сообщение отправлено" : "Ошибка отправки!";
                     runOnUiThread(new Runnable() {
                         @Override
@@ -252,7 +260,7 @@ public class DraftEditor extends AppCompatActivity {
     }
 
     public void saveMessage() {
-        boolean result = ExternalStorage.writeDraftToFile(fileToSave, message);
+        boolean result = ExternalStorage.writeDraftToFile(fileToSave, message.raw());
         if (!result) {
             SimpleFunctions.debug("Проблемсы!");
             Toast.makeText(DraftEditor.this, "Файл как-то не сохранён. Сожалею :(", Toast.LENGTH_SHORT).show();

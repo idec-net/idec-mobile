@@ -29,8 +29,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class Sender {
-    public static boolean sendOneMessage(Context context, Station station, File file) {
-        String str;
+    public static Boolean sendOneMessage(Context context, Station station, File file, boolean force) {
+        // параметр force нужен, чтобы отправлять черновики принудительно
+        String str, toServer;
 
         try {
             FileInputStream fis = new FileInputStream(file);
@@ -42,8 +43,20 @@ public class Sender {
             return false;
         }
 
+        if (!force) {
+            String hash = SimpleFunctions.hsh(str);
+            if (DraftsValidator.hashExists(hash)) {
+                SimpleFunctions.debug("Удаляем пустой черновик...");
+                boolean d = file.delete();
+                if (d) {
+                    DraftsValidator.deleteHash(hash);
+                } else SimpleFunctions.debug("Ошибка при удалении черновика");
+
+                return null;
+            }
+        }
+
         String base64str = new String(Base64.encode(str.getBytes(), Base64.DEFAULT));
-        String toServer = "";
 
         try {
             toServer = "tmsg=" +
@@ -75,18 +88,27 @@ public class Sender {
 
     public static int sendMessages(Context context) {
         int countsent = 0;
+        int countdeleted = 0;
+        int totaldrafts = 0;
 
         for (Station station : Config.values.stations) {
             File tossesDir = ExternalStorage.getStationStorageDir(station.outbox_storage_id);
             ArrayList<File> contents = ExternalStorage.getDraftsInside(tossesDir, true);
 
             if (contents.size() == 0) continue;
+            totaldrafts += contents.size();
 
             for (File file : contents) {
-                if (sendOneMessage(context, station, file)) {
-                    countsent++;
-                }
+                Boolean sent = sendOneMessage(context, station, file, false);
+                if (sent != null) {
+                    if (sent) countsent++;
+                } else countdeleted++;
             }
+        }
+
+        if (totaldrafts > 0 && (countsent + countdeleted) == totaldrafts) {
+            // Значит мы отправили все черновики, которые у нас есть. Чистим кэш
+            DraftsValidator.deleteAll();
         }
 
         return countsent;

@@ -124,9 +124,7 @@ public class ExternalStorage {
         return new DraftMessage(contents);
     }
 
-    public static boolean writeDraftToFile(File file, DraftMessage message) {
-        String contents = message.raw();
-
+    public static boolean writeDraftToFile(File file, String contents) {
         try {
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(contents.getBytes("UTF-8"));
@@ -182,7 +180,12 @@ public class ExternalStorage {
             SimpleFunctions.debug(e.toString());
             return null;
         }
-        if (!writeDraftToFile(file, message)) return null;
+
+        String rawMessage = message.raw();
+        String hash = SimpleFunctions.hsh(rawMessage);
+        DraftsValidator.appendHash(hash);
+
+        if (!writeDraftToFile(file, rawMessage)) return null;
         return file;
     }
 }

@@ -221,7 +221,7 @@ public class DebugActivity extends AppCompatActivity {
 
             ArrayList<String> fetched;
             int fetchedCount = 0;
-            boolean error_flag = false;
+            int error_flag = 0;
 
             try {
                 Fetcher fetcher = new Fetcher(GlobalTransport.transport);
@@ -249,24 +249,33 @@ public class DebugActivity extends AppCompatActivity {
                     );
 
                     if (fetched != null) fetchedCount += fetched.size();
-                    else error_flag = true;
+                    else error_flag++;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
-                error_flag = true;
+                error_flag++;
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
-                final String finalFetched = String.valueOf(fetchedCount);
-                final boolean finalErrorFlag = error_flag;
+                final int finalFetched = fetchedCount;
+                final int finalErrorFlag = error_flag;
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (finalFetched.equals("0") && finalErrorFlag)
-                            Toast.makeText(getApplicationContext(), "Проблема c загрузкой сообщений\nПроверьте подключение к интернету", Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(getApplicationContext(), "Получено сообщений: " + finalFetched, Toast.LENGTH_SHORT).show();
+                        String message = "";
+                        if (finalErrorFlag > 0) {
+                            message += "Ошибок: " + String.valueOf(finalErrorFlag) + "\n\n";
+
+                            if (finalFetched == 0)
+                                message += "Проблема c загрузкой сообщений\nПроверьте подключение к интернету";
+                        } else if (finalFetched == 0) message += "Новых сообщений нет";
+
+                        if (!message.equals(""))
+                            Toast.makeText(DebugActivity.this, message, Toast.LENGTH_SHORT).show();
+
+                        if (finalFetched > 0)
+                            Toast.makeText(getApplicationContext(), "Получено сообщений: " + String.valueOf(finalFetched), Toast.LENGTH_SHORT).show();
                     }
                 });
                 finishTask();
