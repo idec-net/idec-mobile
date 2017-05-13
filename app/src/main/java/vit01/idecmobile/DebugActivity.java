@@ -50,6 +50,7 @@ import vit01.idecmobile.Core.Station;
 public class DebugActivity extends AppCompatActivity {
     ScrollView debugLayout;
     TextView textView;
+    View decorView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,10 @@ public class DebugActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setActivityTitle(this, "Окно отладки");
+
+        decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
         debugLayout = (ScrollView) findViewById(R.id.debugLayout);
         textView = (TextView) findViewById(R.id.debug_view);
         textView.setText("");
@@ -148,6 +153,12 @@ public class DebugActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        super.onStop();
     }
 
     class updateDebug implements Runnable {

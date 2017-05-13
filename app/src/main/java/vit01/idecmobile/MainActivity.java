@@ -38,6 +38,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(9).withName("Настройки").withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
         PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(10).withName("Помощь").withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
         PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName("Обновиться").withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);
+        PrimaryDrawerItem infoItem = new PrimaryDrawerItem().withIdentifier(12).withName("Дата сборки").withIcon(GoogleMaterial.Icon.gmd_info).withSelectable(false);
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -194,7 +196,8 @@ public class MainActivity extends AppCompatActivity {
                         new DividerDrawerItem(),
                         settingsItem,
                         helpItem,
-                        updateItem
+                        updateItem,
+                        infoItem
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -257,6 +260,12 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case 11:
                                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://ii-net.tk/ii/files/app-debug.apk")));
+                                break;
+                            case 12:
+                                new AlertDialog.Builder(MainActivity.this)
+                                        .setMessage(BuildConfig.VERSION_NAME)
+                                        .setPositiveButton("ОК", null)
+                                        .show();
                                 break;
                         }
                         return false;
@@ -380,7 +389,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateEcholist() {
-        //Toast.makeText(MainActivity.this, "Debug: update echolist", Toast.LENGTH_SHORT).show();
         if (!is_offline_list_now)
             echolist.updateState(currentStation.echoareas, Config.currentSelectedStation);
         else

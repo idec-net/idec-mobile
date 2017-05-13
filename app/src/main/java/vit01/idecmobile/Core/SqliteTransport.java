@@ -33,9 +33,14 @@ import java.util.List;
 
 public class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
     public static SQLiteDatabase db_static = null;
+
     public String tableName = "idecMessages";
+    public String echoIndexName = "echostats";
+
+    public String indexCreate = "create index if not exists " +
+            echoIndexName + " on " + tableName + " (echoarea, isunread)";
     public SqliteTransport(Context context) {
-        super(context, "idec-db", null, 2);
+        super(context, "idec-db", null, 3);
     }
 
     @Override
@@ -54,6 +59,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
                 + "isfavorite integer default 0,"
                 + "isunread integer default 1"
                 + ")");
+        db.execSQL(indexCreate);
     }
 
     @Override
@@ -70,6 +76,13 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         if (oldVersion == 1 && newVersion == 2) {
             db.execSQL("alter table " + tableName + " add isfavorite integer default 0");
             db.execSQL("alter table " + tableName + " add isunread integer default 1");
+
+            oldVersion = 2;
+            newVersion = 3;
+        }
+
+        if (oldVersion == 2 && newVersion == 3) {
+            db.execSQL(indexCreate);
         }
     }
 
