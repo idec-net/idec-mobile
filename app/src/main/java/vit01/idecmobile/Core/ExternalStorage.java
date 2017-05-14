@@ -28,6 +28,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class ExternalStorage {
     public static File rootStorage;
@@ -106,6 +107,14 @@ public class ExternalStorage {
             result.addAll(current);
         }
 
+        Collections.sort(result, new Comparator<File>() {
+            @Override
+            public int compare(File file, File t1) {
+                long lm1 = file.lastModified();
+                long lm2 = t1.lastModified();
+                return lm1 < lm2 ? -1 : lm1 == lm2 ? 0 : 1;
+            }
+        });
         return result;
     }
 

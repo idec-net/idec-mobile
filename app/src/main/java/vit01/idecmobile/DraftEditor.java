@@ -57,7 +57,7 @@ public class DraftEditor extends AppCompatActivity {
     File fileToSave;
     ArrayList<String> station_names = new ArrayList<>();
     ArrayAdapter<String> spinnerAdapter;
-    String generatedHash;
+    String generatedHash = null;
     int nodeindex = 0;
     String outbox_id;
 
@@ -108,7 +108,7 @@ public class DraftEditor extends AppCompatActivity {
                 break;
         }
 
-        if (fileToSave == null) {
+        if (fileToSave == null || message == null) {
             Toast.makeText(DraftEditor.this, "Не удалось создать/открыть файл", Toast.LENGTH_SHORT).show();
             SimpleFunctions.debug("Проблема с созданием/открытием файла!");
             finish();
@@ -116,7 +116,8 @@ public class DraftEditor extends AppCompatActivity {
 
         // Если алгоритм сохранил файл, то он сгенерировал и хэш для черновика
         // И этот хэш нам нужен
-        generatedHash = DraftsValidator.hashes.get(DraftsValidator.hashes.size() - 1);
+        if (task.contains("new"))
+            generatedHash = DraftsValidator.getLastHash();
 
         if (!Config.values.defaultEditor) {
             Intent intent = new Intent();

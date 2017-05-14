@@ -101,6 +101,7 @@ public class DraftsValidator {
 
     public static void deleteHash(String hash) {
         if (hashes == null) getHashesCache();
+        if (hash == null) return;
 
         if (hashes.contains(hash)) {
             hashes.remove(hash);
@@ -114,5 +115,14 @@ public class DraftsValidator {
             hashes.clear();
             writeHashesCache();
         }
+    }
+
+    public static String getLastHash() {
+        if (hashes == null) getHashesCache();
+
+        if (hashes.size() > 0) {
+            return hashes.get(hashes.size() - 1);
+        }
+        else return null;
     }
 }
