@@ -339,7 +339,7 @@ public class DraftsView extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             File file = msglist.get(position);
-            if (file == null) {
+            if (file == null || !file.exists()) {
                 onItemDismiss(position);
                 return;
             }

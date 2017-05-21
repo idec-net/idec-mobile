@@ -27,7 +27,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -148,7 +147,7 @@ public class MessageView_full extends Fragment {
         full_date.setText(SimpleFunctions.timestamp2date(message.time));
         full_echo.setText(message.echo);
 
-        full_msg.setMovementMethod(LinkMovementMethod.getInstance());
+        full_msg.setMovementMethod(CustomLinkMovementMethod.getInstance());
 
         Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
 

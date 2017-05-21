@@ -82,6 +82,13 @@ public class MessageSlideActivity extends AppCompatActivity {
 
         Intent gotInfo = getIntent();
         msglist = gotInfo.getStringArrayListExtra("msglist");
+
+        if (msglist == null || msglist.size() == 0) {
+            Toast.makeText(MessageSlideActivity.this, "Список сообщений пуст, выходим", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         nodeIndex = gotInfo.getIntExtra("nodeindex", Config.currentSelectedStation);
         msgCount = msglist.size();
         int firstPosition = gotInfo.getIntExtra("position", msgCount - 1);

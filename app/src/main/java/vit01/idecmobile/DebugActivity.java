@@ -274,8 +274,17 @@ public class DebugActivity extends AppCompatActivity {
                         if (!message.equals(""))
                             Toast.makeText(DebugActivity.this, message, Toast.LENGTH_SHORT).show();
 
-                        if (finalFetched > 0)
+                        if (finalFetched > 0) {
                             Toast.makeText(getApplicationContext(), "Получено сообщений: " + String.valueOf(finalFetched), Toast.LENGTH_SHORT).show();
+
+                            if (Config.values.openUnreadAfterFetch) {
+                                ArrayList<String> unread = GlobalTransport.transport.getAllUnreadMessages();
+                                Intent unreadIntent = new Intent(DebugActivity.this, MessageSlideActivity.class);
+                                unreadIntent.putExtra("msglist", unread);
+                                unreadIntent.putExtra("position", 0);
+                                startActivity(unreadIntent);
+                            }
+                        }
                     }
                 });
                 finishTask();

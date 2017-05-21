@@ -125,8 +125,7 @@ public class ExternalStorage {
             contents = SimpleFunctions.readIt(fis);
             fis.close();
         } catch (Exception e) {
-            SimpleFunctions.debug(e.toString());
-            e.printStackTrace();
+            SimpleFunctions.debug(e.getMessage());
             return null;
         }
 

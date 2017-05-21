@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     SearchAdvancedFragment advsearch;
     MenuItem fetchItem, sendItem, advancedSearchItem;
     SearchView searchView;
+    StringHolder unreadHolder, draftsHolder, favoritesHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -284,6 +285,10 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         is_offline_list_now = false;
+
+        unreadHolder = new StringHolder(null);
+        draftsHolder = new StringHolder(null);
+        favoritesHolder = new StringHolder(null);
         updateNavDrawerCounters();
 
         if (Config.values.firstRun) {
@@ -396,11 +401,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateNavDrawerCounters() {
-        int countUnread = transport.countUnread();
-        int countFavorites = transport.countFavorites();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final int countUnread = transport.countUnread();
+                final int countDrafts = ExternalStorage.getAllDrafts(true).size();
+                final int countFavorites = transport.countFavorites();
 
-        drawer.updateBadge(3, new StringHolder(String.valueOf(countUnread)));
-        drawer.updateBadge(6, new StringHolder(String.valueOf(countFavorites)));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        unreadHolder.setText(countUnread > 0 ? String.valueOf(countUnread) : null);
+                        draftsHolder.setText(countDrafts > 0 ? String.valueOf(countDrafts) : null);
+                        favoritesHolder.setText(countFavorites > 0 ? String.valueOf(countFavorites) : null);
+
+                        drawer.updateBadge(3, unreadHolder);
+                        drawer.updateBadge(5, draftsHolder);
+                        drawer.updateBadge(6, favoritesHolder);
+                    }
+                });
+            }
+        }).start();
     }
 
     public Drawable getStationIcon(String stationName) {

@@ -47,7 +47,8 @@ import vit01.idecmobile.notify.AlarmService;
 
 public class CommonSettings extends AppCompatActivity {
     CheckBox defaultEditor, useProxy, oldQuote, notifyEnabled,
-            notifyVibrate, useTor, swipeToFetch, disable_msglist, sort_by_date, hide_toolbar;
+            notifyVibrate, useTor, swipeToFetch, disable_msglist, sort_by_date,
+            hide_toolbar, open_unread_after_fetch;
     EditText messages_per_fetch, connTimeout, carbon_usernames, carbon_limit, notifyInterval, proxyAddress;
     Spinner selected_theme;
     Intent alarmIntent;
@@ -77,6 +78,7 @@ public class CommonSettings extends AppCompatActivity {
         hide_toolbar = (CheckBox) findViewById(R.id.hide_actionbar_when_scrolling);
         disable_msglist = (CheckBox) findViewById(R.id.echoview_disable_messages_list);
         sort_by_date = (CheckBox) findViewById(R.id.echoview_sort_by_date);
+        open_unread_after_fetch = (CheckBox) findViewById(R.id.open_unread_after_fetch);
         notifyEnabled = (CheckBox) findViewById(R.id.notifications_enabled);
         notifyVibrate = (CheckBox) findViewById(R.id.notification_vibrate);
         useTor = (CheckBox) findViewById(R.id.useTor);
@@ -154,6 +156,7 @@ public class CommonSettings extends AppCompatActivity {
         hide_toolbar.setChecked(Config.values.hide_toolbar_when_scrolling);
         disable_msglist.setChecked(Config.values.disableMsglist);
         sort_by_date.setChecked(Config.values.sortByDate);
+        open_unread_after_fetch.setChecked(Config.values.openUnreadAfterFetch);
         notifyEnabled.setChecked(Config.values.notificationsEnabled);
         notifyVibrate.setChecked(Config.values.notificationsVibrate);
         useTor.setChecked(Config.values.useTor);
@@ -186,6 +189,7 @@ public class CommonSettings extends AppCompatActivity {
         Config.values.hide_toolbar_when_scrolling = hide_toolbar.isChecked();
         Config.values.disableMsglist = disable_msglist.isChecked();
         Config.values.sortByDate = sort_by_date.isChecked();
+        Config.values.openUnreadAfterFetch = open_unread_after_fetch.isChecked();
         Config.values.notificationsEnabled = notifyEnabled.isChecked();
         Config.values.notificationsVibrate = notifyVibrate.isChecked();
 

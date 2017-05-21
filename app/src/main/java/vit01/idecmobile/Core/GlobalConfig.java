@@ -35,7 +35,8 @@ public class GlobalConfig implements Serializable {
             swipeToFetch = true,
             hide_toolbar_when_scrolling = false,
             disableMsglist = true, // начать читать эху сразу с того же места
-            sortByDate = true;
+            sortByDate = true,
+            openUnreadAfterFetch = false;
     public int
             oneRequestLimit = 20,
             connectionTimeout = 20,
