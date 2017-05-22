@@ -20,7 +20,7 @@
 // Copied from StackOverflow: http://stackoverflow.com/questions/15836306/can-a-textview-be-selectable-and-contain-links/30572151#30572151
 // Эта штука нужна, чтобы избежать падения клиента во время выбора текста
 
-package vit01.idecmobile;
+package vit01.idecmobile.gui_helpers;
 
 import android.text.Selection;
 import android.text.Spannable;

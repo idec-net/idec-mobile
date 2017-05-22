@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.gui_helpers;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -67,6 +67,7 @@ import vit01.idecmobile.Core.EchoReadingPosition;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 
 public class EchoView extends AppCompatActivity {
     String echoarea;

@@ -75,6 +75,7 @@ import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.gui_helpers.OnSwipeTouchListener;
 import vit01.idecmobile.notify.workerJob;
 
 public class MainActivity extends AppCompatActivity {

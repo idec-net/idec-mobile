@@ -47,6 +47,7 @@ import java.util.Comparator;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 
 public class FileChooserActivity extends AppCompatActivity {
     RecyclerView recyclerView;

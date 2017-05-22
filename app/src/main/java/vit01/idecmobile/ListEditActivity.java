@@ -51,6 +51,7 @@ import java.util.ArrayList;
 
 import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 
 public class ListEditActivity extends AppCompatActivity {
     ArrayList<String> contents;

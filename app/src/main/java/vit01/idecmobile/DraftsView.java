@@ -57,6 +57,7 @@ import vit01.idecmobile.Core.DraftMessage;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 
 public class DraftsView extends AppCompatActivity {
     ArrayList<File> msglist;

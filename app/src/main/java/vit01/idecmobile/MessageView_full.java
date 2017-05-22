@@ -47,6 +47,7 @@ import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.gui_helpers.CustomLinkMovementMethod;
 
 public class MessageView_full extends Fragment {
     public AbstractTransport transport = GlobalTransport.transport;

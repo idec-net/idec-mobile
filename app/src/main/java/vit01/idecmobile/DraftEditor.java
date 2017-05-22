@@ -82,7 +82,6 @@ public class DraftEditor extends AppCompatActivity {
         outbox_id = Config.values.stations.get(nodeindex).outbox_storage_id;
 
         String task = incoming.getStringExtra("task");
-        boolean finishFlag = false; // Если оно будет true, тогда не делаем нехороших штук
 
         switch (task) {
             case "new_in_echo":
@@ -113,7 +112,7 @@ public class DraftEditor extends AppCompatActivity {
             Toast.makeText(DraftEditor.this, "Не удалось создать/открыть файл", Toast.LENGTH_SHORT).show();
             SimpleFunctions.debug("Проблема с созданием/открытием файла!");
             finish();
-            finishFlag = true;
+            return;
         }
 
         // Если алгоритм сохранил файл, то он сгенерировал и хэш для черновика
@@ -128,14 +127,12 @@ public class DraftEditor extends AppCompatActivity {
 
             startActivity(intent);
             finish();
-            finishFlag = true;
+            return;
         }
 
-        if (!finishFlag) {
-            installValues();
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        installValues();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     @Override
