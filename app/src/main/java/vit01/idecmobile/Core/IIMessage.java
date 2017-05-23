@@ -74,13 +74,14 @@ public class IIMessage implements Serializable {
     }
 
     static Hashtable<String, String> parseTags(String str) {
-        if (str == null) return new Hashtable<>();
+        if (str == null || str.equals("")) return new Hashtable<>();
 
         String[] all_tags = str.split("/");
         Hashtable<String, String> new_tags = new Hashtable<>();
+        if (all_tags.length == 0) return new_tags;
 
         for (int i = 0; i < all_tags.length; i += 2) {
-            if (all_tags[i + 1] != null) {
+            if (i + 1 != all_tags.length) {
                 new_tags.put(all_tags[i], all_tags[i + 1]);
             } else {
                 new_tags.put(all_tags[i], null);
