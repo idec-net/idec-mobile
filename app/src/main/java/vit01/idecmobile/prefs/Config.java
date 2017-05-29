@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile.Core;
+package vit01.idecmobile.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -28,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.R;
 
 public class Config {

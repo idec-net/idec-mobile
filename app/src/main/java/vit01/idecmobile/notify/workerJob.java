@@ -35,11 +35,11 @@ import android.text.TextUtils;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.R;
+import vit01.idecmobile.prefs.Config;
 
 public class workerJob extends BroadcastReceiver {
     public static Hashtable<String, Integer> lastDifference = null;

@@ -23,7 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import vit01.idecmobile.Core.Config;
+import vit01.idecmobile.prefs.Config;
 
 public class boot_completed_receiver extends BroadcastReceiver {
     @Override

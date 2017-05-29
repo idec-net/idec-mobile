@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import vit01.idecmobile.prefs.Config;
+
 public class ExternalStorage {
     public static File rootStorage;
     public static boolean filtersPresent = false;

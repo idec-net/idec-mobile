@@ -17,10 +17,12 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile.Core;
+package vit01.idecmobile.prefs;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import vit01.idecmobile.Core.Station;
 
 public class GlobalConfig implements Serializable {
     static final long serialVersionUID = 1L;

@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 import vit01.idecmobile.R;
+import vit01.idecmobile.prefs.Config;
 
 public class SimpleFunctions {
     public static String appName = "IDECMobile";

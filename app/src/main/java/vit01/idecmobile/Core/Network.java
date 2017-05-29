@@ -36,6 +36,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import info.guardianproject.netcipher.NetCipher;
+import vit01.idecmobile.prefs.Config;
 
 public class Network {
     public static Proxy proxy = null;

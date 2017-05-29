@@ -52,12 +52,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.DraftMessage;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;
+import vit01.idecmobile.prefs.Config;
 
 public class DraftsView extends AppCompatActivity {
     ArrayList<File> msglist;

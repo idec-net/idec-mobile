@@ -55,11 +55,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.prefs.Config;
 
 public class StationsActivity extends AppCompatActivity {
     public static boolean download_all_warning = true;

@@ -28,6 +28,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import vit01.idecmobile.prefs.Config;
+
 public class Sender {
     public static Boolean sendOneMessage(Context context, Station station, File file, boolean force) {
         // параметр force нужен, чтобы отправлять черновики принудительно

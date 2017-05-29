@@ -40,10 +40,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import info.guardianproject.netcipher.proxy.OrbotHelper;
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.notify.AlarmService;
+import vit01.idecmobile.prefs.Config;
 
 public class CommonSettings extends AppCompatActivity {
     CheckBox defaultEditor, useProxy, oldQuote, notifyEnabled,

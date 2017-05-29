@@ -70,13 +70,13 @@ import java.util.ArrayList;
 
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 import vit01.idecmobile.Core.AbstractTransport;
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.gui_helpers.OnSwipeTouchListener;
 import vit01.idecmobile.notify.workerJob;
+import vit01.idecmobile.prefs.Config;
 
 public class MainActivity extends AppCompatActivity {
     private static final int ADD_NODE = 100000;

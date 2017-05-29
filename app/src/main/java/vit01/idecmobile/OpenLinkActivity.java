@@ -26,10 +26,10 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.prefs.Config;
 
 public class OpenLinkActivity extends AppCompatActivity {
 
