@@ -22,6 +22,7 @@ package vit01.idecmobile;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +45,7 @@ import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.notify.AlarmService;
 import vit01.idecmobile.prefs.Config;
+import vit01.idecmobile.prefs.FakeSharedPref;
 
 public class CommonSettings extends AppCompatActivity {
     CheckBox defaultEditor, useProxy, oldQuote, notifyEnabled,
@@ -224,5 +226,10 @@ public class CommonSettings extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public SharedPreferences getSharedPreferences(String filename, int id) {
+        return new FakeSharedPref();
     }
 }
