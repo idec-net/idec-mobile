@@ -21,6 +21,7 @@
         <item name="PSColor">#bb0000</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="AppTheme._Dark" parent="Theme.AppCompat.NoActionBar">
@@ -69,6 +70,7 @@
         <item name="PSColor">#d47cbd</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="AppTheme.Dark" parent="AppTheme._Dark" />
@@ -110,6 +112,7 @@
         <item name="PSColor">#42ACD3</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="WhiteActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
@@ -157,6 +160,7 @@
         <item name="listItemBGColor">?android:attr/itemBackground</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
         <item name="quoteColor">#6699cc</item>
         <item name="commentColor">#999999</item>

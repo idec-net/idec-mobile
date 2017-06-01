@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/settings_category_interface">
+
+        <ListPreference
+                android:key="select_theme"
+                android:title="@string/settings_select_theme"
+                android:summary="@string/settings_select_theme_summary"
+                android:entries="@array/themes_names"
+                android:entryValues="@array/themes"
+                android:dialogTitle="@string/settings_select_theme" />
+
+        <SwitchPreference
+                android:key="editor"
+                android:title="@string/settings_editor"
+                android:summary="@string/settings_editor_summary" />
+
+        <SwitchPreference
+            android:key="citation"
+            android:title="@string/settings_citation"
+            android:summary="@string/settings_citation_summary" />
+
+        <SwitchPreference
+            android:key="pull_to_refresh"
+            android:title="@string/settings_pull_to_refresh"
+            android:summary="@string/settings_pull_to_refresh_summary" />
+
+        <SwitchPreference
+            android:key="hide_toolbar"
+            android:title="@string/settings_hide_toolbar"
+            android:summary="@string/settings_hide_toolbar_summary" />
+
+        <SwitchPreference
+            android:key="open_last_read_message"
+            android:title="@string/settings_open_last_read_message"
+            android:summary="@string/settings_open_last_read_message_summary" />
+
+        <SwitchPreference
+            android:key="open_unread_after_fetch"
+            android:title="@string/settings_open_unread_after_fetch"
+            android:summary="@string/settings_open_unread_after_fetch_summary" />
+
+        <SwitchPreference
+            android:key="sort_by_date"
+            android:title="@string/settings_sort_by_date"
+            android:summary="@string/settings_sort_by_date_summary" />
+
+        <EditTextPreference
+            android:key="carbon_names"
+            android:title="@string/settings_carbon_names"
+            android:summary="@string/settings_carbon_names_summary"
+            android:dialogTitle="@string/settings_carbon_names" />
+
+        <EditTextPreference
+            android:key="carbon_size"
+            android:title="@string/settings_carbon_size"
+            android:summary="@string/settings_carbon_size_summary"
+            android:dialogTitle="@string/settings_carbon_size" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_category_notifications">
+
+        <SwitchPreference
+            android:key="notifications"
+            android:title="@string/settings_notifications"
+            android:summary="@string/settings_notifications_summary" />
+
+        <EditTextPreference
+            android:key="notification_freq"
+            android:dependency="notifications"
+            android:title="@string/settings_notification_freq"
+            android:summary="@string/settings_notification_freq_summary"
+            android:dialogTitle="@string/settings_notification_freq" />
+
+        <SwitchPreference
+            android:key="notification_vibrate"
+            android:dependency="notifications"
+            android:title="@string/settings_notification_vibrate"
+            android:summary="@string/settings_notification_vibrate_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_category_network">
+
+        <EditTextPreference
+            android:key="network_timeout"
+            android:title="@string/settings_network_timeout"
+            android:summary="@string/settings_network_timeout_summary"
+            android:dialogTitle="@string/settings_network_timeout" />
+
+        <EditTextPreference
+            android:key="messages_per_request"
+            android:title="@string/settings_messages_per_request"
+            android:summary="@string/settings_messages_per_request_summary"
+            android:dialogTitle="@string/settings_messages_per_request" />
+
+        <SwitchPreference
+            android:key="proxy"
+            android:title="@string/settings_proxy"
+            android:summary="@string/settings_proxy_summary" />
+
+        <EditTextPreference
+            android:key="proxy_address"
+            android:dependency="proxy"
+            android:title="@string/settings_proxy_address"
+            android:summary="@string/settings_proxy_address_summary"
+            android:dialogTitle="@string/settings_proxy_address" />
+
+        <SwitchPreference
+            android:key="tor"
+            android:dependency="proxy"
+            android:title="@string/settings_tor"
+            android:summary="@string/settings_tor_summary" />
+        
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -44,4 +44,46 @@
         4. <b>Хэши черновиков</b>, чтобы не отправлять случайно отцитированные или пустые сообщения.\n\n
         5. Также клиент умеет <b>экспортировать</b> в файлы конфиг и сообщения из базы данных (+ импортировать!).
     </string>
+
+    <string name="settings_category_interface">Интерфейс</string>
+    <string name="settings_select_theme">Выбор темы</string>
+    <string name="settings_select_theme_summary">Изменить тему оформления приложения</string>
+    <string name="settings_select_theme_message_restart_app">Пожалуйста, перезапустите приложение</string>
+    <string name="settings_editor">Встроенный редактор сообщений</string>
+    <string name="settings_editor_summary">Использовать встроенный редактор для написания сообщений</string>
+    <string name="settings_citation">Упрощенное цитирование</string>
+    <string name="settings_citation_summary">Не включать имя пользователя в цитату</string>
+    <string name="settings_pull_to_refresh">Потянуть для обновления</string>
+    <string name="settings_pull_to_refresh_summary">Скачивать новые сообщения потянув вниз на главном экране</string>
+    <string name="settings_hide_toolbar">Скрывать верхнюю панель</string>
+    <string name="settings_hide_toolbar_summary">Скрывать панель при прокрутке сообщения</string>
+    <string name="settings_open_last_read_message">Открывать последнее прочитанное сообщение</string>
+    <string name="settings_open_last_read_message_summary">При переходе в эху открывать последнее прочитанное сообщение вместо показа списка сообщений</string>
+    <string name="settings_open_unread_after_fetch">Показывать непрочитанные сообщения</string>
+    <string name="settings_open_unread_after_fetch_summary">Показать непрочитанные сообщения сразу после фетча</string>
+    <string name="settings_sort_by_date">Сортировать сообщения по дате написания</string>
+    <string name="settings_sort_by_date_summary">Иначе сортируются по дате получения</string>
+    <string name="settings_carbon_names">Имена пользователей для карбонки</string>
+    <string name="settings_carbon_names_summary">Показывать в карбонке сообщения адресованные указанным пользователям (имена разделяются двоеточием)</string>
+    <string name="settings_carbon_size">Количество сообщений в карбонке</string>
+    <string name="settings_carbon_size_summary">Показывать не более N последних сообщений в карбонке</string>
+    <string name="settings_category_notifications">Уведомления</string>
+    <string name="settings_notifications">Включить уведомления</string>
+    <string name="settings_notifications_summary">Показывать уведомление о новых сообщениях</string>
+    <string name="settings_notification_freq">Периодичность проверки</string>
+    <string name="settings_notification_freq_summary">Проверять новые сообщения каждые N минут</string>
+    <string name="settings_notification_vibrate">Вибрация</string>
+    <string name="settings_notification_vibrate_summary">Вибрировать, когда доступны новые сообщения</string>
+    <string name="settings_category_network">Сеть</string>
+    <string name="settings_network_timeout">Таймаут сетевого соединения</string>
+    <string name="settings_network_timeout_summary">Максимальное время ожидания сетевого соединения (в секундах)</string>
+    <string name="settings_messages_per_request">Скачивать сообщений за один запрос</string>
+    <string name="settings_messages_per_request_summary">Максимальное количество сообщений скачиваемых за один запрос. При плохом интернете можно уменьшить это значение</string>
+    <string name="settings_proxy">Прокси</string>
+    <string name="settings_proxy_summary">Подключаться через прокси-сервер</string>
+    <string name="settings_proxy_address">Настройки прокси-сервера</string>
+    <string name="settings_proxy_address_summary">Формат записи: user:pass@host:port. Прокси Orbot обычно запущен на порту 8118, i2p - 4444</string>
+    <string name="settings_tor">Интеграция с Tor</string>
+    <string name="settings_tor_summary">Автоматически запускать Orbot</string>
+
 </resources>

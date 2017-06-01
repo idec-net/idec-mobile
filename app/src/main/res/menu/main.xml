@@ -42,4 +42,10 @@
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_settings2"
+        android:orderInCategory="110"
+        android:title="Новые настройки"
+        app:showAsAction="never" />
 </menu>

@@ -524,6 +524,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 startActivity(new Intent(this, CommonSettings.class));
                 return true;
+            
+            case R.id.action_settings2:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+
             case R.id.action_fetch: {
                 Intent intent = new Intent(this, DebugActivity.class);
                 intent.putExtra("task", "fetch");
