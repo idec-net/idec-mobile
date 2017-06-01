@@ -29,8 +29,8 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.prefs.Config;
 
 public class HelpActivity extends AppCompatActivity {
 

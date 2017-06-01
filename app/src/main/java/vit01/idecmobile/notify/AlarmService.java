@@ -27,8 +27,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.prefs.Config;
 
 public class AlarmService extends Service {
     AlarmManager alarmManager;

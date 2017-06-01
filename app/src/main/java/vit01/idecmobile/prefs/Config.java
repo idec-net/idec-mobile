@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile.Core;
+package vit01.idecmobile.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -28,17 +28,22 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.R;
 
 public class Config {
     public static GlobalConfig values;
+    public static GlobalConfig default_values;
     public static String filename = "config.obj";
     public static int appTheme = R.style.AppTheme;
     public static int currentSelectedStation;
     public static SharedPreferences sharedPref;
     public static SharedPreferences.Editor prefEditor;
+    public static Context lastContext = null;
 
     public static void loadConfig(Context context, String filename) {
+        lastContext = context;
         try {
             FileInputStream is = context.openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(is);
@@ -52,6 +57,7 @@ public class Config {
 
             values = new GlobalConfig();
         }
+        default_values = new GlobalConfig();
         select_gui_theme();
     }
 
@@ -60,6 +66,8 @@ public class Config {
     }
 
     public static void writeConfig(Context context) {
+        if (context == null) context = lastContext;
+
         try {
             FileOutputStream os = context.openFileOutput(filename, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);

@@ -49,9 +49,9 @@ import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;
+import vit01.idecmobile.prefs.Config;
 
 public class ListEditActivity extends AppCompatActivity {
     ArrayList<String> contents;

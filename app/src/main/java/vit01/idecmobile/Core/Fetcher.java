@@ -36,6 +36,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import vit01.idecmobile.prefs.Config;
+
 public class Fetcher {
     AbstractTransport transport;
     ArrayList<String> emptyList;

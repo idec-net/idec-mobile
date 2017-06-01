@@ -38,7 +38,6 @@ import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Blacklist;
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.GlobalTransport;
@@ -46,6 +45,7 @@ import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.prefs.Config;
 
 public class DebugActivity extends AppCompatActivity {
     ScrollView debugLayout;

@@ -44,12 +44,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.EchoReadingPosition;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.prefs.Config;
 
 public class MessageSlideActivity extends AppCompatActivity {
     ActionBar actionBar;

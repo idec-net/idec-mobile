@@ -29,8 +29,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.prefs.Config;
 
 public class SearchActivity extends AppCompatActivity {
     @Override
