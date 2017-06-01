@@ -21,81 +21,39 @@ package vit01.idecmobile;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import vit01.idecmobile.Core.Config;
+import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
+
+import vit01.idecmobile.prefs.Config;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
-
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
-        if (key.equals("select_theme")) {
-            Toast.makeText(getActivity(), R.string.settings_select_theme_message_restart_app, Toast.LENGTH_SHORT).show();
-        }
-        if (key.equals("editor")) {
-            Config.values.defaultEditor = sharedPreferences.getBoolean(key, true);
-        }
-        if (key.equals("citation")) {
-            Config.values.oldQuote = sharedPreferences.getBoolean(key, false);
-        }
-        if (key.equals("pull_to_refresh")) {
-            Config.values.swipeToFetch = sharedPreferences.getBoolean(key, true);
-        }
-        if (key.equals("hide_toolbar")) {
-            Config.values.hide_toolbar_when_scrolling = sharedPreferences.getBoolean(key, false);
-        }
-        if (key.equals("open_last_read_message")) {
-            Config.values.disableMsglist = sharedPreferences.getBoolean(key, true);
-        }
-        if (key.equals("open_unread_after_fetch")) {
-            Config.values.openUnreadAfterFetch = sharedPreferences.getBoolean(key, false);
-        }
-        if (key.equals("sort_by_date")) {
-            Config.values.sortByDate = sharedPreferences.getBoolean(key, true);
-        }
-        if (key.equals("carbon_names")) {
-            Config.values.carbon_to = sharedPreferences.getString(key, "All");
-        }
-        if (key.equals("carbon_size")) {
-            Config.values.carbon_limit = sharedPreferences.getInt(key, 50);
-        }
-        if (key.equals("notifications")) {
-            Config.values.notificationsEnabled = sharedPreferences.getBoolean(key, false);
-        }
-        if (key.equals("notification_freq")) {
-            Config.values.notifyFireDuration = sharedPreferences.getInt(key, 15);
-        }
-        if (key.equals("notification_vibrate")) {
-            Config.values.notificationsVibrate = sharedPreferences.getBoolean(key, true);
-        }
-        if (key.equals("network_timeout")) {
-            int timeout;
-            try {
-                timeout = Integer.parseInt(sharedPreferences.getString(key, "20"));
-            } catch (NumberFormatException e) {
-                Toast.makeText(getActivity(), "Вы ввели некорректное число", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Config.values.connectionTimeout = timeout;  // проверку на отрицательное число и ноль следует делать в фильтре
-        }
-        if (key.equals("messages_per_request")) {
-            Config.values.oneRequestLimit = sharedPreferences.getInt(key, 20);
-        }
-        if (key.equals("proxy")) {
-            Config.values.useProxy = sharedPreferences.getBoolean(key, false);
-        }
-        if (key.equals("proxy_address")) {
-            Config.values.proxyAddress = sharedPreferences.getString(key, "127.0.0.1:8118");
-        }
-        if (key.equals("tor")) {
-            Config.values.useTor = sharedPreferences.getBoolean(key, false);
+        // Никогда не запускать здесь sharedPreferences.edit(), иначе будет
+        // цикл с бесконечной рекурсией!
+
+        switch (key) {
+            case "application_theme":
+                Toast.makeText(getActivity(), R.string.settings_select_theme_message_restart_app, Toast.LENGTH_SHORT).show();
+                break;
+            case "connection_timeout":
+                int timeout = Config.values.connectionTimeout;
+
+                if (timeout <= 0) {
+                    Toast.makeText(getActivity(), "Вы ввели некорректное число", Toast.LENGTH_SHORT).show();
+                    Config.values.connectionTimeout = Config.default_values.connectionTimeout;
+                    // проверку на отрицательное число и ноль следует делать в фильтре
+                }
+
+                break;
         }
     }
 
@@ -109,7 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
+        SharedPreferences sharedPref = getPreferenceScreen().getSharedPreferences();
+        sharedPref.unregisterOnSharedPreferenceChangeListener(this);
     }
 }

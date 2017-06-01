@@ -27,7 +27,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import vit01.idecmobile.Core.SimpleFunctions;
+
 public class FakeSharedPref implements SharedPreferences {
+    SharedPreferences.OnSharedPreferenceChangeListener listener = null;
+
     @Nullable
     @Override
     public String getString(String s, String s1) {
@@ -97,12 +101,12 @@ public class FakeSharedPref implements SharedPreferences {
 
     @Override
     public void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
-
+        listener = onSharedPreferenceChangeListener;
     }
 
     @Override
     public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
-
+        listener = null;
     }
 
     @Override
@@ -146,6 +150,7 @@ public class FakeSharedPref implements SharedPreferences {
                     Config.values.applicationTheme = s1;
                     break;
             }
+            if (listener != null) listener.onSharedPreferenceChanged(FakeSharedPref.this, s);
             return this;
         }
 
@@ -169,6 +174,7 @@ public class FakeSharedPref implements SharedPreferences {
                     break;
             }
 
+            if (listener != null) listener.onSharedPreferenceChanged(FakeSharedPref.this, s);
             return this;
         }
 
@@ -213,6 +219,7 @@ public class FakeSharedPref implements SharedPreferences {
                     break;
             }
 
+            if (listener != null) listener.onSharedPreferenceChanged(FakeSharedPref.this, s);
             return this;
         }
 
@@ -243,6 +250,7 @@ public class FakeSharedPref implements SharedPreferences {
 
         @Override
         public boolean commit() {
+            SimpleFunctions.debug("Write config...");
             Config.writeConfig(null);
             return true;
         }

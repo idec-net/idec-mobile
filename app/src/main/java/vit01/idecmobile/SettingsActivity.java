@@ -19,19 +19,20 @@
 
 package vit01.idecmobile;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import vit01.idecmobile.Core.Config;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.prefs.Config;
+import vit01.idecmobile.prefs.FakeSharedPref;
 
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Config.loadConfig(this);
         setTheme(Config.appTheme);
 
         super.onCreate(savedInstanceState);
@@ -55,5 +56,10 @@ public class SettingsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public SharedPreferences getSharedPreferences(String filename, int id) {
+        return new FakeSharedPref();
     }
 }

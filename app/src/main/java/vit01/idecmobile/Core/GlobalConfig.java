@@ -17,12 +17,10 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile.prefs;
+package vit01.idecmobile.Core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import vit01.idecmobile.Core.Station;
 
 public class GlobalConfig implements Serializable {
     static final long serialVersionUID = 1L;
@@ -53,7 +51,7 @@ public class GlobalConfig implements Serializable {
             proxyAddress = "127.0.0.1:8118", // аутентификация для http-прокси поддерживается
             applicationTheme = "default"; // тема оформления
 
-    GlobalConfig() {
+    public GlobalConfig() {
         offlineEchoareas.add("lenta.rss");
         offlineEchoareas.add("edgar.allan.poe");
 
