@@ -22,11 +22,15 @@ package vit01.idecmobile;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.Preference;
 import android.widget.Toast;
 
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 
+import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;
+import vit01.idecmobile.prefs.NumberPickerFragment;
+import vit01.idecmobile.prefs.NumberPickerPreference;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     @Override
@@ -55,6 +59,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
                 break;
         }
+    }
+
+    @Override
+    public void onDisplayPreferenceDialog(Preference preference) {
+        NumberPickerFragment fragment;
+        if (preference instanceof NumberPickerPreference) {
+            SimpleFunctions.debug("displaying");
+            fragment = NumberPickerFragment.newInstance((NumberPickerPreference) preference);
+            fragment.setTargetFragment(this, 0);
+            fragment.show(getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
+        } else super.onDisplayPreferenceDialog(preference);
     }
 
     @Override

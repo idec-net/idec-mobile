@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:preference="http://schemas.android.com/tools">
 
-    <PreferenceCategory
-        android:title="@string/settings_category_interface">
+    <PreferenceCategory android:title="@string/settings_category_interface">
 
         <ListPreference
             android:dialogTitle="@string/settings_select_theme"
-                android:entries="@array/themes_names"
-                android:entryValues="@array/themes"
+            android:entries="@array/themes_names"
+            android:entryValues="@array/themes"
             android:key="application_theme"
             android:summary="@string/settings_select_theme_summary"
             android:title="@string/settings_select_theme" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:key="default_editor"
             android:summary="@string/settings_editor_summary"
             android:title="@string/settings_editor" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:key="old_quote"
             android:summary="@string/settings_citation_summary"
             android:title="@string/settings_citation" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:key="swipe_to_fetch"
             android:summary="@string/settings_pull_to_refresh_summary"
             android:title="@string/settings_pull_to_refresh" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:key="hide_toolbar_when_scrolling"
             android:summary="@string/settings_hide_toolbar_summary"
             android:title="@string/settings_hide_toolbar" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:key="disable_msglist"
             android:summary="@string/settings_open_last_read_message_summary"
             android:title="@string/settings_open_last_read_message" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:key="open_unread_after_fetch"
             android:summary="@string/settings_open_unread_after_fetch_summary"
             android:title="@string/settings_open_unread_after_fetch" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:key="sort_by_date"
             android:summary="@string/settings_sort_by_date_summary"
             android:title="@string/settings_sort_by_date" />
@@ -53,32 +53,39 @@
             android:summary="@string/settings_carbon_names_summary"
             android:title="@string/settings_carbon_names" />
 
-        <EditTextPreference
+        <vit01.idecmobile.prefs.NumberPickerPreference
+            android:defaultValue="50"
             android:dialogTitle="@string/settings_carbon_size"
             android:inputType="numberDecimal"
             android:key="carbon_limit"
             android:summary="@string/settings_carbon_size_summary"
-            android:title="@string/settings_carbon_size" />
+            android:title="@string/settings_carbon_size"
+            preference:maxValue="5000"
+            preference:minValue="1"
+            preference:wrapSelectorWheel="false" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/settings_category_notifications">
+    <PreferenceCategory android:title="@string/settings_category_notifications">
 
         <SwitchPreference
             android:key="notifications_enabled"
             android:summary="@string/settings_notifications_summary"
             android:title="@string/settings_notifications" />
 
-        <EditTextPreference
+        <vit01.idecmobile.prefs.NumberPickerPreference
+            android:defaultValue="15"
             android:dependency="notifications_enabled"
             android:dialogTitle="@string/settings_notification_freq"
             android:inputType="numberDecimal"
             android:key="notify_fire_duration"
             android:summary="@string/settings_notification_freq_summary"
-            android:title="@string/settings_notification_freq" />
+            android:title="@string/settings_notification_freq"
+            preference:maxValue="10080"
+            preference:minValue="1"
+            preference:wrapSelectorWheel="false" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:dependency="notifications_enabled"
             android:key="notifications_vibrate"
             android:summary="@string/settings_notification_vibrate_summary"
@@ -86,22 +93,29 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/settings_category_network">
+    <PreferenceCategory android:title="@string/settings_category_network">
 
-        <EditTextPreference
+        <vit01.idecmobile.prefs.NumberPickerPreference
+            android:defaultValue="20"
             android:dialogTitle="@string/settings_network_timeout"
             android:inputType="numberDecimal"
             android:key="connection_timeout"
             android:summary="@string/settings_network_timeout_summary"
-            android:title="@string/settings_network_timeout" />
+            android:title="@string/settings_network_timeout"
+            preference:maxValue="180"
+            preference:minValue="1"
+            preference:wrapSelectorWheel="false" />
 
-        <EditTextPreference
+        <vit01.idecmobile.prefs.NumberPickerPreference
+            android:defaultValue="20"
             android:dialogTitle="@string/settings_messages_per_request"
             android:inputType="numberDecimal"
             android:key="one_request_limit"
             android:summary="@string/settings_messages_per_request_summary"
-            android:title="@string/settings_messages_per_request" />
+            android:title="@string/settings_messages_per_request"
+            preference:maxValue="15000"
+            preference:minValue="1"
+            preference:wrapSelectorWheel="false" />
 
         <SwitchPreference
             android:key="use_proxy"
@@ -115,12 +129,12 @@
             android:summary="@string/settings_proxy_address_summary"
             android:title="@string/settings_proxy_address" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:dependency="use_proxy"
             android:key="use_tor"
             android:summary="@string/settings_tor_summary"
             android:title="@string/settings_tor" />
-        
+
     </PreferenceCategory>
 
 </PreferenceScreen>
