@@ -250,19 +250,20 @@ public class FakeSharedPref implements SharedPreferences {
 
         @Override
         public boolean commit() {
-            SimpleFunctions.debug("Write config...");
-            Config.writeConfig(null);
-            return true;
-        }
+            SimpleFunctions.debug("Write config from preferences...");
 
-        @Override
-        public void apply() {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    commit();
+                    Config.writeConfig(null);
                 }
             }).start();
+
+            return true;
         }
+
+        // Этот метод нихрена не делает, это так и надо!
+        @Override
+        public void apply() {}
     }
 }

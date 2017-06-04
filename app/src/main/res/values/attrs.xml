@@ -8,10 +8,4 @@
     <attr name="quoteColor" />
     <attr name="commentColor" />
     <attr name="PSColor" />
-
-    <declare-styleable name="NumberPickerPreference">
-        <attr name="minValue" format="integer|reference" />
-        <attr name="maxValue" format="integer|reference" />
-        <attr name="wrapSelectorWheel" format="boolean" />
-    </declare-styleable>
 </resources>

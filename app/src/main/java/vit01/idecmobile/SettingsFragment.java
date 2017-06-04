@@ -19,23 +19,92 @@
 
 package vit01.idecmobile;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
-import android.widget.Toast;
+import android.view.Gravity;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 
-import vit01.idecmobile.Core.SimpleFunctions;
+import info.guardianproject.netcipher.proxy.OrbotHelper;
+import vit01.idecmobile.Core.Network;
+import vit01.idecmobile.notify.AlarmService;
 import vit01.idecmobile.prefs.Config;
-import vit01.idecmobile.prefs.NumberPickerFragment;
-import vit01.idecmobile.prefs.NumberPickerPreference;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public Preference.OnPreferenceClickListener integerListener = new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(final Preference preference) {
+            int maxValue;
+
+            switch (preference.getKey()) {
+                case "connection_timeout":
+                    maxValue = 180;
+                    break;
+                case "one_request_limit":
+                    maxValue = 15000;
+                    break;
+                case "notify_fire_duration":
+                    maxValue = 10080;
+                    break;
+                case "carbon_limit":
+                    maxValue = 5000;
+                    break;
+                default:
+                    maxValue = 42;
+                    break;
+            }
+
+            int value = preference.getSharedPreferences().getInt(preference.getKey(), 1);
+
+            final NumberPicker picker = new NumberPicker(getContext());
+            picker.setMinValue(1);
+            picker.setMaxValue(maxValue);
+            picker.setValue(value);
+            picker.setWrapSelectorWheel(false);
+            picker.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            final LinearLayout linearLayout = new LinearLayout(getActivity());
+            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            linearLayout.setGravity(Gravity.CENTER);
+            linearLayout.addView(picker);
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle(preference.getTitle())
+                    .setView(linearLayout)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            picker.clearFocus();
+                            int newValue = picker.getValue();
+                            SharedPreferences.Editor editor = preference.getSharedPreferences().edit();
+                            editor.putInt(preference.getKey(), newValue);
+                            editor.apply();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+
+            return true;
+        }
+    };
+
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
+
+        findPreference("connection_timeout").setOnPreferenceClickListener(integerListener);
+        findPreference("carbon_limit").setOnPreferenceClickListener(integerListener);
+        findPreference("notify_fire_duration").setOnPreferenceClickListener(integerListener);
+        findPreference("one_request_limit").setOnPreferenceClickListener(integerListener);
     }
 
     @Override
@@ -44,32 +113,43 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         // Никогда не запускать здесь sharedPreferences.edit(), иначе будет
         // цикл с бесконечной рекурсией!
 
+        Activity mContext = getActivity();
+
         switch (key) {
             case "application_theme":
-                Toast.makeText(getActivity(), R.string.settings_select_theme_message_restart_app, Toast.LENGTH_SHORT).show();
+                Config.select_gui_theme();
+                Intent intent = mContext.getIntent();
+                mContext.finish();
+                startActivity(intent);
                 break;
-            case "connection_timeout":
-                int timeout = Config.values.connectionTimeout;
+            case "use_proxy":
+                Network.proxy = null;
+                break;
+            case "proxy_address":
+                Network.proxy = null;
+                break;
+            case "use_tor":
+                boolean useTor = sharedPreferences.getBoolean(key, Config.default_values.useTor);
 
-                if (timeout <= 0) {
-                    Toast.makeText(getActivity(), "Вы ввели некорректное число", Toast.LENGTH_SHORT).show();
-                    Config.values.connectionTimeout = Config.default_values.connectionTimeout;
-                    // проверку на отрицательное число и ноль следует делать в фильтре
+                if (useTor) {
+                    Context context = mContext.getApplicationContext();
+                    if (!OrbotHelper.isOrbotInstalled(context)) {
+                        startActivity(OrbotHelper.getOrbotInstallIntent(context));
+                    } else if (!OrbotHelper.isOrbotRunning(context)) {
+                        startActivity(OrbotHelper.getShowOrbotStartIntent());
+                    }
                 }
-
+                break;
+            case "notifications_enabled":
+                mContext.startService(new Intent(mContext, AlarmService.class));
+                break;
+            case "notify_fire_duration":
+                mContext.startService(new Intent(mContext, AlarmService.class));
+                break;
+            case "notifications_vibrate":
+                mContext.startService(new Intent(mContext, AlarmService.class));
                 break;
         }
-    }
-
-    @Override
-    public void onDisplayPreferenceDialog(Preference preference) {
-        NumberPickerFragment fragment;
-        if (preference instanceof NumberPickerPreference) {
-            SimpleFunctions.debug("displaying");
-            fragment = NumberPickerFragment.newInstance((NumberPickerPreference) preference);
-            fragment.setTargetFragment(this, 0);
-            fragment.show(getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
-        } else super.onDisplayPreferenceDialog(preference);
     }
 
     @Override
@@ -84,5 +164,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         super.onPause();
         SharedPreferences sharedPref = getPreferenceScreen().getSharedPreferences();
         sharedPref.unregisterOnSharedPreferenceChangeListener(this);
+        Config.writeConfig(getActivity()); // Не убирать! Здесь сохраняем конфиг на самом деле!
     }
 }

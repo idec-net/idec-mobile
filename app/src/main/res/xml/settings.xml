@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:preference="http://schemas.android.com/tools">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/settings_category_interface">
 
@@ -48,21 +47,16 @@
             android:title="@string/settings_sort_by_date" />
 
         <EditTextPreference
+            android:defaultValue="All"
             android:dialogTitle="@string/settings_carbon_names"
             android:key="carbon_to"
             android:summary="@string/settings_carbon_names_summary"
             android:title="@string/settings_carbon_names" />
 
-        <vit01.idecmobile.prefs.NumberPickerPreference
-            android:defaultValue="50"
-            android:dialogTitle="@string/settings_carbon_size"
-            android:inputType="numberDecimal"
+        <Preference
             android:key="carbon_limit"
             android:summary="@string/settings_carbon_size_summary"
-            android:title="@string/settings_carbon_size"
-            preference:maxValue="5000"
-            preference:minValue="1"
-            preference:wrapSelectorWheel="false" />
+            android:title="@string/settings_carbon_size" />
 
     </PreferenceCategory>
 
@@ -73,17 +67,11 @@
             android:summary="@string/settings_notifications_summary"
             android:title="@string/settings_notifications" />
 
-        <vit01.idecmobile.prefs.NumberPickerPreference
-            android:defaultValue="15"
+        <Preference
             android:dependency="notifications_enabled"
-            android:dialogTitle="@string/settings_notification_freq"
-            android:inputType="numberDecimal"
             android:key="notify_fire_duration"
             android:summary="@string/settings_notification_freq_summary"
-            android:title="@string/settings_notification_freq"
-            preference:maxValue="10080"
-            preference:minValue="1"
-            preference:wrapSelectorWheel="false" />
+            android:title="@string/settings_notification_freq" />
 
         <CheckBoxPreference
             android:dependency="notifications_enabled"
@@ -95,27 +83,15 @@
 
     <PreferenceCategory android:title="@string/settings_category_network">
 
-        <vit01.idecmobile.prefs.NumberPickerPreference
-            android:defaultValue="20"
-            android:dialogTitle="@string/settings_network_timeout"
-            android:inputType="numberDecimal"
+        <Preference
             android:key="connection_timeout"
             android:summary="@string/settings_network_timeout_summary"
-            android:title="@string/settings_network_timeout"
-            preference:maxValue="180"
-            preference:minValue="1"
-            preference:wrapSelectorWheel="false" />
+            android:title="@string/settings_network_timeout" />
 
-        <vit01.idecmobile.prefs.NumberPickerPreference
-            android:defaultValue="20"
-            android:dialogTitle="@string/settings_messages_per_request"
-            android:inputType="numberDecimal"
+        <Preference
             android:key="one_request_limit"
             android:summary="@string/settings_messages_per_request_summary"
-            android:title="@string/settings_messages_per_request"
-            preference:maxValue="15000"
-            preference:minValue="1"
-            preference:wrapSelectorWheel="false" />
+            android:title="@string/settings_messages_per_request" />
 
         <SwitchPreference
             android:key="use_proxy"

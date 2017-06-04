@@ -96,10 +96,13 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     StringHolder unreadHolder, draftsHolder, favoritesHolder;
 
+    int currentTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Config.loadConfig(this);
         setTheme(Config.appTheme);
+        currentTheme = Config.appTheme;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -255,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(MainActivity.this, AdditionalActivity.class));
                                 break;
                             case 9:
-                                startActivity(new Intent(MainActivity.this, CommonSettings.class));
+                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                                 break;
                             case 10:
                                 startActivity(new Intent(MainActivity.this, HelpActivity.class));
@@ -354,6 +357,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (Config.appTheme != currentTheme) {
+            finish(); // Если поменяли тему в настройках, перезапускаемся
+            startActivity(getIntent());
+            return;
+        }
+
         updateStationsList();
         Config.getCurrentStationPosition(this);
         updateEcholist();
@@ -522,10 +531,6 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_settings:
-                startActivity(new Intent(this, CommonSettings.class));
-                return true;
-            
-            case R.id.action_settings2:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
 
