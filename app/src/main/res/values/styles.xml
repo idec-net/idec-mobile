@@ -7,9 +7,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/md_black_1000</item>
-        <item name="android:textColorSecondary">@color/md_grey_600</item>
+        <item name="textColorPrimaryReal">@color/md_black_1000</item>
+        <item name="textColorSecondaryReal">@color/md_grey_600</item>
+        <item name="textColorDisabled">@color/md_grey_500</item>
         <item name="divider">@color/md_grey_200</item>
+        <item name="android:textColorPrimary">@color/primary_text_color_selector</item>
+        <item name="android:textColorSecondary">@color/secondary_text_color_selector</item>
         <item name="listItemBGColor">#FFFFFF
         </item> <!-- это нужно для некоторых элементов списков -->
         <item name="menuIconColor">#FFFFFF</item> <!-- ставить обязательно -->
@@ -21,7 +24,7 @@
         <item name="PSColor">#bb0000</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/AppTheme.Preferences</item>
     </style>
 
     <style name="AppTheme._Dark" parent="Theme.AppCompat.NoActionBar">
@@ -58,11 +61,14 @@
 
         <item name="android:colorForeground">#eafffd</item>
         <item name="android:editTextColor">#eafffd</item>
-        <item name="android:textColor">#eafffd</item>
-        <item name="android:textColorPrimary">#eafffd</item>
+        <item name="android:textColor">@color/primary_text_color_selector</item>
+        <item name="textColorPrimaryReal">#eafffd</item>
         <item name="android:textColorPrimaryInverse">@android:color/primary_text_light</item>
-        <item name="android:textColorSecondary">#C7D0FF</item>
+        <item name="textColorSecondaryReal">#C7D0FF</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
+        <item name="textColorDisabled">#bbc7d0ff</item>
+        <item name="android:textColorPrimary">@color/primary_text_color_selector</item>
+        <item name="android:textColorSecondary">@color/secondary_text_color_selector</item>
         <item name="listItemBGColor">?android:attr/itemBackground</item>
 
         <item name="quoteColor">#81FADC</item>
@@ -70,7 +76,7 @@
         <item name="PSColor">#d47cbd</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/AppTheme.Preferences</item>
     </style>
 
     <style name="AppTheme.Dark" parent="AppTheme._Dark" />
@@ -98,12 +104,15 @@
         <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
         <item name="material_drawer_header_text_shadow">#FFFFFF</item>
 
-        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:textColor">@color/primary_text_color_selector</item>
         <item name="android:colorForeground">@color/md_grey_600</item>
         <item name="android:editTextColor">@color/md_grey_900</item>
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:textColorSecondary">#7CA99F</item>
+        <item name="textColorPrimaryReal">#000000</item>
+        <item name="textColorSecondaryReal">#7CA99F</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_dark</item>
+        <item name="textColorDisabled">#c87ca99f</item>
+        <item name="android:textColorPrimary">@color/primary_text_color_selector</item>
+        <item name="android:textColorSecondary">@color/secondary_text_color_selector</item>
         <item name="listItemBGColor">?android:attr/itemBackground</item>
         <item name="android:theme">@style/WhiteActionBar</item>
 
@@ -112,12 +121,12 @@
         <item name="PSColor">#42ACD3</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/AppTheme.Preferences</item>
     </style>
 
     <style name="WhiteActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">?attr/menuIconColor</item>
-        <item name="android:textColorSecondary">#7CA99F</item>
+        <item name="android:textColorSecondary">@color/secondary_text_color_selector</item>
         <item name="android:textColorHint">?attr/quoteColor</item>
     </style>
 
@@ -152,15 +161,18 @@
 
         <item name="android:colorForeground">#eafffd</item>
         <item name="android:editTextColor">#eafffd</item>
-        <item name="android:textColor">#eafffd</item>
-        <item name="android:textColorPrimary">#eafffd</item>
+        <item name="android:textColor">@color/primary_text_color_selector</item>
+        <item name="textColorPrimaryReal">#eafffd</item>
         <item name="android:textColorPrimaryInverse">@android:color/primary_text_light</item>
-        <item name="android:textColorSecondary">#cccccc</item>
+        <item name="textColorSecondaryReal">#cccccc</item>
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
+        <item name="textColorDisabled">#bbcccccc</item>
+        <item name="android:textColorPrimary">@color/primary_text_color_selector</item>
+        <item name="android:textColorSecondary">@color/secondary_text_color_selector</item>
         <item name="listItemBGColor">?android:attr/itemBackground</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/AppTheme.Preferences</item>
 
         <item name="quoteColor">#6699cc</item>
         <item name="commentColor">#999999</item>
@@ -197,6 +209,19 @@
         <item name="android:textSize">17sp</item>
         <item name="android:paddingTop">10sp</item>
         <item name="android:textColor">?attr/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.Preferences" parent="PreferenceThemeOverlay.v14.Material.Fix">
+        <item name="preferenceInformationStyle">@style/AppTheme.PreferenceInfoStyle</item>
+        <item name="preferenceStyle">@style/AppTheme.PreferenceStyle</item>
+    </style>
+
+    <style name="AppTheme.PreferenceStyle" parent="Preference.Material">
+        <item name="android:shouldDisableView">true</item>
+    </style>
+
+    <style name="AppTheme.PreferenceInfoStyle" parent="Preference.Information.Material">
+        <item name="android:shouldDisableView">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
