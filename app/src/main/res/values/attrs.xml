@@ -4,8 +4,6 @@
     <attr name="menuIconColor" />
     <attr name="listItemBGColor" />
     <attr name="material_drawer_header_text_shadow" />
-    <attr name="textColorPrimaryReal" />
-    <attr name="textColorSecondaryReal" />
     <attr name="textColorDisabled" />
 
     <attr name="quoteColor" />
