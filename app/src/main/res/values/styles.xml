@@ -122,9 +122,9 @@
     </style>
 
     <style name="WhiteActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:textColorPrimary">?attr/menuIconColor</item>
-
         <item name="android:textColorHint">?attr/quoteColor</item>
+        <item name="android:textColorPrimary">?attr/menuIconColor</item>
+        <item name="android:textColorSecondary">#7CA99F</item>
     </style>
 
     <style name="AppTheme.TheWhite" parent="AppTheme._TheWhite" />
