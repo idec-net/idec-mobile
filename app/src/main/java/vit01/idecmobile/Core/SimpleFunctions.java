@@ -19,6 +19,7 @@
 
 package vit01.idecmobile.Core;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.app.ActionBar;
@@ -328,8 +329,16 @@ public class SimpleFunctions {
     }
 
     public static void setDisplayHomeAsUpEnabled(AppCompatActivity activity) {
+        setDisplayHomeAsUpEnabled(activity, true);
+    }
+
+    public static void setDisplayHomeAsUpEnabled(AppCompatActivity activity, boolean state) {
         ActionBar ab = activity.getSupportActionBar();
-        if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) ab.setDisplayHomeAsUpEnabled(state);
         else SimpleFunctions.debug("Can't set displayHomeAsUpEnabled");
+    }
+
+    public static boolean isTablet(Activity activity) {
+        return activity.getResources().getBoolean(R.bool.isTablet);
     }
 }

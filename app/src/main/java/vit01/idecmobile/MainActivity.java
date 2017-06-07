@@ -48,6 +48,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        boolean isTablet = SimpleFunctions.isTablet(this);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_fetch);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -183,10 +185,9 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName("Обновиться").withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);
         PrimaryDrawerItem infoItem = new PrimaryDrawerItem().withIdentifier(12).withName("Дата сборки").withIcon(GoogleMaterial.Icon.gmd_info).withSelectable(false);
 
-        drawer = new DrawerBuilder()
+        DrawerBuilder drawerBuilder = new DrawerBuilder()
                 .withActivity(this)
                 .withAccountHeader(drawerHeader)
-                .withToolbar(toolbar)
                 .withActionBarDrawerToggleAnimated(true)
                 .withTranslucentStatusBar(false)
                 .addDrawerItems(
@@ -275,8 +276,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                         return false;
                     }
-                })
-                .build();
+                });
+
+        if (isTablet) {
+            drawer = drawerBuilder.buildView();
+            ((ViewGroup) findViewById(R.id.drawer_holder)).addView(drawer.getSlider());
+        } else {
+            drawer = drawerBuilder.withToolbar(toolbar).build();
+        }
 
         transport = GlobalTransport.transport(this);
         updateStationsList();
