@@ -19,9 +19,9 @@
 
 package vit01.idecmobile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -30,9 +30,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -51,7 +54,7 @@ import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;
 
-public class MessageSlideActivity extends AppCompatActivity {
+public class MessageSlideFragment extends Fragment {
     ActionBar actionBar;
     ViewPager mPager;
     boolean stackUpdate = false;
@@ -61,48 +64,26 @@ public class MessageSlideActivity extends AppCompatActivity {
     private ArrayList<Integer> discussionStack = new ArrayList<>();
     private String echoarea = null;
 
+    public MessageSlideFragment() {
+    }
+
+    public static MessageSlideFragment newInstance(
+
+    ) {
+        MessageSlideFragment fragment = new MessageSlideFragment();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        setTheme(Config.appTheme);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message_slide);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        
-        if (Config.values.hide_toolbar_when_scrolling) {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-        }
-
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
-
-        SimpleFunctions.resetIDECParserColors();
-
-        Intent gotInfo = getIntent();
-        msglist = gotInfo.getStringArrayListExtra("msglist");
-
-        if (msglist == null || msglist.size() == 0) {
-            Toast.makeText(MessageSlideActivity.this, "Список сообщений пуст, выходим", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
-        nodeIndex = gotInfo.getIntExtra("nodeindex", Config.currentSelectedStation);
-        msgCount = msglist.size();
-        int firstPosition = gotInfo.getIntExtra("position", msgCount - 1);
-        if (gotInfo.hasExtra("echoarea")) echoarea = gotInfo.getStringExtra("echoarea");
-
-        mPager = (ViewPager) findViewById(R.id.swipe_pager);
-        PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(pagerAdapter);
-        mPager.setCurrentItem(firstPosition);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_message_slide, container, false);
+        mPager = (ViewPager) rootView.findViewById(R.id.swipe_pager);
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 updateActionBar(position);
-                if (Config.values.disableMsglist && echoarea != null && !echoarea.equals("_unread"))
+                if (Config.values.disableMsglist && IDECFunctions.isRealEchoarea(echoarea))
                     EchoReadingPosition.setPosition(echoarea, msglist.get(position));
 
                 if ((discussionStack.size() > 0) && discussionStack.get(0).equals(position) && !stackUpdate) {
@@ -122,25 +103,90 @@ public class MessageSlideActivity extends AppCompatActivity {
                 }).start();
             }
         });
+        return rootView;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    }
+
+    public void updateActionBar(int position) {
+        // actionBar.setTitle(String.valueOf(position + 1) + " из " + msgCount);
+    }
+
+    public void initSlider(String echo, ArrayList<String> msgids, int nIndex, int firstPosition) {
+        SimpleFunctions.resetIDECParserColors();
+        msglist = msgids;
+
+        if (msglist == null || msglist.size() == 0) {
+            Toast.makeText(getActivity(), "Список сообщений пуст, выходим", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        nodeIndex = nIndex < 0 ? Config.currentSelectedStation : nIndex;
+
+        msgCount = msglist.size();
+        echoarea = echo;
+
+        PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
+        mPager.setAdapter(pagerAdapter);
+        mPager.setCurrentItem(firstPosition);
 
         // помечаем прочитанным первое сообщение
         GlobalTransport.transport.setUnread(false, Collections.singletonList(msglist.get(firstPosition)));
         updateActionBar(firstPosition);
-        if (Config.values.disableMsglist && echoarea != null && !echoarea.equals("_unread")) {
+        if (Config.values.disableMsglist && IDECFunctions.isRealEchoarea(echoarea)) {
             EchoReadingPosition.setPosition(echoarea, msglist.get(firstPosition));
         }
     }
 
-    public void updateActionBar(int position) {
-        actionBar.setTitle(String.valueOf(position + 1) + " из " + msgCount);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Activity activity = getActivity();
+        inflater.inflate(R.menu.message_view, menu);
+        MenuItem return_msglist = menu.findItem(R.id.action_msglist_return);
+
+        int iconColor = SimpleFunctions.colorFromTheme(activity, R.attr.menuIconColor);
+
+        if (!SimpleFunctions.isTablet(activity) && Config.values.disableMsglist && echoarea != null) {
+            return_msglist.setVisible(true);
+            return_msglist.setIcon(new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_format_list_bulleted).actionBar().color(iconColor));
+        }
+
+        MenuItem tostart = menu.findItem(R.id.action_first_item);
+        MenuItem toend = menu.findItem(R.id.action_last_item);
+
+        if (msgCount == 1) {
+            tostart.setVisible(false);
+            toend.setVisible(false);
+        } else {
+            IconicsDrawable startIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_first_page).actionBar().color(iconColor);
+            IconicsDrawable endIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_last_page).actionBar().color(iconColor);
+
+            IconicsDrawable discussionNextIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_chevron_right).actionBar().color(iconColor);
+
+            tostart.setIcon(startIcon);
+            toend.setIcon(endIcon);
+
+            menu.findItem(R.id.action_discussion_previous).setVisible(false);
+            menu.findItem(R.id.action_discussion_next).setVisible(true).setIcon(discussionNextIcon);
+        }
+
+        IconicsDrawable newMsg = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_create).actionBar().color(iconColor);
+        MenuItem compose = menu.findItem(R.id.action_new_message);
+        compose.setIcon(newMsg);
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Activity callingActivity = getActivity();
+
         switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
             case R.id.action_first_item:
                 mPager.setCurrentItem(0, false);
                 return true;
@@ -151,7 +197,7 @@ public class MessageSlideActivity extends AppCompatActivity {
                 IIMessage msg = GlobalTransport.transport.getMessage
                         (msglist.get(mPager.getCurrentItem()));
 
-                Intent intent = new Intent(MessageSlideActivity.this, DraftEditor.class);
+                Intent intent = new Intent(callingActivity, DraftEditor.class);
                 intent.putExtra("task", "new_in_echo");
                 intent.putExtra("echoarea", msg.echo);
                 intent.putExtra("nodeindex", nodeIndex);
@@ -159,8 +205,8 @@ public class MessageSlideActivity extends AppCompatActivity {
                 return true;
             case R.id.action_msglist_return:
                 EchoReadingPosition.writePositionCache();
-                setResult(0);
-                finish();
+                callingActivity.setResult(0);
+                callingActivity.finish();
                 return true;
             case R.id.action_discussion_previous:
                 int pos = mPager.getCurrentItem();
@@ -168,7 +214,7 @@ public class MessageSlideActivity extends AppCompatActivity {
                         .getMessage(msglist.get(pos)).tags.get("repto");
 
                 if (repto == null) {
-                    Toast.makeText(MessageSlideActivity.this, "Этот пользователь никому не отвечал!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(callingActivity, "Этот пользователь никому не отвечал!", Toast.LENGTH_SHORT).show();
                     break;
                 } else {
                     if (msglist.contains(repto)) {
@@ -177,7 +223,7 @@ public class MessageSlideActivity extends AppCompatActivity {
                         stackUpdate = true;
                         mPager.setCurrentItem(newindex);
                     } else {
-                        Toast.makeText(MessageSlideActivity.this, "В данном списке сообщений нет того, на которое отвечали.\nМожет быть, надо сначала зайти в саму эху?", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(callingActivity, "В данном списке сообщений нет того, на которое отвечали.\nМожет быть, надо сначала зайти в саму эху?", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -186,7 +232,7 @@ public class MessageSlideActivity extends AppCompatActivity {
                     stackUpdate = true;
                     mPager.setCurrentItem(discussionStack.remove(0));
                 } else
-                    Toast.makeText(MessageSlideActivity.this, "Стек дискуссии пуст!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(callingActivity, "Стек дискуссии пуст!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_save_in_file:
                 String msgid = msglist.get(mPager.getCurrentItem());
@@ -198,7 +244,7 @@ public class MessageSlideActivity extends AppCompatActivity {
 
                     if (!create) {
                         String debug = "Не могу создать файл " + file.getName();
-                        Toast.makeText(MessageSlideActivity.this, debug, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(callingActivity, debug, Toast.LENGTH_SHORT).show();
                         break;
                     }
                 } catch (IOException e) {
@@ -213,81 +259,29 @@ public class MessageSlideActivity extends AppCompatActivity {
                         fos.close();
                     } catch (Exception e) {
                         SimpleFunctions.debug(e.getMessage());
-                        Toast.makeText(MessageSlideActivity.this, "Ошибка: " +
+                        Toast.makeText(callingActivity, "Ошибка: " +
                                 e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                         break;
                     }
 
-                    new AlertDialog.Builder(MessageSlideActivity.this)
+                    new AlertDialog.Builder(callingActivity)
                             .setMessage("Сообщение сохранено в файл " + file.getAbsolutePath())
                             .setPositiveButton("Ясно", null)
                             .show();
                 } else {
-                    Toast.makeText(MessageSlideActivity.this, "Файл " + file.getAbsolutePath() + " недоступен для записи.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(callingActivity, "Файл " + file.getAbsolutePath() + " недоступен для записи.", Toast.LENGTH_SHORT).show();
                 }
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (Config.values.disableMsglist && echoarea != null && !echoarea.equals("_unread")) {
+    public void onPause() {
+        if ((Config.values.disableMsglist || SimpleFunctions.isTablet(getActivity()))
+                && IDECFunctions.isRealEchoarea(echoarea))
             EchoReadingPosition.writePositionCache();
-            setResult(1);
-        } else setResult(0); // return to list
-        super.onBackPressed();
-    }
-
-    @Override
-    public void onDestroy() {
-        if (Config.values.disableMsglist && echoarea != null && !echoarea.equals("_unread"))
-            EchoReadingPosition.writePositionCache();
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.message_view, menu);
-        MenuItem return_msglist = menu.findItem(R.id.action_msglist_return);
-
-        int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
-
-        if (Config.values.disableMsglist && echoarea != null) {
-            return_msglist.setVisible(true);
-            return_msglist.setIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_format_list_bulleted).actionBar().color(iconColor));
-        }
-
-        MenuItem tostart = menu.findItem(R.id.action_first_item);
-        MenuItem toend = menu.findItem(R.id.action_last_item);
-
-        if (msgCount == 1) {
-            tostart.setVisible(false);
-            toend.setVisible(false);
-        } else {
-            IconicsDrawable startIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_first_page).actionBar().color(iconColor);
-            IconicsDrawable endIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_last_page).actionBar().color(iconColor);
-
-            IconicsDrawable discussionNextIcon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_chevron_right).actionBar().color(iconColor);
-
-            tostart.setIcon(startIcon);
-            toend.setIcon(endIcon);
-
-            menu.findItem(R.id.action_discussion_previous).setVisible(false);
-            menu.findItem(R.id.action_discussion_next).setVisible(true).setIcon(discussionNextIcon);
-        }
-
-        IconicsDrawable newMsg = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_create).actionBar().color(iconColor);
-        MenuItem compose = menu.findItem(R.id.action_new_message);
-        compose.setIcon(newMsg);
-
-        return super.onCreateOptionsMenu(menu);
+        super.onPause();
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

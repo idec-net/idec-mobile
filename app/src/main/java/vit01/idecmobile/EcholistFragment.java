@@ -155,7 +155,7 @@ public class EcholistFragment extends Fragment {
             l.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent viewEcho = new Intent(callingActivity, EchoView.class);
+                    Intent viewEcho = new Intent(callingActivity, EchoReaderActivity.class);
                     viewEcho.putExtra("echoarea", holder.echoarea_name.getText().toString());
                     viewEcho.putExtra("nodeindex", nodeindex);
 

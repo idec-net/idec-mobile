@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.prefs.Config;
 
 public class SearchAdvancedFragment extends BottomSheetDialogFragment {
     String DATE_FORMAT = "dd.MM.yyyy";
@@ -86,6 +87,25 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
 
     public static SearchAdvancedFragment newInstance() {
         return new SearchAdvancedFragment();
+    }
+
+    public static SearchAdvancedFragment newInstance(String echoarea) {
+        SearchAdvancedFragment fragm = new SearchAdvancedFragment();
+        if (echoarea == null) return fragm;
+
+        switch (echoarea) {
+            case "_carbon_classic":
+                fragm.receivers = Config.values.carbon_to;
+                break;
+            case "_favorites":
+                fragm.is_favorite = true;
+                break;
+            default:
+                fragm.echoareas = echoarea;
+                break;
+        }
+
+        return fragm;
     }
 
     @Override

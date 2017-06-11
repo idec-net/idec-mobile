@@ -67,8 +67,6 @@ import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import java.util.ArrayList;
-
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.ExternalStorage;
@@ -101,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Config.loadConfig(this);
+        if (Config.values == null) Config.loadConfig(this);
+        else Config.lastContext = this;
+
         setTheme(Config.appTheme);
         currentTheme = Config.appTheme;
 
@@ -222,16 +222,9 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 break;
                             case 3:
-                                ArrayList<String> unread = transport.getAllUnreadMessages();
-
-                                if (unread.size() == 0) {
-                                    Toast.makeText(MainActivity.this, "Непрочитанных сообщений нет!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Intent unreadIntent = new Intent(MainActivity.this, MessageSlideActivity.class);
-                                    unreadIntent.putExtra("msglist", unread);
-                                    unreadIntent.putExtra("position", 0);
-                                    startActivity(unreadIntent);
-                                }
+                                Intent unreadIntent = new Intent(MainActivity.this, EchoView.class);
+                                unreadIntent.putExtra("echoarea", "_unread");
+                                startActivity(unreadIntent);
                                 break;
                             case 4:
                                 Intent sent = new Intent(MainActivity.this, DraftsView.class);

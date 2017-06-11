@@ -40,7 +40,6 @@ import android.widget.Toast;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 import vit01.idecmobile.Core.AbstractTransport;
@@ -52,8 +51,6 @@ import vit01.idecmobile.gui_helpers.CustomLinkMovementMethod;
 public class MessageView_full extends Fragment {
     public AbstractTransport transport = GlobalTransport.transport;
     MenuItem discussionBack;
-    private ArrayList<String> msglist;
-    private int position;
     private String msgid;
     private IIMessage message;
     private boolean messageStarred = false;
@@ -62,14 +59,10 @@ public class MessageView_full extends Fragment {
         // Required empty public constructor
     }
 
-    public static MessageView_full newInstance(
-            ArrayList<String> msglist,
-            int position
-    ) {
+    public static MessageView_full newInstance(String msgid) {
         MessageView_full fragment = new MessageView_full();
         Bundle args = new Bundle();
-        args.putStringArrayList("msglist", msglist);
-        args.putInt("position", position);
+        args.putString("msgid", msgid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,8 +71,7 @@ public class MessageView_full extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            msglist = getArguments().getStringArrayList("msglist");
-            position = getArguments().getInt("position");
+            msgid = getArguments().getString("msgid");
         }
         setHasOptionsMenu(true);
     }
@@ -89,7 +81,6 @@ public class MessageView_full extends Fragment {
                              Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.message_view, null, false);
 
-        msgid = msglist.get(position);
         message = transport.getMessage(msgid);
         if (message == null) message = new IIMessage();
 

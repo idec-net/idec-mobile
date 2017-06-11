@@ -278,10 +278,8 @@ public class DebugActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Получено сообщений: " + String.valueOf(finalFetched), Toast.LENGTH_SHORT).show();
 
                             if (Config.values.openUnreadAfterFetch) {
-                                ArrayList<String> unread = GlobalTransport.transport.getAllUnreadMessages();
-                                Intent unreadIntent = new Intent(DebugActivity.this, MessageSlideActivity.class);
-                                unreadIntent.putExtra("msglist", unread);
-                                unreadIntent.putExtra("position", 0);
+                                Intent unreadIntent = new Intent(DebugActivity.this, EchoView.class);
+                                unreadIntent.putExtra("echoarea", "_unread");
                                 startActivity(unreadIntent);
                             }
                         }

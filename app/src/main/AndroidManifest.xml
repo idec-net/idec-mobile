@@ -48,6 +48,22 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
+            android:name=".EchoReaderActivity"
+            android:label="@string/title_activity_echo_view"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="vit01.idecmobile.MainActivity" />
+
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchActivity" />
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity">
             <meta-data

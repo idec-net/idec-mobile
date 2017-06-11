@@ -21,30 +21,24 @@ package vit01.idecmobile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +51,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.EchoReadingPosition;
@@ -69,158 +61,124 @@ import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 import vit01.idecmobile.prefs.Config;
 
-public class EchoView extends AppCompatActivity {
+public class MessageListFragment extends Fragment {
     String echoarea;
     ArrayList<String> msglist;
     int countMessages;
-    AbstractTransport transport;
     int nodeIndex;
-    MenuItem advancedSearchItem;
-    SearchAdvancedFragment advsearch;
-    SearchView searchView;
 
     RecyclerView recyclerView;
     RecyclerView.Adapter mAdapter = null;
     RecyclerView.LayoutManager mLayoutManager;
 
+    public MessageListFragment() {
+    }
+
+    public static MessageListFragment newInstance(
+
+    ) {
+        return new MessageListFragment();
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        setTheme(Config.appTheme);
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_echo_view);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        /* if (getArguments() != null) {
+            // echoareas = getArguments().getStringArrayList("echolist");
+            // nodeindex = getArguments().getInt("nodeindex");
+        } else echoareas = new ArrayList<>();
+        */
+        setHasOptionsMenu(true);
+    }
 
-        if (Config.values.hide_toolbar_when_scrolling) {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-        }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_msglist, container, false);
 
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EchoView.this, DraftEditor.class);
+                Intent intent = new Intent(getActivity(), DraftEditor.class);
                 intent.putExtra("task", "new_in_echo");
                 intent.putExtra("echoarea", echoarea);
                 intent.putExtra("nodeindex", nodeIndex);
                 startActivity(intent);
+                Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_SHORT).show();
             }
         });
 
-        IconicsDrawable create_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_create).color(Color.WHITE).sizeDp(19);
+        IconicsDrawable create_icon = new IconicsDrawable(getActivity()).icon(GoogleMaterial.Icon.gmd_create).color(Color.WHITE).sizeDp(19);
         fab.setImageDrawable(create_icon);
 
-        SimpleFunctions.setDisplayHomeAsUpEnabled(this);
-
-        recyclerView = (RecyclerView) findViewById(R.id.msglist_view);
-        mLayoutManager = new LinearLayoutManager(this);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.msglist_view);
+        mLayoutManager = new LinearLayoutManager(rootView.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(rootView.getContext()));
 
-        Intent intent = getIntent();
-        echoarea = intent.getStringExtra("echoarea");
-        nodeIndex = intent.getIntExtra("nodeindex", -1);
+        return rootView;
+    }
 
-        if (nodeIndex < 0) {
-            fab.setVisibility(View.INVISIBLE);
-        }
-
-        transport = GlobalTransport.transport;
-        loadContent(false);
-
-        advsearch = SearchAdvancedFragment.newInstance();
-
-        switch (echoarea) {
-            case "_carbon_classic":
-                advsearch.receivers = Config.values.carbon_to;
-                break;
-            case "_favorites":
-                advsearch.is_favorite = true;
-                break;
-            default:
-                advsearch.echoareas = echoarea;
-                break;
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 
+    public void initEchoView(String echo, ArrayList<String> msgids, int nIndex) {
+        echoarea = echo;
+        msglist = msgids;
+        nodeIndex = nIndex;
+
+        loadContent(false);
+    }
+
+    public void showEmptyView() {
+        // Отображаем окошечко, что здесь пусто
+        View view = getActivity().getLayoutInflater().inflate(R.layout.content_empty, null);
+        RelativeLayout l = (RelativeLayout) view.findViewById(R.id.content_empty_layout);
+        ((CoordinatorLayout) view.getRootView()).removeAllViews();
+
+        RelativeLayout current = (RelativeLayout) getActivity().findViewById(R.id.msglist_view_layout);
+        current.removeAllViews();
+        current.addView(l);
+    }
+
     boolean loadContent(boolean unread_only) {
-        switch (echoarea) {
-            case "_favorites":
-                SimpleFunctions.setActivityTitle(this, "Избранные");
-                msglist = (unread_only) ? transport.getUnreadFavorites() : transport.getFavorites();
-                countMessages = msglist.size();
-                break;
-            case "_carbon_classic":
-                SimpleFunctions.setActivityTitle(this, "Карбонка");
-
-                List<String> carbon_users = Arrays.asList(Config.values.carbon_to.split(":"));
-
-                String sort = Config.values.sortByDate ? "date" : "number";
-                msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit, unread_only, sort);
-                countMessages = msglist.size();
-                break;
-            case "_unread":
-                msglist = transport.getAllUnreadMessages();
-                countMessages = msglist.size();
-
-                if (countMessages == 0) {
-                    Toast.makeText(EchoView.this, "Непрочитанных сообщений нет!", Toast.LENGTH_SHORT).show();
-                    finish();
-                    return false;
-                }
-
-                SimpleFunctions.setActivityTitle(this, "Непрочитанные");
-                break;
-            default:
-                SimpleFunctions.setActivityTitle(this, echoarea);
-
-                if (unread_only) {
-                    msglist = transport.getUnreadMessages(echoarea);
-                    countMessages = msglist.size();
-                } else {
-                    countMessages = transport.countMessages(echoarea);
-
-                    msglist = (countMessages > 0) ?
-                            transport.getMsgList(echoarea, 0, 0, Config.values.sortByDate ? "date" : "number")
-                            : SimpleFunctions.emptyList;
-                }
-                break;
+        if (msglist == null) {
+            msglist = IDECFunctions.loadAreaMessages(echoarea, unread_only);
         }
+        countMessages = msglist.size();
+
+        Activity activity = getActivity();
 
         if (countMessages == 0) {
             if (mAdapter == null) {
-                // Отображаем окошечко, что здесь пусто
-                View view = getLayoutInflater().inflate(R.layout.content_empty, null);
-                RelativeLayout l = (RelativeLayout) view.findViewById(R.id.content_empty_layout);
-                ((CoordinatorLayout) view.getRootView()).removeAllViews();
-
-                RelativeLayout current = (RelativeLayout) findViewById(R.id.msglist_view_layout);
-                current.removeAllViews();
-                current.addView(l);
+                showEmptyView();
             } else {
-                Toast.makeText(EchoView.this, "Таких сообщений нет!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Таких сообщений нет!", Toast.LENGTH_SHORT).show();
             }
             // возвращение false приведёт к невозможности сменить чекбокс на противоположный
             return false;
         } else {
             Collections.reverse(msglist);
 
-            mAdapter = new MyAdapter(this, recyclerView, msglist, transport, echoarea, nodeIndex, unread_only);
+            mAdapter = new MyAdapter(activity, recyclerView, msglist, GlobalTransport.transport, echoarea, nodeIndex, unread_only);
             recyclerView.setAdapter(mAdapter);
 
-            if (Config.values.disableMsglist &&
+            boolean isTablet = SimpleFunctions.isTablet(activity);
+            int gotPosition = 0;
+
+            ArrayList<String> normalMsgList = new ArrayList<>(msglist);
+            Collections.reverse(normalMsgList);
+
+            if ((Config.values.disableMsglist || isTablet) &&
                     !echoarea.equals("_carbon_classic") &&
                     !echoarea.equals("_favorites")) {
-                Intent readNow = new Intent(EchoView.this, MessageSlideActivity.class);
-                ArrayList<String> normalMsgList = new ArrayList<>(msglist);
-                Collections.reverse(normalMsgList);
-                readNow.putExtra("msglist", normalMsgList);
-                readNow.putExtra("nodeindex", nodeIndex);
-                readNow.putExtra("echoarea", echoarea);
-
-                int gotPosition = 0;
 
                 if (!echoarea.equals("_unread")) {
                     String lastMsgid = EchoReadingPosition.getPosition(echoarea);
@@ -238,8 +196,23 @@ public class EchoView extends AppCompatActivity {
                     gotPosition = normalMsgList.size() - 1;
                 // это предотвратит клиент от падения, если произошла чистка по ЧС или уменьшение количество мессаг в эхе
 
-                readNow.putExtra("position", gotPosition);
-                startActivityForResult(readNow, 1);
+                if (!isTablet && !unread_only) {
+                    Intent readNow = new Intent(activity, MessageSlideActivity.class);
+                    readNow.putExtra("msglist", normalMsgList);
+                    readNow.putExtra("nodeindex", nodeIndex);
+                    readNow.putExtra("echoarea", echoarea);
+                    readNow.putExtra("position", gotPosition);
+                    startActivityForResult(readNow, 1);
+                }
+            }
+
+            if (!IDECFunctions.isRealEchoarea(echoarea)) {
+                gotPosition = msglist.size() - 1;
+            }
+
+            if (isTablet) {
+                ((MessageSlideFragment) getFragmentManager().findFragmentById(R.id.messages_slider))
+                        .initSlider(echoarea, normalMsgList, nodeIndex, gotPosition);
             }
         }
 
@@ -247,83 +220,32 @@ public class EchoView extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
-        }
-    }
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final Activity activity = getActivity();
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_echoview, menu);
-
-        int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
+        int iconColor = SimpleFunctions.colorFromTheme(activity, R.attr.menuIconColor);
         if (echoarea.equals("_favorites")) {
             MenuItem favItem = menu.findItem(R.id.action_favorites_remove_all);
             favItem.setVisible(true);
-            favItem.setIcon(new IconicsDrawable(getApplicationContext(),
+            favItem.setIcon(new IconicsDrawable(activity,
                     GoogleMaterial.Icon.gmd_clear_all).actionBar()
                     .color(iconColor));
         }
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                triggerSearch(null, new Bundle());
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        advancedSearchItem = menu.findItem(R.id.action_advancedsearch);
-
-
-        searchItem.setIcon(
-                new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_search)
-                        .actionBar().color(iconColor));
-
-        advancedSearchItem.setIcon(
-                new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_expand_more)
-                        .actionBar().color(iconColor));
-
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                advancedSearchItem.setVisible(true);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                advancedSearchItem.setVisible(false);
-                invalidateOptionsMenu();
-                return true;
-            }
-        });
-        return true;
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        final Activity activity = getActivity();
         int id = item.getItemId();
 
         switch (id) {
             case R.id.action_mark_all_read:
                 if (echoarea.equals("_carbon_classic")) {
-                    transport.setUnread(false, msglist);
+                    GlobalTransport.transport.setUnread(false, msglist);
                 } else {
-                    transport.setUnread(false, echoarea);
+                    GlobalTransport.transport.setUnread(false, echoarea);
                 }
 
                 if (mAdapter != null) {
@@ -338,12 +260,12 @@ public class EchoView extends AppCompatActivity {
                 }
                 break;
             case R.id.action_favorites_remove_all:
-                new AlertDialog.Builder(this)
+                new AlertDialog.Builder(activity)
                         .setTitle("Очистить избранные")
                         .setMessage("Снять со всех сообщений данную метку?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                final ProgressDialog progress = ProgressDialog.show(EchoView.this, "Подождите", "Сообщения удаляются...", true);
+                                final ProgressDialog progress = ProgressDialog.show(activity, "Подождите", "Сообщения удаляются...", true);
                                 progress.show();
 
                                 new Thread(new Runnable() {
@@ -352,11 +274,11 @@ public class EchoView extends AppCompatActivity {
                                         ArrayList<String> favorites = GlobalTransport.transport.getFavorites();
                                         GlobalTransport.transport.setFavorite(false, favorites);
                                         progress.dismiss();
-                                        runOnUiThread(new Runnable() {
+                                        activity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(getApplicationContext(), "Выполнено!", Toast.LENGTH_SHORT).show();
-                                                finish();
+                                                Toast.makeText(activity, "Выполнено!", Toast.LENGTH_SHORT).show();
+                                                activity.finish();
                                             }
                                         });
                                     }
@@ -365,48 +287,15 @@ public class EchoView extends AppCompatActivity {
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(),
+                                Toast.makeText(activity,
                                         "Правильно, пусть останутся!", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .show();
                 break;
-            case R.id.action_search:
-                if (!item.isActionViewExpanded()) item.expandActionView();
-                return true;
-            case R.id.action_advancedsearch:
-                advsearch.show(getSupportFragmentManager(), advsearch.getTag());
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if (resultCode == 1) finish();
-        }
-    }
-
-    @Override
-    public void triggerSearch(String initialQuery, Bundle bundle) {
-        String query = searchView.getQuery().toString();
-
-        if (query.equals("") || TextUtils.isEmpty(query)) initialQuery = "___query_empty";
-        else initialQuery = query;
-
-        bundle.putAll(advsearch.getDataBundle());
-
-        if (Build.VERSION.SDK_INT < 21) {
-            Intent searchIntent = new Intent(this, SearchActivity.class);
-            searchIntent.setAction(Intent.ACTION_SEARCH);
-            searchIntent.putExtra(SearchManager.QUERY, query);
-            searchIntent.putExtra(SearchManager.APP_DATA, bundle);
-            startActivity(searchIntent);
-        } else {
-            super.triggerSearch(initialQuery, bundle);
-        }
     }
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
@@ -417,14 +306,13 @@ public class EchoView extends AppCompatActivity {
         int visibleItems = 20;
         int lastVisibleItem;
         int nodeIndex;
-        boolean loading, unread_only;
+        boolean loading, unread_only, isTablet;
         int primaryColor, secondaryColor;
         private ArrayList<String> msglist;
         private ArrayList<String> visible_msglist;
         private Handler handler;
         private Drawable starredDrawable, unstarredDrawable;
 
-        // Provide a suitable constructor (depends on the kind of dataset)
         public MyAdapter(Activity activity,
                          RecyclerView recyclerView,
                          ArrayList<String> hashes,
@@ -438,6 +326,7 @@ public class EchoView extends AppCompatActivity {
             echoarea = echo;
             callingActivity = activity;
             unread_only = _unread_only;
+            isTablet = SimpleFunctions.isTablet(callingActivity);
 
             total_count = msglist.size();
 
@@ -493,14 +382,11 @@ public class EchoView extends AppCompatActivity {
                     .sizeDp(20);
         }
 
-        // Create new views (invoked by the layout manager)
         @Override
         public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                        int viewType) {
-            // create a new view
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_list_element, parent, false);
-            // set the view's size, margins, paddings and layout parameters
 
             RelativeLayout l = (RelativeLayout) v.findViewById(R.id.msg_clickable_layout);
 
@@ -509,21 +395,27 @@ public class EchoView extends AppCompatActivity {
             l.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ArrayList<String> normalMsglist = new ArrayList<>(msglist);
-                    Collections.reverse(normalMsglist);
-
-                    Intent intent = new Intent(callingActivity, MessageSlideActivity.class);
-                    intent.putExtra("msglist", normalMsglist);
-
-                    if (!echoarea.equals("_carbon_classic") &&
-                            !echoarea.equals("_favorites") &&
-                            !unread_only) {
-                        intent.putExtra("echoarea", echoarea);
-                        intent.putExtra("nodeindex", nodeIndex);
-                    }
                     int pos = total_count - holder.position - 1;
-                    intent.putExtra("position", pos);
-                    callingActivity.startActivity(intent);
+
+                    if (!isTablet) {
+                        ArrayList<String> normalMsglist = new ArrayList<>(msglist);
+                        Collections.reverse(normalMsglist);
+
+                        Intent intent = new Intent(callingActivity, MessageSlideActivity.class);
+                        intent.putExtra("msglist", normalMsglist);
+
+                        if (IDECFunctions.isRealEchoarea(echoarea) && !unread_only) {
+                            intent.putExtra("echoarea", echoarea);
+                            intent.putExtra("nodeindex", nodeIndex);
+                        }
+                        intent.putExtra("position", pos);
+                        callingActivity.startActivity(intent);
+                    } else {
+                        ((MessageSlideFragment) ((AppCompatActivity) callingActivity)
+                                .getSupportFragmentManager()
+                                .findFragmentById(R.id.messages_slider))
+                                .mPager.setCurrentItem(pos);
+                    }
                 }
             });
 
@@ -547,11 +439,8 @@ public class EchoView extends AppCompatActivity {
             return holder;
         }
 
-        // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            // - get element from your dataset at this position
-            // - replace the contents of the view with that element
             holder.msgid = visible_msglist.get(position);
             holder.position = position;
             IIMessage message = transport.getMessage(holder.msgid);
@@ -581,17 +470,12 @@ public class EchoView extends AppCompatActivity {
             holder.msg_text.setTypeface(null, font_style);
         }
 
-        // Return the size of your dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {
             return visible_msglist.size();
         }
 
-        // Provide a reference to the views for each data item
-        // Complex data items may need more than one view per item, and
-        // you provide access to all the views for a data item in a view holder
         public static class ViewHolder extends RecyclerView.ViewHolder {
-            // each data item is just a string in this case
             public TextView msg_subj, msg_from_to, msg_text, msg_date;
             public ImageView msg_star;
             public String msgid;

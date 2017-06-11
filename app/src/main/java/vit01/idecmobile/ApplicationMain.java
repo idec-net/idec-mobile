@@ -26,6 +26,8 @@ import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
+import vit01.idecmobile.prefs.Config;
+
 @ReportsCrashes(
         mailTo = "me@ii-net.tk",
         mode = ReportingInteractionMode.DIALOG,
@@ -37,6 +39,9 @@ public class ApplicationMain extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+
+        // Подгружаем наш любимый конфиг
+        Config.loadConfig(this);
 
         // Initialize bug reports
         ACRA.init(this);
