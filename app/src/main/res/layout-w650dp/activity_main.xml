@@ -37,6 +37,11 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true" />
 
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/divider" />
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"

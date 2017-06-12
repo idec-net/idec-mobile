@@ -43,6 +43,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,11 +85,8 @@ public class MessageListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /* if (getArguments() != null) {
-            // echoareas = getArguments().getStringArrayList("echolist");
-            // nodeindex = getArguments().getInt("nodeindex");
-        } else echoareas = new ArrayList<>();
-        */
+        // По идее, мы здесь должны смотреть getArguments() и искать нужное, но
+        // нафиг надо
         setHasOptionsMenu(true);
     }
 
@@ -106,7 +104,6 @@ public class MessageListFragment extends Fragment {
                 intent.putExtra("echoarea", echoarea);
                 intent.putExtra("nodeindex", nodeIndex);
                 startActivity(intent);
-                Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -139,81 +136,124 @@ public class MessageListFragment extends Fragment {
 
     public void showEmptyView() {
         // Отображаем окошечко, что здесь пусто
-        View view = getActivity().getLayoutInflater().inflate(R.layout.content_empty, null);
+        Activity activity = getActivity();
+
+        View view = activity.getLayoutInflater().inflate(R.layout.content_empty, null, false);
         RelativeLayout l = (RelativeLayout) view.findViewById(R.id.content_empty_layout);
         ((CoordinatorLayout) view.getRootView()).removeAllViews();
 
-        RelativeLayout current = (RelativeLayout) getActivity().findViewById(R.id.msglist_view_layout);
+        ViewGroup current = (RelativeLayout) activity.findViewById(R.id.msglist_view_layout);
+
         current.removeAllViews();
         current.addView(l);
+
+        if (SimpleFunctions.isTablet(getActivity())) {
+            // На планшетах просто растягиваем на весь экран фрагмент
+            // Будет правильнее не удалять всё нафиг, а именно растянуть,
+            // чтобы не потерять кнопку для написания нового сообщения.
+
+            ViewGroup fragm_layout = (LinearLayout) activity.findViewById(R.id.fragments_layout_container);
+            fragm_layout.removeViewAt(2); // Удаляем правый фрагмент и разделитель
+            fragm_layout.removeViewAt(1);
+            current = (LinearLayout) activity.findViewById(R.id.msglist_container);
+            current.setLayoutParams(new LinearLayout.LayoutParams
+                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
     }
 
     boolean loadContent(boolean unread_only) {
-        if (msglist == null) {
-            msglist = IDECFunctions.loadAreaMessages(echoarea, unread_only);
-        }
-        countMessages = msglist.size();
+        ArrayList<String> tmp_msglist = IDECFunctions.loadAreaMessages(echoarea, unread_only);
+        int tmp_countMessages = tmp_msglist.size();
 
         Activity activity = getActivity();
 
-        if (countMessages == 0) {
+        if (tmp_countMessages == 0) {
             if (mAdapter == null) {
+                msglist = tmp_msglist;
+                countMessages = 0;
+
+                if (echoarea.equals("_unread")) {
+                    Toast.makeText(activity, "Непрочитанных сообщений нет!", Toast.LENGTH_SHORT).show();
+                    activity.finish();
+                    return false;
+                }
+
                 showEmptyView();
             } else {
                 Toast.makeText(activity, "Таких сообщений нет!", Toast.LENGTH_SHORT).show();
             }
             // возвращение false приведёт к невозможности сменить чекбокс на противоположный
             return false;
-        } else {
-            Collections.reverse(msglist);
+        }
 
-            mAdapter = new MyAdapter(activity, recyclerView, msglist, GlobalTransport.transport, echoarea, nodeIndex, unread_only);
-            recyclerView.setAdapter(mAdapter);
+        msglist = tmp_msglist;
+        countMessages = tmp_countMessages;
+        Collections.reverse(msglist);
 
-            boolean isTablet = SimpleFunctions.isTablet(activity);
-            int gotPosition = 0;
+        mAdapter = new MyAdapter(activity, recyclerView, msglist, GlobalTransport.transport, echoarea, nodeIndex, unread_only);
+        recyclerView.setAdapter(mAdapter);
 
-            ArrayList<String> normalMsgList = new ArrayList<>(msglist);
-            Collections.reverse(normalMsgList);
+        boolean isTablet = SimpleFunctions.isTablet(activity);
+        int gotPosition = 0;
+        int lastPosition = msglist.size() - 1;
 
-            if ((Config.values.disableMsglist || isTablet) &&
-                    !echoarea.equals("_carbon_classic") &&
-                    !echoarea.equals("_favorites")) {
+        ArrayList<String> normalMsgList = new ArrayList<>(msglist);
+        Collections.reverse(normalMsgList);
 
-                if (!echoarea.equals("_unread")) {
-                    String lastMsgid = EchoReadingPosition.getPosition(echoarea);
+        if ((Config.values.disableMsglist || isTablet)) {
+            switch (echoarea) {
+                case "_carbon_classic":
+                    gotPosition = lastPosition;
+                    break;
+                case "_favorites":
+                    gotPosition = lastPosition;
+                    break;
+                case "_search_results":
+                    gotPosition = 0;
+                    break;
+                case "_unread":
+                    gotPosition = 0;
+                    break;
+                default:
+                    if (!IDECFunctions.isRealEchoarea(echoarea)) gotPosition = 0;
+                    else {
+                        String lastMsgid = EchoReadingPosition.getPosition(echoarea);
 
-                    if (lastMsgid != null && normalMsgList.contains(lastMsgid)) {
-                        gotPosition = normalMsgList.lastIndexOf(lastMsgid);
+                        if (lastMsgid != null && normalMsgList.contains(lastMsgid)) {
+                            gotPosition = normalMsgList.lastIndexOf(lastMsgid);
+                        }
                     }
-                }
-
-                if (gotPosition < 0)
-                    gotPosition = 0; // исправить эту строку, если при первом заходе
-                // в эху хочется читать не первое сообщение, а какое-то другое
-
-                if (gotPosition > 0 && gotPosition > (normalMsgList.size() - 1))
-                    gotPosition = normalMsgList.size() - 1;
-                // это предотвратит клиент от падения, если произошла чистка по ЧС или уменьшение количество мессаг в эхе
-
-                if (!isTablet && !unread_only) {
-                    Intent readNow = new Intent(activity, MessageSlideActivity.class);
-                    readNow.putExtra("msglist", normalMsgList);
-                    readNow.putExtra("nodeindex", nodeIndex);
-                    readNow.putExtra("echoarea", echoarea);
-                    readNow.putExtra("position", gotPosition);
-                    startActivityForResult(readNow, 1);
-                }
+                    break;
             }
 
-            if (!IDECFunctions.isRealEchoarea(echoarea)) {
-                gotPosition = msglist.size() - 1;
-            }
+            if (gotPosition < 0)
+                gotPosition = 0; // исправить эту строку, если при первом заходе
+            // в эху хочется читать не первое сообщение, а какое-то другое
 
-            if (isTablet) {
-                ((MessageSlideFragment) getFragmentManager().findFragmentById(R.id.messages_slider))
-                        .initSlider(echoarea, normalMsgList, nodeIndex, gotPosition);
-            }
+            if (gotPosition > 0 && gotPosition > lastPosition)
+                gotPosition = lastPosition;
+            // это предотвратит клиент от падения, если произошла чистка по ЧС или уменьшение количество мессаг в эхе
+        }
+
+        if (!isTablet && !unread_only
+                && !echoarea.equals("_carbon_classic")
+                && !echoarea.equals("_favorites")
+                && (
+                Config.values.disableMsglist ||
+                        echoarea.equals("_unread") ||
+                        echoarea.equals("_search_results")
+        )) {
+            Intent readNow = new Intent(activity, MessageSlideActivity.class);
+            readNow.putExtra("msglist", normalMsgList);
+            readNow.putExtra("nodeindex", nodeIndex);
+            readNow.putExtra("echoarea", echoarea);
+            readNow.putExtra("position", gotPosition);
+            activity.startActivityForResult(readNow, 1);
+        }
+
+        if (isTablet) {
+            ((MessageSlideFragment) getFragmentManager().findFragmentById(R.id.messages_slider))
+                    .initSlider(echoarea, normalMsgList, nodeIndex, gotPosition);
         }
 
         return true;
@@ -231,6 +271,8 @@ public class MessageListFragment extends Fragment {
                     GoogleMaterial.Icon.gmd_clear_all).actionBar()
                     .color(iconColor));
         }
+
+        if (countMessages <= 1) menu.findItem(R.id.action_search).setVisible(false);
 
         super.onCreateOptionsMenu(menu, inflater);
     }

@@ -21,12 +21,14 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
+        android:id="@+id/fragments_layout_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:id="@+id/msglist_container"
             android:layout_width="@dimen/material_drawer_width"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -38,6 +40,11 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/divider" />
 
         <LinearLayout
             android:layout_width="fill_parent"

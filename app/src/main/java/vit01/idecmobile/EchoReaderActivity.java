@@ -70,7 +70,7 @@ public class EchoReaderActivity extends AppCompatActivity {
             findViewById(R.id.fab).setVisibility(View.INVISIBLE);
         }
 
-        toolbar.setTitle(IDECFunctions.getAreaName(echoarea));
+        SimpleFunctions.setActivityTitle(this, IDECFunctions.getAreaName(echoarea));
         advsearch = SearchAdvancedFragment.newInstance(echoarea);
 
         ((MessageListFragment) getSupportFragmentManager()
@@ -81,7 +81,7 @@ public class EchoReaderActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
-            if (resultCode == 1) finish();
+            if (resultCode == 1 && !SimpleFunctions.isTablet(this)) finish();
         }
     }
 

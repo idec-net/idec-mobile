@@ -8,6 +8,7 @@
         android:id="@+id/action_starred"
         android:orderInCategory="1"
         android:title="В избранное"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item

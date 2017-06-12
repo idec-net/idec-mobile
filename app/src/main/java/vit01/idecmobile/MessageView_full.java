@@ -72,8 +72,8 @@ public class MessageView_full extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             msgid = getArguments().getString("msgid");
+            setHasOptionsMenu(true);
         }
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -186,6 +186,9 @@ public class MessageView_full extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem starredItem = menu.findItem(R.id.action_starred);
         discussionBack = menu.findItem(R.id.action_discussion_previous);
+
+        if (starredItem == null || discussionBack == null) return;
+
         if (messageStarred) {
             setStarredIcon(true, starredItem);
         } else {
@@ -210,7 +213,8 @@ public class MessageView_full extends Fragment {
 
     private void setStarredIcon(boolean isStarred, MenuItem item) {
         Drawable icon;
-        Context context = getContext();
+        Context context = getActivity();
+        if (!item.isVisible()) item.setVisible(true);
 
         int iconColor = SimpleFunctions.colorFromTheme(context, R.attr.menuIconColor);
 

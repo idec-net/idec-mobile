@@ -216,13 +216,13 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 2:
-                                Intent intent = new Intent(MainActivity.this, EchoView.class);
+                                Intent intent = new Intent(MainActivity.this, EchoReaderActivity.class);
                                 intent.putExtra("echoarea", "_carbon_classic");
                                 intent.putExtra("nodeindex", -1);
                                 startActivity(intent);
                                 break;
                             case 3:
-                                Intent unreadIntent = new Intent(MainActivity.this, EchoView.class);
+                                Intent unreadIntent = new Intent(MainActivity.this, EchoReaderActivity.class);
                                 unreadIntent.putExtra("echoarea", "_unread");
                                 startActivity(unreadIntent);
                                 break;
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(unsent);
                                 break;
                             case 6:
-                                Intent favorites = new Intent(MainActivity.this, EchoView.class);
+                                Intent favorites = new Intent(MainActivity.this, EchoReaderActivity.class);
                                 favorites.putExtra("echoarea", "_favorites");
                                 favorites.putExtra("nodeindex", -1);
                                 startActivity(favorites);

@@ -27,7 +27,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -55,7 +54,8 @@ import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;
 
 public class MessageSlideFragment extends Fragment {
-    ActionBar actionBar;
+    public boolean isTablet, isRealEchoarea, shouldRememberPosition;
+    Activity activity;
     ViewPager mPager;
     boolean stackUpdate = false;
     private int msgCount;
@@ -63,15 +63,13 @@ public class MessageSlideFragment extends Fragment {
     private ArrayList<String> msglist;
     private ArrayList<Integer> discussionStack = new ArrayList<>();
     private String echoarea = null;
+    private String appendToTitle = null; // Здесь должно быть имя эхи и разделитель |
 
     public MessageSlideFragment() {
     }
 
-    public static MessageSlideFragment newInstance(
-
-    ) {
-        MessageSlideFragment fragment = new MessageSlideFragment();
-        return fragment;
+    public static MessageSlideFragment newInstance() {
+        return new MessageSlideFragment();
     }
 
     @Override
@@ -83,7 +81,7 @@ public class MessageSlideFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 updateActionBar(position);
-                if (Config.values.disableMsglist && IDECFunctions.isRealEchoarea(echoarea))
+                if (shouldRememberPosition)
                     EchoReadingPosition.setPosition(echoarea, msglist.get(position));
 
                 if ((discussionStack.size() > 0) && discussionStack.get(0).equals(position) && !stackUpdate) {
@@ -109,12 +107,13 @@ public class MessageSlideFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = getActivity();
         setHasOptionsMenu(true);
-        actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     public void updateActionBar(int position) {
-        // actionBar.setTitle(String.valueOf(position + 1) + " из " + msgCount);
+        SimpleFunctions.setActivityTitle((AppCompatActivity) activity,
+                appendToTitle + String.valueOf(position + 1) + " из " + msgCount);
     }
 
     public void initSlider(String echo, ArrayList<String> msgids, int nIndex, int firstPosition) {
@@ -122,7 +121,7 @@ public class MessageSlideFragment extends Fragment {
         msglist = msgids;
 
         if (msglist == null || msglist.size() == 0) {
-            Toast.makeText(getActivity(), "Список сообщений пуст, выходим", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Список сообщений пуст...", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -131,6 +130,19 @@ public class MessageSlideFragment extends Fragment {
         msgCount = msglist.size();
         echoarea = echo;
 
+        isRealEchoarea = IDECFunctions.isRealEchoarea(echoarea);
+        isTablet = SimpleFunctions.isTablet(activity);
+
+        if (isTablet) { // Если на планшете, то приписываем к счётчику сверху имя эхи
+            String prettyName = IDECFunctions.getAreaName(echoarea);
+            if (prettyName.equals("")) appendToTitle = "";
+            else appendToTitle = prettyName + ",  ";
+        } else appendToTitle = "";
+
+        // Сохраняем последнее прочитанное либо когда отключен список эх, либо когда планшетный режим
+        // И учитываем только в настоящих эхах (к таковым не относятся карбонка, непрочитанные, избранные)
+        shouldRememberPosition = (Config.values.disableMsglist || isTablet) && isRealEchoarea;
+
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
         mPager.setAdapter(pagerAdapter);
         mPager.setCurrentItem(firstPosition);
@@ -138,20 +150,20 @@ public class MessageSlideFragment extends Fragment {
         // помечаем прочитанным первое сообщение
         GlobalTransport.transport.setUnread(false, Collections.singletonList(msglist.get(firstPosition)));
         updateActionBar(firstPosition);
-        if (Config.values.disableMsglist && IDECFunctions.isRealEchoarea(echoarea)) {
+
+        if (shouldRememberPosition) {
             EchoReadingPosition.setPosition(echoarea, msglist.get(firstPosition));
         }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Activity activity = getActivity();
         inflater.inflate(R.menu.message_view, menu);
         MenuItem return_msglist = menu.findItem(R.id.action_msglist_return);
 
         int iconColor = SimpleFunctions.colorFromTheme(activity, R.attr.menuIconColor);
 
-        if (!SimpleFunctions.isTablet(activity) && Config.values.disableMsglist && echoarea != null) {
+        if (!isTablet && Config.values.disableMsglist && echoarea != null) {
             return_msglist.setVisible(true);
             return_msglist.setIcon(new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_format_list_bulleted).actionBar().color(iconColor));
         }
@@ -159,9 +171,11 @@ public class MessageSlideFragment extends Fragment {
         MenuItem tostart = menu.findItem(R.id.action_first_item);
         MenuItem toend = menu.findItem(R.id.action_last_item);
 
-        if (msgCount == 1) {
+        if (msgCount <= 1) {
             tostart.setVisible(false);
             toend.setVisible(false);
+
+            if (msgCount == 0) menu.findItem(R.id.action_save_in_file).setVisible(false);
         } else {
             IconicsDrawable startIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_first_page).actionBar().color(iconColor);
             IconicsDrawable endIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_last_page).actionBar().color(iconColor);
@@ -175,17 +189,18 @@ public class MessageSlideFragment extends Fragment {
             menu.findItem(R.id.action_discussion_next).setVisible(true).setIcon(discussionNextIcon);
         }
 
-        IconicsDrawable newMsg = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_create).actionBar().color(iconColor);
         MenuItem compose = menu.findItem(R.id.action_new_message);
-        compose.setIcon(newMsg);
+
+        if (!isTablet && isRealEchoarea) {
+            IconicsDrawable newMsg = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_create).actionBar().color(iconColor);
+            compose.setIcon(newMsg);
+        } else compose.setVisible(false);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Activity callingActivity = getActivity();
-
         switch (item.getItemId()) {
             case R.id.action_first_item:
                 mPager.setCurrentItem(0, false);
@@ -197,16 +212,15 @@ public class MessageSlideFragment extends Fragment {
                 IIMessage msg = GlobalTransport.transport.getMessage
                         (msglist.get(mPager.getCurrentItem()));
 
-                Intent intent = new Intent(callingActivity, DraftEditor.class);
+                Intent intent = new Intent(activity, DraftEditor.class);
                 intent.putExtra("task", "new_in_echo");
                 intent.putExtra("echoarea", msg.echo);
                 intent.putExtra("nodeindex", nodeIndex);
                 startActivity(intent);
                 return true;
             case R.id.action_msglist_return:
-                EchoReadingPosition.writePositionCache();
-                callingActivity.setResult(0);
-                callingActivity.finish();
+                activity.setResult(0);
+                activity.finish();
                 return true;
             case R.id.action_discussion_previous:
                 int pos = mPager.getCurrentItem();
@@ -214,7 +228,7 @@ public class MessageSlideFragment extends Fragment {
                         .getMessage(msglist.get(pos)).tags.get("repto");
 
                 if (repto == null) {
-                    Toast.makeText(callingActivity, "Этот пользователь никому не отвечал!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Этот пользователь никому не отвечал!", Toast.LENGTH_SHORT).show();
                     break;
                 } else {
                     if (msglist.contains(repto)) {
@@ -223,7 +237,7 @@ public class MessageSlideFragment extends Fragment {
                         stackUpdate = true;
                         mPager.setCurrentItem(newindex);
                     } else {
-                        Toast.makeText(callingActivity, "В данном списке сообщений нет того, на которое отвечали.\nМожет быть, надо сначала зайти в саму эху?", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "В данном списке сообщений нет того, на которое отвечали.\nМожет быть, надо сначала зайти в саму эху?", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -232,7 +246,7 @@ public class MessageSlideFragment extends Fragment {
                     stackUpdate = true;
                     mPager.setCurrentItem(discussionStack.remove(0));
                 } else
-                    Toast.makeText(callingActivity, "Стек дискуссии пуст!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Стек дискуссии пуст!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_save_in_file:
                 String msgid = msglist.get(mPager.getCurrentItem());
@@ -244,7 +258,7 @@ public class MessageSlideFragment extends Fragment {
 
                     if (!create) {
                         String debug = "Не могу создать файл " + file.getName();
-                        Toast.makeText(callingActivity, debug, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, debug, Toast.LENGTH_SHORT).show();
                         break;
                     }
                 } catch (IOException e) {
@@ -259,18 +273,18 @@ public class MessageSlideFragment extends Fragment {
                         fos.close();
                     } catch (Exception e) {
                         SimpleFunctions.debug(e.getMessage());
-                        Toast.makeText(callingActivity, "Ошибка: " +
+                        Toast.makeText(activity, "Ошибка: " +
                                 e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                         break;
                     }
 
-                    new AlertDialog.Builder(callingActivity)
+                    new AlertDialog.Builder(activity)
                             .setMessage("Сообщение сохранено в файл " + file.getAbsolutePath())
                             .setPositiveButton("Ясно", null)
                             .show();
                 } else {
-                    Toast.makeText(callingActivity, "Файл " + file.getAbsolutePath() + " недоступен для записи.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Файл " + file.getAbsolutePath() + " недоступен для записи.", Toast.LENGTH_SHORT).show();
                 }
         }
         return super.onOptionsItemSelected(item);
@@ -278,8 +292,7 @@ public class MessageSlideFragment extends Fragment {
 
     @Override
     public void onPause() {
-        if ((Config.values.disableMsglist || SimpleFunctions.isTablet(getActivity()))
-                && IDECFunctions.isRealEchoarea(echoarea))
+        if (shouldRememberPosition)
             EchoReadingPosition.writePositionCache();
         super.onPause();
     }
