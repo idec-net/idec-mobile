@@ -103,9 +103,9 @@ public class SearchActivity extends AppCompatActivity {
                                 time1, time2, is_favorite);
 
                         if (msgids.size() > 0) {
-                            Intent intent = new Intent(SearchActivity.this, MessageSlideActivity.class);
+                            Intent intent = new Intent(SearchActivity.this, EchoReaderActivity.class);
+                            intent.putExtra("echoarea", "_search_results");
                             intent.putExtra("msglist", msgids);
-                            intent.putExtra("position", 0);
                             startActivity(intent);
                         } else
                             Toast.makeText(SearchActivity.this, "Ничего не найдено!", Toast.LENGTH_LONG).show();

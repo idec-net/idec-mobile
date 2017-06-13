@@ -41,7 +41,7 @@ public class OpenLinkActivity extends AppCompatActivity {
 
         if (ii_link.contains(".")) {
             // значит это эха!
-            Intent intent = new Intent(OpenLinkActivity.this, EchoView.class);
+            Intent intent = new Intent(OpenLinkActivity.this, EchoReaderActivity.class);
             int nodeindex = -1;
 
             int i = 0;
@@ -62,7 +62,7 @@ public class OpenLinkActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             // иначе сообщение
-            Intent intent = new Intent(OpenLinkActivity.this, MessageSlideActivity.class);
+            Intent intent = new Intent(OpenLinkActivity.this, EchoReaderActivity.class);
             AbstractTransport transport = GlobalTransport.transport;
 
             IIMessage message = transport.getMessage(ii_link);
@@ -72,7 +72,6 @@ public class OpenLinkActivity extends AppCompatActivity {
             if (msglist.contains(ii_link)) {
                 int position = msglist.lastIndexOf(ii_link);
 
-                intent.putExtra("msglist", msglist);
                 intent.putExtra("echoarea", message.echo);
                 intent.putExtra("position", position);
             } else {

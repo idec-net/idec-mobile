@@ -21,6 +21,7 @@ package vit01.idecmobile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,6 +58,9 @@ public class MessageSlideFragment extends Fragment {
     public boolean isTablet, isRealEchoarea, shouldRememberPosition;
     Activity activity;
     ViewPager mPager;
+    Drawable starredIcon, unstarredIcon;
+    MenuItem starredMenuItem;
+    MessageListFragment listFragment = null;
     boolean stackUpdate = false;
     private int msgCount;
     private int nodeIndex;
@@ -79,7 +83,7 @@ public class MessageSlideFragment extends Fragment {
         mPager = (ViewPager) rootView.findViewById(R.id.swipe_pager);
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
                 updateActionBar(position);
                 if (shouldRememberPosition)
                     EchoReadingPosition.setPosition(echoarea, msglist.get(position));
@@ -97,6 +101,14 @@ public class MessageSlideFragment extends Fragment {
                     @Override
                     public void run() {
                         GlobalTransport.transport.setUnread(false, Collections.singletonList(msgid));
+                        if (listFragment != null) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listFragment.mAdapter.messageChanged(msgid);
+                                }
+                            });
+                        }
                     }
                 }).start();
             }
@@ -108,6 +120,7 @@ public class MessageSlideFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
+        listFragment = (MessageListFragment) getFragmentManager().findFragmentById(R.id.msglist);
         setHasOptionsMenu(true);
     }
 
@@ -156,6 +169,12 @@ public class MessageSlideFragment extends Fragment {
         }
     }
 
+    public void setStarredIcon(boolean isStarred, MenuItem item) {
+        if (!item.isVisible()) item.setVisible(true);
+
+        item.setIcon(isStarred ? starredIcon : unstarredIcon);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.message_view, menu);
@@ -170,6 +189,15 @@ public class MessageSlideFragment extends Fragment {
 
         MenuItem tostart = menu.findItem(R.id.action_first_item);
         MenuItem toend = menu.findItem(R.id.action_last_item);
+
+        starredMenuItem = menu.findItem(R.id.action_starred);
+        starredIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_star)
+                .actionBar().color(iconColor);
+        unstarredIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_star)
+                .actionBar().color(iconColor).alpha(80);
+
+        MessageView_full fragm = ((ScreenSlidePagerAdapter) mPager.getAdapter()).mCurrentFragment;
+        setStarredIcon(fragm.messageStarred, starredMenuItem);
 
         if (msgCount <= 1) {
             tostart.setVisible(false);
@@ -207,6 +235,16 @@ public class MessageSlideFragment extends Fragment {
                 return true;
             case R.id.action_last_item:
                 mPager.setCurrentItem(msgCount - 1, false);
+                return true;
+            case R.id.action_starred:
+                MessageView_full current_fragment = ((ScreenSlidePagerAdapter) mPager.getAdapter()).mCurrentFragment;
+                String msgid = msglist.get(mPager.getCurrentItem());
+                current_fragment.messageStarred = !current_fragment.messageStarred;
+                GlobalTransport.transport.setFavorite(
+                        current_fragment.messageStarred, Collections.singletonList(msgid));
+                activity.invalidateOptionsMenu();
+
+                if (listFragment != null) listFragment.mAdapter.messageChanged(msgid, false);
                 return true;
             case R.id.action_new_message:
                 IIMessage msg = GlobalTransport.transport.getMessage
@@ -249,9 +287,9 @@ public class MessageSlideFragment extends Fragment {
                     Toast.makeText(activity, "Стек дискуссии пуст!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_save_in_file:
-                String msgid = msglist.get(mPager.getCurrentItem());
-                String msgRaw = GlobalTransport.transport.getMessage(msgid).raw();
-                File file = new File(ExternalStorage.rootStorage.getParentFile(), msgid + ".txt");
+                String _msgid = msglist.get(mPager.getCurrentItem());
+                String msgRaw = GlobalTransport.transport.getMessage(_msgid).raw();
+                File file = new File(ExternalStorage.rootStorage.getParentFile(), _msgid + ".txt");
 
                 if (!file.exists()) try {
                     boolean create = file.createNewFile();
@@ -298,6 +336,7 @@ public class MessageSlideFragment extends Fragment {
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public MessageView_full mCurrentFragment;
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -305,6 +344,14 @@ public class MessageSlideFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             return MessageView_full.newInstance(msglist.get(position));
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            mCurrentFragment = ((MessageView_full) object);
+            if (starredMenuItem != null)
+                setStarredIcon(mCurrentFragment.messageStarred, starredMenuItem);
+            super.setPrimaryItem(container, position, object);
         }
 
         @Override

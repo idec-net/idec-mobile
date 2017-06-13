@@ -23,7 +23,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -40,8 +39,6 @@ import android.widget.Toast;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import java.util.Collections;
-
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
@@ -50,10 +47,10 @@ import vit01.idecmobile.gui_helpers.CustomLinkMovementMethod;
 
 public class MessageView_full extends Fragment {
     public AbstractTransport transport = GlobalTransport.transport;
+    public boolean messageStarred = false;
     MenuItem discussionBack;
     private String msgid;
     private IIMessage message;
-    private boolean messageStarred = false;
 
     public MessageView_full() {
         // Required empty public constructor
@@ -184,47 +181,8 @@ public class MessageView_full extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem starredItem = menu.findItem(R.id.action_starred);
         discussionBack = menu.findItem(R.id.action_discussion_previous);
 
-        if (starredItem == null || discussionBack == null) return;
-
-        if (messageStarred) {
-            setStarredIcon(true, starredItem);
-        } else {
-            setStarredIcon(false, starredItem);
-        }
-
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_starred:
-                messageStarred = !messageStarred;
-                setStarredIcon(messageStarred, item);
-                transport.setFavorite(messageStarred, Collections.singletonList(msgid));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void setStarredIcon(boolean isStarred, MenuItem item) {
-        Drawable icon;
-        Context context = getActivity();
-        if (!item.isVisible()) item.setVisible(true);
-
-        int iconColor = SimpleFunctions.colorFromTheme(context, R.attr.menuIconColor);
-
-        if (isStarred) {
-            icon = new IconicsDrawable(context, GoogleMaterial.Icon.gmd_star)
-                    .actionBar().color(iconColor);
-        } else {
-            icon = new IconicsDrawable(context, GoogleMaterial.Icon.gmd_star)
-                    .actionBar().color(iconColor).alpha(80);
-        }
-        item.setIcon(icon);
     }
 }

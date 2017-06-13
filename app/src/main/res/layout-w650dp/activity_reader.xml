@@ -37,8 +37,7 @@
                 android:id="@+id/msglist"
                 android:name="vit01.idecmobile.MessageListFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                android:layout_height="match_parent" />
         </LinearLayout>
 
         <View
@@ -55,8 +54,7 @@
                 android:id="@+id/messages_slider"
                 android:name="vit01.idecmobile.MessageSlideFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                android:layout_height="match_parent" />
         </LinearLayout>
     </LinearLayout>
 

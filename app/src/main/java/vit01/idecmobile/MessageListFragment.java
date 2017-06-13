@@ -67,9 +67,10 @@ public class MessageListFragment extends Fragment {
     ArrayList<String> msglist;
     int countMessages;
     int nodeIndex;
+    MessageSlideFragment slider = null;
 
     RecyclerView recyclerView;
-    RecyclerView.Adapter mAdapter = null;
+    MessageListFragment.MyAdapter mAdapter = null;
     RecyclerView.LayoutManager mLayoutManager;
 
     public MessageListFragment() {
@@ -130,6 +131,7 @@ public class MessageListFragment extends Fragment {
         echoarea = echo;
         msglist = msgids;
         nodeIndex = nIndex;
+        slider = (MessageSlideFragment) getFragmentManager().findFragmentById(R.id.messages_slider);
 
         loadContent(false);
     }
@@ -190,9 +192,6 @@ public class MessageListFragment extends Fragment {
         countMessages = tmp_countMessages;
         Collections.reverse(msglist);
 
-        mAdapter = new MyAdapter(activity, recyclerView, msglist, GlobalTransport.transport, echoarea, nodeIndex, unread_only);
-        recyclerView.setAdapter(mAdapter);
-
         boolean isTablet = SimpleFunctions.isTablet(activity);
         int gotPosition = 0;
         int lastPosition = msglist.size() - 1;
@@ -251,10 +250,17 @@ public class MessageListFragment extends Fragment {
             activity.startActivityForResult(readNow, 1);
         }
 
+        int reversedPosition = msglist.size() - 1 - gotPosition; // мы ведь перевернули список, значит и позицию надо
+        mAdapter = new MyAdapter(activity, recyclerView, msglist, GlobalTransport.transport,
+                echoarea, nodeIndex, reversedPosition);
+        recyclerView.setAdapter(mAdapter);
+
         if (isTablet) {
-            ((MessageSlideFragment) getFragmentManager().findFragmentById(R.id.messages_slider))
-                    .initSlider(echoarea, normalMsgList, nodeIndex, gotPosition);
+            slider.initSlider(echoarea, normalMsgList, nodeIndex, gotPosition);
         }
+        recyclerView.scrollToPosition(reversedPosition);
+        mAdapter.lastSelectedItem = reversedPosition;
+        mAdapter.setSelection(reversedPosition);
 
         return true;
     }
@@ -348,12 +354,14 @@ public class MessageListFragment extends Fragment {
         int visibleItems = 20;
         int lastVisibleItem;
         int nodeIndex;
-        boolean loading, unread_only, isTablet;
-        int primaryColor, secondaryColor;
+        int lastSelectedItem = 0;
+        boolean loading, isTablet;
+        int primaryColor, secondaryColor, normalItemColor, selectedItemColor;
         private ArrayList<String> msglist;
         private ArrayList<String> visible_msglist;
         private Handler handler;
         private Drawable starredDrawable, unstarredDrawable;
+        private RecyclerView rv;
 
         public MyAdapter(Activity activity,
                          RecyclerView recyclerView,
@@ -361,24 +369,25 @@ public class MessageListFragment extends Fragment {
                          AbstractTransport db,
                          String echo,
                          int nodeindex,
-                         boolean _unread_only) {
+                         int startPosition) {
             msglist = hashes;
             transport = db;
             nodeIndex = nodeindex;
             echoarea = echo;
             callingActivity = activity;
-            unread_only = _unread_only;
             isTablet = SimpleFunctions.isTablet(callingActivity);
 
             total_count = msglist.size();
 
-            if (total_count < visibleItems) {
+            if (total_count < visibleItems || total_count <= startPosition + 1) {
                 visible_msglist = new ArrayList<>(msglist);
             } else {
-                visible_msglist = new ArrayList<>(msglist.subList(0, visibleItems));
+                visible_msglist = new ArrayList<>(msglist.subList(0,
+                        startPosition > visibleItems - 1 ? startPosition + 1 : visibleItems));
             }
 
             handler = new Handler();
+            rv = recyclerView;
 
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
@@ -406,13 +415,16 @@ public class MessageListFragment extends Fragment {
                                 loading = false;
                             }
                         }
-                    }, 10);
+                    }, 1);
                 }
             });
 
             int accentColor = SimpleFunctions.colorFromTheme(callingActivity, R.attr.colorAccent);
             secondaryColor = SimpleFunctions.colorFromTheme(callingActivity, android.R.attr.textColorSecondary);
             primaryColor = SimpleFunctions.colorFromTheme(callingActivity, android.R.attr.textColorPrimary);
+            normalItemColor = SimpleFunctions.colorFromTheme(callingActivity, android.R.attr.itemBackground);
+            selectedItemColor = Color.argb(45, Color.red(secondaryColor),
+                    Color.green(secondaryColor), Color.blue(secondaryColor));
 
             starredDrawable = new IconicsDrawable(activity)
                     .icon(GoogleMaterial.Icon.gmd_star)
@@ -446,7 +458,7 @@ public class MessageListFragment extends Fragment {
                         Intent intent = new Intent(callingActivity, MessageSlideActivity.class);
                         intent.putExtra("msglist", normalMsglist);
 
-                        if (IDECFunctions.isRealEchoarea(echoarea) && !unread_only) {
+                        if (IDECFunctions.isRealEchoarea(echoarea)) {
                             intent.putExtra("echoarea", echoarea);
                             intent.putExtra("nodeindex", nodeIndex);
                         }
@@ -457,6 +469,8 @@ public class MessageListFragment extends Fragment {
                                 .getSupportFragmentManager()
                                 .findFragmentById(R.id.messages_slider))
                                 .mPager.setCurrentItem(pos);
+
+                        setSelection(holder.position);
                     }
                 }
             });
@@ -475,6 +489,13 @@ public class MessageListFragment extends Fragment {
                     }
 
                     transport.setFavorite(message.is_favorite, Collections.singletonList(holder.msgid));
+                    MessageSlideFragment slider = (MessageSlideFragment) ((AppCompatActivity) callingActivity)
+                            .getSupportFragmentManager()
+                            .findFragmentById(R.id.messages_slider);
+
+                    if (slider != null &&
+                            ((total_count - holder.position - 1) == slider.mPager.getCurrentItem()))
+                        slider.setStarredIcon(message.is_favorite, slider.starredMenuItem);
                 }
             });
 
@@ -483,6 +504,8 @@ public class MessageListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            position = holder.getAdapterPosition();
+
             holder.msgid = visible_msglist.get(position);
             holder.position = position;
             IIMessage message = transport.getMessage(holder.msgid);
@@ -507,6 +530,10 @@ public class MessageListFragment extends Fragment {
                 holder.msg_text.setTextColor(secondaryColor);
             }
 
+            if (position == lastSelectedItem) {
+                holder.itemView.setBackgroundColor(selectedItemColor);
+            } else holder.itemView.setBackgroundColor(normalItemColor);
+
             holder.msg_subj.setTypeface(null, font_style);
             holder.msg_from_to.setTypeface(null, font_style);
             holder.msg_text.setTypeface(null, font_style);
@@ -515,6 +542,37 @@ public class MessageListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return visible_msglist.size();
+        }
+
+        public void messageChanged(String msgid, boolean needScroll) {
+            if (visible_msglist.contains(msgid)) {
+                int pos = visible_msglist.indexOf(msgid);
+                notifyItemChanged(pos);
+
+                if (needScroll) {
+                    rv.scrollToPosition(pos);
+                    setSelection(pos);
+                }
+            }
+        }
+
+        public void messageChanged(String msgid) {
+            messageChanged(msgid, true);
+        }
+
+        public void setSelection(final int pos) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    RecyclerView.ViewHolder lastItemView = rv.findViewHolderForAdapterPosition(lastSelectedItem);
+                    RecyclerView.ViewHolder itemView = rv.findViewHolderForAdapterPosition(pos);
+
+                    if (lastItemView != null)
+                        lastItemView.itemView.setBackgroundColor(normalItemColor);
+                    if (itemView != null) itemView.itemView.setBackgroundColor(selectedItemColor);
+                    lastSelectedItem = pos;
+                }
+            }, 50);
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
