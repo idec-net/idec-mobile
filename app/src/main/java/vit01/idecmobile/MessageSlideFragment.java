@@ -55,7 +55,7 @@ import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;
 
 public class MessageSlideFragment extends Fragment {
-    public boolean isTablet, isRealEchoarea, shouldRememberPosition;
+    public boolean isTablet, isRealEchoarea;
     Activity activity;
     ViewPager mPager;
     Drawable starredIcon, unstarredIcon;
@@ -85,7 +85,7 @@ public class MessageSlideFragment extends Fragment {
             @Override
             public void onPageSelected(final int position) {
                 updateActionBar(position);
-                if (shouldRememberPosition)
+                if (isRealEchoarea)
                     EchoReadingPosition.setPosition(echoarea, msglist.get(position));
 
                 if ((discussionStack.size() > 0) && discussionStack.get(0).equals(position) && !stackUpdate) {
@@ -152,10 +152,6 @@ public class MessageSlideFragment extends Fragment {
             else appendToTitle = prettyName + ",  ";
         } else appendToTitle = "";
 
-        // Сохраняем последнее прочитанное либо когда отключен список эх, либо когда планшетный режим
-        // И учитываем только в настоящих эхах (к таковым не относятся карбонка, непрочитанные, избранные)
-        shouldRememberPosition = (Config.values.disableMsglist || isTablet) && isRealEchoarea;
-
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
         mPager.setAdapter(pagerAdapter);
         mPager.setCurrentItem(firstPosition);
@@ -164,7 +160,7 @@ public class MessageSlideFragment extends Fragment {
         GlobalTransport.transport.setUnread(false, Collections.singletonList(msglist.get(firstPosition)));
         updateActionBar(firstPosition);
 
-        if (shouldRememberPosition) {
+        if (isRealEchoarea) {
             EchoReadingPosition.setPosition(echoarea, msglist.get(firstPosition));
         }
     }
@@ -196,8 +192,13 @@ public class MessageSlideFragment extends Fragment {
         unstarredIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_star)
                 .actionBar().color(iconColor).alpha(80);
 
-        MessageView_full fragm = ((ScreenSlidePagerAdapter) mPager.getAdapter()).mCurrentFragment;
-        setStarredIcon(fragm.messageStarred, starredMenuItem);
+        if (mPager != null) {
+            ScreenSlidePagerAdapter adapter = (ScreenSlidePagerAdapter) mPager.getAdapter();
+            if (adapter != null) {
+                MessageView_full fragm = adapter.mCurrentFragment;
+                if (fragm != null) setStarredIcon(fragm.messageStarred, starredMenuItem);
+            }
+        }
 
         if (msgCount <= 1) {
             tostart.setVisible(false);
@@ -257,6 +258,7 @@ public class MessageSlideFragment extends Fragment {
                 startActivity(intent);
                 return true;
             case R.id.action_msglist_return:
+                onPause();
                 activity.setResult(0);
                 activity.finish();
                 return true;
@@ -330,13 +332,13 @@ public class MessageSlideFragment extends Fragment {
 
     @Override
     public void onPause() {
-        if (shouldRememberPosition)
-            EchoReadingPosition.writePositionCache();
+        EchoReadingPosition.writePositionCache();
         super.onPause();
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public MessageView_full mCurrentFragment;
+
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }

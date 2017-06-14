@@ -45,6 +45,10 @@ public class EchoReaderActivity extends AppCompatActivity {
     SearchAdvancedFragment advsearch;
     MenuItem advancedSearchItem;
     SearchView searchView;
+    String echoarea;
+    ArrayList<String> msgids;
+    int nodeIndex;
+    MessageListFragment listFragment;
 
     boolean isTablet;
 
@@ -62,9 +66,9 @@ public class EchoReaderActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        String echoarea = intent.getStringExtra("echoarea");
-        ArrayList<String> msgids = intent.getStringArrayListExtra("msglist");
-        int nodeIndex = intent.getIntExtra("nodeindex", -1);
+        echoarea = intent.getStringExtra("echoarea");
+        msgids = intent.getStringArrayListExtra("msglist");
+        nodeIndex = intent.getIntExtra("nodeindex", -1);
 
         if (nodeIndex < 0) {
             findViewById(R.id.fab).setVisibility(View.INVISIBLE);
@@ -72,17 +76,23 @@ public class EchoReaderActivity extends AppCompatActivity {
 
         SimpleFunctions.setActivityTitle(this, IDECFunctions.getAreaName(echoarea));
         advsearch = SearchAdvancedFragment.newInstance(echoarea);
-
-        ((MessageListFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.msglist))
-                .initEchoView(echoarea, msgids, nodeIndex);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        MessageListFragment.alreadyOpenedSliderActivity = true;
         if (requestCode == 1) {
             if (resultCode == 1 && !SimpleFunctions.isTablet(this)) finish();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        listFragment = (MessageListFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.msglist);
+        listFragment.initEchoView(echoarea, msgids, nodeIndex);
     }
 
     @Override

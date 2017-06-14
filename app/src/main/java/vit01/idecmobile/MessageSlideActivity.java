@@ -83,6 +83,7 @@ public class MessageSlideActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        onPause();
         if (Config.values.disableMsglist) {
             setResult(1);
         } else setResult(0); // return to list

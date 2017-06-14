@@ -63,12 +63,12 @@ import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 import vit01.idecmobile.prefs.Config;
 
 public class MessageListFragment extends Fragment {
+    static boolean alreadyOpenedSliderActivity = false;
     String echoarea;
     ArrayList<String> msglist;
     int countMessages;
     int nodeIndex;
     MessageSlideFragment slider = null;
-
     RecyclerView recyclerView;
     MessageListFragment.MyAdapter mAdapter = null;
     RecyclerView.LayoutManager mLayoutManager;
@@ -133,7 +133,8 @@ public class MessageListFragment extends Fragment {
         nodeIndex = nIndex;
         slider = (MessageSlideFragment) getFragmentManager().findFragmentById(R.id.messages_slider);
 
-        loadContent(false);
+        boolean lastUnreadOnly = getActivity().getIntent().getBooleanExtra("unread_only", false);
+        loadContent(lastUnreadOnly);
     }
 
     public void showEmptyView() {
@@ -164,10 +165,24 @@ public class MessageListFragment extends Fragment {
     }
 
     boolean loadContent(boolean unread_only) {
-        ArrayList<String> tmp_msglist = IDECFunctions.loadAreaMessages(echoarea, unread_only);
-        int tmp_countMessages = tmp_msglist.size();
-
+        ArrayList<String> tmp_msglist;
         Activity activity = getActivity();
+        Intent currentIntent = activity.getIntent();
+
+        boolean lastUnreadOnly = currentIntent.getBooleanExtra("unread_only", false);
+
+        if (msglist == null || unread_only != lastUnreadOnly) {
+            tmp_msglist = IDECFunctions.loadAreaMessages(echoarea, unread_only);
+            currentIntent.putExtra("msglist", tmp_msglist);
+            if (tmp_msglist.size() > 0)
+                currentIntent.putExtra("unread_only", unread_only);
+            activity.setIntent(currentIntent);
+        } else {
+            tmp_msglist = msglist;
+            Collections.reverse(tmp_msglist);
+        }
+
+        int tmp_countMessages = tmp_msglist.size();
 
         if (tmp_countMessages == 0) {
             if (mAdapter == null) {
@@ -199,44 +214,35 @@ public class MessageListFragment extends Fragment {
         ArrayList<String> normalMsgList = new ArrayList<>(msglist);
         Collections.reverse(normalMsgList);
 
-        if ((Config.values.disableMsglist || isTablet)) {
-            switch (echoarea) {
-                case "_carbon_classic":
-                    gotPosition = lastPosition;
-                    break;
-                case "_favorites":
-                    gotPosition = lastPosition;
-                    break;
-                case "_search_results":
-                    gotPosition = 0;
-                    break;
-                case "_unread":
-                    gotPosition = 0;
-                    break;
-                default:
-                    if (!IDECFunctions.isRealEchoarea(echoarea)) gotPosition = 0;
-                    else {
-                        String lastMsgid = EchoReadingPosition.getPosition(echoarea);
-
-                        if (lastMsgid != null && normalMsgList.contains(lastMsgid)) {
-                            gotPosition = normalMsgList.lastIndexOf(lastMsgid);
-                        }
-                    }
-                    break;
-            }
-
-            if (gotPosition < 0)
-                gotPosition = 0; // исправить эту строку, если при первом заходе
-            // в эху хочется читать не первое сообщение, а какое-то другое
-
-            if (gotPosition > 0 && gotPosition > lastPosition)
+        switch (echoarea) {
+            case "_carbon_classic":
                 gotPosition = lastPosition;
-            // это предотвратит клиент от падения, если произошла чистка по ЧС или уменьшение количество мессаг в эхе
+                break;
+            case "_favorites":
+                gotPosition = lastPosition;
+                break;
+            case "_search_results":
+                gotPosition = 0;
+                break;
+            case "_unread":
+                gotPosition = 0;
+                break;
+            default:
+                if (!IDECFunctions.isRealEchoarea(echoarea)) gotPosition = 0;
+                else {
+                    String lastMsgid = EchoReadingPosition.getPosition(echoarea);
+
+                    if (lastMsgid != null && normalMsgList.contains(lastMsgid)) {
+                        gotPosition = normalMsgList.lastIndexOf(lastMsgid);
+                    }
+                }
+                break;
         }
 
         if (!isTablet && !unread_only
                 && !echoarea.equals("_carbon_classic")
                 && !echoarea.equals("_favorites")
+                && !alreadyOpenedSliderActivity
                 && (
                 Config.values.disableMsglist ||
                         echoarea.equals("_unread") ||
@@ -247,6 +253,7 @@ public class MessageListFragment extends Fragment {
             readNow.putExtra("nodeindex", nodeIndex);
             readNow.putExtra("echoarea", echoarea);
             readNow.putExtra("position", gotPosition);
+            alreadyOpenedSliderActivity = true;
             activity.startActivityForResult(readNow, 1);
         }
 
@@ -256,6 +263,7 @@ public class MessageListFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
 
         if (isTablet) {
+            alreadyOpenedSliderActivity = false;
             slider.initSlider(echoarea, normalMsgList, nodeIndex, gotPosition);
         }
         recyclerView.scrollToPosition(reversedPosition);
@@ -276,6 +284,11 @@ public class MessageListFragment extends Fragment {
             favItem.setIcon(new IconicsDrawable(activity,
                     GoogleMaterial.Icon.gmd_clear_all).actionBar()
                     .color(iconColor));
+        }
+
+        if (echoarea.equals("_unread") || echoarea.equals("_search_results")) {
+            MenuItem action_unread_only = menu.findItem(R.id.action_display_unread_only);
+            action_unread_only.setVisible(false);
         }
 
         if (countMessages <= 1) menu.findItem(R.id.action_search).setVisible(false);
@@ -450,6 +463,7 @@ public class MessageListFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     int pos = total_count - holder.position - 1;
+                    setSelection(holder.position);
 
                     if (!isTablet) {
                         ArrayList<String> normalMsglist = new ArrayList<>(msglist);
@@ -463,14 +477,13 @@ public class MessageListFragment extends Fragment {
                             intent.putExtra("nodeindex", nodeIndex);
                         }
                         intent.putExtra("position", pos);
-                        callingActivity.startActivity(intent);
+                        alreadyOpenedSliderActivity = true;
+                        callingActivity.startActivityForResult(intent, 1);
                     } else {
                         ((MessageSlideFragment) ((AppCompatActivity) callingActivity)
                                 .getSupportFragmentManager()
                                 .findFragmentById(R.id.messages_slider))
                                 .mPager.setCurrentItem(pos);
-
-                        setSelection(holder.position);
                     }
                 }
             });

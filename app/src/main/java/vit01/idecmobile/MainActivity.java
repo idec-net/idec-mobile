@@ -368,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
         updateEcholist();
         updateNavDrawerCounters();
         swipeRefresh.setEnabled(Config.values.swipeToFetch);
+        MessageListFragment.alreadyOpenedSliderActivity = false;
     }
 
     public void updateStationsList() {
