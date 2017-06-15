@@ -214,7 +214,7 @@ public class MessageSlideFragment extends Fragment {
             tostart.setIcon(startIcon);
             toend.setIcon(endIcon);
 
-            menu.findItem(R.id.action_discussion_previous).setVisible(false);
+            // menu.findItem(R.id.action_discussion_previous).setVisible(false);
             menu.findItem(R.id.action_discussion_next).setVisible(true).setIcon(discussionNextIcon);
         }
 
@@ -332,7 +332,8 @@ public class MessageSlideFragment extends Fragment {
 
     @Override
     public void onPause() {
-        EchoReadingPosition.writePositionCache();
+        if (isRealEchoarea)
+            EchoReadingPosition.writePositionCache();
         super.onPause();
     }
 

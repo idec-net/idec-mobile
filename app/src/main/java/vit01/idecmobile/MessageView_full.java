@@ -115,7 +115,7 @@ public class MessageView_full extends Fragment {
             full_repto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getActivity().onOptionsItemSelected(discussionBack);
+                    onOptionsItemSelected(discussionBack);
                 }
             });
             full_repto.setOnLongClickListener(new View.OnLongClickListener() {

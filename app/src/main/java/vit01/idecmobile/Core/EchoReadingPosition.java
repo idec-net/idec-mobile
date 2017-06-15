@@ -60,6 +60,8 @@ public class EchoReadingPosition {
     }
 
     public static void writePositionCache() {
+        if (positions_file == null || positions == null) return;
+
         if (!positions_file.exists()) {
             try {
                 boolean r = positions_file.createNewFile();

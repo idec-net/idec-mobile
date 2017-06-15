@@ -57,6 +57,7 @@ public class SimpleFunctions {
     public static String appName = "IDECMobile";
     public static ArrayList<String> emptyList = new ArrayList<>();
     public static Queue<String> debugMessages = new LinkedList<>();
+    public static Queue<String> prettyDebugMessages = new LinkedList<>();
     public static boolean debugTaskFinished = true;
     public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), HH:mm", Locale.getDefault());
     public static Pattern quote_pattern = Pattern.compile("(^\\s?[\\w_а-яА-Я\\-]{0,20})((>)+)(.+$)",
@@ -319,6 +320,14 @@ public class SimpleFunctions {
 
         if (!debugTaskFinished) {
             debugMessages.add(message);
+        }
+    }
+
+    public static void pretty_debug(String message) {
+        Log.d(appName, message);
+
+        if (!debugTaskFinished) {
+            prettyDebugMessages.add(message);
         }
     }
 
