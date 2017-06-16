@@ -346,7 +346,9 @@ public class MessageSlideFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return MessageView_full.newInstance(msglist.get(position));
+            MessageView_full instance = MessageView_full.newInstance(msglist.get(position));
+            instance.parentContext = MessageSlideFragment.this;
+            return instance;
         }
 
         @Override

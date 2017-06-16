@@ -244,9 +244,7 @@ public class MessageListFragment extends Fragment {
                 && !echoarea.equals("_favorites")
                 && !alreadyOpenedSliderActivity
                 && (
-                Config.values.disableMsglist ||
-                        echoarea.equals("_unread") ||
-                        echoarea.equals("_search_results")
+                Config.values.disableMsglist
         )) {
             Intent readNow = new Intent(activity, MessageSlideActivity.class);
             readNow.putExtra("msglist", normalMsgList);

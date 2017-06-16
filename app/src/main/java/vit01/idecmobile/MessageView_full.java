@@ -49,6 +49,7 @@ public class MessageView_full extends Fragment {
     public AbstractTransport transport = GlobalTransport.transport;
     public boolean messageStarred = false;
     MenuItem discussionBack;
+    Fragment parentContext;
     private String msgid;
     private IIMessage message;
 
@@ -115,7 +116,7 @@ public class MessageView_full extends Fragment {
             full_repto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onOptionsItemSelected(discussionBack);
+                    if (parentContext != null) parentContext.onOptionsItemSelected(discussionBack);
                 }
             });
             full_repto.setOnLongClickListener(new View.OnLongClickListener() {
