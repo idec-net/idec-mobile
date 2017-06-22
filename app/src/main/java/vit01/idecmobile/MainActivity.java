@@ -581,6 +581,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_advancedsearch:
                 advsearch.show(fm, advsearch.getTag());
                 return true;
+            case R.id.progress_fetch:
+                Intent fetchintent = new Intent(MainActivity.this, ProgressActivity.class);
+                fetchintent.putExtra("task", "fetch");
+                startActivity(fetchintent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

@@ -179,6 +179,7 @@ public class Fetcher {
         Hashtable<String, Integer> maxEconomy = new Hashtable<>();
 
         if (xc_id != null) {
+            SimpleFunctions.pretty_debug("Обновляем счётчики");
             String xc_cell_name = "xc_" + xc_id;
             String tmp_xc_cell_name = "xc_tmp_" + xc_id;
 
@@ -279,22 +280,26 @@ public class Fetcher {
             bottomOffset = fetch_limit;
             String offset = String.valueOf(bottomOffset);
 
+            SimpleFunctions.pretty_debug("Получаем индекс (" + String.valueOf(offset) + ")");
             echoBundle = Network.getFile(context,
                     address + "u/e/" + TextUtils.join("/", echoesToFetch) +
                             "/-" + offset + ":" + offset, null, timeout);
         } else {
+            SimpleFunctions.pretty_debug("Получаем индекс");
             echoBundle = Network.getFile(context,
                     address + "u/e/" + TextUtils.join("/", echoesToFetch), null, timeout);
         }
 
         Hashtable<String, ArrayList<String>> localIndex = new Hashtable<>();
 
+        SimpleFunctions.pretty_debug("Загрузка локальной базы");
         for (String echo : echoesToFetch) {
             SimpleFunctions.debug("Загрузка локальной эхи " + echo);
 
             localIndex.put(echo, transport.getMsgList(echo, 0, 0, "number"));
         }
 
+        SimpleFunctions.debug("Высчитываем разницу");
         Hashtable<String, ArrayList<String>> remoteIndex = parseRemoteIndex(echoBundle);
 
         Hashtable<String, ArrayList<String>> commonDiff = new Hashtable<>();
@@ -328,6 +333,7 @@ public class Fetcher {
 
         while (nextfetch.size() > 0) {
             bottomOffset += fetch_limit;
+            SimpleFunctions.pretty_debug("Получаем индекс (" + String.valueOf(bottomOffset) + ")");
             echoBundle = Network.getFile(context, address + "u/e/"
                             + TextUtils.join("/", nextfetch) + "/-"
                             + String.valueOf(bottomOffset) + ":" + String.valueOf(fetch_limit),
@@ -391,7 +397,12 @@ public class Fetcher {
 
         ArrayList<String> savedMessages = new ArrayList<>();
 
+        int diff_full = commonDiff.size();
+        int diff_done = 0;
+
         for (List<String> diff : difference2d) {
+            SimpleFunctions.pretty_debug("Скачиваем сообщения (" + String.valueOf(diff_done)
+                    + "/" + String.valueOf(diff_full) + ")");
             String fullBundle = Network.getFile(context,
                     address + "u/m/" + TextUtils.join("/", diff), null, timeout);
 
@@ -400,6 +411,10 @@ public class Fetcher {
                 if (savedMessages.size() > 0) return savedMessages;
                 else return null;
             }
+
+            diff_done += diff.size();
+
+            SimpleFunctions.pretty_debug("Сохраняем в базу");
 
             ArrayList<String> bundles = new ArrayList<>();
             bundles.addAll(Arrays.asList(fullBundle.split("\n")));

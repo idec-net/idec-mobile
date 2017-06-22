@@ -17,15 +17,12 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.Core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import vit01.idecmobile.Core.AbstractTransport;
-import vit01.idecmobile.Core.GlobalTransport;
-import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;
 
 public class IDECFunctions {

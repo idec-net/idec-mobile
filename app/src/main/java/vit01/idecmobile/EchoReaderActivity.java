@@ -38,6 +38,7 @@ import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
+import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;
 

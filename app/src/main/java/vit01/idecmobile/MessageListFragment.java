@@ -57,6 +57,7 @@ import java.util.Collections;
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.EchoReadingPosition;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;

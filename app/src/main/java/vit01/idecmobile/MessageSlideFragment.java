@@ -50,6 +50,7 @@ import java.util.Collections;
 import vit01.idecmobile.Core.EchoReadingPosition;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;

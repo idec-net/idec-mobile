@@ -55,6 +55,7 @@
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
         <activity android:name=".DebugActivity" />
+        <activity android:name=".ProgressActivity" />
         <activity
             android:name=".StationsActivity"
             android:label="@string/title_activity_stations"
