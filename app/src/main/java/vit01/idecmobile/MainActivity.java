@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Intent intent = new Intent(MainActivity.this, DebugActivity.class);
+                Intent intent = new Intent(MainActivity.this, ProgressActivity.class);
                 intent.putExtra("task", "fetch");
                 startActivity(intent);
 
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
         String task = getIntent().getStringExtra("task");
 
         if (task != null && task.equals("fetch")) {
-            Intent fetcher = new Intent(MainActivity.this, DebugActivity.class);
+            Intent fetcher = new Intent(MainActivity.this, ProgressActivity.class);
             fetcher.putExtra("task", "fetch");
             startActivity(fetcher);
 
@@ -536,13 +536,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_fetch: {
-                Intent intent = new Intent(this, DebugActivity.class);
+                Intent intent = new Intent(this, ProgressActivity.class);
                 intent.putExtra("task", "fetch");
                 startActivity(intent);
                 return true;
             }
             case R.id.action_send: {
-                Intent intent = new Intent(this, DebugActivity.class);
+                Intent intent = new Intent(this, ProgressActivity.class);
                 intent.putExtra("task", "send");
                 startActivity(intent);
                 return true;
@@ -580,11 +580,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.action_advancedsearch:
                 advsearch.show(fm, advsearch.getTag());
-                return true;
-            case R.id.progress_fetch:
-                Intent fetchintent = new Intent(MainActivity.this, ProgressActivity.class);
-                fetchintent.putExtra("task", "fetch");
-                startActivity(fetchintent);
                 return true;
         }
 

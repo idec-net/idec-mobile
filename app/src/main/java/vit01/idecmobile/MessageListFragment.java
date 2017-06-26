@@ -302,7 +302,7 @@ public class MessageListFragment extends Fragment {
 
         switch (id) {
             case R.id.action_mark_all_read:
-                if (echoarea.equals("_carbon_classic")) {
+                if (!IDECFunctions.isRealEchoarea(echoarea)) {
                     GlobalTransport.transport.setUnread(false, msglist);
                 } else {
                     GlobalTransport.transport.setUnread(false, echoarea);

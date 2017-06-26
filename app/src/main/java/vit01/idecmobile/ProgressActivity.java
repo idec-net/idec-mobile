@@ -21,15 +21,20 @@ package vit01.idecmobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
@@ -43,6 +48,7 @@ import vit01.idecmobile.prefs.Config;
 public class ProgressActivity extends AppCompatActivity {
     TextView info;
     ProgressBar progressBar;
+    ImageView errorView;
     Button viewLog;
     String debugLog = "";
     boolean closeWindow = true;
@@ -52,16 +58,71 @@ public class ProgressActivity extends AppCompatActivity {
         setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress);
+
+        initUI();
+
+        Intent gotIntent = getIntent();
+        String task = gotIntent.getStringExtra("task");
+        chooseTitle(task);
+
+        SimpleFunctions.debugTaskFinished = false;
+        SimpleFunctions.debugMessages.clear();
+        new Thread(new updateDebug()).start();
+
+        switch (task) {
+            case "fetch":
+                progressBar.setIndeterminate(true);
+                new Thread(new doFetch()).start();
+                // Continue, copy code from DebugActivity
+
+                break;
+            case "send":
+                progressBar.setIndeterminate(false);
+                new Thread(new sendMessages()).start();
+                // write code here
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!SimpleFunctions.debugTaskFinished) {
+            Toast.makeText(ProgressActivity.this, "Потом окно закроешь!", Toast.LENGTH_SHORT).show();
+        } else if (!closeWindow) finish();
+    }
+
+    @Override
+    public void onDestroy() {
+        SimpleFunctions.debugTaskFinished = true;
+        super.onDestroy();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setContentView(R.layout.activity_progress);
+        initUI();
+        chooseTitle(getIntent().getStringExtra("task"));
+        if (SimpleFunctions.debugTaskFinished && !closeWindow) {
+            errorHappened();
+        }
+    }
+
+    public void initUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         info = (TextView) findViewById(R.id.progress_status_text);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
+        errorView = (ImageView) findViewById(R.id.error_view);
         viewLog = (Button) findViewById(R.id.progress_watch_log);
 
         viewLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                while (SimpleFunctions.debugMessages.size() > 0) {
+                    debugLog += SimpleFunctions.debugMessages.remove() + "\n";
+                }
                 new AlertDialog.Builder(ProgressActivity.this)
                         .setMessage(debugLog)
                         .setTitle("Debug Log")
@@ -70,48 +131,29 @@ public class ProgressActivity extends AppCompatActivity {
             }
         });
 
-        Intent gotIntent = getIntent();
-        String task = gotIntent.getStringExtra("task");
-
-        new Thread(new updateDebug()).start();
-
-        switch (task) {
-            case "fetch":
-                SimpleFunctions.setActivityTitle(this, "Скачивание сообщений");
-                progressBar.setIndeterminate(true);
-                new Thread(new doFetch()).start();
-                // Continue, copy code from DebugActivity
-
-                break;
-            case "send":
-                SimpleFunctions.setActivityTitle(this, "Отправка почты");
-                progressBar.setIndeterminate(false);
-                new Thread(new sendMessages()).start();
-                // write code here
-                break;
-        }
+        errorView.setImageDrawable(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_warning).color(
+                SimpleFunctions.colorFromTheme(this, android.R.attr.textColorSecondary)).sizeDp(150));
     }
 
-    /*
-    @Override
-    public void onBackPressed() {
-        Toast.makeText(ProgressActivity.this, "Oh, wait!", Toast.LENGTH_SHORT).show();
-    }*/
-
-    @Override
-    public void onDestroy() {
-        SimpleFunctions.debugTaskFinished = true;
-        super.onDestroy();
+    public void chooseTitle(String task) {
+        String title;
+        switch (task) {
+            case "fetch":
+                title = "Скачивание сообщений";
+                break;
+            case "send":
+                title = "Отправка почты";
+                break;
+            default:
+                title = "<null>";
+                break;
+        }
+        SimpleFunctions.setActivityTitle(this, title);
     }
 
     public void finishTask() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        SimpleFunctions.debugTaskFinished = true;
 
-        SimpleFunctions.debugMessages.clear();
         SimpleFunctions.prettyDebugMessages.clear();
         runOnUiThread(new Runnable() {
             @Override
@@ -121,6 +163,13 @@ public class ProgressActivity extends AppCompatActivity {
         });
     }
 
+    public void errorHappened() {
+        info.setText("Выполнено с ошибками");
+        viewLog.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+        closeWindow = false;
+    }
 
     class updateDebug implements Runnable {
         @Override
@@ -152,7 +201,6 @@ public class ProgressActivity extends AppCompatActivity {
     class doFetch implements Runnable {
         @Override
         public void run() {
-            SimpleFunctions.debugTaskFinished = false;
             Context appContext = getApplicationContext();
 
             ArrayList<String> fetched;
@@ -192,7 +240,6 @@ public class ProgressActivity extends AppCompatActivity {
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
                 error_flag++;
             } finally {
-                SimpleFunctions.debugTaskFinished = true;
                 final int finalFetched = fetchedCount;
                 final int finalErrorFlag = error_flag;
 
@@ -201,9 +248,7 @@ public class ProgressActivity extends AppCompatActivity {
                     public void run() {
                         String message = "";
                         if (finalErrorFlag > 0) {
-                            info.setText("Выполнено с ошибками");
-                            viewLog.setVisibility(View.VISIBLE);
-                            closeWindow = false;
+                            errorHappened();
 
                             message += "Ошибок: " + String.valueOf(finalErrorFlag) + "\n\n";
 
@@ -233,7 +278,6 @@ public class ProgressActivity extends AppCompatActivity {
     class sendMessages implements Runnable {
         @Override
         public void run() {
-            SimpleFunctions.debugTaskFinished = false;
             int sent = 0;
 
             try {
@@ -243,11 +287,8 @@ public class ProgressActivity extends AppCompatActivity {
                 e.printStackTrace();
                 SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
 
-                info.setText("Выполнено с ошибками");
-                viewLog.setVisibility(View.VISIBLE);
-                closeWindow = false;
+                errorHappened();
             } finally {
-                SimpleFunctions.debugTaskFinished = true;
                 final String finalSent = String.valueOf(sent);
 
                 runOnUiThread(new Runnable() {

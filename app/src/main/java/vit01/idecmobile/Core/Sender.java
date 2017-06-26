@@ -101,6 +101,7 @@ public class Sender {
             totaldrafts += contents.size();
 
             for (File file : contents) {
+                SimpleFunctions.pretty_debug("Отправлено: " + String.valueOf(countsent));
                 Boolean sent = sendOneMessage(context, station, file, false);
                 if (sent != null) {
                     if (sent) countsent++;
