@@ -132,7 +132,7 @@ public class ProgressActivity extends AppCompatActivity {
         });
 
         errorView.setImageDrawable(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_warning).color(
-                SimpleFunctions.colorFromTheme(this, android.R.attr.textColorSecondary)).sizeDp(150));
+                SimpleFunctions.colorFromTheme(this, android.R.attr.textColorSecondary)).sizeDp(100));
     }
 
     public void chooseTitle(String task) {

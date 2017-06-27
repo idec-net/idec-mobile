@@ -115,6 +115,15 @@ public class DraftEditor extends AppCompatActivity {
             return;
         }
 
+        if (task.contains("new")) {
+            // замещаем intent, чтобы при повороте экрана не создавалось
+            // заново сообщение
+            Intent override = new Intent();
+            override.putExtra("task", "edit_existing");
+            override.putExtra("file", fileToSave);
+            setIntent(override);
+        }
+
         // Если алгоритм сохранил файл, то он сгенерировал и хэш для черновика
         // И этот хэш нам нужен
         if (task.contains("new"))
