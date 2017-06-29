@@ -23,8 +23,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.ArrayList;
-
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
@@ -67,20 +65,9 @@ public class OpenLinkActivity extends AppCompatActivity {
 
             IIMessage message = transport.getMessage(ii_link);
             if (message == null) message = new IIMessage();
-            ArrayList<String> msglist = transport.getMsgList(message.echo, 0, 0, Config.values.sortByDate ? "date" : "number");
 
-            if (msglist.contains(ii_link)) {
-                int position = msglist.lastIndexOf(ii_link);
-
-                intent.putExtra("echoarea", message.echo);
-                intent.putExtra("position", position);
-            } else {
-                msglist = new ArrayList<>();
-                msglist.add(ii_link);
-
-                intent.putExtra("msglist", msglist);
-                intent.putExtra("position", 0);
-            }
+            intent.putExtra("echoarea", message.echo);
+            intent.putExtra("msgid", ii_link);
             startActivity(intent);
         }
         finish();

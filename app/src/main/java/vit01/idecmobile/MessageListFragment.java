@@ -170,6 +170,7 @@ public class MessageListFragment extends Fragment {
         Activity activity = getActivity();
         Intent currentIntent = activity.getIntent();
 
+        String requestedMsgid = currentIntent.getStringExtra("msgid");
         boolean lastUnreadOnly = currentIntent.getBooleanExtra("unread_only", false);
 
         if (msglist == null || unread_only != lastUnreadOnly) {
@@ -231,7 +232,8 @@ public class MessageListFragment extends Fragment {
             default:
                 if (!IDECFunctions.isRealEchoarea(echoarea)) gotPosition = 0;
                 else {
-                    String lastMsgid = EchoReadingPosition.getPosition(echoarea);
+                    String savedPositionMsgid = EchoReadingPosition.getPosition(echoarea);
+                    String lastMsgid = requestedMsgid != null ? requestedMsgid : savedPositionMsgid;
 
                     if (lastMsgid != null && normalMsgList.contains(lastMsgid)) {
                         gotPosition = normalMsgList.lastIndexOf(lastMsgid);
@@ -358,7 +360,7 @@ public class MessageListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         AbstractTransport transport;
         Activity callingActivity;
         String echoarea = "no.echo";
@@ -375,13 +377,13 @@ public class MessageListFragment extends Fragment {
         private Drawable starredDrawable, unstarredDrawable;
         private RecyclerView rv;
 
-        public MyAdapter(Activity activity,
-                         RecyclerView recyclerView,
-                         ArrayList<String> hashes,
-                         AbstractTransport db,
-                         String echo,
-                         int nodeindex,
-                         int startPosition) {
+        MyAdapter(Activity activity,
+                  RecyclerView recyclerView,
+                  ArrayList<String> hashes,
+                  AbstractTransport db,
+                  String echo,
+                  int nodeindex,
+                  int startPosition) {
             msglist = hashes;
             transport = db;
             nodeIndex = nodeindex;
@@ -556,7 +558,7 @@ public class MessageListFragment extends Fragment {
             return visible_msglist.size();
         }
 
-        public void messageChanged(String msgid, boolean needScroll) {
+        void messageChanged(String msgid, boolean needScroll) {
             if (visible_msglist.contains(msgid)) {
                 int pos = visible_msglist.indexOf(msgid);
                 notifyItemChanged(pos);
@@ -568,11 +570,11 @@ public class MessageListFragment extends Fragment {
             }
         }
 
-        public void messageChanged(String msgid) {
+        void messageChanged(String msgid) {
             messageChanged(msgid, true);
         }
 
-        public void setSelection(final int pos) {
+        void setSelection(final int pos) {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -587,13 +589,13 @@ public class MessageListFragment extends Fragment {
             }, 50);
         }
 
-        public static class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView msg_subj, msg_from_to, msg_text, msg_date;
-            public ImageView msg_star;
+        static class ViewHolder extends RecyclerView.ViewHolder {
             public String msgid;
             public int position;
+            TextView msg_subj, msg_from_to, msg_text, msg_date;
+            ImageView msg_star;
 
-            public ViewHolder(View myLayout) {
+            ViewHolder(View myLayout) {
                 super(myLayout);
                 msg_subj = (TextView) myLayout.findViewById(R.id.msg_subj);
                 msg_from_to = (TextView) myLayout.findViewById(R.id.msg_from_to);
