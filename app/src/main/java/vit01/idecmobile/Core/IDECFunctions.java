@@ -97,4 +97,23 @@ public class IDECFunctions {
                 return true;
         }
     }
+
+    public static int getNodeIndex(String echoarea, boolean allow_false_results) {
+        int nodeindex = -1;
+
+        int i = 0;
+        for (Station station : Config.values.stations) {
+            if (station.echoareas.contains(echoarea)) {
+                nodeindex = i;
+                break;
+            }
+            i += 1;
+        }
+
+        if (nodeindex == -1 && !allow_false_results) {
+            nodeindex = Config.currentSelectedStation;
+        }
+
+        return nodeindex;
+    }
 }

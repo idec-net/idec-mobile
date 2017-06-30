@@ -171,6 +171,10 @@ public class MessageListFragment extends Fragment {
         Intent currentIntent = activity.getIntent();
 
         String requestedMsgid = currentIntent.getStringExtra("msgid");
+        if (requestedMsgid != null) currentIntent.removeExtra("msgid");
+        // Зануляем msgid, потому что алгоритм всё равно его запомнит, и это позволит избежать
+        // проблем с поворотом экрана и с запуском слайдер-активити
+
         boolean lastUnreadOnly = currentIntent.getBooleanExtra("unread_only", false);
 
         if (msglist == null || unread_only != lastUnreadOnly) {
@@ -201,7 +205,8 @@ public class MessageListFragment extends Fragment {
             } else {
                 Toast.makeText(activity, "Таких сообщений нет!", Toast.LENGTH_SHORT).show();
             }
-            // возвращение false приведёт к невозможности сменить чекбокс на противоположный
+            // возвращение false приведёт к невозможности сменить чекбокс
+            // [только непрочитанные] на противоположный
             return false;
         }
 
@@ -245,10 +250,9 @@ public class MessageListFragment extends Fragment {
         if (!isTablet && !unread_only
                 && !echoarea.equals("_carbon_classic")
                 && !echoarea.equals("_favorites")
-                && !alreadyOpenedSliderActivity
-                && (
-                Config.values.disableMsglist
-        )) {
+                && (!alreadyOpenedSliderActivity || requestedMsgid != null)
+                && Config.values.disableMsglist
+                ) {
             Intent readNow = new Intent(activity, MessageSlideActivity.class);
             readNow.putExtra("msglist", normalMsgList);
             readNow.putExtra("nodeindex", nodeIndex);

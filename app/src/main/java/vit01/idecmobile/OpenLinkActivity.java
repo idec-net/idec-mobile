@@ -23,11 +23,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.IIMessage;
-import vit01.idecmobile.Core.Station;
-import vit01.idecmobile.prefs.Config;
 
 public class OpenLinkActivity extends AppCompatActivity {
 
@@ -40,23 +41,9 @@ public class OpenLinkActivity extends AppCompatActivity {
         if (ii_link.contains(".")) {
             // значит это эха!
             Intent intent = new Intent(OpenLinkActivity.this, EchoReaderActivity.class);
-            int nodeindex = -1;
-
-            int i = 0;
-            for (Station station : Config.values.stations) {
-                if (station.echoareas.contains(ii_link)) {
-                    nodeindex = i;
-                    break;
-                }
-                i += 1;
-            }
-
-            if (nodeindex == -1) {
-                nodeindex = Config.currentSelectedStation;
-            }
 
             intent.putExtra("echoarea", ii_link);
-            intent.putExtra("nodeindex", nodeindex);
+            intent.putExtra("nodeindex", IDECFunctions.getNodeIndex(ii_link, false));
             startActivity(intent);
         } else {
             // иначе сообщение
@@ -66,8 +53,24 @@ public class OpenLinkActivity extends AppCompatActivity {
             IIMessage message = transport.getMessage(ii_link);
             if (message == null) message = new IIMessage();
 
-            intent.putExtra("echoarea", message.echo);
+            // Если сообщения в базе нет, то выдаётся "ненастоящая" эха no.echo.
+            // Иначе имеет смысл загрузить эху и показать сообщение внутри неё
+
+            boolean isRealEcho = IDECFunctions.isRealEchoarea(message.echo);
+            int nodeindex = -1;
+
+            if (isRealEcho) {
+                intent.putExtra("echoarea", message.echo);
+                nodeindex = IDECFunctions.getNodeIndex(message.echo, true);
+            } else {
+                ArrayList<String> s = new ArrayList<>();
+                s.add(ii_link);
+
+                intent.putExtra("echoarea", "no.echo");
+                intent.putStringArrayListExtra("msglist", s);
+            }
             intent.putExtra("msgid", ii_link);
+            intent.putExtra("nodeindex", nodeindex);
             startActivity(intent);
         }
         finish();

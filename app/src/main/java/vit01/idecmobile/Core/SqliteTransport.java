@@ -410,9 +410,9 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         String selection_block;
 
         if (users_to.size() == 1) {
-            selection_block = "msgto='" + users_to.get(0) + "'";
+            selection_block = "msgto like '%" + users_to.get(0) + "%'";
         } else {
-            selection_block = "msgto='" + TextUtils.join("' or msgto='", users_to) + "'";
+            selection_block = "msgto like '%" + TextUtils.join("%' or msgto like '%", users_to) + "%'";
         }
 
         if (unread) {
