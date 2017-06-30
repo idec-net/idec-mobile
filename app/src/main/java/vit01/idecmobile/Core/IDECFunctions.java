@@ -116,4 +116,13 @@ public class IDECFunctions {
 
         return nodeindex;
     }
+
+    public static ArrayList<String> getStationsNames() {
+        ArrayList<String> stationNames = new ArrayList<>();
+        for (Station station : Config.values.stations) {
+            stationNames.add(station.nodename);
+        }
+
+        return stationNames;
+    }
 }

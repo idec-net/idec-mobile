@@ -208,7 +208,7 @@ public class ProgressActivity extends AppCompatActivity {
             int error_flag = 0;
 
             try {
-                Fetcher fetcher = new Fetcher(GlobalTransport.transport);
+                Fetcher fetcher = new Fetcher(appContext, GlobalTransport.transport);
 
                 for (Station station : Config.values.stations) {
                     if (!station.fetch_enabled) {
@@ -221,7 +221,6 @@ public class ProgressActivity extends AppCompatActivity {
                     Integer ue_limit = (station.advanced_ue) ? station.ue_limit : 0;
 
                     fetched = fetcher.fetch_messages(
-                            appContext,
                             station.address,
                             station.echoareas,
                             xc_id,

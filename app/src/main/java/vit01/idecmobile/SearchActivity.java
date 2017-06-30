@@ -89,12 +89,6 @@ public class SearchActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                progress.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -102,6 +96,7 @@ public class SearchActivity extends AppCompatActivity {
                                 query, subjKey, echoareas, senders, receivers, addresses,
                                 time1, time2, is_favorite);
 
+                        progress.dismiss();
                         if (msgids.size() > 0) {
                             Intent intent = new Intent(SearchActivity.this, EchoReaderActivity.class);
                             intent.putExtra("echoarea", "_search_results");

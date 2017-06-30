@@ -20,6 +20,8 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -49,6 +51,7 @@ import java.util.Collections;
 
 import vit01.idecmobile.Core.EchoReadingPosition;
 import vit01.idecmobile.Core.ExternalStorage;
+import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.IIMessage;
@@ -322,11 +325,68 @@ public class MessageSlideFragment extends Fragment {
 
                     new AlertDialog.Builder(activity)
                             .setMessage("Сообщение сохранено в файл " + file.getAbsolutePath())
-                            .setPositiveButton("Ясно", null)
+                            .setPositiveButton(android.R.string.ok, null)
                             .show();
                 } else {
                     Toast.makeText(activity, "Файл " + file.getAbsolutePath() + " недоступен для записи.", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.action_update_from_server:
+                final String __msgid = msglist.get(mPager.getCurrentItem());
+                ArrayList<String> stationsNames = IDECFunctions.getStationsNames();
+
+                final Integer[] chosenStation = {0};
+
+                new AlertDialog.Builder(activity)
+                        .setTitle("Выберите станцию")
+                        .setSingleChoiceItems(stationsNames.toArray(new CharSequence[stationsNames.size()]), 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                chosenStation[0] = i;
+                            }
+                        })
+                        .setPositiveButton("Начать", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, final int i) {
+                                final ProgressDialog progress = ProgressDialog.show(activity, "Загрузка", "Подождите-ка...", true);
+                                progress.show();
+
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Fetcher fetcher = new Fetcher(activity, GlobalTransport.transport);
+                                        final boolean result = fetcher.fetch_one_message(__msgid,
+                                                Config.values.stations.get(chosenStation[0]));
+                                        if (result)
+                                            GlobalTransport.transport.setUnread(false, Collections.singletonList(__msgid));
+
+                                        activity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progress.dismiss();
+                                                if (!result) {
+                                                    new AlertDialog.Builder(activity)
+                                                            .setTitle("Ошибка")
+                                                            .setMessage("Сообщение не скачалось, посмотрите в системный лог")
+                                                            .setPositiveButton(android.R.string.ok, null)
+                                                            .show();
+                                                } else {
+                                                    ((ScreenSlidePagerAdapter) mPager.getAdapter()).mCurrentFragment.initializeMessage(mPager.getContext());
+                                                    Toast.makeText(activity, "Сообщение в базе обновлено", Toast.LENGTH_SHORT).show();
+
+                                                    if (listFragment != null) {
+                                                        listFragment.mAdapter.messageChanged(__msgid);
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

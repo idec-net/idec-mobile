@@ -49,6 +49,7 @@ public class MessageView_full extends Fragment {
     public AbstractTransport transport = GlobalTransport.transport;
     public boolean messageStarred = false;
     MenuItem discussionBack;
+    TextView full_subj, full_msg, full_from_to, full_date, full_msgid, full_repto, full_echo;
     Fragment parentContext;
     private String msgid;
     private IIMessage message;
@@ -79,11 +80,6 @@ public class MessageView_full extends Fragment {
                              Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.message_view, null, false);
 
-        message = transport.getMessage(msgid);
-        if (message == null) message = new IIMessage();
-
-        TextView full_subj, full_msg, full_from_to, full_date, full_msgid, full_repto, full_echo;
-
         full_subj = (TextView) rootLayout.findViewById(R.id.full_subj);
         full_msg = (TextView) rootLayout.findViewById(R.id.full_text);
         full_from_to = (TextView) rootLayout.findViewById(R.id.full_from_to);
@@ -91,12 +87,6 @@ public class MessageView_full extends Fragment {
         full_msgid = (TextView) rootLayout.findViewById(R.id.full_msgid);
         full_repto = (TextView) rootLayout.findViewById(R.id.full_repto);
         full_echo = (TextView) rootLayout.findViewById(R.id.full_echo);
-
-        messageStarred = message.is_favorite;
-        full_subj.setText(message.subj);
-        full_msg.setText(Html.fromHtml(SimpleFunctions.reparseMessage(inflater.getContext(), message.msg)));
-        full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
-        full_msgid.setText("msgid: " + msgid);
 
         full_msgid.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,34 +99,6 @@ public class MessageView_full extends Fragment {
                 Toast.makeText(getActivity(), "id сообщения скопирован в буфер обмена", Toast.LENGTH_SHORT).show();
             }
         });
-
-        if (message.repto == null) {
-            full_repto.setVisibility(View.GONE);
-        } else {
-            full_repto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (parentContext != null) parentContext.onOptionsItemSelected(discussionBack);
-                }
-            });
-            full_repto.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ClipboardManager clipboard = (ClipboardManager)
-                            getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("idec msgid", message.repto);
-                    clipboard.setPrimaryClip(clip);
-
-                    Toast.makeText(getActivity(), "msgid ответа скопирован в буфер обмена", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            });
-            full_repto.setText("Ответ: " + message.repto);
-        }
-
-        full_date.setText(SimpleFunctions.timestamp2date(message.time));
-        full_echo.setText(message.echo);
-
         full_msg.setMovementMethod(CustomLinkMovementMethod.getInstance());
 
         Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
@@ -177,7 +139,46 @@ public class MessageView_full extends Fragment {
                 startActivity(intent);
             }
         });
+        initializeMessage(getContext());
         return rootLayout;
+    }
+
+    public void initializeMessage(Context context) {
+        message = transport.getMessage(msgid);
+        if (message == null) message = new IIMessage();
+
+        messageStarred = message.is_favorite;
+        full_subj.setText(message.subj);
+        full_msg.setText(Html.fromHtml(SimpleFunctions.reparseMessage(context, message.msg)));
+        full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
+        full_msgid.setText("msgid: " + msgid);
+
+        if (message.repto == null) {
+            full_repto.setVisibility(View.GONE);
+        } else {
+            full_repto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (parentContext != null) parentContext.onOptionsItemSelected(discussionBack);
+                }
+            });
+            full_repto.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    ClipboardManager clipboard = (ClipboardManager)
+                            getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("idec msgid", message.repto);
+                    clipboard.setPrimaryClip(clip);
+
+                    Toast.makeText(getActivity(), "msgid ответа скопирован в буфер обмена", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+            full_repto.setText("Ответ: " + message.repto);
+        }
+
+        full_date.setText(SimpleFunctions.timestamp2date(message.time));
+        full_echo.setText(message.echo);
     }
 
     @Override

@@ -62,6 +62,7 @@ import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.GlobalConfig;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
@@ -165,11 +166,8 @@ public class AdditionalActivity extends AppCompatActivity {
 
             final Spinner spinner = (Spinner) rootView.findViewById(R.id.additional_stations_spinner);
 
-            ArrayList<String> stationNames = new ArrayList<>();
-            for (Station station : Config.values.stations) {
-                stationNames.add(station.nodename);
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, stationNames);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                    android.R.layout.simple_spinner_dropdown_item, IDECFunctions.getStationsNames());
             spinner.setAdapter(adapter);
 
             final ListView listview = (ListView) rootView.findViewById(R.id.additional_xfile_list);

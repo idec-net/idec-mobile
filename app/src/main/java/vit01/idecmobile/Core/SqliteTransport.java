@@ -156,6 +156,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     }
 
     public boolean updateMessage(String msgid, IIMessage message) {
+        if (msgid == null) {
+            return false;
+        }
+        message.id = msgid;
         ContentValues cv = getContentValues(message);
 
         SQLiteDatabase db = getDb();

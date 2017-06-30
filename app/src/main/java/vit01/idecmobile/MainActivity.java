@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                             case 12:
                                 new AlertDialog.Builder(MainActivity.this)
                                         .setMessage(BuildConfig.VERSION_NAME)
-                                        .setPositiveButton("ОК", null)
+                                        .setPositiveButton(android.R.string.ok, null)
                                         .show();
                                 break;
                         }

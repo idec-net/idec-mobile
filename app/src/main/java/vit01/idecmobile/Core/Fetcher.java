@@ -41,10 +41,12 @@ import vit01.idecmobile.prefs.Config;
 public class Fetcher {
     AbstractTransport transport;
     ArrayList<String> emptyList;
+    Context context;
 
-    public Fetcher(AbstractTransport db) {
+    public Fetcher(Context mCont, AbstractTransport db) {
         transport = db;
         emptyList = SimpleFunctions.emptyList;
+        context = mCont;
         if (!Blacklist.loaded) Blacklist.loadBlacklist();
     }
 
@@ -158,7 +160,6 @@ public class Fetcher {
     }
 
     public ArrayList<String> fetch_messages(
-            Context context,
             String address,
             ArrayList<String> firstEchoesToFetch,
             String xc_id,
@@ -444,6 +445,49 @@ public class Fetcher {
         }
 
         return savedMessages;
+    }
+
+    public boolean fetch_one_message(String msgid, Station station) {
+        String bundle = Network.getFile(context, station.address + "u/m/" + msgid, null, Config.values.connectionTimeout);
+        if (bundle == null || bundle.equals("")) {
+            SimpleFunctions.debug("Ошибка: скачанный файл пустой");
+            return false;
+        }
+        String[] lines = bundle.split("\n");
+        String[] pieces = lines[0].split(":");
+
+        if (pieces.length != 2 || !pieces[0].equals(msgid) || pieces[1].equals("")) {
+            SimpleFunctions.debug("Ошибка: повреждённый бандл сообщения");
+            return false;
+        }
+
+        SimpleFunctions.debug("savemsg " + msgid);
+        try {
+            byte[] rawmsg = Base64.decode(pieces[1], Base64.DEFAULT);
+            String message = new String(rawmsg, "UTF-8");
+
+            IIMessage parsed = new IIMessage(message);
+
+            // Смотрим, есть сообщение в базе на самом деле или его нет
+            IIMessage testInBase = transport.getMessage(msgid);
+
+            if (testInBase != null
+                    && testInBase.id.equals(msgid)
+                    && !testInBase.echo.equals("no.echo")) {
+                boolean updated = transport.updateMessage(msgid, parsed);
+
+                if (!updated) {
+                    SimpleFunctions.debug("Error in message updating");
+                    return false;
+                }
+            } else transport.saveMessage(msgid, parsed.echo, parsed);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            SimpleFunctions.debug("Invalid decoded message: " + pieces[1]);
+            return false;
+        }
     }
 
     private void xc_parse_values(Hashtable<String, Integer> htable, String[] lines) {

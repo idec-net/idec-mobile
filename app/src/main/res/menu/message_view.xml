@@ -41,6 +41,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_update_from_server"
+        android:title="Обновить с сервера"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_discussion_previous"
         android:title="Выше по обсуждению"
         android:visible="false"
