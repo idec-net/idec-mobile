@@ -1,21 +1,15 @@
 apply plugin: 'com.android.application'
 
-def buildVersionName = {
-    def date = new Date().toString();
-    return date;
-}
-
 android {
     compileSdkVersion 25
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "vit01.idecmobile"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 2
-        versionName buildVersionName()
-        // versionName "debug"
+        versionName "debug"
     }
     buildTypes {
         release {
@@ -23,7 +17,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    productFlavors {}
+    productFlavors {
+        justdebug {
+            versionName "debug"
+        }
+        debugapk {
+            def buildVersionName = {
+                def date = new Date().toString();
+                return date;
+            }
+
+            versionName buildVersionName()
+        }
+    }
 }
 
 dependencies {
