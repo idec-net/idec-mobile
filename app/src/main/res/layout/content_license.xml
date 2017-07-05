@@ -5,23 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="vit01.idecmobile.HelpActivity"
-    tools:showIn="@layout/activity_help">
+    tools:context="vit01.idecmobile.HelperActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:focusableInTouchMode="true"
+        android:descendantFocusability="beforeDescendants"
         android:padding="@dimen/text_margin">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="web|email"
-            android:text="@string/help_text"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textIsSelectable="true"
-            android:textSize="@dimen/material_text_body1" />
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="true" />
 
         <TextView
             android:id="@+id/text_GPL"
@@ -30,6 +30,7 @@
             android:autoLink="web|email"
             android:textColor="?android:attr/textColorPrimary"
             android:textIsSelectable="true"
+            android:visibility="gone"
             android:textSize="14sp" />
     </LinearLayout>
 

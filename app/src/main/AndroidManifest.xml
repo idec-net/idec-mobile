@@ -79,12 +79,8 @@
                 android:value="vit01.idecmobile.EchoReaderActivity" />
         </activity>
         <activity
-            android:name=".HelpActivity"
-            android:label="@string/title_activity_help"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="vit01.idecmobile.MainActivity" />
+            android:name=".HelperActivity"
+            android:label="@string/title_activity_help">
         </activity>
         <activity
             android:name=".OpenLinkActivity"

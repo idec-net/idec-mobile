@@ -398,12 +398,12 @@ public class Fetcher {
 
         ArrayList<String> savedMessages = new ArrayList<>();
 
-        int diff_full = commonDiff.size();
+        int diff_full = difference.size();
         int diff_done = 0;
 
         for (List<String> diff : difference2d) {
-            SimpleFunctions.pretty_debug("Скачиваем сообщения (" + String.valueOf(diff_done)
-                    + "/" + String.valueOf(diff_full) + ")");
+            String progress = "(" + String.valueOf(diff_done + diff.size()) + "/" + String.valueOf(diff_full) + ")";
+            SimpleFunctions.pretty_debug("Скачиваем сообщения " + progress);
             String fullBundle = Network.getFile(context,
                     address + "u/m/" + TextUtils.join("/", diff), null, timeout);
 
@@ -415,7 +415,7 @@ public class Fetcher {
 
             diff_done += diff.size();
 
-            SimpleFunctions.pretty_debug("Сохраняем в базу");
+            SimpleFunctions.pretty_debug("Сохраняем в базу " + progress);
 
             ArrayList<String> bundles = new ArrayList<>();
             bundles.addAll(Arrays.asList(fullBundle.split("\n")));

@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                                 break;
                             case 10:
-                                startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                                startActivity(new Intent(MainActivity.this, HelperActivity.class));
                                 break;
                             case 11:
                                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://ii-net.tk/ii/files/app-debug.apk")));
@@ -296,8 +296,13 @@ public class MainActivity extends AppCompatActivity {
         updateNavDrawerCounters();
 
         if (Config.values.firstRun) {
+            // Запускаем клиент в первый раз, показываем настройки и справку
             Config.values.firstRun = false;
             startActivity(new Intent(this, StationsActivity.class));
+
+            Intent helpIntent = new Intent(this, HelperActivity.class);
+            helpIntent.putExtra("tab", "newbie");
+            startActivity(helpIntent);
         }
 
         String task = getIntent().getStringExtra("task");

@@ -27,9 +27,21 @@
 
     <string name="title_activity_stations">StationsActivity</string>
     <string name="title_activity_help">Помощь</string>
-    <string name="help_text">
+    <string name="help_about">
         Это очень большой текст. И очень важный для клиента. Я пока что не знаю, что сюда запихать.
         Но зато я знаю, что клиент распространяется под GNU GPL.
+    </string>
+    <string name="help_newbie"><![CDATA[
+        <h3>Специально для новичков:</h3>
+        <p>Чтобы читать сообщения, пароль не требуется, достаточно указать лишь адрес станции,
+            затем нажать кнопку "Настроить всё автоматически" и (по желанию) получить список эхоконференций
+            с выбранной ноды.</p>
+
+        <p>В первый раз сообщения могут скачиваться долго, но стоит немного потерпеть.
+            Также в контекстном меню на главном экране есть пункт "Пометить почту прочитанной",
+            куда есть смысл нажать после самого первого скачивания.
+        </p>
+    ]]>
     </string>
     <string name="title_activity_additional">AdditionalActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
