@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
 public class Sender {
@@ -48,11 +49,11 @@ public class Sender {
         if (!force) {
             String hash = SimpleFunctions.hsh(str);
             if (DraftsValidator.hashExists(hash)) {
-                SimpleFunctions.debug("Удаляем пустой черновик...");
+                SimpleFunctions.debug(context.getString(R.string.sender_delete_draft));
                 boolean d = file.delete();
                 if (d) {
                     DraftsValidator.deleteHash(hash);
-                } else SimpleFunctions.debug("Ошибка при удалении черновика");
+                } else SimpleFunctions.debug(context.getString(R.string.sender_delete_draft_err));
 
                 return null;
             }
@@ -82,7 +83,7 @@ public class Sender {
             boolean rename = file.renameTo(file2);
 
             if (!rename)
-                SimpleFunctions.debug("Проблема с переименованием в " + filename_2);
+                SimpleFunctions.debug(context.getString(R.string.sender_rename_problem) + " " + filename_2);
             return true;
         }
         return false;
@@ -101,7 +102,7 @@ public class Sender {
             totaldrafts += contents.size();
 
             for (File file : contents) {
-                SimpleFunctions.pretty_debug("Отправлено: " + String.valueOf(countsent));
+                SimpleFunctions.pretty_debug(context.getString(R.string.sender_sent) + ": " + String.valueOf(countsent));
                 Boolean sent = sendOneMessage(context, station, file, false);
                 if (sent != null) {
                     if (sent) countsent++;

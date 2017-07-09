@@ -78,7 +78,7 @@ public class AdditionalActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
-        SimpleFunctions.setActivityTitle(this, "Дополнительно");
+        SimpleFunctions.setActivityTitle(this, getString(R.string.additional));
 
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
@@ -94,7 +94,7 @@ public class AdditionalActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             final File file = (File) data.getSerializableExtra("selected_file");
-            Toast.makeText(AdditionalActivity.this, "Выбрал файл " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AdditionalActivity.this, getString(R.string.file_chosen, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
 
             if (requestCode == 1) {
                 Intent intent = new Intent(AdditionalActivity.this, DebugActivity.class);
@@ -112,10 +112,10 @@ public class AdditionalActivity extends AppCompatActivity {
                     public void run() {
                         String result;
                         if (!file.exists() || !file.canRead())
-                            result = "Файл не существует или недоступен для чтения";
+                            result = getString(R.string.no_file_warning);
                         else {
                             if (file.length() > (1024 * 1024))
-                                result = "Конфиг больше мегабайта? НЕ ВЕРЮ! (c)";
+                                result = getString(R.string.config_very_big);
                             else {
                                 try {
                                     FileInputStream is = new FileInputStream(file);
@@ -124,9 +124,9 @@ public class AdditionalActivity extends AppCompatActivity {
                                     ois.close();
                                     is.close();
                                     Config.configUpdate(getApplicationContext());
-                                    result = "Вроде бы, всё прошло нормально";
+                                    result = getString(R.string.done);
                                 } catch (Exception e) {
-                                    result = "Конфиг не найден/ошибка, подгружаем обыкновенный: " + e.toString();
+                                    result = getString(R.string.config_not_found) + ": " + e.toString();
                                     SimpleFunctions.debug(result);
                                     e.printStackTrace();
 
@@ -144,11 +144,7 @@ public class AdditionalActivity extends AppCompatActivity {
                         });
                     }
                 }).start();
-            } else {
-                Toast.makeText(AdditionalActivity.this, "Что-то ещё не предусмотренное заранее", Toast.LENGTH_SHORT).show();
             }
-        } else if (resultCode == RESULT_CANCELED) {
-            Toast.makeText(AdditionalActivity.this, "Неа, не выбрал", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -176,7 +172,7 @@ public class AdditionalActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "Загружается, жди!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.wait), Toast.LENGTH_SHORT).show();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -267,18 +263,18 @@ public class AdditionalActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     new AlertDialog.Builder(getContext())
-                            .setTitle("Очистить всю базу данных")
-                            .setMessage("Ты в своём уме, товарищ??")
+                            .setTitle(R.string.action_delete_database)
+                            .setMessage(R.string.are_you_crazy)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     transport.FuckDeleteEverything();
                                     updateEchoList();
-                                    Toast.makeText(getContext(), "База очищена", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.deleting_database_complete, Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(getContext(), "Вот и правильно, что отменил!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.ok_database_is_alive, Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .show();
@@ -292,9 +288,9 @@ public class AdditionalActivity extends AppCompatActivity {
                     for (Station station : Config.values.stations) {
                         boolean deleted = SimpleFunctions.delete_xc_from_station(getContext(), station);
                         if (!deleted)
-                            SimpleFunctions.debug("Ошибка удаления для станции " + station.nodename + " & " + station.outbox_storage_id);
+                            SimpleFunctions.debug(getString(R.string.station_deletion_error, station.nodename, station.outbox_storage_id));
                     }
-                    Toast.makeText(getContext(), "Кэш /x/c очищен", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.xc_cache_clear_complete, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -314,7 +310,7 @@ public class AdditionalActivity extends AppCompatActivity {
 
                     if (!current_echo.equals("")) {
                         transport.deleteEchoarea(current_echo, true);
-                        Toast.makeText(getContext(), "Эха удалена", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.echo_deletion_complete, Toast.LENGTH_SHORT).show();
                         updateEchoList();
                     }
                 }
@@ -357,7 +353,7 @@ public class AdditionalActivity extends AppCompatActivity {
                         intent.putExtra("limit", topLimit);
                         startActivity(intent);
                     } else
-                        Toast.makeText(getContext(), "Чё-то ты не то ввёл", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.wrong_input, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -376,7 +372,7 @@ public class AdditionalActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     ArrayList<String> echoareas = GlobalTransport.transport.fullEchoList();
                     if (echoareas.size() == 0) {
-                        Toast.makeText(getActivity(), "Экспортировать нечего!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.nothing_to_export, Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -414,7 +410,7 @@ public class AdditionalActivity extends AppCompatActivity {
                             try {
                                 File toExport = new File(ExternalStorage.rootStorage.getParentFile(), "idecConfig_" + String.valueOf(System.currentTimeMillis()) + ".obj");
                                 if (!toExport.exists() && !toExport.createNewFile())
-                                    throw new IOException("Ошибка: не удалось создать файл " + toExport.getAbsolutePath());
+                                    throw new IOException(getString(R.string.create_file_error) + toExport.getAbsolutePath());
 
                                 FileOutputStream os = new FileOutputStream(toExport);
                                 ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -422,11 +418,11 @@ public class AdditionalActivity extends AppCompatActivity {
                                 oos.close();
                                 os.close();
 
-                                result = "Конфиг сохранён в файл " + toExport.getAbsolutePath();
+                                result = getString(R.string.config_saved) + " " + toExport.getAbsolutePath();
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 SimpleFunctions.debug(e.toString());
-                                result = "Ошибка: " + e.toString();
+                                result = getString(R.string.error_formatted, e.toString());
                             }
 
                             final String finalResult = result;
@@ -507,7 +503,7 @@ public class AdditionalActivity extends AppCompatActivity {
                                 mContext.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(mContext, "Ошибка скачивания ЧС со станции", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, R.string.blacklist_download_error, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 return;
@@ -518,14 +514,15 @@ public class AdditionalActivity extends AppCompatActivity {
                             File blacklist_file = new File(ExternalStorage.rootStorage, Blacklist.filename);
                             if (!blacklist_file.exists()) try {
                                 boolean created = blacklist_file.createNewFile();
-                                if (!created) throw new IOException("Файл ЧС не был создан");
+                                if (!created)
+                                    throw new IOException("Blacklist file was not created");
                             } catch (IOException e) {
                                 SimpleFunctions.debug(e.toString());
                                 e.printStackTrace();
                                 mContext.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(mContext, "Ошибка создани файла", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, R.string.create_file_error, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 return;
@@ -539,12 +536,12 @@ public class AdditionalActivity extends AppCompatActivity {
                                 mContext.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(mContext, "Чёрный список сохранён", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, R.string.blacklist_saved, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                final String error = "Ошибка записи ЧС в файл " + e.toString();
+                                final String error = getString(R.string.blacklist_save_error) + " " + e.toString();
                                 SimpleFunctions.debug(error);
 
                                 mContext.runOnUiThread(new Runnable() {
@@ -559,7 +556,7 @@ public class AdditionalActivity extends AppCompatActivity {
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(mContext, "ЧС загружен в ОЗУ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, R.string.blacklist_loaded, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -577,9 +574,9 @@ public class AdditionalActivity extends AppCompatActivity {
 
                     if (blacklist_file.exists()) {
                         boolean deleted = blacklist_file.delete();
-                        if (deleted) result = "ЧС успешно удалён";
-                        else result = "Ошибка удаления чёрного списка";
-                    } else result = "Удалять нечего";
+                        if (deleted) result = getString(R.string.blacklist_deleted);
+                        else result = getString(R.string.blacklist_deletion_error);
+                    } else result = getString(R.string.nothing_to_delete);
 
                     Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
                 }
@@ -618,11 +615,11 @@ public class AdditionalActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Файлы ноды";
+                    return getString(R.string.node_files);
                 case 1:
-                    return "База данных";
+                    return getString(R.string.database);
                 case 2:
-                    return "Чёрный список";
+                    return getString(R.string.blacklist);
             }
             return null;
         }

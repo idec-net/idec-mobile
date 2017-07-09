@@ -77,13 +77,14 @@ public class SearchActivity extends AppCompatActivity {
                 (time1 == null || time2 == null) &&
                 !is_favorite) {
 
-            Toast.makeText(SearchActivity.this, "Введены пустые параметры! Искать нечего", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SearchActivity.this, R.string.empty_search_params, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
 
-        final ProgressDialog progress = ProgressDialog.show(SearchActivity.this, "Идёт поиск", "Подождите-ка...", true);
+        final ProgressDialog progress = ProgressDialog.show(SearchActivity.this,
+                getString(R.string.searching_messages), getString(R.string.wait), true);
         progress.show();
 
         new Thread(new Runnable() {
@@ -103,7 +104,7 @@ public class SearchActivity extends AppCompatActivity {
                             intent.putExtra("msglist", msgids);
                             startActivity(intent);
                         } else
-                            Toast.makeText(SearchActivity.this, "Ничего не найдено!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SearchActivity.this, R.string.nothing_found, Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });

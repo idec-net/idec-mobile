@@ -87,7 +87,7 @@ public class ProgressActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!SimpleFunctions.debugTaskFinished) {
-            Toast.makeText(ProgressActivity.this, "Потом окно закроешь!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProgressActivity.this, R.string.close_window_later, Toast.LENGTH_SHORT).show();
         } else if (!closeWindow) finish();
     }
 
@@ -139,10 +139,10 @@ public class ProgressActivity extends AppCompatActivity {
         String title;
         switch (task) {
             case "fetch":
-                title = "Скачивание сообщений";
+                title = getString(R.string.loading_messages);
                 break;
             case "send":
-                title = "Отправка почты";
+                title = getString(R.string.sending_letters);
                 break;
             default:
                 title = "<null>";
@@ -164,7 +164,7 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     public void errorHappened() {
-        info.setText("Выполнено с ошибками");
+        info.setText(R.string.done_with_errors);
         viewLog.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
         errorView.setVisibility(View.VISIBLE);
@@ -236,7 +236,7 @@ public class ProgressActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
                 error_flag++;
             } finally {
                 final int finalFetched = fetchedCount;
@@ -249,17 +249,18 @@ public class ProgressActivity extends AppCompatActivity {
                         if (finalErrorFlag > 0) {
                             errorHappened();
 
-                            message += "Ошибок: " + String.valueOf(finalErrorFlag) + "\n\n";
+                            message += getString(R.string.errors, finalErrorFlag) + "\n\n";
 
                             if (finalFetched == 0)
-                                message += "Проблема c загрузкой сообщений\nПроверьте подключение к интернету";
-                        } else if (finalFetched == 0) message += "Новых сообщений нет";
+                                message += getString(R.string.internet_error);
+                        } else if (finalFetched == 0)
+                            message += getString(R.string.no_new_messages);
 
                         if (!message.equals(""))
                             Toast.makeText(ProgressActivity.this, message, Toast.LENGTH_SHORT).show();
 
                         if (finalFetched > 0) {
-                            Toast.makeText(getApplicationContext(), "Получено сообщений: " + String.valueOf(finalFetched), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.messages_got, finalFetched), Toast.LENGTH_SHORT).show();
 
                             if (Config.values.openUnreadAfterFetch) {
                                 Intent unreadIntent = new Intent(ProgressActivity.this, EchoReaderActivity.class);
@@ -281,19 +282,18 @@ public class ProgressActivity extends AppCompatActivity {
 
             try {
                 sent = Sender.sendMessages(getApplicationContext());
-                SimpleFunctions.debug("Отправлено сообщений: " + String.valueOf(sent));
+                SimpleFunctions.debug(getString(R.string.messages_sent, sent));
             } catch (Exception e) {
                 e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
 
                 errorHappened();
             } finally {
-                final String finalSent = String.valueOf(sent);
-
+                final int finalSent = sent;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Отправлено сообщений: " + finalSent, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.messages_sent, finalSent), Toast.LENGTH_SHORT).show();
                     }
                 });
 

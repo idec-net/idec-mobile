@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="25dp"
-                    android:text="Посмотреть полный лог"
+                    android:text="@string/action_view_full_log"
                     android:visibility="gone" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

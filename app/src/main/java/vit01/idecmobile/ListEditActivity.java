@@ -71,7 +71,7 @@ public class ListEditActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
-        SimpleFunctions.setActivityTitle(this, "Правка списка эх");
+        SimpleFunctions.setActivityTitle(this, getString(R.string.title_activity_list_edit));
 
         Intent in = getIntent();
         String listType = in.getStringExtra("type");
@@ -211,7 +211,7 @@ public class ListEditActivity extends AppCompatActivity {
         );
 
         editEchoarea = new AlertDialog.Builder(ListEditActivity.this)
-                .setTitle("Правка эхоконференции")
+                .setTitle(R.string.echolist_edit_echo)
                 .setView(alertView)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -246,7 +246,7 @@ public class ListEditActivity extends AppCompatActivity {
                             editEchoarea.cancel();
                         } else {
                             Toast.makeText(ListEditActivity.this,
-                                    "В списке должна быть хотя бы одна эхоконференция!",
+                                    R.string.echolist_at_least_one_echo,
                                     Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -254,7 +254,7 @@ public class ListEditActivity extends AppCompatActivity {
                 contents_adapter.notifyDataSetChanged();
             }
         });
-        Toast.makeText(ListEditActivity.this, "Перемещаем и удяляем эхи через drag&drop!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ListEditActivity.this, R.string.echolist_drag_drop_edit, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -23,11 +23,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import vit01.idecmobile.Strings;
+
 public class Station implements Serializable {
     static final long serialVersionUID = 100L;
 
     public String
-            nodename = "New Station",
+            nodename = Strings.node_mira,
             address = "https://ii-net.tk/ii/ii-point.php?q=/",
             authstr = "",
             outbox_storage_id = null;

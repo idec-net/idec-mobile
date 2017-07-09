@@ -144,7 +144,7 @@ public class StationsActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.delete_station) {
             if (Config.values.stations.size() == 1) {
-                Toast.makeText(StationsActivity.this, "Это последняя станция!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(StationsActivity.this, R.string.warning_last_station, Toast.LENGTH_SHORT).show();
             } else {
                 currentIndex = spinner.getSelectedItemPosition();
 
@@ -154,8 +154,8 @@ public class StationsActivity extends AppCompatActivity {
 
                 if (contents.size() > 0) {
                     new AlertDialog.Builder(this)
-                            .setTitle("Удалить станцию")
-                            .setMessage("На этой станции остались черновики/отправленные сообщения. Точно удалить?")
+                            .setTitle(R.string.delete_node)
+                            .setMessage(R.string.delete_node_confirm)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     for (File file : contents) {
@@ -167,7 +167,7 @@ public class StationsActivity extends AppCompatActivity {
                                     if (draftsDir != null) {
                                         boolean r = draftsDir.delete();
                                         if (!r)
-                                            Toast.makeText(StationsActivity.this, "Чё-то не заработало :(", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(StationsActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
                                     }
 
                                     SimpleFunctions.delete_xc_from_station(getApplicationContext(), Config.values.stations.get(currentIndex));
@@ -179,7 +179,7 @@ public class StationsActivity extends AppCompatActivity {
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(StationsActivity.this, "Оки-доки-локи!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(StationsActivity.this, android.R.string.ok, Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .show();
@@ -187,7 +187,7 @@ public class StationsActivity extends AppCompatActivity {
                     if (draftsDir != null) {
                         boolean r = draftsDir.delete();
                         if (!r)
-                            Toast.makeText(StationsActivity.this, "Пустой каталог для черновиков не удалился...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(StationsActivity.this, R.string.draft_dir_deletion_error, Toast.LENGTH_SHORT).show();
                     }
 
                     SimpleFunctions.delete_xc_from_station(getApplicationContext(), Config.values.stations.get(currentIndex));
@@ -334,7 +334,7 @@ public class StationsActivity extends AppCompatActivity {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getContext(), "Адрес станции должен заканчиваться слешем, запомни на будущее!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), R.string.station_slash_at_the_end, Toast.LENGTH_SHORT).show();
                                         address.setText(finalStr_address);
                                     }
                                 });
@@ -343,7 +343,7 @@ public class StationsActivity extends AppCompatActivity {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getContext(), "Подожди-ка...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.wait, Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -375,7 +375,7 @@ public class StationsActivity extends AppCompatActivity {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getContext(), "Адрес станции должен заканчиваться слешем, запомни на будущее!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), R.string.station_slash_at_the_end, Toast.LENGTH_SHORT).show();
                                         address.setText(finalStr_address);
                                     }
                                 });
@@ -384,7 +384,7 @@ public class StationsActivity extends AppCompatActivity {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getContext(), "Связываемся со станцией...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.connecting_to_station, Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -408,9 +408,9 @@ public class StationsActivity extends AppCompatActivity {
                         download_all_warning = false;
 
                         new AlertDialog.Builder(getContext())
-                                .setTitle("Предупреждение")
-                                .setMessage("Эта опция довольно неприятная, потому что в некоторых случаях она может выкачать всю эху целиком (до нескольких тысяч сообщений!). Рекомендуется включить принудительную обрезку индекса, чтобы не напороться на эти грабли.")
-                                .setPositiveButton("Я знаю, что делаю", null)
+                                .setTitle(R.string.warning)
+                                .setMessage(R.string.warning_download_limits)
+                                .setPositiveButton(R.string.i_am_really_sure, null)
                                 .show();
                     }
                 }
@@ -435,7 +435,7 @@ public class StationsActivity extends AppCompatActivity {
             }
             cut_remote_index.setText("50");
 
-            Toast.makeText(getContext(), "Автоконфигурация выполнена", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.autoconfig_done, Toast.LENGTH_SHORT).show();
         }
 
         public void installEchoList(String rawfile, final int nodeindex) {
@@ -447,7 +447,7 @@ public class StationsActivity extends AppCompatActivity {
 
             if (rawfile == null) {
                 SimpleFunctions.debug("installEchoList: rawfile = null");
-                Toast.makeText(getActivity(), "Ошибка: список эх не получен!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.interner_error_echolist, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -465,7 +465,7 @@ public class StationsActivity extends AppCompatActivity {
             }
 
             if (realEchoList.size() == 0) {
-                Toast.makeText(mContext, "Проблемы с парсингом списка эх!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.echolist_parsing_error, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -478,9 +478,9 @@ public class StationsActivity extends AppCompatActivity {
             lv.setAdapter(adapter);
 
             new AlertDialog.Builder(getActivity())
-                    .setTitle("Установить этот список эх?")
+                    .setTitle(R.string.echolist_confirm_install)
                     .setView(lv)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Config.values.stations.get(nodeindex).echoareas = realEchoList;
@@ -489,7 +489,7 @@ public class StationsActivity extends AppCompatActivity {
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(mContext, "Правь список сам...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, R.string.edit_by_yourself, Toast.LENGTH_SHORT).show();
                         }
                     }).show();
         }

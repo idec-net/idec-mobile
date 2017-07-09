@@ -172,18 +172,18 @@ public class MainActivity extends AppCompatActivity {
         emailText.setTextSize(15f);
         emailText.setAlpha(0.8f);
 
-        PrimaryDrawerItem echoItem = new PrimaryDrawerItem().withIdentifier(1).withName("Эхоконференции").withIcon(GoogleMaterial.Icon.gmd_message);
-        PrimaryDrawerItem carbonItem = new PrimaryDrawerItem().withIdentifier(2).withName("Карбонка").withIcon(GoogleMaterial.Icon.gmd_input).withSelectable(false);
-        PrimaryDrawerItem unreadItem = new PrimaryDrawerItem().withIdentifier(3).withName("Непрочитанные").withIcon(GoogleMaterial.Icon.gmd_remove_red_eye).withSelectable(false);
-        PrimaryDrawerItem sentItem = new PrimaryDrawerItem().withIdentifier(4).withName("Отправленные").withIcon(GoogleMaterial.Icon.gmd_send).withSelectable(false);
-        final PrimaryDrawerItem draftsItem = new PrimaryDrawerItem().withIdentifier(5).withName("Черновики").withIcon(GoogleMaterial.Icon.gmd_drafts).withSelectable(false);
-        PrimaryDrawerItem starredItem = new PrimaryDrawerItem().withIdentifier(6).withName("Избранные").withIcon(GoogleMaterial.Icon.gmd_star).withSelectable(false);
-        final PrimaryDrawerItem offlineItem = new PrimaryDrawerItem().withIdentifier(7).withName("Offline-эхи").withIcon(GoogleMaterial.Icon.gmd_signal_wifi_off);
-        PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(8).withName("Дополнительно").withIcon(GoogleMaterial.Icon.gmd_extension).withSelectable(false);
-        PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(9).withName("Настройки").withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
-        PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(10).withName("Помощь").withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
-        PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName("Обновиться").withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);
-        PrimaryDrawerItem infoItem = new PrimaryDrawerItem().withIdentifier(12).withName("Дата сборки").withIcon(GoogleMaterial.Icon.gmd_info).withSelectable(false);
+        PrimaryDrawerItem echoItem = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.echoareas).withIcon(GoogleMaterial.Icon.gmd_message);
+        PrimaryDrawerItem carbonItem = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.carbon).withIcon(GoogleMaterial.Icon.gmd_input).withSelectable(false);
+        PrimaryDrawerItem unreadItem = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.unread).withIcon(GoogleMaterial.Icon.gmd_remove_red_eye).withSelectable(false);
+        PrimaryDrawerItem sentItem = new PrimaryDrawerItem().withIdentifier(4).withName(R.string.sent).withIcon(GoogleMaterial.Icon.gmd_send).withSelectable(false);
+        final PrimaryDrawerItem draftsItem = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.drafts).withIcon(GoogleMaterial.Icon.gmd_drafts).withSelectable(false);
+        PrimaryDrawerItem starredItem = new PrimaryDrawerItem().withIdentifier(6).withName(R.string.favorites).withIcon(GoogleMaterial.Icon.gmd_star).withSelectable(false);
+        final PrimaryDrawerItem offlineItem = new PrimaryDrawerItem().withIdentifier(7).withName(R.string.offline_echoes).withIcon(GoogleMaterial.Icon.gmd_signal_wifi_off);
+        PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(8).withName(R.string.additional).withIcon(GoogleMaterial.Icon.gmd_extension).withSelectable(false);
+        PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(9).withName(R.string.settings).withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
+        PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(10).withName(R.string.title_activity_help).withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
+        PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName(R.string.update).withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);
+        PrimaryDrawerItem infoItem = new PrimaryDrawerItem().withIdentifier(12).withName(R.string.build_date).withIcon(GoogleMaterial.Icon.gmd_info).withSelectable(false);
 
         DrawerBuilder drawerBuilder = new DrawerBuilder()
                 .withActivity(this)
@@ -396,8 +396,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         drawerHeader.addProfiles(
-                new ProfileSettingDrawerItem().withName("Добавить станцию").withIdentifier(ADD_NODE).withIcon(GoogleMaterial.Icon.gmd_add),
-                new ProfileSettingDrawerItem().withName("Управление станциями").withIdentifier(MANAGE_NODE).withIcon(GoogleMaterial.Icon.gmd_settings)
+                new ProfileSettingDrawerItem().withName(getString(R.string.add_node)).withIdentifier(ADD_NODE).withIcon(GoogleMaterial.Icon.gmd_add),
+                new ProfileSettingDrawerItem().withName(getString(R.string.manage_node)).withIdentifier(MANAGE_NODE).withIcon(GoogleMaterial.Icon.gmd_settings)
         );
 
         if (Config.currentSelectedStation > (Config.values.stations.size() - 1)) {
@@ -564,7 +564,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(MainActivity.this, "Подождите...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, R.string.wait, Toast.LENGTH_SHORT).show();
                             }
                         });
 

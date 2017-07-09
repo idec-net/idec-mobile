@@ -110,7 +110,7 @@ public class Network {
 
     public static void setupProxy() {
         if (!Config.values.useProxy) {
-            SimpleFunctions.debug("(Прокси сервер: не используется)");
+            SimpleFunctions.debug("(Not using proxy servers this time)");
             Authenticator.setDefault(null);
             proxy = Proxy.NO_PROXY;
             NetCipher.setProxy(proxy);
@@ -122,11 +122,11 @@ public class Network {
         URI uri = null;
         try {
             uri = new URI("http://" + Config.values.proxyAddress);
-            SimpleFunctions.debug("Используем прокси " + uri.getHost() + " " + uri.getPort() + " " + uri.getUserInfo());
+            SimpleFunctions.debug("Using proxy: " + uri.getHost() + " " + uri.getPort() + " " + uri.getUserInfo());
         } catch (URISyntaxException e) {
             e.printStackTrace();
             SimpleFunctions.debug(e.toString());
-            SimpleFunctions.debug("Ошибка парсинга адреса прокси-сервера!");
+            SimpleFunctions.debug("Error parsing proxy server address!");
         }
 
         String host = (uri != null) ? uri.getHost() : "127.0.0.1";

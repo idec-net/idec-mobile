@@ -53,7 +53,7 @@ public class Config {
             is.close();
             configUpdate(context);
         } catch (Exception e) {
-            SimpleFunctions.debug("Конфиг не найден/ошибка, создаём по умолчанию");
+            SimpleFunctions.debug("Config is not found (or error), create from default");
             e.printStackTrace();
 
             values = new GlobalConfig();
@@ -76,7 +76,7 @@ public class Config {
             oos.close();
             os.close();
         } catch (Exception e) {
-            SimpleFunctions.debug("Ошибка записи конфига");
+            SimpleFunctions.debug("Error writing config");
             e.printStackTrace();
         }
     }

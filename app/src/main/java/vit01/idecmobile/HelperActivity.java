@@ -210,11 +210,11 @@ public class HelperActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "О нас";
+                    return getString(R.string.about);
                 case 1:
-                    return "Для новичков";
+                    return getString(R.string.newbies);
                 case 2:
-                    return "Лицензия";
+                    return getString(R.string.license);
             }
             return null;
         }

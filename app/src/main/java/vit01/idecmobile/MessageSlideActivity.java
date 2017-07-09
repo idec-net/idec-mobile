@@ -61,7 +61,7 @@ public class MessageSlideActivity extends AppCompatActivity {
         ArrayList<String> msglist = gotInfo.getStringArrayListExtra("msglist");
 
         if (msglist == null || msglist.size() == 0) {
-            Toast.makeText(MessageSlideActivity.this, "Список сообщений пуст, выходим", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MessageSlideActivity.this, R.string.empty_msglist, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }

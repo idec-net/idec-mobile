@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Подробнее про расширение /x/file написано в документации" />
+            android:text="@string/help_xfile_short" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:id="@+id/additional_load_xfile_list"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Скачать список" />
+                android:text="@string/action_download_list" />
         </LinearLayout>
     </LinearLayout>
 

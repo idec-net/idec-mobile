@@ -92,8 +92,8 @@ public class DraftsView extends AppCompatActivity {
         Intent intent = getIntent();
         unsent_only = intent.getBooleanExtra("unsent", true);
 
-        if (unsent_only) SimpleFunctions.setActivityTitle(this, "Черновики");
-        else SimpleFunctions.setActivityTitle(this, "Отправленные");
+        if (unsent_only) SimpleFunctions.setActivityTitle(this, getString(R.string.drafts));
+        else SimpleFunctions.setActivityTitle(this, getString(R.string.sent));
 
         loadContent(unsent_only);
     }
@@ -212,11 +212,12 @@ public class DraftsView extends AppCompatActivity {
         switch (id) {
             case R.id.action_drafts_remove_all:
                 new AlertDialog.Builder(this)
-                        .setTitle("Очистка сообщений")
-                        .setMessage((unsent_only) ? "Удалить все черновики?" : "Удалить все отправленные?")
+                        .setTitle(R.string.action_delete_drafts)
+                        .setMessage((unsent_only) ? R.string.confirm_delete_drafts : R.string.confirm_delete_sent)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                final ProgressDialog progress = ProgressDialog.show(DraftsView.this, "Подождите", "Сообщения удаляются...", true);
+                                final ProgressDialog progress = ProgressDialog.show(DraftsView.this,
+                                        getString(R.string.wait), getString(R.string.deleting_messages), true);
                                 progress.show();
 
                                 new Thread(new Runnable() {
@@ -232,7 +233,7 @@ public class DraftsView extends AppCompatActivity {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(getApplicationContext(), "Выполнено!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getApplicationContext(), R.string.done, Toast.LENGTH_SHORT).show();
                                                 finish();
                                             }
                                         });
@@ -243,7 +244,7 @@ public class DraftsView extends AppCompatActivity {
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(DraftsView.this,
-                                        "Правильно, пусть останутся!", Toast.LENGTH_SHORT).show();
+                                        R.string.ok_let_them_exist, Toast.LENGTH_SHORT).show();
                             }
                         })
                         .show();
@@ -368,7 +369,7 @@ public class DraftsView extends AppCompatActivity {
                 total_count--;
                 notifyItemRemoved(position);
             } else {
-                Toast.makeText(callingActivity, "Удалить не получилось :(", Toast.LENGTH_SHORT).show();
+                Toast.makeText(callingActivity, R.string.error, Toast.LENGTH_SHORT).show();
             }
         }
 

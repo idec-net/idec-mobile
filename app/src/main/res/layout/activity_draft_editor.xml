@@ -56,9 +56,9 @@
                     style="@style/AppTheme.EditTextFullWidth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Эхоконференция"
+                    android:hint="@string/echoarea"
                     android:inputType="none"
-                    android:singleLine="true" />
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <View style="@style/Divider" />
@@ -73,8 +73,8 @@
                     style="@style/AppTheme.EditTextFullWidth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Кому"
-                    android:singleLine="true" />
+                    android:hint="@string/to"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <View style="@style/Divider" />
@@ -89,8 +89,8 @@
                     style="@style/AppTheme.EditTextFullWidth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Тема"
-                    android:singleLine="true" />
+                    android:hint="@string/subj"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <View style="@style/Divider" />
@@ -105,9 +105,9 @@
                     style="@style/AppTheme.EditTextFullWidth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ответ на"
+                    android:hint="@string/answer_to"
                     android:inputType="none"
-                    android:singleLine="true" />
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <View style="@style/Divider" />
@@ -122,7 +122,7 @@
                     style="@style/AppTheme.EditTextFullWidth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Сообщение"
+                    android:hint="@string/message"
                     android:inputType="textLongMessage|textMultiLine|textCapSentences" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>

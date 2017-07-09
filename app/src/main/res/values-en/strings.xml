@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string-array name="echo_menu_options">
+        <item>To the beginning</item>
+        <item>To the end</item>
+        <item>Remove from the list</item>
+    </string-array>
+
+    <string name="action_settings">Client settings</string>
+    <string name="help_about">This is empty, sorry</string>
+    <string name="help_newbie">This is empty, sorry</string>
+    <string name="permission_grant_text">This is empty, sorry</string>
+    <string name="permission_grant_top">Please grant filesystem access permission</string>
+    <string name="settings_carbon_names">Carbon area user names</string>
+    <string name="settings_carbon_names_summary">Messages sent to the selected users will appear in carbon area (delimiter is colon)</string>
+    <string name="settings_carbon_size">Carbon area size in messages</string>
+    <string name="settings_carbon_size_summary">Show up to N messages in carbon area</string>
+    <string name="settings_category_interface">User Interface</string>
+    <string name="settings_category_network">Network</string>
+    <string name="settings_category_notifications">Notifications</string>
+    <string name="settings_citation">Simplified quotation</string>
+    <string name="settings_citation_summary">Don\'t include usernames in quotes</string>
+    <string name="settings_editor">Built-in messages editor</string>
+    <string name="settings_editor_summary">Use client\'s built-in editor to write/answer messages</string>
+    <string name="settings_hide_toolbar">Hide toolbar</string>
+    <string name="settings_hide_toolbar_summary">Hide application toolbar while scrolling messages</string>
+    <string name="settings_messages_per_request_summary">Maximum amount of messages downloaded per request. If you have unstable network connection, you may lower the value</string>
+    <string name="settings_messages_per_request">Messages downloaded per request</string>
+    <string name="settings_network_timeout">Connection timeout</string>
+    <string name="settings_network_timeout_summary">Specify time amount in seconds</string>
+    <string name="settings_notification_freq">Check-up frequency</string>
+    <string name="settings_notification_freq_summary">Check for new messages every N minutes</string>
+    <string name="settings_notification_vibrate">Vibration</string>
+    <string name="settings_notification_vibrate_summary">Vibrate if new messages are available on server</string>
+    <string name="settings_notifications">Turn on notifications</string>
+    <string name="settings_notifications_summary">Show notifications informing of new messages</string>
+    <string name="settings_open_last_read_message">Show message read last time</string>
+    <string name="settings_open_last_read_message_summary">Don\'t show messages list when navigating to echoarea, instantly start reading mode instead</string>
+    <string name="settings_open_unread_after_fetch">Unread after fetch</string>
+    <string name="settings_open_unread_after_fetch_summary">Show all unread messages right after downloading</string>
+    <string name="settings_proxy">HTTP proxy</string>
+    <string name="settings_proxy_address">Proxy settings</string>
+    <string name="settings_proxy_address_summary">String format: user:pass@host:port. Orbot usually uses port 8118, i2p prefers 4444</string>
+    <string name="settings_proxy_summary">Connect through proxy server</string>
+    <string name="settings_pull_to_refresh">Pull to refresh</string>
+    <string name="settings_pull_to_refresh_summary">Fetch new messages from server pulling the finger down on the main screen</string>
+    <string name="settings_select_theme">Theme choose</string>
+    <string name="settings_select_theme_summary">Change client appearance</string>
+    <string name="settings_sort_by_date">Sort by the date message was sent</string>
+    <string name="settings_sort_by_date_summary">Otherwise messages are sorted by fetching time</string>
+    <string name="settings_tor">Tor integration</string>
+    <string name="settings_tor_summary">Start Orbot automatically</string>
+    <string name="title_activity_help">Help</string>
+    <string name="action_send">Send</string>
+    <string name="blacklist">Blacklist</string>
+    <string name="of">" of "</string>
+    <string name="node_tavern">Tavern</string>
+    <string name="node_mira">Mira Station</string>
+    <string name="acra_report_title">Oops, a terrible error happened!</string>
+    <string name="acra_report_description">Send us a bug report letter if you\'re really good and kind person</string>
+    <string name="blacklist_apply">Apply blacklist to the index&#8230;</string>
+    <string name="blacklist_clear">Clear messages by blacklist</string>
+    <string name="create_file_error">"Can't create file "</string>
+    <string name="drafts_cache">Drafts validation cache</string>
+    <string name="echo_positions">Read-Positions Cache</string>
+    <string name="empty_file_warning">" is not present or it's unavailable for reading"</string>
+    <string name="fetcher_bundle_get_error"></string>
+    <string name="file_write_error">"Error writing data to "</string>
+    <string name="fetcher_update_counters">Update counters</string>
+</resources>

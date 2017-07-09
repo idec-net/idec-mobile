@@ -96,7 +96,7 @@ public class MessageView_full extends Fragment {
                 ClipData clip = ClipData.newPlainText("idec msgid", message.id);
                 clipboard.setPrimaryClip(clip);
 
-                Toast.makeText(getActivity(), "id сообщения скопирован в буфер обмена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.msgid_clipboard_done, Toast.LENGTH_SHORT).show();
             }
         });
         full_msg.setMovementMethod(CustomLinkMovementMethod.getInstance());
@@ -151,7 +151,7 @@ public class MessageView_full extends Fragment {
         full_subj.setText(message.subj);
         full_msg.setText(Html.fromHtml(SimpleFunctions.reparseMessage(context, message.msg)));
         full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
-        full_msgid.setText("msgid: " + msgid);
+        full_msgid.setText(String.format("msgid: %s", msgid));
 
         if (message.repto == null) {
             full_repto.setVisibility(View.GONE);
@@ -170,11 +170,11 @@ public class MessageView_full extends Fragment {
                     ClipData clip = ClipData.newPlainText("idec msgid", message.repto);
                     clipboard.setPrimaryClip(clip);
 
-                    Toast.makeText(getActivity(), "msgid ответа скопирован в буфер обмена", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.repto_clipboard_done, Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });
-            full_repto.setText("Ответ: " + message.repto);
+            full_repto.setText(getString(R.string.answered, message.repto));
         }
 
         full_date.setText(SimpleFunctions.timestamp2date(message.time));

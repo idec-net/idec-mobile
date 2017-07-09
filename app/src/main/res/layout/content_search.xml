@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
-                android:text="Параметры поиска"
+                android:text="@string/search_params"
                 android:textColor="?attr/colorAccent"
                 android:textSize="17sp" />
 
@@ -52,9 +52,9 @@
                         android:id="@+id/search_advanced_echoareas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Эха"
+                        android:hint="@string/echo"
                         android:inputType="none"
-                        android:singleLine="true" />
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -82,9 +82,9 @@
                         android:id="@+id/search_advanced_senders"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Отправители"
+                        android:hint="@string/search_senders"
                         android:inputType="none"
-                        android:singleLine="true" />
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -112,9 +112,9 @@
                         android:id="@+id/search_advanced_receivers"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Получатели"
+                        android:hint="@string/search_receivers"
                         android:inputType="none"
-                        android:singleLine="true" />
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -142,9 +142,9 @@
                         android:id="@+id/search_advanced_addresses"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Станции отправителей"
+                        android:hint="@string/search_senders_stations"
                         android:inputType="none"
-                        android:singleLine="true" />
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -157,9 +157,9 @@
                     android:id="@+id/search_advanced_subj"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Тема сообщения"
+                    android:hint="@string/search_subj"
                     android:inputType="text"
-                    android:singleLine="true" />
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
@@ -172,29 +172,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="От: " />
+                    android:text="@string/search_date_from" />
 
                 <Button
                     android:id="@+id/search_advanced_date_first"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
-                    android:background="@null"
-                    android:text="select date" />
+                    android:background="@null" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="До: " />
+                    android:text="@string/search_date_to" />
 
                 <Button
                     android:id="@+id/search_advanced_date_second"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="50"
-                    android:background="@null"
-                    android:text="select date" />
+                    android:background="@null" />
 
                 <ImageView
                     android:id="@+id/search_advanced_date_clear"
@@ -210,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:padding="8dp"
-                android:text="Содержится в избранных сообщениях" />
+                android:text="@string/search_present_in_favorites" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -223,6 +221,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:clickable="true"
+        android:contentDescription="@android:string/search_go"
         app:layout_anchor="@+id/bottom_sheet"
         app:layout_anchorGravity="top|right|end" />
 </android.support.design.widget.CoordinatorLayout>

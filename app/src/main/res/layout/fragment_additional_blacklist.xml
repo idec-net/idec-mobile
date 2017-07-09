@@ -15,14 +15,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Файл чёрного списка сообщений расположен в рабочем каталоге клиента в корне внутренней памяти"
+            android:text="@string/blacklist_location"
             android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Скачать со станции" />
+            android:text="@string/blacklist_download_from_station" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,37 +40,37 @@
                 android:id="@+id/additional_load_blacklist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Скачать" />
+                android:text="@string/action_download" />
         </LinearLayout>
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Или скопировать из файла" />
+            android:text="@string/blacklist_copy_from_file" />
 
         <Button
             android:id="@+id/additional_select_file_blacklist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Выбрать файл" />
+            android:text="@string/action_file_choose" />
 
         <Button
             android:id="@+id/additional_blacklist_clear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Очистить cообщения по ЧС" />
+            android:text="@string/blacklist_clear" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Очистить локальный чёрный список" />
+            android:text="@string/blacklist_remove_list" />
 
         <Button
             android:id="@+id/additional_delete_blacklist_file"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Удалить файл" />
+            android:text="@string/action_file_delete" />
     </LinearLayout>
 </ScrollView>

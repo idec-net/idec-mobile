@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import vit01.idecmobile.Strings;
+
 public class EchoReadingPosition {
     // Этот класс нужен, чтобы запоминать последнее прочитанное сообщение
     // в каждой эхе, дабы продолжать чтение с того же места
@@ -56,7 +58,8 @@ public class EchoReadingPosition {
                 e.printStackTrace();
                 SimpleFunctions.debug(e.toString());
             }
-        } else SimpleFunctions.debug("Кэш позиций отсутствует, либо недоступен на чтение");
+        } else
+            SimpleFunctions.debug(Strings.decorate(Strings.echo_positions) + Strings.empty_file_warning);
     }
 
     public static void writePositionCache() {
@@ -66,7 +69,7 @@ public class EchoReadingPosition {
             try {
                 boolean r = positions_file.createNewFile();
                 if (!r) {
-                    SimpleFunctions.debug("Не могу создать файл кэша позиции эх!");
+                    SimpleFunctions.debug(Strings.create_file_error + Strings.decorate(Strings.echo_positions));
                     return;
                 }
             } catch (IOException e) {
@@ -87,7 +90,7 @@ public class EchoReadingPosition {
 
                 os.close();
             } catch (IOException e) {
-                SimpleFunctions.debug("Ошибка записи в кэш позиции эх!");
+                SimpleFunctions.debug(Strings.file_write_error + Strings.decorate(Strings.echo_positions));
             }
         }
     }

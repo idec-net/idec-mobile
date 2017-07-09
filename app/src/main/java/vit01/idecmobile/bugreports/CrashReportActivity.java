@@ -25,6 +25,8 @@ import android.support.v7.app.AlertDialog;
 
 import org.acra.dialog.BaseCrashReportDialog;
 
+import vit01.idecmobile.R;
+
 public class CrashReportActivity extends BaseCrashReportDialog
         implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
     @Override
@@ -32,10 +34,10 @@ public class CrashReportActivity extends BaseCrashReportDialog
         super.init(savedInstanceState);
 
         final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Упс, страшная ошибка!")
-                .setMessage("Если ты очень добрый и хороший человек, отошли нам письмо о том, что произошло")
-                .setPositiveButton("Отправить", this)
-                .setNegativeButton("Отмена", this)
+                .setTitle(R.string.acra_report_title)
+                .setMessage(R.string.acra_report_description)
+                .setPositiveButton(R.string.action_send, this)
+                .setNegativeButton(android.R.string.cancel, this)
                 .create();
 
         dialog.setCanceledOnTouchOutside(false);

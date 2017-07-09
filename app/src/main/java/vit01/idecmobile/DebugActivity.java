@@ -19,7 +19,6 @@
 
 package vit01.idecmobile;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +41,6 @@ import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
-import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.prefs.Config;
@@ -59,7 +57,7 @@ public class DebugActivity extends AppCompatActivity {
         setContentView(R.layout.activity_debug);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SimpleFunctions.setActivityTitle(this, "Окно отладки");
+        SimpleFunctions.setActivityTitle(this, getString(R.string.title_activity_debug));
 
         decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
@@ -76,12 +74,6 @@ public class DebugActivity extends AppCompatActivity {
         String task = intent.getStringExtra("task");
 
         switch (task) {
-            case "fetch":
-                new Thread(new doFetch()).start();
-                break;
-            case "send":
-                new Thread(new sendMessages()).start();
-                break;
             case "download_file":
                 xfile_download xfile_load = new xfile_download();
                 xfile_load.station = Config.values.stations.get(intent.getIntExtra("nodeindex", 0));
@@ -130,7 +122,7 @@ public class DebugActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(DebugActivity.this, "Как нехорошо закрывать окно дебага!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(DebugActivity.this, R.string.close_window_debug, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -185,110 +177,6 @@ public class DebugActivity extends AppCompatActivity {
         }
     }
 
-    class sendMessages implements Runnable {
-        @Override
-        public void run() {
-            SimpleFunctions.debugTaskFinished = false;
-            int sent = 0;
-
-            try {
-                sent = Sender.sendMessages(getApplicationContext());
-                SimpleFunctions.debug("Отправлено сообщений: " + String.valueOf(sent));
-            } catch (Exception e) {
-                e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
-            } finally {
-                SimpleFunctions.debugTaskFinished = true;
-                final String finalSent = String.valueOf(sent);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Отправлено сообщений: " + finalSent, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                finishTask();
-            }
-        }
-    }
-
-    class doFetch implements Runnable {
-        @Override
-        public void run() {
-            SimpleFunctions.debugTaskFinished = false;
-            Context appContext = getApplicationContext();
-
-            ArrayList<String> fetched;
-            int fetchedCount = 0;
-            int error_flag = 0;
-
-            try {
-                Fetcher fetcher = new Fetcher(appContext, GlobalTransport.transport);
-
-                for (Station station : Config.values.stations) {
-                    if (!station.fetch_enabled) {
-                        SimpleFunctions.debug("skip fetching " + station.nodename);
-                        continue;
-                    }
-
-                    String xc_id = (station.xc_enable) ?
-                            station.outbox_storage_id : null;
-                    Integer ue_limit = (station.advanced_ue) ? station.ue_limit : 0;
-
-                    fetched = fetcher.fetch_messages(
-                            station.address,
-                            station.echoareas,
-                            xc_id,
-                            Config.values.oneRequestLimit,
-                            ue_limit,
-                            station.pervasive_ue,
-                            station.cut_remote_index,
-                            Config.values.connectionTimeout
-                    );
-
-                    if (fetched != null) fetchedCount += fetched.size();
-                    else error_flag++;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
-                error_flag++;
-            } finally {
-                SimpleFunctions.debugTaskFinished = true;
-                final int finalFetched = fetchedCount;
-                final int finalErrorFlag = error_flag;
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String message = "";
-                        if (finalErrorFlag > 0) {
-                            message += "Ошибок: " + String.valueOf(finalErrorFlag) + "\n\n";
-
-                            if (finalFetched == 0)
-                                message += "Проблема c загрузкой сообщений\nПроверьте подключение к интернету";
-                        } else if (finalFetched == 0) message += "Новых сообщений нет";
-
-                        if (!message.equals(""))
-                            Toast.makeText(DebugActivity.this, message, Toast.LENGTH_SHORT).show();
-
-                        if (finalFetched > 0) {
-                            Toast.makeText(getApplicationContext(), "Получено сообщений: " + String.valueOf(finalFetched), Toast.LENGTH_SHORT).show();
-
-                            if (Config.values.openUnreadAfterFetch) {
-                                Intent unreadIntent = new Intent(DebugActivity.this, EchoReaderActivity.class);
-                                unreadIntent.putExtra("echoarea", "_unread");
-                                startActivity(unreadIntent);
-                            }
-                        }
-                    }
-                });
-                finishTask();
-            }
-        }
-    }
-
     class xfile_download implements Runnable {
         public Station station;
         public String filename;
@@ -304,7 +192,7 @@ public class DebugActivity extends AppCompatActivity {
                 success = Fetcher.xfile_download(getApplicationContext(), station, filename, new_file);
             } catch (Exception e) {
                 e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
 
@@ -312,7 +200,9 @@ public class DebugActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String result = (finalSuccess) ? "Файл загружен в " + new_file.getAbsolutePath() : "Были ошибки";
+                        String result = (finalSuccess)
+                                ? getString(R.string.file_loaded_to, new_file.getAbsolutePath())
+                                : getString(R.string.done_with_errors);
                         Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                     }
                 });
@@ -346,7 +236,7 @@ public class DebugActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
 
@@ -372,7 +262,8 @@ public class DebugActivity extends AppCompatActivity {
             try {
                 Blacklist.loadBlacklist();
 
-                if (Blacklist.badMsgids.size() == 0) SimpleFunctions.debug("ЧС пуст!");
+                if (Blacklist.badMsgids.size() == 0)
+                    SimpleFunctions.debug(getString(R.string.blacklist_empty));
                 else {
                     SimpleFunctions.debug("Начинаем удалять " + Blacklist.badMsgids.size() + " сообщений...");
                     for (String entry : Blacklist.badMsgids) {
@@ -387,7 +278,7 @@ public class DebugActivity extends AppCompatActivity {
                 SimpleFunctions.debug("Удалено сообщений: " + String.valueOf(deleted));
             } catch (Exception e) {
                 e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
                 final String finalDeleted = String.valueOf(deleted);
@@ -419,15 +310,9 @@ public class DebugActivity extends AppCompatActivity {
                 if (!where.exists()) {
                     boolean created = where.createNewFile();
                     if (!created)
-                        SimpleFunctions.debug("Не могу создать файл " + where.getAbsolutePath());
+                        SimpleFunctions.debug(getString(R.string.create_file_error) + where.getAbsolutePath());
                 }
                 if (where.canWrite()) {
-                    if (!where.exists()) {
-                        boolean created = where.createNewFile();
-                        if (!created)
-                            SimpleFunctions.debug("Файл " + where.getAbsolutePath() + " невозможно создать!");
-                    }
-
                     fos = new FileOutputStream(where);
 
                     if (msgids == null) msgids = new ArrayList<>();
@@ -446,15 +331,15 @@ public class DebugActivity extends AppCompatActivity {
                             msgids.clear();
                         }
                     }
-                    SimpleFunctions.debug("Готово!");
+                    SimpleFunctions.debug(getString(R.string.done));
 
                 } else
-                    SimpleFunctions.debug("Файл " + where.getAbsolutePath() + " недоступен для записи!");
+                    SimpleFunctions.debug(where.getAbsolutePath() + getString(R.string.unable_to_write_error));
 
                 SimpleFunctions.debug("Экспортировано: " + String.valueOf(exported) + " в файл " + where.getAbsolutePath());
             } catch (Exception e) {
                 e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
             } finally {
                 if (fos != null) {
                     try {
@@ -539,12 +424,12 @@ public class DebugActivity extends AppCompatActivity {
                             SimpleFunctions.debug("Wrong message bundle: " + bundle);
                         }
                     }
-                } else SimpleFunctions.debug("Файл не существует или недоступен для чтения!");
+                } else SimpleFunctions.debug(getString(R.string.no_file_warning));
 
                 SimpleFunctions.debug("Сообщений импортировано: " + String.valueOf(savedMessages));
             } catch (Exception e) {
                 e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
                 final String finalResult = String.valueOf(savedMessages);
@@ -570,7 +455,7 @@ public class DebugActivity extends AppCompatActivity {
 
             try {
                 if (!where.exists() || !where.canRead()) {
-                    SimpleFunctions.debug("Не могу прочитать файл. Может быть, его нет?");
+                    SimpleFunctions.debug(getString(R.string.no_file_warning));
                 } else {
                     long oneMB = 1024 * 1024;
                     if (where.length() > oneMB) {
@@ -590,7 +475,7 @@ public class DebugActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                SimpleFunctions.debug("Ошибочка вышла! " + e.toString());
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
                 finishTask();

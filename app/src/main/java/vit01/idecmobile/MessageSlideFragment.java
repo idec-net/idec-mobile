@@ -70,6 +70,7 @@ public class MessageSlideFragment extends Fragment {
     private int nodeIndex;
     private ArrayList<String> msglist;
     private ArrayList<Integer> discussionStack = new ArrayList<>();
+    private String of = getString(R.string.of);
     private String echoarea = null;
     private String appendToTitle = null; // Здесь должно быть имя эхи и разделитель |
 
@@ -130,7 +131,7 @@ public class MessageSlideFragment extends Fragment {
 
     public void updateActionBar(int position) {
         SimpleFunctions.setActivityTitle((AppCompatActivity) activity,
-                appendToTitle + String.valueOf(position + 1) + " из " + msgCount);
+                appendToTitle + String.valueOf(position + 1) + of + msgCount);
     }
 
     public void initSlider(String echo, ArrayList<String> msgids, int nIndex, int firstPosition) {
@@ -138,7 +139,7 @@ public class MessageSlideFragment extends Fragment {
         msglist = msgids;
 
         if (msglist == null || msglist.size() == 0) {
-            Toast.makeText(activity, "Список сообщений пуст...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.empty_msglist, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -272,7 +273,7 @@ public class MessageSlideFragment extends Fragment {
                         .getMessage(msglist.get(pos)).tags.get("repto");
 
                 if (repto == null) {
-                    Toast.makeText(activity, "Этот пользователь никому не отвечал!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.user_answered_to_nobody, Toast.LENGTH_SHORT).show();
                     break;
                 } else {
                     if (msglist.contains(repto)) {
@@ -281,7 +282,7 @@ public class MessageSlideFragment extends Fragment {
                         stackUpdate = true;
                         mPager.setCurrentItem(newindex);
                     } else {
-                        Toast.makeText(activity, "В данном списке сообщений нет того, на которое отвечали.\nМожет быть, надо сначала зайти в саму эху?", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.repto_msgid_not_found, Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -290,7 +291,7 @@ public class MessageSlideFragment extends Fragment {
                     stackUpdate = true;
                     mPager.setCurrentItem(discussionStack.remove(0));
                 } else
-                    Toast.makeText(activity, "Стек дискуссии пуст!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.empty_discussion_stack, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_save_in_file:
                 String _msgid = msglist.get(mPager.getCurrentItem());
@@ -301,7 +302,7 @@ public class MessageSlideFragment extends Fragment {
                     boolean create = file.createNewFile();
 
                     if (!create) {
-                        String debug = "Не могу создать файл " + file.getName();
+                        String debug = getString(R.string.create_file_error) + file.getName();
                         Toast.makeText(activity, debug, Toast.LENGTH_SHORT).show();
                         break;
                     }
@@ -317,18 +318,18 @@ public class MessageSlideFragment extends Fragment {
                         fos.close();
                     } catch (Exception e) {
                         SimpleFunctions.debug(e.getMessage());
-                        Toast.makeText(activity, "Ошибка: " +
+                        Toast.makeText(activity, getString(R.string.error) + ": " +
                                 e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                         break;
                     }
 
                     new AlertDialog.Builder(activity)
-                            .setMessage("Сообщение сохранено в файл " + file.getAbsolutePath())
+                            .setMessage(getString(R.string.message_saved_to_file) + " " + file.getAbsolutePath())
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
                 } else {
-                    Toast.makeText(activity, "Файл " + file.getAbsolutePath() + " недоступен для записи.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, file.getAbsolutePath() + " " + getString(R.string.unable_to_write_error), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.action_update_from_server:
@@ -338,17 +339,18 @@ public class MessageSlideFragment extends Fragment {
                 final Integer[] chosenStation = {0};
 
                 new AlertDialog.Builder(activity)
-                        .setTitle("Выберите станцию")
+                        .setTitle(R.string.choose_node)
                         .setSingleChoiceItems(stationsNames.toArray(new CharSequence[stationsNames.size()]), 0, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 chosenStation[0] = i;
                             }
                         })
-                        .setPositiveButton("Начать", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, final int i) {
-                                final ProgressDialog progress = ProgressDialog.show(activity, "Загрузка", "Подождите-ка...", true);
+                                final ProgressDialog progress = ProgressDialog.show(activity,
+                                        activity.getString(R.string.loading), activity.getString(R.string.wait), true);
                                 progress.show();
 
                                 new Thread(new Runnable() {
@@ -366,13 +368,13 @@ public class MessageSlideFragment extends Fragment {
                                                 progress.dismiss();
                                                 if (!result) {
                                                     new AlertDialog.Builder(activity)
-                                                            .setTitle("Ошибка")
-                                                            .setMessage("Сообщение не скачалось, посмотрите в системный лог")
+                                                            .setTitle(R.string.error)
+                                                            .setMessage(R.string.update_message_error)
                                                             .setPositiveButton(android.R.string.ok, null)
                                                             .show();
                                                 } else {
                                                     ((ScreenSlidePagerAdapter) mPager.getAdapter()).mCurrentFragment.initializeMessage(mPager.getContext());
-                                                    Toast.makeText(activity, "Сообщение в базе обновлено", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(activity, R.string.message_updated, Toast.LENGTH_SHORT).show();
 
                                                     if (listFragment != null) {
                                                         listFragment.mAdapter.messageChanged(__msgid);

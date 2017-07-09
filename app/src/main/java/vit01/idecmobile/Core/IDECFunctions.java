@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import vit01.idecmobile.Strings;
 import vit01.idecmobile.prefs.Config;
 
 public class IDECFunctions {
@@ -63,13 +64,13 @@ public class IDECFunctions {
 
         switch (echoarea) {
             case "_favorites":
-                return "Избранные";
+                return Strings.favorites;
             case "_carbon_classic":
-                return "Карбонка";
+                return Strings.carbon;
             case "_unread":
-                return "Непрочитанные";
+                return Strings.unread;
             case "_search_results":
-                return "Найденное";
+                return Strings.search_results;
             default:
                 return echoarea;
         }

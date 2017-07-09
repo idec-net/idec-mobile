@@ -11,7 +11,7 @@
         android:layout_marginEnd="@dimen/list_horizontal_margin"
         android:layout_marginStart="@dimen/list_horizontal_margin"
         android:inputType="text"
-        android:singleLine="true" />
+        android:maxLines="1" />
 
     <ListView
         android:id="@+id/echo_menu_options"

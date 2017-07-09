@@ -168,7 +168,7 @@ public class workerJob extends BroadcastReceiver {
             if (notification_text.length() > 0) // костыль с последним переносом строки
                 notification_text = notification_text.substring(0, notification_text.length() - 1);
 
-            Show_Notification(context, "Новые сообщения: " + total.toString(),
+            Show_Notification(context, context.getString(R.string.new_messages, total),
                     notification_text, true);
         }
     }

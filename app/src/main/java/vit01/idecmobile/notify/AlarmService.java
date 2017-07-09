@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
 public class AlarmService extends Service {
@@ -73,7 +74,7 @@ public class AlarmService extends Service {
                 Config.values.notifyFireDuration * 1000 * 60, // интервал обновления
                 jobPendingIntent);
 
-        Toast.makeText(AlarmService.this, "Уведомления IDECMobile (пере)запущены",
+        Toast.makeText(AlarmService.this, R.string.notification_service_reload,
                 Toast.LENGTH_SHORT).show();
     }
 

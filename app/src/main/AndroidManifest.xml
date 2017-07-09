@@ -33,7 +33,6 @@
         </activity>
         <activity
             android:name=".EchoReaderActivity"
-            android:label="@string/title_activity_echo_view"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -60,7 +59,6 @@
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".StationsActivity"
-            android:label="@string/title_activity_stations"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -97,7 +95,6 @@
         <activity android:name=".DraftEditor" />
         <activity
             android:name=".AdditionalActivity"
-            android:label="@string/title_activity_additional"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.Light">
             <meta-data

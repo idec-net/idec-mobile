@@ -19,6 +19,7 @@
 
 package vit01.idecmobile;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -108,6 +109,7 @@ public class SearchAdvancedFragment extends BottomSheetDialogFragment {
         return fragm;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);

@@ -36,18 +36,25 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
 public class Fetcher {
     AbstractTransport transport;
     ArrayList<String> emptyList;
-    Context context;
+    private Context context;
+    private String str_load_index, str_load_db, str_load_messages, str_save_in_db;
 
     public Fetcher(Context mCont, AbstractTransport db) {
         transport = db;
         emptyList = SimpleFunctions.emptyList;
         context = mCont;
         if (!Blacklist.loaded) Blacklist.loadBlacklist();
+
+        str_load_index = mCont.getString(R.string.fetcher_load_index);
+        str_load_db = mCont.getString(R.string.fetcher_load_database);
+        str_load_messages = mCont.getString(R.string.fetcher_dl_messages);
+        str_save_in_db = mCont.getString(R.string.fetcher_save_in_db);
     }
 
     public static ArrayList<String> xfile_list_download(Context context, Station station) {
@@ -180,7 +187,7 @@ public class Fetcher {
         Hashtable<String, Integer> maxEconomy = new Hashtable<>();
 
         if (xc_id != null) {
-            SimpleFunctions.pretty_debug("Обновляем счётчики");
+            SimpleFunctions.pretty_debug(context.getString(R.string.fetcher_update_counters));
             String xc_cell_name = "xc_" + xc_id;
             String tmp_xc_cell_name = "xc_tmp_" + xc_id;
 
@@ -190,7 +197,7 @@ public class Fetcher {
             String local_xc_data = SimpleFunctions.read_internal_file(context, xc_cell_name);
 
             if (remote_xc_data == null) {
-                SimpleFunctions.debug("Похоже, на станции проблема с /x/c");
+                SimpleFunctions.debug(context.getString(R.string.fetcher_xc_problem));
                 return null;
             }
             if (local_xc_data.equals(remote_xc_data)) return emptyList;
@@ -199,7 +206,7 @@ public class Fetcher {
             ArrayList<String> excluded_echoareas = new ArrayList<>();
 
             if (local_xc_data.equals("")) {
-                SimpleFunctions.debug("Фетчим в первый раз...");
+                SimpleFunctions.debug(context.getString(R.string.fetcher_first_time));
                 use_xc_now = false;
                 // Если получили данные в первый раз, то /x/c пока не нужен
             }
@@ -208,7 +215,7 @@ public class Fetcher {
             String[] remote_xc_lines = remote_xc_data.split("\n");
 
             if (local_xc_lines.length != remote_xc_lines.length) {
-                SimpleFunctions.debug("Не используем /x/c в этот раз...");
+                SimpleFunctions.debug(context.getString(R.string.fetcher_not_use_xc));
                 use_xc_now = false;
                 // Значит пользователь просто обновил список эх. Продолжать не следует
             }
@@ -281,26 +288,26 @@ public class Fetcher {
             bottomOffset = fetch_limit;
             String offset = String.valueOf(bottomOffset);
 
-            SimpleFunctions.pretty_debug("Получаем индекс (" + String.valueOf(offset) + ")");
+            SimpleFunctions.pretty_debug(str_load_index + " (" + String.valueOf(offset) + ")");
             echoBundle = Network.getFile(context,
                     address + "u/e/" + TextUtils.join("/", echoesToFetch) +
                             "/-" + offset + ":" + offset, null, timeout);
         } else {
-            SimpleFunctions.pretty_debug("Получаем индекс");
+            SimpleFunctions.pretty_debug(str_load_index);
             echoBundle = Network.getFile(context,
                     address + "u/e/" + TextUtils.join("/", echoesToFetch), null, timeout);
         }
 
         Hashtable<String, ArrayList<String>> localIndex = new Hashtable<>();
 
-        SimpleFunctions.pretty_debug("Загрузка локальной базы");
+        SimpleFunctions.pretty_debug(str_load_db);
         for (String echo : echoesToFetch) {
-            SimpleFunctions.debug("Загрузка локальной эхи " + echo);
+            SimpleFunctions.debug("Loading local echo " + echo);
 
             localIndex.put(echo, transport.getMsgList(echo, 0, 0, "number"));
         }
 
-        SimpleFunctions.debug("Высчитываем разницу");
+        SimpleFunctions.debug("Calculating index difference...");
         Hashtable<String, ArrayList<String>> remoteIndex = parseRemoteIndex(echoBundle);
 
         Hashtable<String, ArrayList<String>> commonDiff = new Hashtable<>();
@@ -334,7 +341,7 @@ public class Fetcher {
 
         while (nextfetch.size() > 0) {
             bottomOffset += fetch_limit;
-            SimpleFunctions.pretty_debug("Получаем индекс (" + String.valueOf(bottomOffset) + ")");
+            SimpleFunctions.pretty_debug(str_load_index + " (" + String.valueOf(bottomOffset) + ")");
             echoBundle = Network.getFile(context, address + "u/e/"
                             + TextUtils.join("/", nextfetch) + "/-"
                             + String.valueOf(bottomOffset) + ":" + String.valueOf(fetch_limit),
@@ -392,7 +399,7 @@ public class Fetcher {
             }
         }
 
-        SimpleFunctions.debug("Применяем чёрный список к индексу...");
+        SimpleFunctions.debug(context.getString(R.string.blacklist_apply));
         difference.removeAll(Blacklist.badMsgids);
         List<List<String>> difference2d = SimpleFunctions.chunks_divide(difference, one_request_limit);
 
@@ -402,20 +409,20 @@ public class Fetcher {
         int diff_done = 0;
 
         for (List<String> diff : difference2d) {
-            String progress = "(" + String.valueOf(diff_done + diff.size()) + "/" + String.valueOf(diff_full) + ")";
-            SimpleFunctions.pretty_debug("Скачиваем сообщения " + progress);
+            String progress = " (" + String.valueOf(diff_done + diff.size()) + "/" + String.valueOf(diff_full) + ")";
+            SimpleFunctions.pretty_debug(str_load_messages + progress);
             String fullBundle = Network.getFile(context,
                     address + "u/m/" + TextUtils.join("/", diff), null, timeout);
 
             if (fullBundle == null) {
-                SimpleFunctions.debug("Ошибка получения бандла сообщений. Проверь интернет");
+                SimpleFunctions.debug(context.getString(R.string.fetcher_bundle_get_error));
                 if (savedMessages.size() > 0) return savedMessages;
                 else return null;
             }
 
             diff_done += diff.size();
 
-            SimpleFunctions.pretty_debug("Сохраняем в базу " + progress);
+            SimpleFunctions.pretty_debug(str_save_in_db + " " + progress);
 
             ArrayList<String> bundles = new ArrayList<>();
             bundles.addAll(Arrays.asList(fullBundle.split("\n")));
@@ -439,7 +446,7 @@ public class Fetcher {
                         SimpleFunctions.debug("Invalid decoded message: " + pieces[1]);
                     }
                 } else {
-                    SimpleFunctions.debug("Wrong message bundle: " + bundle);
+                    SimpleFunctions.debug(context.getString(R.string.fetcher_bundle_parse_error) + ": " + bundle);
                 }
             }
         }
@@ -450,14 +457,14 @@ public class Fetcher {
     public boolean fetch_one_message(String msgid, Station station) {
         String bundle = Network.getFile(context, station.address + "u/m/" + msgid, null, Config.values.connectionTimeout);
         if (bundle == null || bundle.equals("")) {
-            SimpleFunctions.debug("Ошибка: скачанный файл пустой");
+            SimpleFunctions.debug("Error: selected message is empty on remote station!");
             return false;
         }
         String[] lines = bundle.split("\n");
         String[] pieces = lines[0].split(":");
 
         if (pieces.length != 2 || !pieces[0].equals(msgid) || pieces[1].equals("")) {
-            SimpleFunctions.debug("Ошибка: повреждённый бандл сообщения");
+            SimpleFunctions.debug(context.getString(R.string.fetcher_bundle_parse_error));
             return false;
         }
 

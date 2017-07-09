@@ -22,6 +22,8 @@ package vit01.idecmobile.Core;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import vit01.idecmobile.Strings;
+
 public class GlobalConfig implements Serializable {
     static final long serialVersionUID = 1L;
     public boolean
@@ -59,7 +61,7 @@ public class GlobalConfig implements Serializable {
         stations.add(new Station());
 
         Station secondStation = stations.get(1);
-        secondStation.nodename = "tavern";
+        secondStation.nodename = Strings.node_tavern;
         secondStation.address = "http://idec.spline-online.tk/";
 
         secondStation.echoareas.add("spline.local.14");

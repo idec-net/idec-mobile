@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Когда клиент отписывается от эхоконференции, это совсем не значит, что эха удалена из базы. Если хочется сэкономить место на диске, то ниже можно это сделать" />
+            android:text="@string/help_database_deletion" />
 
         <Spinner
             android:id="@+id/additional_full_echolist"
@@ -33,20 +33,20 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Удалить" />
+                android:text="@string/action_delete" />
 
             <Button
                 android:id="@+id/additional_database_export_echoarea"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Экспорт в файл бандла" />
+                android:text="@string/action_echo_export" />
         </LinearLayout>
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Укоротить эху до максимум N сообщений" />
+            android:text="@string/action_echo_truncate_summary" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,50 +66,50 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Обрезать эху" />
+                android:text="@string/action_echo_truncate" />
         </LinearLayout>
 
         <Button
             android:id="@+id/additional_database_clear_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Очистить всю базу данных" />
+            android:text="@string/action_delete_database" />
 
         <Button
             android:id="@+id/additional_clear_xc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Очистить кэш" />
+            android:text="@string/action_clear_xc" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Импорт бандлов сообщений" />
+            android:text="@string/action_bundle_import" />
 
         <Button
             android:id="@+id/additional_select_file_bundle_import"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Выбрать файл" />
+            android:text="@string/action_file_choose" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Экспорт всей базы данных" />
+            android:text="@string/action_database_export" />
 
         <Button
             android:id="@+id/additional_database_export_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Начать" />
+            android:text="@string/start" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Файл конфигурации клиента" />
+            android:text="@string/client_config" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -122,14 +122,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Импорт настроек" />
+                android:text="@string/action_config_import" />
 
             <Button
                 android:id="@+id/additional_database_export_config"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Экспортировать" />
+                android:text="@string/action_config_export" />
         </LinearLayout>
 
     </LinearLayout>

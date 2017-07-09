@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import vit01.idecmobile.Strings;
+
 public class DraftsValidator {
     // Эта штука нужна, чтобы проверять, был изменён созданный черновик или нет
     // Если он изменён не был, значит пользователь ошибся, и черновик удаляем
@@ -54,7 +56,7 @@ public class DraftsValidator {
                 SimpleFunctions.debug(e.toString());
             }
         } else
-            SimpleFunctions.debug("Кэш для проверки черновиков отсутствует, либо недоступен на чтение");
+            SimpleFunctions.debug(Strings.decorate(Strings.drafts_cache) + Strings.empty_file_warning);
     }
 
     public static void writeHashesCache() {
@@ -62,7 +64,7 @@ public class DraftsValidator {
             try {
                 boolean r = hashes_file.createNewFile();
                 if (!r) {
-                    SimpleFunctions.debug("Не могу создать файл кэша проверки черновиков!");
+                    SimpleFunctions.debug(Strings.create_file_error + Strings.decorate(Strings.drafts_cache));
                     return;
                 }
             } catch (IOException e) {
@@ -80,7 +82,7 @@ public class DraftsValidator {
                 os.write(data.getBytes());
                 os.close();
             } catch (IOException e) {
-                SimpleFunctions.debug("Ошибка записи в кэш проверки черновиков!");
+                SimpleFunctions.debug(Strings.file_write_error + Strings.decorate(Strings.drafts_cache));
             }
         }
     }

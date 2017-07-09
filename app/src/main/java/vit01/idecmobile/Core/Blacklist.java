@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import vit01.idecmobile.Strings;
+
 public class Blacklist {
     public static String filename = "blacklist.txt";
     public static ArrayList<String> badMsgids = new ArrayList<>();
@@ -45,6 +47,7 @@ public class Blacklist {
                 e.printStackTrace();
                 SimpleFunctions.debug(e.toString());
             }
-        } else SimpleFunctions.debug("ЧС пуст, либо недоступен на чтение");
+        } else
+            SimpleFunctions.debug(Strings.decorate(Strings.blacklist) + Strings.empty_file_warning);
     }
 }

@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Ответить"
+                android:text="@string/action_reply"
                 android:textColor="?attr/android:textColorSecondary" />
 
             <Button
@@ -108,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="С цитатой"
+                android:text="@string/action_quote_reply"
                 android:textColor="?attr/android:textColorSecondary" />
         </LinearLayout>
     </LinearLayout>

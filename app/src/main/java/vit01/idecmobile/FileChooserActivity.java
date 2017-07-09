@@ -81,7 +81,7 @@ public class FileChooserActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
-        SimpleFunctions.setActivityTitle(this, "Выбор файла");
+        SimpleFunctions.setActivityTitle(this, getString(R.string.title_activity_file_chooser));
 
         textColorPrimary = SimpleFunctions.colorFromTheme(this, android.R.attr.textColorPrimary);
         currentDir = getExternalOrRoot();

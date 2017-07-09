@@ -40,10 +40,13 @@ public class ApplicationMain extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        // Подгружаем наш любимый конфиг
-        Config.loadConfig(this);
-
         // Initialize bug reports
         ACRA.init(this);
+
+        // Грузим некоторые строки с переводами
+        Strings.initStrings(base);
+
+        // Подгружаем наш любимый конфиг
+        Config.loadConfig(this);
     }
 }

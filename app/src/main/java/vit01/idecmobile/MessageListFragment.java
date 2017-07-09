@@ -196,14 +196,14 @@ public class MessageListFragment extends Fragment {
                 countMessages = 0;
 
                 if (echoarea.equals("_unread")) {
-                    Toast.makeText(activity, "Непрочитанных сообщений нет!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.no_unread_messages, Toast.LENGTH_SHORT).show();
                     activity.finish();
                     return false;
                 }
 
                 showEmptyView();
             } else {
-                Toast.makeText(activity, "Таких сообщений нет!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.no_such_messages, Toast.LENGTH_SHORT).show();
             }
             // возвращение false приведёт к невозможности сменить чекбокс
             // [только непрочитанные] на противоположный
@@ -327,11 +327,12 @@ public class MessageListFragment extends Fragment {
                 break;
             case R.id.action_favorites_remove_all:
                 new AlertDialog.Builder(activity)
-                        .setTitle("Очистить избранные")
-                        .setMessage("Снять со всех сообщений данную метку?")
+                        .setTitle(R.string.clear_favorites)
+                        .setMessage(R.string.clear_favorites_confirm)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                final ProgressDialog progress = ProgressDialog.show(activity, "Подождите", "Сообщения удаляются...", true);
+                                final ProgressDialog progress = ProgressDialog.show(activity,
+                                        activity.getString(R.string.wait), activity.getString(R.string.deleting_messages), true);
                                 progress.show();
 
                                 new Thread(new Runnable() {
@@ -343,7 +344,7 @@ public class MessageListFragment extends Fragment {
                                         activity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(activity, "Выполнено!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(activity, R.string.done, Toast.LENGTH_SHORT).show();
                                                 activity.finish();
                                             }
                                         });
@@ -353,8 +354,7 @@ public class MessageListFragment extends Fragment {
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(activity,
-                                        "Правильно, пусть останутся!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, R.string.ok_let_them_exist, Toast.LENGTH_SHORT).show();
                             }
                         })
                         .show();

@@ -17,40 +17,40 @@
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Имя станции" />
+            android:text="@string/node_name" />
 
         <EditText
             android:id="@+id/stations_nodename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Адрес сервера" />
+            android:text="@string/node_address" />
 
         <EditText
             android:id="@+id/stations_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textUri"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Строка авторизации (пароль)" />
+            android:text="@string/node_authstr" />
 
         <EditText
             android:id="@+id/stations_authstr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <Switch
             android:id="@+id/stations_fetch_enable"
@@ -59,65 +59,65 @@
             android:checked="true"
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
-            android:text="Включить эту станцию" />
+            android:text="@string/enable_node" />
 
         <CheckBox
             android:id="@+id/stations_xc_enable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Поддержка схемы IDEC /x/c" />
+            android:text="@string/node_xc_support" />
 
         <CheckBox
             android:id="@+id/stations_advanced_ue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Поддержка расширенного /u/e" />
+            android:text="@string/node_advanced_ue" />
 
         <CheckBox
             android:id="@+id/stations_pervasive_ue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:text="Качать индекс дальше, если все сообщения новые" />
+            android:text="@string/node_continue_loading_index" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Лимит msgid на эху в одном запросе" />
+            android:text="@string/node_ue_limit" />
 
         <EditText
             android:id="@+id/stations_fetch_limit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Принудительная обрезка индекса (0 - выключено)" />
+            android:text="@string/node_cut_index" />
 
         <EditText
             android:id="@+id/stations_cut_remote_index"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <Button
             android:id="@+id/stations_get_echolist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Получить список эх с ноды" />
+            android:text="@string/action_download_echolist" />
 
         <Button
             android:id="@+id/stations_autoconfig"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Настроить всё автоматически" />
+            android:text="@string/action_autoconfig" />
     </LinearLayout>
 </ScrollView>

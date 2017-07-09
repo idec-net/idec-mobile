@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
-        SimpleFunctions.setActivityTitle(this, "Настройки клиента");
+        SimpleFunctions.setActivityTitle(this, getString(R.string.action_settings));
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, new SettingsFragment())
