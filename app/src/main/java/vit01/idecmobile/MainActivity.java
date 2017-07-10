@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         setTheme(Config.appTheme);
         currentTheme = Config.appTheme;
+        Strings.initStrings(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
