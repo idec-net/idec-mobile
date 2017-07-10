@@ -287,8 +287,30 @@
 
     <!-- Help text -->
 
-    <string name="help_about">This is empty, sorry</string>
-    <string name="help_newbie">This is empty, sorry</string>
+    <string name="help_about">I don\'t know what to put there! See README.md on https://github.com/vit1-irk/idec-mobile</string>
+    <string name="help_newbie"><![CDATA[
+        <h3>Language explanation</h3>
+        <p>When you fetch messages for the first time and read them, you can notice a lot of russian text.
+        So <b>do not panic</b>! We\'re just a small community of russian guys trying to attract more people.
+        If you write in English or in any other language <b>it\'s OK</b> and we will try to be as friendly as possible.
+        </p>
+
+        <p>Apply for a help in <b>ii.14</b> or <b>pipe.2032</b> echoareas, perform any tests you like in <b>ii.test.14</b></p>
+
+        <h3>Especially for newbies:</h3>
+        <p>You don\'t need password to read messages, it\'s just enough to specify only node address.
+        Then push "Configure automatically" button and (if you\'d like to) get echolist from specified station.</p>
+
+        <p>It can take much time for the first messages download, please be patient.
+            Also there is a "Mark all messages as read" menu item on the main screen,
+            so you can select this option and avoid reading tons of text.
+        </p>
+
+        <h3>Signing up</h3>
+        <p>Please contact by email to get an auth string (password) for write access: <a href="mailto:me@ii-net.tk">me@ii-net.tk</a> (vit01) or
+        <a href="mailto:spline@rooker.ru">spline@rooker.ru</a> (Andrew Lobanov).</p>
+
+    ]]></string>
 
     <string name="help_xfile_short">Learn more about /x/file extension in our documentation</string>
     <string name="help_database_deletion">When the client unsubscribes from echoarea, it doesn\'t mean that the area is about to disappear from database. If you\'d like to save your storage, perform actions below</string>
@@ -302,7 +324,15 @@
 
     <string name="permission_grant_top">Please grant filesystem access permission</string>
 
-    <string name="permission_grant_text">This is empty, sorry</string>
+    <string name="permission_grant_text">What types of data does IDEC Mobile store in internal storage:
+        \n\n1. <b>Drafts</b> and <b>sent</b> messages.\n
+        Firstly, to be able to edit them using external text editor.
+        Secondly, to keep them up after application reinstalling (deletion).\n\n
+        2. <b>Blacklist.</b> Same purposes.\n\n
+        3. <b>Last seen</b> messages in echoareas (to continue reading them for the next time without scrolling/searching).\n\n
+        4. <b>Drafts hashes</b>, not to send empty messages created by mistake.\n\n
+        5. Also the client supports <b>exporting</b> of config file and messages database (+ importing!).
+    </string>
 
     <!-- Main Client Settings -->
 
