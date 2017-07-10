@@ -1,71 +1,337 @@
-<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:http="http://schemas.android.com/tools">
+    <string name="action_settings">Client settings</string>
+    <string name="action_stations_settings">Stations\' settings</string>
+    <string name="action_send">Send</string>
+    <string name="action_send_all">Send all</string>
+    <string name="action_fetch">Fetch messages</string>
+    <string name="action_download">Download</string>
+    <string name="action_download_list">Download list</string>
+    <string name="action_update_from_server">Update from server</string>
+    <string name="action_download_echolist">Get echolist from node</string>
+    <string name="action_mark_all_base_read">Mark all messages as read</string>
+    <string name="action_mark_all_read">Mark all as read</string>
+    <string name="action_mark_favorite">Mark favorite</string>
+    <string name="action_display_unread_only">View: unread only</string>
+    <string name="action_compose">Compose</string>
+    <string name="action_new_message">New message</string>
+    <string name="action_reply">Reply</string>
+    <string name="action_quote_reply">With quote</string>
+    <string name="action_file_choose">Pick a file</string>
+    <string name="action_file_delete">Delete file</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_delete_all">Delete all</string>
+    <string name="action_delete_favorites">Clear all favorites</string>
+    <string name="action_delete_station">Remove station</string>
+    <string name="action_view_full_log">View full log</string>
+    <string name="action_autoconfig">Configure automatically</string>
+    <string name="action_save_in_file">Save to file</string>
+    <string name="action_echo_export">Export into bundle file</string>
+    <string name="action_echo_truncate">Truncate echo</string>
+    <string name="action_echo_truncate_summary">Truncate echoarea up to N messages</string>
+    <string name="action_delete_database">Clear whole database</string>
+    <string name="action_delete_drafts">Messages deletion</string>
+    <string name="action_clear_xc">Clear cache</string>
+    <string name="action_bundle_import">Import of messages\' bundles</string>
+    <string name="action_database_export">Whole database export</string>
+    <string name="action_config_import">Config import</string>
+    <string name="action_config_export">Export</string>
 
-<resources>
+    <string name="navigate_first">To the beginning</string>
+    <string name="navigate_last">To the end</string>
+    <string name="navigate_msglist">Go to messages list</string>
+    <string name="navigate_discussion_previous">Navigate to the past in discussion</string>
+    <string name="navigate_discussion_next">Get back in discussion</string>
+
+    <string name="title_activity_help">Help</string>
+    <string name="title_activity_file_chooser">Pick a file</string>
+    <string name="title_activity_list_edit">Edit echolist</string>
+    <string name="title_activity_debug">Debug window</string>
+
+    <string name="of">" of "</string>
+    <string name="quantity">Quantity: %d</string>
+    <string name="messages_quantity">Messages: %d</string>
+
+    <string name="favorites">Favorites</string>
+    <string name="carbon">Carbon area</string>
+    <string name="unread">Unread</string>
+    <string name="search_results">Search results</string>
+    <string name="client_config">Client\'s config file</string>
+
+    <string name="about">About us</string>
+    <string name="newbies">For newbies</string>
+    <string name="license">License</string>
+    <string name="node_files">Node files</string>
+    <string name="database">Database</string>
+
+    <string name="wait">Please wait…</string>
+    <string name="done">Completed!</string>
+    <string name="start">Start</string>
+    <string name="ok_close">All right, close this</string>
+    <string name="loading">Loading</string>
+    <string name="loading_messages">Messages downloading</string>
+    <string name="sending_letters">Sending messages</string>
+    <string name="connecting_to_station">Connecting to the station…</string>
+    <string name="searching_messages">Performing search</string>
+    <string name="inserting_to_list">List is being created…</string>
+    <string name="exporting_certain_messages">Export of particular messages…</string>
+    <string name="exporting_by_echoes">Export by echoareas…</string>
+    <string name="trying_to_copy_something">Trying to copy into %s inside working directory</string>
+    <string name="autoconfig_done">Autoconfiguration complete</string>
+    <string name="messages_sent">Messages sent: %d</string>
+    <string name="messages_got">Received %d messages</string>
+    <string name="clear_favorites">Clear favorites</string>
+    <string name="clear_favorites_confirm">Are you sure to remove this flag from all messages?</string>
+    <string name="are_you_crazy">Are you sane comrade??</string>
+    <string name="deleting_messages">Messages are being removed</string>
+    <string name="deleting_useless_messages">Removing useless messages…</string>
+    <string name="deleting_n_messages">Start deleting %d messages</string>
+    <string name="deleted_n_messages">Deleted %d messages</string>
+    <string name="deleting_database_complete">Database was deleted</string>
+    <string name="echoarea_clear_done">Echo has been truncated</string>
+    <string name="xc_cache_clear_complete">/x/c cache cleared</string>
+    <string name="echo_deletion_complete">Echoarea deletion completed</string>
+    <string name="ok_let_them_exist">That\'s right decision!</string>
+    <string name="ok_database_is_alive">All fine with that</string>
+    <string name="edit_by_yourself">Edit your list by hand…</string>
+    <string name="i_am_really_sure">I know what I\'m doing</string>
+    <string name="config_saved">Config saved into file</string>
+    <string name="message_updated">Message has been updated in database</string>
+    <string name="notification_service_reload">IDECMobile notification service (re)started</string>
+    <string name="message_saved_to_file">Message saved to file</string>
+    <string name="msgid_clipboard_done">Message id copied to clipboard</string>
+    <string name="repto_clipboard_done">msgid of reply origin copied to clipboard</string>
+    <string name="answered">Reply: %s</string>
+    <string name="new_messages">New messages: %d</string>
+    <string name="truncate_limit_display" formatted="false">Selected limit: %d messages, initial quantity: %d</string>
+    <string name="exported_n_in_file" formatted="false">Exported %d entries to file %s</string>
+    <string name="exported_n_messages">Exported: %d</string>
+    <string name="imported_n_messages">Messages imported: %d</string>
+
+    <string name="add_node">Add node</string>
+    <string name="delete_node">Remove station</string>
+    <string name="delete_node_confirm">There are some drafts/sent messages belonging to the current station. Are you sure to delete them?</string>
+    <string name="manage_node">Manage stations</string>
+    <string name="choose_node">Choose a station</string>
+    <string name="enable_node">Enable this station</string>
+    <string name="node_authstr">Auth string (password)</string>
+    <string name="node_name">Node name</string>
+    <string name="node_address">Server address</string>
+    <string name="node_xc_support">IDEC scheme /x/c support</string>
+    <string name="node_advanced_ue">Advanced /u/e support</string>
+    <string name="node_continue_loading_index">Continue index downloading if all messages look like new</string>
+    <string name="node_ue_limit">Msgid\'s limit for echoarea per request</string>
+    <string name="node_cut_index">Forced index quantity limit (0 to disable)</string>
+
+    <string name="echoareas">Echoareas</string>
+    <string name="echoarea">Echoarea</string>
+    <string name="echo">Echo</string>
+    <string name="additional">Additional</string>
+    <string name="drafts">Drafts</string>
+    <string name="sent">Sent</string>
+    <string name="settings">Settings</string>
+    <string name="update">Update</string>
+    <string name="offline_echoes">Offline-echoes</string>
+    <string name="build_date">Build date</string>
+
+    <string name="to">To</string>
+    <string name="subj">Subject</string>
+    <string name="answer_to">Reply to</string>
+    <string name="message">Message</string>
+
+    <string name="drafts_cache">Drafts validation cache</string>
+    <string name="echo_positions">Read-Positions Cache</string>
+
+    <string name="file_chosen">File %s selected</string>
+    <string name="file_loaded_to">File was loaded to %s</string>
+
+    <string name="confirm_delete_drafts">Delete all drafts?</string>
+    <string name="confirm_delete_sent">Delete all sent messages?</string>
+
+
+
     <string-array name="echo_menu_options">
         <item>To the beginning</item>
         <item>To the end</item>
         <item>Remove from the list</item>
     </string-array>
 
-    <string name="action_settings">Client settings</string>
+    <!-- Echolist edit -->
+
+    <string name="echolist_edit_echo">Edit echoarea</string>
+    <string name="echolist_at_least_one_echo">Echolist must contain at least one area!</string>
+    <string name="echolist_drag_drop_edit">Move and remove echoes with drag&amp;drop!</string>
+    <string name="echolist_confirm_install">Would you like to install this echolist?</string>
+
+    <!-- Blacklist -->
+
+    <string name="blacklist">Blacklist</string>
+    <string name="blacklist_clear">Clear messages by blacklist</string>
+    <string name="blacklist_ram_loading">Loading blacklist into RAM</string>
+    <string name="blacklist_clear_ready">Probably it was all right. Now you can clear entries</string>
+    <string name="blacklist_apply">Apply blacklist to the index…</string>
+    <string name="blacklist_location">Blacklist file is located in client\'s working directory inside the internal storage root</string>
+    <string name="blacklist_download_from_station">Download from node</string>
+    <string name="blacklist_copy_from_file">Or copy from file</string>
+    <string name="blacklist_remove_list">Delete local blacklist</string>
+    <string name="blacklist_download_error">Error downloading blacklist from node</string>
+    <string name="blacklist_save_error">Error saving blacklist into file</string>
+    <string name="blacklist_deletion_error">Error deleting blacklist</string>
+    <string name="blacklist_too_big">Blacklist bigger than 1MiB? You\'re insane :/</string>
+    <string name="blacklist_empty">Blacklist is empty!</string>
+    <string name="blacklist_saved">Blacklist was saved</string>
+    <string name="blacklist_loaded">Blacklist loaded into RAM</string>
+    <string name="blacklist_deleted">Blacklist was deleted successfully</string>
+
+
+    <!-- Errors & warnings -->
+
+    <string name="error">Error</string>
+    <string name="errors">Errors: %d</string>
+    <string name="error_formatted">Error happened: %s</string>
+    <string name="done_with_errors">Completed with errors</string>
+    <string name="error_sending">Sending error!</string>
+    <string name="warning">Warning</string>
+    <string name="error_moving_to_station">Error moving this to other station!</string>
+    <string name="empty_file_warning">" is not present or it\'s unavailable for reading"</string>
+    <string name="no_file_warning">File does not exist or it\'s unreadable</string>
+    <string name="empty_msglist">Messages list is empty, getting out</string>
+    <string name="empty_discussion_stack">Discussion stack is empty!</string>
+    <string name="empty_search_params">Blank options were entered! There is nothing to search</string>
+    <string name="empty_place">This place is empty…</string>
+    <string name="nothing_found">Nothing found!</string>
+    <string name="config_very_big">Config bigger than 1MiB? I don\'t believe!</string>
+    <string name="config_not_found">Config not found/error, loading default one</string>
+    <string name="create_file_error">"Can\'t create file "</string>
+    <string name="open_create_file_error">Couldn\'t create/open file</string>
+    <string name="unable_to_write_error">is unwritable</string>
+    <string name="file_write_error">"Error writing data to "</string>
+    <string name="unable_to_save_error">Failed to save the file. Sorry :(</string>
+    <string name="deletion_error">Failed to delete!</string>
+    <string name="draft_dir_deletion_error">Empty drafts directory was not deleted…</string>
+    <string name="station_deletion_error" formatted="false">Deletion error for station %s &amp; %s</string>
+    <string name="echolist_parsing_error">Echolist parsing error!</string>
+    <string name="wrong_input">You typed something wrong</string>
+    <string name="internet_error">Messages downloading problem\n
+  Check your network connection</string>
+    <string name="interner_error_echolist">Error: echolist was not received!</string>
+    <string name="update_message_error">Message downloading failed, see system log</string>
+    <string name="nothing_to_export">Nothing to export!</string>
+    <string name="echoarea_nothing_to_truncate">There is nothing to truncate!</string>
+    <string name="nothing_to_delete">Nothing to delete</string>
+    <string name="no_such_messages">There are no such messages!</string>
+    <string name="no_new_messages">No new messages</string>
+    <string name="no_unread_messages">There are no unread messages!</string>
+    <string name="user_answered_to_nobody">This user didn\'t reply to anybody!</string>
+    <string name="repto_msgid_not_found">Current message list doesn\'t contain selected reply origin.\n
+  Maybe you should navigate to the corresponding echoarea first?</string>
+    <string name="close_window_later">You\'re about to close that later!</string>
+    <string name="close_window_debug">You\'re behaving so bad trying to close debug window!</string>
+    <string name="station_slash_at_the_end">Node address must end with slash, remember for the next time!</string>
+    <string name="warning_download_limits">This option may cause unwanted behavior because sometimes fetcher can fetch up the whole echoarea (up to several thousands of messages). We recommend to turn on \"forced index cut\" to avoid that.</string>
+    <string name="warning_last_station">This is the last node left!</string>
+
+    <!-- Fetcher -->
+
+    <string name="fetcher_update_counters">Update counters</string>
+    <string name="fetcher_xc_problem">Looks like this station has a problem with /x/c</string>
+    <string name="fetcher_first_time">Fetching for the first time…</string>
+    <string name="fetcher_not_use_xc">Not using /x/c this time…</string>
+
+    <string name="fetcher_load_index">Fetching index</string>
+    <string name="fetcher_load_database">Loading local database</string>
+    <string name="fetcher_dl_messages">Fetching messages</string>
+    <string name="fetcher_save_in_db">Saving into database</string>
+
+    <string name="fetcher_bundle_get_error">Error getting messages bundle. Check your internet connection</string>
+    <string name="fetcher_bundle_parse_error">Error: corrupted message bundle</string>
+
+    <!-- Sender -->
+
+    <string name="message_sent">Message has been sent</string>
+    <string name="sender_sent">Sent: %d</string>
+    <string name="sender_delete_draft">Deleting empty draft</string>
+    <string name="delete_draft">Deleting draft</string>
+    <string name="sender_delete_draft_err">Error deleting the draft</string>
+    <string name="sender_rename_problem">Error renaming to</string>
+
+    <!-- Acra bugreports -->
+
+    <string name="acra_report_title">Oops, a terrible error happened!</string>
+    <string name="acra_report_description">Send us a bug report letter if you\'re really good and kind person</string>
+
+    <!-- Search -->
+
+    <string name="search">Search</string>
+    <string name="search_in_db">Database search</string>
+    <string name="search_advanced">Advanced search</string>
+    <string name="search_params">Search options</string>
+    <string name="search_senders">Senders</string>
+    <string name="search_receivers">Receivers</string>
+    <string name="search_senders_stations">Senders\' stations</string>
+    <string name="search_subj">Subject</string>
+    <string name="search_date_from">From:</string>
+    <string name="search_date_to">To:</string>
+    <string name="search_present_in_favorites">Is favorite</string>
+
+    <!-- Help text -->
+
     <string name="help_about">This is empty, sorry</string>
     <string name="help_newbie">This is empty, sorry</string>
-    <string name="permission_grant_text">This is empty, sorry</string>
+
+    <string name="help_xfile_short">Learn more about /x/file extension in our documentation</string>
+    <string name="help_database_deletion">When the client unsubscribes from echoarea, it doesn\'t mean that the area is about to disappear from database. If you\'d like to save your storage, perform actions below</string>
+
+    <!-- Tavern & Mira -->
+
+    <string name="node_mira">Mira Station</string>
+    <string name="node_tavern">Tavern</string>
+
+    <!-- Permissions error text -->
+
     <string name="permission_grant_top">Please grant filesystem access permission</string>
-    <string name="settings_carbon_names">Carbon area user names</string>
-    <string name="settings_carbon_names_summary">Messages sent to the selected users will appear in carbon area (delimiter is colon)</string>
-    <string name="settings_carbon_size">Carbon area size in messages</string>
-    <string name="settings_carbon_size_summary">Show up to N messages in carbon area</string>
+
+    <string name="permission_grant_text">This is empty, sorry</string>
+
+    <!-- Main Client Settings -->
+
     <string name="settings_category_interface">User Interface</string>
-    <string name="settings_category_network">Network</string>
-    <string name="settings_category_notifications">Notifications</string>
-    <string name="settings_citation">Simplified quotation</string>
-    <string name="settings_citation_summary">Don\'t include usernames in quotes</string>
+    <string name="settings_select_theme">Theme choose</string>
+    <string name="settings_select_theme_summary">Change client appearance</string>
     <string name="settings_editor">Built-in messages editor</string>
     <string name="settings_editor_summary">Use client\'s built-in editor to write/answer messages</string>
+    <string name="settings_citation">Simplified quotation</string>
+    <string name="settings_citation_summary">Don\'t include usernames in quotes</string>
+    <string name="settings_pull_to_refresh">Pull to refresh</string>
+    <string name="settings_pull_to_refresh_summary">Fetch new messages from server pulling the finger down on the main screen</string>
     <string name="settings_hide_toolbar">Hide toolbar</string>
     <string name="settings_hide_toolbar_summary">Hide application toolbar while scrolling messages</string>
-    <string name="settings_messages_per_request_summary">Maximum amount of messages downloaded per request. If you have unstable network connection, you may lower the value</string>
-    <string name="settings_messages_per_request">Messages downloaded per request</string>
-    <string name="settings_network_timeout">Connection timeout</string>
-    <string name="settings_network_timeout_summary">Specify time amount in seconds</string>
-    <string name="settings_notification_freq">Check-up frequency</string>
-    <string name="settings_notification_freq_summary">Check for new messages every N minutes</string>
-    <string name="settings_notification_vibrate">Vibration</string>
-    <string name="settings_notification_vibrate_summary">Vibrate if new messages are available on server</string>
-    <string name="settings_notifications">Turn on notifications</string>
-    <string name="settings_notifications_summary">Show notifications informing of new messages</string>
     <string name="settings_open_last_read_message">Show message read last time</string>
     <string name="settings_open_last_read_message_summary">Don\'t show messages list when navigating to echoarea, instantly start reading mode instead</string>
     <string name="settings_open_unread_after_fetch">Unread after fetch</string>
     <string name="settings_open_unread_after_fetch_summary">Show all unread messages right after downloading</string>
-    <string name="settings_proxy">HTTP proxy</string>
-    <string name="settings_proxy_address">Proxy settings</string>
-    <string name="settings_proxy_address_summary">String format: user:pass@host:port. Orbot usually uses port 8118, i2p prefers 4444</string>
-    <string name="settings_proxy_summary">Connect through proxy server</string>
-    <string name="settings_pull_to_refresh">Pull to refresh</string>
-    <string name="settings_pull_to_refresh_summary">Fetch new messages from server pulling the finger down on the main screen</string>
-    <string name="settings_select_theme">Theme choose</string>
-    <string name="settings_select_theme_summary">Change client appearance</string>
     <string name="settings_sort_by_date">Sort by the date message was sent</string>
     <string name="settings_sort_by_date_summary">Otherwise messages are sorted by fetching time</string>
+    <string name="settings_carbon_names">Carbon area user names</string>
+    <string name="settings_carbon_names_summary">Messages sent to the selected users will appear in carbon area (delimiter is colon)</string>
+    <string name="settings_carbon_size">Carbon area size in messages</string>
+    <string name="settings_carbon_size_summary">Show up to N messages in carbon area</string>
+    <string name="settings_category_notifications">Notifications</string>
+    <string name="settings_notifications">Turn on notifications</string>
+    <string name="settings_notifications_summary">Show notifications informing of new messages</string>
+    <string name="settings_notification_freq">Check-up frequency</string>
+    <string name="settings_notification_freq_summary">Check for new messages every N minutes</string>
+    <string name="settings_notification_vibrate">Vibration</string>
+    <string name="settings_notification_vibrate_summary">Vibrate if new messages are available on server</string>
+    <string name="settings_category_network">Network</string>
+    <string name="settings_network_timeout">Connection timeout</string>
+    <string name="settings_network_timeout_summary">Specify time amount in seconds</string>
+    <string name="settings_messages_per_request">Messages downloaded per request</string>
+    <string name="settings_messages_per_request_summary">Maximum amount of messages downloaded per request. If you have unstable network connection, you may lower the value</string>
+    <string name="settings_proxy">HTTP proxy</string>
+    <string name="settings_proxy_summary">Connect through proxy server</string>
+    <string name="settings_proxy_address">Proxy settings</string>
+    <string name="settings_proxy_address_summary">String format: user:pass@host:port. Orbot usually uses port 8118, i2p prefers 4444</string>
     <string name="settings_tor">Tor integration</string>
     <string name="settings_tor_summary">Start Orbot automatically</string>
-    <string name="title_activity_help">Help</string>
-    <string name="action_send">Send</string>
-    <string name="blacklist">Blacklist</string>
-    <string name="of">" of "</string>
-    <string name="node_tavern">Tavern</string>
-    <string name="node_mira">Mira Station</string>
-    <string name="acra_report_title">Oops, a terrible error happened!</string>
-    <string name="acra_report_description">Send us a bug report letter if you\'re really good and kind person</string>
-    <string name="blacklist_apply">Apply blacklist to the index&#8230;</string>
-    <string name="blacklist_clear">Clear messages by blacklist</string>
-    <string name="create_file_error">"Can't create file "</string>
-    <string name="drafts_cache">Drafts validation cache</string>
-    <string name="echo_positions">Read-Positions Cache</string>
-    <string name="empty_file_warning">" is not present or it's unavailable for reading"</string>
-    <string name="fetcher_bundle_get_error"></string>
-    <string name="file_write_error">"Error writing data to "</string>
-    <string name="fetcher_update_counters">Update counters</string>
+
 </resources>
