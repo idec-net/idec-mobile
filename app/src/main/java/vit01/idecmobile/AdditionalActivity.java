@@ -410,7 +410,7 @@ public class AdditionalActivity extends AppCompatActivity {
                             try {
                                 File toExport = new File(ExternalStorage.rootStorage.getParentFile(), "idecConfig_" + String.valueOf(System.currentTimeMillis()) + ".obj");
                                 if (!toExport.exists() && !toExport.createNewFile())
-                                    throw new IOException(getString(R.string.create_file_error) + toExport.getAbsolutePath());
+                                    throw new IOException(getString(R.string.create_file_error) + " " + toExport.getAbsolutePath());
 
                                 FileOutputStream os = new FileOutputStream(toExport);
                                 ObjectOutputStream oos = new ObjectOutputStream(os);

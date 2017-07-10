@@ -70,7 +70,6 @@ public class MessageSlideFragment extends Fragment {
     private int nodeIndex;
     private ArrayList<String> msglist;
     private ArrayList<Integer> discussionStack = new ArrayList<>();
-    private String of = getString(R.string.of);
     private String echoarea = null;
     private String appendToTitle = null; // Здесь должно быть имя эхи и разделитель |
 
@@ -85,6 +84,7 @@ public class MessageSlideFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_message_slide, container, false);
+
         mPager = (ViewPager) rootView.findViewById(R.id.swipe_pager);
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -131,7 +131,7 @@ public class MessageSlideFragment extends Fragment {
 
     public void updateActionBar(int position) {
         SimpleFunctions.setActivityTitle((AppCompatActivity) activity,
-                appendToTitle + String.valueOf(position + 1) + of + msgCount);
+                appendToTitle + getString(R.string.of, position + 1, msgCount));
     }
 
     public void initSlider(String echo, ArrayList<String> msgids, int nIndex, int firstPosition) {
@@ -302,7 +302,7 @@ public class MessageSlideFragment extends Fragment {
                     boolean create = file.createNewFile();
 
                     if (!create) {
-                        String debug = getString(R.string.create_file_error) + file.getName();
+                        String debug = getString(R.string.create_file_error) + " " + file.getName();
                         Toast.makeText(activity, debug, Toast.LENGTH_SHORT).show();
                         break;
                     }

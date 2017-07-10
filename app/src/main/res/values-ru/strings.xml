@@ -1,0 +1,355 @@
+<resources xmlns:http="http://schemas.android.com/tools">
+    <string name="action_settings">Настройки клиента</string>
+    <string name="action_stations_settings">Настройки станций</string>
+    <string name="action_send">Отправить</string>
+    <string name="action_send_all">Отправить всё</string>
+    <string name="action_fetch">Скачать сообщения</string>
+    <string name="action_download">Скачать</string>
+    <string name="action_download_list">Скачать список</string>
+    <string name="action_update_from_server">Обновить с сервера</string>
+    <string name="action_download_echolist">Получить список эх с ноды</string>
+    <string name="action_mark_all_base_read">Пометить почту прочитанной</string>
+    <string name="action_mark_all_read">Пометить всё как прочитанное</string>
+    <string name="action_mark_favorite">В избранное</string>
+    <string name="action_display_unread_only">Вид: только непрочитанные</string>
+    <string name="action_compose">Написать</string>
+    <string name="action_new_message">Новое сообщение</string>
+    <string name="action_reply">Ответить</string>
+    <string name="action_quote_reply">С цитатой</string>
+    <string name="action_file_choose">Выбрать файл</string>
+    <string name="action_file_delete">Удалить файл</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_delete_all">Удалить все</string>
+    <string name="action_delete_favorites">Удалить все избранные</string>
+    <string name="action_delete_station">Удалить станцию</string>
+    <string name="action_view_full_log">Посмотреть полный лог</string>
+    <string name="action_autoconfig">Настроить всё автоматически</string>
+    <string name="action_save_in_file">Сохранить в файл</string>
+    <string name="action_echo_export">Экспорт в файл бандла</string>
+    <string name="action_echo_truncate">Обрезать эху</string>
+    <string name="action_echo_truncate_summary">Укоротить эху до максимум N сообщений</string>
+    <string name="action_delete_database">Очистить всю базу данных</string>
+    <string name="action_delete_drafts">Очистка сообщений</string>
+    <string name="action_clear_xc">Очистить кэш</string>
+    <string name="action_bundle_import">Импорт бандлов сообщений</string>
+    <string name="action_database_export">Экспорт всей базы данных</string>
+    <string name="action_config_import">Импорт настроек</string>
+    <string name="action_config_export">Экспортировать</string>
+
+    <string name="navigate_first">В начало</string>
+    <string name="navigate_last">В конец</string>
+    <string name="navigate_msglist">К списку сообщений</string>
+    <string name="navigate_discussion_previous">Выше по обсуждению</string>
+    <string name="navigate_discussion_next">Вернуться на ранее прочитанное</string>
+
+    <string name="title_activity_help">Помощь</string>
+    <string name="title_activity_file_chooser">Выбор файла</string>
+    <string name="title_activity_list_edit">Правка списка эх</string>
+    <string name="title_activity_debug">Окно отладки</string>
+
+    <string name="of" formatted="false">%1$d из %2$d</string>
+    <string name="quantity">Количество: %d</string>
+    <string name="messages_quantity">Сообщений: %d</string>
+
+    <string name="favorites">Избранные</string>
+    <string name="carbon">Карбонка</string>
+    <string name="unread">Непрочитанные</string>
+    <string name="search_results">Найденное</string>
+    <string name="client_config">Файл конфигурации клиента</string>
+
+    <string name="about">О нас</string>
+    <string name="newbies">Для новичков</string>
+    <string name="license">Лицензия</string>
+    <string name="node_files">Файлы ноды</string>
+    <string name="database">База данных</string>
+
+    <string name="wait">Подождите&#8230;</string>
+    <string name="done">Выполнено!</string>
+    <string name="start">Начать</string>
+    <string name="ok_close">Всё понял, закрыть</string>
+    <string name="loading">Загрузка</string>
+    <string name="loading_messages">Скачивание сообщений</string>
+    <string name="sending_letters">Отправка почты</string>
+    <string name="connecting_to_station">Связываемся со станцией…</string>
+    <string name="searching_messages">Идёт поиск</string>
+    <string name="inserting_to_list">Составляется список…</string>
+    <string name="exporting_certain_messages">Экспорт отдельных сообщений…</string>
+    <string name="exporting_by_echoes">Экспорт по эхоконференциям…</string>
+    <string name="trying_to_copy_something">Пробуем скопировать в %s рабочего каталога…</string>
+    <string name="autoconfig_done">Автоконфигурация выполнена</string>
+    <string name="messages_sent">Отправлено сообщений: %d</string>
+    <string name="messages_got">Получено сообщений: %d</string>
+    <string name="clear_favorites">Очистить избранные</string>
+    <string name="clear_favorites_confirm">Снять со всех сообщений данную метку?</string>
+    <string name="are_you_crazy">Ты в своём уме, товарищ??</string>
+    <string name="deleting_messages">Сообщения удаляются</string>
+    <string name="deleting_useless_messages">Удаляем лишние сообщения…</string>
+    <string name="deleting_n_messages">Начинаем удалять %d сообщений…</string>
+    <string name="deleted_n_messages">Удалено сообщений: %d</string>
+    <string name="deleting_database_complete">База очищена</string>
+    <string name="echoarea_clear_done">Эха подчищена</string>
+    <string name="xc_cache_clear_complete">Кэш /x/c очищен</string>
+    <string name="echo_deletion_complete">Эха удалена</string>
+    <string name="ok_let_them_exist">Правильно, пусть останутся!</string>
+    <string name="ok_database_is_alive">Вот и правильно, что отменил!</string>
+    <string name="edit_by_yourself">Правь список сам…</string>
+    <string name="i_am_really_sure">Я знаю, что делаю</string>
+    <string name="config_saved">Конфиг сохранён в файл</string>
+    <string name="message_updated">Сообщение в базе обновлено</string>
+    <string name="notification_service_reload">Уведомления IDECMobile (пере)запущены</string>
+    <string name="message_saved_to_file">Сообщение сохранено в файл</string>
+    <string name="msgid_clipboard_done">id сообщения скопирован в буфер обмена</string>
+    <string name="repto_clipboard_done">msgid ответа скопирован в буфер обмена</string>
+    <string name="answered">Ответ: %s</string>
+    <string name="new_messages">Новые сообщения: %d</string>
+    <string name="truncate_limit_display" formatted="false">Выбранный лимит: %d сообщений, исходное количество: %d</string>
+    <string name="exported_n_in_file" formatted="false">Экспортировано: %d в файл %s</string>
+    <string name="exported_n_messages">Экспортировано: %d</string>
+    <string name="imported_n_messages">Сообщений импортировано: %d</string>
+
+    <string name="add_node">Добавить станцию</string>
+    <string name="delete_node">Удалить станцию</string>
+    <string name="delete_node_confirm">На этой станции остались черновики/отправленные сообщения. Точно удалить?</string>
+    <string name="manage_node">Управление станциями</string>
+    <string name="choose_node">Выберите станцию</string>
+    <string name="enable_node">Включить эту станцию</string>
+    <string name="node_authstr">Строка авторизации (пароль)</string>
+    <string name="node_name">Имя станции</string>
+    <string name="node_address">Адрес сервера</string>
+    <string name="node_xc_support">Поддержка схемы IDEC /x/c</string>
+    <string name="node_advanced_ue">Поддержка расширенного /u/e</string>
+    <string name="node_continue_loading_index">Качать индекс дальше, если все сообщения новые</string>
+    <string name="node_ue_limit">Лимит msgid на эху в одном запросе</string>
+    <string name="node_cut_index">Принудительная обрезка индекса (0 - выключено)</string>
+
+    <string name="echoareas">Эхоконференции</string>
+    <string name="echoarea">Эхоконференция</string>
+    <string name="echo">Эха</string>
+    <string name="additional">Дополнительно</string>
+    <string name="drafts">Черновики</string>
+    <string name="sent">Отправленные</string>
+    <string name="settings">Настройки</string>
+    <string name="update">Обновиться</string>
+    <string name="offline_echoes">Offline-эхи</string>
+    <string name="build_date">Дата сборки</string>
+
+    <string name="to">Кому</string>
+    <string name="subj">Тема</string>
+    <string name="answer_to">Ответ на</string>
+    <string name="message">Сообщение</string>
+
+    <string name="drafts_cache">Кэш проверки черновиков</string>
+    <string name="echo_positions">Кэш позиций</string>
+
+    <string name="file_chosen">Выбрал файл %s</string>
+    <string name="file_loaded_to">Файл загружен в %s</string>
+
+    <string name="confirm_delete_drafts">Удалить все черновики?</string>
+    <string name="confirm_delete_sent">Удалить все отправленные?</string>
+
+    <string-array name="echo_menu_options">
+        <item>В начало</item>
+        <item>В конец</item>
+        <item>Удалить эху</item>
+    </string-array>
+
+    <!-- Echolist edit -->
+
+    <string name="echolist_edit_echo">Правка эхоконференции</string>
+    <string name="echolist_at_least_one_echo">В списке должна быть хотя бы одна эхоконференция!</string>
+    <string name="echolist_drag_drop_edit">Перемещаем и удяляем эхи через drag&amp;drop!</string>
+    <string name="echolist_confirm_install">Установить этот список эх?</string>
+
+    <!-- Blacklist -->
+
+    <string name="blacklist">Чёрный список</string>
+    <string name="blacklist_clear">Очистить сообщения по ЧС</string>
+    <string name="blacklist_ram_loading">Загружаем ЧС в ОЗУ</string>
+    <string name="blacklist_clear_ready">Вроде бы, всё прошло нормально. Можно чистить</string>
+    <string name="blacklist_apply">Применяем чёрный список к индексу&#8230;</string>
+    <string name="blacklist_location">Файл чёрного списка сообщений расположен в рабочем каталоге клиента в корне внутренней памяти</string>
+    <string name="blacklist_download_from_station">Скачать со станции</string>
+    <string name="blacklist_copy_from_file">Или скопировать из файла</string>
+    <string name="blacklist_remove_list">Очистить локальный чёрный список</string>
+    <string name="blacklist_download_error">Ошибка скачивания ЧС со станции</string>
+    <string name="blacklist_save_error">Ошибка записи ЧС в файл</string>
+    <string name="blacklist_deletion_error">Ошибка удаления чёрного списка</string>
+    <string name="blacklist_too_big">Чёрный список больше одного мегабайта? Ну тебя нафиг!</string>
+    <string name="blacklist_empty">ЧС пуст!</string>
+    <string name="blacklist_saved">Чёрный список сохранён</string>
+    <string name="blacklist_loaded">ЧС загружен в ОЗУ</string>
+    <string name="blacklist_deleted">ЧС успешно удалён</string>
+
+
+    <!-- Errors & warnings -->
+
+    <string name="error">Ошибка</string>
+    <string name="errors">Ошибок: %d</string>
+    <string name="error_formatted">Ошибочка вышла: %s</string>
+    <string name="done_with_errors">Выполнено с ошибками</string>
+    <string name="error_sending">Ошибка отправки!</string>
+    <string name="warning">Предупреждение</string>
+    <string name="error_moving_to_station">Переместить на другую станцию не получилось!</string>
+    <string name="empty_file_warning">отсутствует, либо недоступен для чтения</string>
+    <string name="no_file_warning">Файл не существует, либо недоступен для чтения</string>
+    <string name="empty_msglist">Список сообщений пуст, выходим</string>
+    <string name="empty_discussion_stack">Стек дискуссии пуст!</string>
+    <string name="empty_search_params">Введены пустые параметры! Искать нечего</string>
+    <string name="empty_place">Здесь пусто…</string>
+    <string name="nothing_found">Ничего не найдено!</string>
+    <string name="config_very_big">Конфиг больше мегабайта? НЕ ВЕРЮ! ©</string>
+    <string name="config_not_found">Конфиг не найден/ошибка, подгружаем обыкновенный</string>
+    <string name="create_file_error">Не могу создать файл</string>
+    <string name="open_create_file_error">Не удалось создать/открыть файл</string>
+    <string name="unable_to_write_error">недоступен для записи</string>
+    <string name="file_write_error">Ошибка записи в</string>
+    <string name="unable_to_save_error">Файл как-то не сохранён. Сожалею :(</string>
+    <string name="deletion_error">Удалить не получилось!</string>
+    <string name="draft_dir_deletion_error">Пустой каталог для черновиков не удалился…</string>
+    <string name="station_deletion_error" formatted="false">Ошибка удаления для станции %s &amp; %s</string>
+    <string name="echolist_parsing_error">Проблемы с парсингом списка эх!</string>
+    <string name="wrong_input">Чё-то ты не то ввёл</string>
+    <string name="internet_error">Проблема c загрузкой сообщений\nПроверьте подключение к интернету</string>
+    <string name="interner_error_echolist">Ошибка: список эх не получен!</string>
+    <string name="update_message_error">Сообщение не скачалось, посмотрите в системный лог</string>
+    <string name="nothing_to_export">Экспортировать нечего!</string>
+    <string name="echoarea_nothing_to_truncate">Здесь приемлемое количество сообщений!</string>
+    <string name="nothing_to_delete">Удалять нечего</string>
+    <string name="no_such_messages">Таких сообщений нет!</string>
+    <string name="no_new_messages">Новых сообщений нет</string>
+    <string name="no_unread_messages">Непрочитанных сообщений нет!</string>
+    <string name="user_answered_to_nobody">Этот пользователь никому не отвечал!</string>
+    <string name="repto_msgid_not_found">В данном списке сообщений нет того, на которое отвечали.\nМожет быть, надо сначала зайти в саму эху?</string>
+    <string name="close_window_later">Потом окно закроешь!</string>
+    <string name="close_window_debug">Как нехорошо закрывать окно дебага!</string>
+    <string name="station_slash_at_the_end">Адрес станции должен заканчиваться слешем, запомни на будущее!</string>
+    <string name="warning_download_limits">Эта опция довольно неприятная, потому что в некоторых случаях она может выкачать всю эху целиком (до нескольких тысяч сообщений!). Рекомендуется включить принудительную обрезку индекса, чтобы не напороться на эти грабли.</string>
+    <string name="warning_last_station">Это последняя станция!</string>
+
+    <!-- Fetcher -->
+
+    <string name="fetcher_update_counters">Обновляем счётчики</string>
+    <string name="fetcher_xc_problem">Похоже, на станции проблема с /x/c</string>
+    <string name="fetcher_first_time">Фетчим в первый раз&#8230;</string>
+    <string name="fetcher_not_use_xc">Не используем /x/c в этот раз&#8230;</string>
+
+    <string name="fetcher_load_index">Получаем индекс</string>
+    <string name="fetcher_load_database">Загрузка локальной базы</string>
+    <string name="fetcher_dl_messages">Скачиваем сообщения</string>
+    <string name="fetcher_save_in_db">Сохраняем в базу</string>
+
+    <string name="fetcher_bundle_get_error">Ошибка получения бандла сообщений. Проверь интернет</string>
+    <string name="fetcher_bundle_parse_error">Ошибка: повреждённый бандл сообщения</string>
+
+    <!-- Sender -->
+
+    <string name="message_sent">Сообщение отправлено</string>
+    <string name="sender_sent">Отправлено: %d</string>
+    <string name="sender_delete_draft">Удаляем пустой черновик</string>
+    <string name="delete_draft">Удаляем черновик</string>
+    <string name="sender_delete_draft_err">Ошибка при удалении черновика</string>
+    <string name="sender_rename_problem">Проблема с переименованием в</string>
+
+    <!-- Acra bugreports -->
+
+    <string name="acra_report_title">Упс, страшная ошибка!</string>
+    <string name="acra_report_description">Если ты очень добрый и хороший человек, отошли нам письмо о том, что произошло</string>
+
+    <!-- Search -->
+
+    <string name="search">Поиск</string>
+    <string name="search_in_db">Поиск по базе</string>
+    <string name="search_advanced">Расширенный поиск</string>
+    <string name="search_params">Параметры поиска</string>
+    <string name="search_senders">Отправители</string>
+    <string name="search_receivers">Получатели</string>
+    <string name="search_senders_stations">Станции отправителей</string>
+    <string name="search_subj">Тема сообщения</string>
+    <string name="search_date_from">От: </string>
+    <string name="search_date_to">До: </string>
+    <string name="search_present_in_favorites">Содержится в избранных сообщениях</string>
+
+    <!-- Help text -->
+
+    <string name="help_about">
+        Это очень большой текст. И очень важный для клиента. Я пока что не знаю, что сюда запихать.
+        Но зато я знаю, что клиент распространяется под GNU GPL.
+    </string>
+    <string name="help_newbie"><![CDATA[
+        <h3>Специально для новичков:</h3>
+        <p>Чтобы читать сообщения, пароль не требуется, достаточно указать лишь адрес станции,
+            затем нажать кнопку "Настроить всё автоматически" и (по желанию) получить список эхоконференций
+            с выбранной ноды.</p>
+
+        <p>В первый раз сообщения могут скачиваться долго, но стоит немного потерпеть.
+            Также в контекстном меню на главном экране есть пункт "Пометить почту прочитанной",
+            куда есть смысл нажать после самого первого скачивания.
+        </p>
+    ]]>
+    </string>
+
+    <string name="help_xfile_short">Подробнее про расширение /x/file написано в документации</string>
+    <string name="help_database_deletion">Когда клиент отписывается от эхоконференции, это совсем не значит, что эха удалена из базы данных. Если хочется сэкономить место в памяти, то ниже можно это сделать</string>
+
+    <!-- Tavern & Mira -->
+
+    <string name="node_mira">Станция мира</string>
+    <string name="node_tavern">Таверна</string>
+
+    <!-- Permissions error text -->
+
+    <string name="permission_grant_top">Предоставьте приложению права на доступ к внутренней памяти</string>
+
+    <string name="permission_grant_text">Что клиент записывает в общую ФС:
+        \n\n1. <b>Исходящие</b> (черновики) и <b>отправленные</b> сообщения.\n
+        Во-первых, чтобы их можно было править с помощью внешнего редактора.
+        Во-вторых, дабы они были в целости и сохранности после переустановки (удаления) приложения.\n\n
+        2. <b>Чёрный список.</b> По тем же причинам.\n\n
+        3. <b>Последние просмотренные</b> сообщения в эхах (чтобы можно было продолжить чтение с того же места).\n\n
+        4. <b>Хэши черновиков</b>, чтобы не отправлять случайно отцитированные или пустые сообщения.\n\n
+        5. Также клиент умеет <b>экспортировать</b> в файлы конфиг и сообщения из базы данных (+ импортировать!).
+    </string>
+
+    <!-- Main Client Settings -->
+
+    <string name="settings_category_interface">Интерфейс</string>
+    <string name="settings_select_theme">Выбор темы</string>
+    <string name="settings_select_theme_summary">Изменить тему оформления приложения</string>
+    <string name="settings_editor">Встроенный редактор сообщений</string>
+    <string name="settings_editor_summary">Использовать встроенный редактор для написания сообщений</string>
+    <string name="settings_citation">Упрощённое цитирование</string>
+    <string name="settings_citation_summary">Не включать имя пользователя в цитату</string>
+    <string name="settings_pull_to_refresh">Потянуть для обновления</string>
+    <string name="settings_pull_to_refresh_summary">Скачивать новые сообщения, потянув вниз на главном экране</string>
+    <string name="settings_hide_toolbar">Скрывать верхнюю панель</string>
+    <string name="settings_hide_toolbar_summary">Скрывать панель при прокрутке сообщений</string>
+    <string name="settings_open_last_read_message">Открывать последнее прочитанное сообщение</string>
+    <string name="settings_open_last_read_message_summary">Не показывать список сообщений при переходе в эху, а сразу читать с того же места</string>
+    <string name="settings_open_unread_after_fetch">Показывать непрочитанные сообщения</string>
+    <string name="settings_open_unread_after_fetch_summary">Показать непрочитанные сразу после фетча</string>
+    <string name="settings_sort_by_date">Сортировать сообщения по дате написания</string>
+    <string name="settings_sort_by_date_summary">Иначе сортируются по дате получения</string>
+    <string name="settings_carbon_names">Имена пользователей для карбонки</string>
+    <string name="settings_carbon_names_summary">Показывать в карбонке сообщения, адресованные указанным пользователям (имена разделяются двоеточием)</string>
+    <string name="settings_carbon_size">Количество сообщений в карбонке</string>
+    <string name="settings_carbon_size_summary">Показывать не более N последних сообщений в карбонке</string>
+    <string name="settings_category_notifications">Уведомления</string>
+    <string name="settings_notifications">Включить уведомления</string>
+    <string name="settings_notifications_summary">Показывать уведомления о новых сообщениях</string>
+    <string name="settings_notification_freq">Периодичность проверки</string>
+    <string name="settings_notification_freq_summary">Проверять новые сообщения каждые N минут</string>
+    <string name="settings_notification_vibrate">Вибрация</string>
+    <string name="settings_notification_vibrate_summary">Вибрировать, когда доступны новые сообщения</string>
+    <string name="settings_category_network">Сеть</string>
+    <string name="settings_network_timeout">Таймаут сетевого соединения</string>
+    <string name="settings_network_timeout_summary">Максимальное время ожидания сетевого соединения (в секундах)</string>
+    <string name="settings_messages_per_request">Скачивать сообщений за один запрос</string>
+    <string name="settings_messages_per_request_summary">Максимальное количество сообщений, скачиваемых за один запрос. При плохом интернете можно уменьшить это значение</string>
+    <string name="settings_proxy">HTTP прокси</string>
+    <string name="settings_proxy_summary">Подключаться через прокси-сервер</string>
+    <string name="settings_proxy_address">Настройки прокси-сервера</string>
+    <string name="settings_proxy_address_summary">Формат записи: user:pass@host:port. Orbot обычно запущен на порту 8118, i2p - 4444</string>
+    <string name="settings_tor">Интеграция с Tor</string>
+    <string name="settings_tor_summary">Автоматически запускать Orbot</string>
+
+</resources>

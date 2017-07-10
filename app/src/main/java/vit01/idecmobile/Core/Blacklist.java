@@ -48,6 +48,6 @@ public class Blacklist {
                 SimpleFunctions.debug(e.toString());
             }
         } else
-            SimpleFunctions.debug(Strings.decorate(Strings.blacklist) + Strings.empty_file_warning);
+            SimpleFunctions.debug(Strings.decorate(Strings.blacklist) + " " + Strings.empty_file_warning);
     }
 }

@@ -56,7 +56,7 @@ public class DraftsValidator {
                 SimpleFunctions.debug(e.toString());
             }
         } else
-            SimpleFunctions.debug(Strings.decorate(Strings.drafts_cache) + Strings.empty_file_warning);
+            SimpleFunctions.debug(Strings.decorate(Strings.drafts_cache) + " " + Strings.empty_file_warning);
     }
 
     public static void writeHashesCache() {
@@ -82,7 +82,7 @@ public class DraftsValidator {
                 os.write(data.getBytes());
                 os.close();
             } catch (IOException e) {
-                SimpleFunctions.debug(Strings.file_write_error + Strings.decorate(Strings.drafts_cache));
+                SimpleFunctions.debug(Strings.file_write_error + " " + Strings.decorate(Strings.drafts_cache));
             }
         }
     }

@@ -59,7 +59,7 @@ public class EchoReadingPosition {
                 SimpleFunctions.debug(e.toString());
             }
         } else
-            SimpleFunctions.debug(Strings.decorate(Strings.echo_positions) + Strings.empty_file_warning);
+            SimpleFunctions.debug(Strings.decorate(Strings.echo_positions) + " " + Strings.empty_file_warning);
     }
 
     public static void writePositionCache() {
@@ -90,7 +90,7 @@ public class EchoReadingPosition {
 
                 os.close();
             } catch (IOException e) {
-                SimpleFunctions.debug(Strings.file_write_error + Strings.decorate(Strings.echo_positions));
+                SimpleFunctions.debug(Strings.file_write_error + " " + Strings.decorate(Strings.echo_positions));
             }
         }
     }

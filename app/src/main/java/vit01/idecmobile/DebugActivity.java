@@ -311,7 +311,7 @@ public class DebugActivity extends AppCompatActivity {
                 if (!where.exists()) {
                     boolean created = where.createNewFile();
                     if (!created)
-                        SimpleFunctions.debug(getString(R.string.create_file_error) + where.getAbsolutePath());
+                        SimpleFunctions.debug(getString(R.string.create_file_error) + " " + where.getAbsolutePath());
                 }
                 if (where.canWrite()) {
                     fos = new FileOutputStream(where);
