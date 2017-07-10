@@ -225,13 +225,13 @@ public class DebugActivity extends AppCompatActivity {
                 AbstractTransport transport = GlobalTransport.transport;
                 int countMessages = transport.countMessages(echoarea);
 
-                SimpleFunctions.debug("Выбранный лимит: " + String.valueOf(limit) + " сообщений, исходное количество: " + String.valueOf(countMessages));
+                SimpleFunctions.debug(getString(R.string.truncate_limit_display, limit, countMessages));
                 if (countMessages <= limit) needTruncate = false;
                 else {
                     int deleteLength = countMessages - limit;
-                    SimpleFunctions.debug("Составляется список...");
+                    SimpleFunctions.debug(getString(R.string.inserting_to_list));
                     ArrayList<String> deleteThem = transport.getMsgList(echoarea, 0, deleteLength, "number");
-                    SimpleFunctions.debug("Удаляем лишние сообщения...");
+                    SimpleFunctions.debug(getString(R.string.deleting_useless_messages));
                     transport.deleteMessages(deleteThem, echoarea);
                 }
             } catch (Exception e) {
@@ -244,7 +244,7 @@ public class DebugActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String answer = (finalNeedTruncate) ? "Эха подчищена" : "Здесь приемлемое количество сообщений!";
+                        int answer = (finalNeedTruncate) ? R.string.echoarea_clear_done : R.string.echoarea_nothing_to_truncate;
                         Toast.makeText(getApplicationContext(), answer, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -265,7 +265,7 @@ public class DebugActivity extends AppCompatActivity {
                 if (Blacklist.badMsgids.size() == 0)
                     SimpleFunctions.debug(getString(R.string.blacklist_empty));
                 else {
-                    SimpleFunctions.debug("Начинаем удалять " + Blacklist.badMsgids.size() + " сообщений...");
+                    SimpleFunctions.debug(getString(R.string.deleting_n_messages, Blacklist.badMsgids.size()));
                     for (String entry : Blacklist.badMsgids) {
                         boolean success = GlobalTransport.transport.deleteMessage(entry, null);
                         if (success) {
@@ -275,18 +275,19 @@ public class DebugActivity extends AppCompatActivity {
                     }
                 }
 
-                SimpleFunctions.debug("Удалено сообщений: " + String.valueOf(deleted));
+                SimpleFunctions.debug(getString(R.string.deleted_n_messages, deleted));
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
-                final String finalDeleted = String.valueOf(deleted);
+                final int finalDeleted = deleted;
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Удалено сообщений: " + finalDeleted, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.deleted_n_messages, finalDeleted), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -317,11 +318,11 @@ public class DebugActivity extends AppCompatActivity {
 
                     if (msgids == null) msgids = new ArrayList<>();
                     if (msgids.size() > 0) {
-                        SimpleFunctions.debug("Экспорт отдельных сообщений...");
-                        SimpleFunctions.debug("Количество: " + String.valueOf(msgids.size()));
+                        SimpleFunctions.debug(getString(R.string.exporting_certain_messages));
+                        SimpleFunctions.debug(getString(R.string.quantity, msgids.size()));
                         exported += exportThese(fos, msgids);
                     } else if (echoareas != null) {
-                        SimpleFunctions.debug("Экспорт по эхоконференциям...");
+                        SimpleFunctions.debug(getString(R.string.exporting_by_echoes));
 
                         for (String echoarea : echoareas) {
                             msgids.addAll(GlobalTransport.transport.getMsgList(echoarea, 0, 0, "number"));
@@ -336,7 +337,7 @@ public class DebugActivity extends AppCompatActivity {
                 } else
                     SimpleFunctions.debug(where.getAbsolutePath() + getString(R.string.unable_to_write_error));
 
-                SimpleFunctions.debug("Экспортировано: " + String.valueOf(exported) + " в файл " + where.getAbsolutePath());
+                SimpleFunctions.debug(getString(R.string.exported_n_in_file, exported, where.getAbsolutePath()));
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
@@ -350,12 +351,12 @@ public class DebugActivity extends AppCompatActivity {
                     }
                 }
                 SimpleFunctions.debugTaskFinished = true;
-                final String finalResult = String.valueOf(exported);
+                final int finalResult = exported;
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Экспортировано: " + finalResult, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.exported_n_messages, finalResult), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -426,18 +427,19 @@ public class DebugActivity extends AppCompatActivity {
                     }
                 } else SimpleFunctions.debug(getString(R.string.no_file_warning));
 
-                SimpleFunctions.debug("Сообщений импортировано: " + String.valueOf(savedMessages));
+                SimpleFunctions.debug(getString(R.string.imported_n_messages, savedMessages));
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
             } finally {
                 SimpleFunctions.debugTaskFinished = true;
-                final String finalResult = String.valueOf(savedMessages);
+                final int finalResult = savedMessages;
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Сообщений: " + finalResult, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.messages_quantity, finalResult), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -459,18 +461,18 @@ public class DebugActivity extends AppCompatActivity {
                 } else {
                     long oneMB = 1024 * 1024;
                     if (where.length() > oneMB) {
-                        SimpleFunctions.debug("Чёрный список больше одного мегабайта? Ну тебя нафиг!");
+                        SimpleFunctions.debug(getString(R.string.blacklist_too_big));
                         Thread.sleep(3000);
                     } else {
-                        SimpleFunctions.debug("Пробуем скопировать в " + Blacklist.filename + " рабочего каталога...");
+                        SimpleFunctions.debug(getString(R.string.trying_to_copy_something, Blacklist.filename));
                         FileOutputStream fos = new FileOutputStream(new File(ExternalStorage.rootStorage, Blacklist.filename));
                         String info = SimpleFunctions.readIt(new FileInputStream(where));
                         fos.write(info.getBytes());
                         fos.close();
 
-                        SimpleFunctions.debug("Загружаем ЧС в ОЗУ");
+                        SimpleFunctions.debug(getString(R.string.blacklist_ram_loading));
                         Blacklist.loadBlacklist();
-                        SimpleFunctions.debug("\nВроде бы, всё прошло нормально. Можно чистить");
+                        SimpleFunctions.debug("\n" + getString(R.string.blacklist_clear_ready));
                     }
                 }
             } catch (Exception e) {

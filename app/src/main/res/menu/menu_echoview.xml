@@ -4,32 +4,32 @@
     <item
         android:id="@+id/action_search"
         android:actionViewClass="android.support.v7.widget.SearchView"
-        android:title="Поиск"
+        android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
 
     <item
         android:id="@+id/action_advancedsearch"
-        android:title="Расширенный поиск"
+        android:title="@string/search_advanced"
         android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_mark_all_read"
-        android:title="Пометить всё как прочитанное"
+        android:title="@string/action_mark_all_read"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_display_unread_only"
         android:checkable="true"
         android:checked="false"
-        android:title="Вид: только непрочитанные"
+        android:title="@string/action_display_unread_only"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_favorites_remove_all"
         android:orderInCategory="100"
-        android:title="Удалить все избранные"
+        android:title="@string/action_delete_favorites"
         android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

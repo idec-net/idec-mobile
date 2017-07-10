@@ -4,6 +4,6 @@
     tools:context="vit01.idecmobile.StationsActivity">
     <item
         android:id="@+id/delete_station"
-        android:title="Удалить станцию"
+        android:title="@string/action_delete_station"
         app:showAsAction="never" />
 </menu>

@@ -183,7 +183,7 @@ public class MessageSlideFragment extends Fragment {
 
         int iconColor = SimpleFunctions.colorFromTheme(activity, R.attr.menuIconColor);
 
-        if (!isTablet && Config.values.disableMsglist && echoarea != null) {
+        if (!isTablet && Config.values.disableMsglist) {
             return_msglist.setVisible(true);
             return_msglist.setIcon(new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_format_list_bulleted).actionBar().color(iconColor));
         }

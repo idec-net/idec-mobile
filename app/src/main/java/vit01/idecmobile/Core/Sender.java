@@ -102,7 +102,7 @@ public class Sender {
             totaldrafts += contents.size();
 
             for (File file : contents) {
-                SimpleFunctions.pretty_debug(context.getString(R.string.sender_sent) + ": " + String.valueOf(countsent));
+                SimpleFunctions.pretty_debug(context.getString(R.string.sender_sent, countsent));
                 Boolean sent = sendOneMessage(context, station, file, false);
                 if (sent != null) {
                     if (sent) countsent++;

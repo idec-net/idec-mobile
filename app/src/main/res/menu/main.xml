@@ -4,38 +4,38 @@
 
     <item
         android:id="@+id/action_fetch"
-        android:title="Скачать сообщения"
+        android:title="@string/action_fetch"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_send"
-        android:title="Отправить всё"
+        android:title="@string/action_send_all"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_search"
         android:actionViewClass="android.support.v7.widget.SearchView"
-        android:title="Поиск по базе"
+        android:title="@string/search_in_db"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
 
     <item
         android:id="@+id/action_advancedsearch"
-        android:title="Расширенный поиск"
+        android:title="@string/search_advanced"
         android:visible="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_edit_echoareas"
-        android:title="Править список эх"
+        android:title="@string/title_activity_list_edit"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_mark_all_base_read"
-        android:title="Пометить почту прочитанной"
+        android:title="@string/action_mark_all_base_read"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_stations"
-        android:title="Настройки станций"
+        android:title="@string/action_stations_settings"
         app:showAsAction="never" />
 
     <item

@@ -71,7 +71,7 @@ public class DraftEditor extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
-        SimpleFunctions.setActivityTitle(this, "Написать");
+        SimpleFunctions.setActivityTitle(this, getString(R.string.action_compose));
 
         getControls();
         Intent incoming = getIntent();
@@ -109,8 +109,8 @@ public class DraftEditor extends AppCompatActivity {
         }
 
         if (fileToSave == null || message == null) {
-            Toast.makeText(DraftEditor.this, "Не удалось создать/открыть файл", Toast.LENGTH_SHORT).show();
-            SimpleFunctions.debug("Проблема с созданием/открытием файла!");
+            Toast.makeText(DraftEditor.this, R.string.open_create_file_error, Toast.LENGTH_SHORT).show();
+            SimpleFunctions.debug("file creation problem");
             finish();
             return;
         }
@@ -176,7 +176,7 @@ public class DraftEditor extends AppCompatActivity {
 
                     assert sent != null;
                     DraftsValidator.deleteHash(generatedHash);
-                    final String statusText = (sent) ? "Сообщение отправлено" : "Ошибка отправки!";
+                    final int statusText = (sent) ? R.string.message_sent : R.string.error_sending;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -188,10 +188,10 @@ public class DraftEditor extends AppCompatActivity {
 
             finish();
         } else if (id == R.id.action_compose_delete) {
-            Toast.makeText(DraftEditor.this, "Удаляем черновик", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DraftEditor.this, R.string.delete_draft, Toast.LENGTH_SHORT).show();
             boolean r = fileToSave.delete();
             if (!r) {
-                Toast.makeText(DraftEditor.this, "Удалить не получилось!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DraftEditor.this, R.string.deletion_error, Toast.LENGTH_SHORT).show();
             } else fileToSave = null;
             finish();
         }
@@ -231,7 +231,7 @@ public class DraftEditor extends AppCompatActivity {
                     boolean renamed = fileToSave.renameTo(newFile);
 
                     if (!renamed) {
-                        Toast.makeText(DraftEditor.this, "Переместить на другую станцию не получилось!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DraftEditor.this, R.string.error_moving_to_station, Toast.LENGTH_SHORT).show();
                     }
 
                     fileToSave = newFile;
@@ -274,8 +274,8 @@ public class DraftEditor extends AppCompatActivity {
     public void saveMessage() {
         boolean result = ExternalStorage.writeDraftToFile(fileToSave, message.raw());
         if (!result) {
-            SimpleFunctions.debug("Проблемсы!");
-            Toast.makeText(DraftEditor.this, "Файл как-то не сохранён. Сожалею :(", Toast.LENGTH_SHORT).show();
+            SimpleFunctions.debug(getString(R.string.error));
+            Toast.makeText(DraftEditor.this, R.string.unable_to_save_error, Toast.LENGTH_SHORT).show();
         }
     }
 

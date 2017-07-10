@@ -4,11 +4,11 @@
 
     <item
         android:id="@+id/action_compose_send"
-        android:title="Отправить"
+        android:title="@string/action_send"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_compose_delete"
-        android:title="Удалить"
+        android:title="@string/action_delete"
         app:showAsAction="never" />
 </menu>

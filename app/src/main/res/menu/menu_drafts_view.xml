@@ -3,6 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_drafts_remove_all"
-        android:title="Удалить все"
+        android:title="@string/action_delete_all"
         app:showAsAction="ifRoom" />
 </menu>

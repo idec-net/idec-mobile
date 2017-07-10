@@ -7,53 +7,53 @@
     <item
         android:id="@+id/action_starred"
         android:orderInCategory="1"
-        android:title="В избранное"
+        android:title="@string/action_mark_favorite"
         android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_last_item"
         android:orderInCategory="2"
-        android:title="В конец"
+        android:title="@string/navigate_last"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_msglist_return"
         android:orderInCategory="3"
-        android:title="К списку сообщений"
+        android:title="@string/navigate_msglist"
         android:visible="false"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_new_message"
         android:orderInCategory="4"
-        android:title="Новое сообщение"
+        android:title="@string/action_new_message"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_first_item"
-        android:title="В начало"
+        android:title="@string/navigate_first"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_save_in_file"
-        android:title="Сохранить в файл"
+        android:title="@string/action_save_in_file"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_update_from_server"
-        android:title="Обновить с сервера"
+        android:title="@string/action_update_from_server"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_discussion_previous"
-        android:title="Выше по обсуждению"
+        android:title="@string/navigate_discussion_previous"
         android:visible="false"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_discussion_next"
-        android:title="Вернуться на ранее прочитанное"
+        android:title="@string/navigate_discussion_next"
         android:visible="false"
         app:showAsAction="never" />
 </menu>
