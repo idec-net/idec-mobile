@@ -16,6 +16,7 @@
     <string name="action_display_unread_only">View: unread only</string>
     <string name="action_compose">Compose</string>
     <string name="action_new_message">New message</string>
+    <string name="action_new_message_short">New in echo</string>
     <string name="action_reply">Reply</string>
     <string name="action_quote_reply">With quote</string>
     <string name="action_file_choose">Pick a file</string>

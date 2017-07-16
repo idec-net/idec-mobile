@@ -351,5 +351,6 @@
     <string name="settings_proxy_address_summary">Формат записи: user:pass@host:port. Orbot обычно запущен на порту 8118, i2p - 4444</string>
     <string name="settings_tor">Интеграция с Tor</string>
     <string name="settings_tor_summary">Автоматически запускать Orbot</string>
+    <string name="action_new_message_short">Новое</string>
 
 </resources>

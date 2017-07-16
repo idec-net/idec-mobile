@@ -25,12 +25,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_new_message"
-        android:orderInCategory="4"
-        android:title="@string/action_new_message"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_first_item"
         android:title="@string/navigate_first"
         app:showAsAction="never" />

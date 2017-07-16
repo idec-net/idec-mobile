@@ -28,8 +28,9 @@ import vit01.idecmobile.prefs.Config;
 
 public class IDECFunctions {
     public static ArrayList<String> loadAreaMessages(String echoarea, boolean unread_only) {
-        AbstractTransport transport = GlobalTransport.transport;
+        AbstractTransport transport = GlobalTransport.transport();
         ArrayList<String> msglist;
+        if (echoarea == null) return SimpleFunctions.emptyList;
 
         switch (echoarea) {
             case "_favorites":

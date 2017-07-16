@@ -51,6 +51,7 @@ public class MessageView_full extends Fragment {
     MenuItem discussionBack;
     TextView full_subj, full_msg, full_from_to, full_date, full_msgid, full_repto, full_echo;
     Fragment parentContext;
+    Button fullNewMessageBtn;
     private String msgid;
     private IIMessage message;
 
@@ -101,11 +102,10 @@ public class MessageView_full extends Fragment {
         });
         full_msg.setMovementMethod(CustomLinkMovementMethod.getInstance());
 
-        Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
-
         int secondaryColor = SimpleFunctions.colorFromTheme(getActivity(), android.R.attr.textColorSecondary);
 
-        fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(24).color(secondaryColor), null, null);
+        Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
+        fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(20).color(secondaryColor), null, null);
         fullAnswerBtn.setCompoundDrawablePadding(30);
 
         fullAnswerBtn.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +123,7 @@ public class MessageView_full extends Fragment {
         });
 
         Button fullQuoteAnswerBtn = (Button) rootLayout.findViewById(R.id.full_quote_answer_button);
-        fullQuoteAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_format_quote).sizeDp(24).color(secondaryColor), null, null);
+        fullQuoteAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_format_quote).sizeDp(20).color(secondaryColor), null, null);
         fullQuoteAnswerBtn.setCompoundDrawablePadding(30);
 
         fullQuoteAnswerBtn.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +139,22 @@ public class MessageView_full extends Fragment {
                 startActivity(intent);
             }
         });
+
+        fullNewMessageBtn = (Button) rootLayout.findViewById(R.id.full_new_button);
+        fullNewMessageBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_create).sizeDp(20).color(secondaryColor), null, null);
+        fullNewMessageBtn.setCompoundDrawablePadding(30);
+
+        fullNewMessageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), DraftEditor.class);
+                intent.putExtra("task", "new_in_echo");
+                intent.putExtra("echoarea", message.echo);
+                intent.putExtra("nodeindex", SimpleFunctions.getPreferredOutboxId(message.echo));
+                startActivity(intent);
+            }
+        });
+
         initializeMessage(getContext());
         return rootLayout;
     }
@@ -175,6 +191,10 @@ public class MessageView_full extends Fragment {
                 }
             });
             full_repto.setText(getString(R.string.answered, message.repto));
+        }
+
+        if (message.echo == null || message.echo.equals("") || message.echo.equals("no.echo")) {
+            fullNewMessageBtn.setVisibility(View.GONE);
         }
 
         full_date.setText(SimpleFunctions.timestamp2date(message.time));

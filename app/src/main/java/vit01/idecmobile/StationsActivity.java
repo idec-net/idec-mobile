@@ -325,20 +325,7 @@ public class StationsActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            String str_address = address.getText().toString();
-
-                            if (!str_address.endsWith("/")) {
-                                str_address += "/";
-
-                                final String finalStr_address = str_address;
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getContext(), R.string.station_slash_at_the_end, Toast.LENGTH_SHORT).show();
-                                        address.setText(finalStr_address);
-                                    }
-                                });
-                            }
+                            String str_address = addressSlashCheck();
 
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
@@ -366,20 +353,7 @@ public class StationsActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            String str_address = address.getText().toString();
-
-                            if (!str_address.endsWith("/")) {
-                                str_address += "/";
-
-                                final String finalStr_address = str_address;
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getContext(), R.string.station_slash_at_the_end, Toast.LENGTH_SHORT).show();
-                                        address.setText(finalStr_address);
-                                    }
-                                });
-                            }
+                            String str_address = addressSlashCheck();
 
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
@@ -509,6 +483,7 @@ public class StationsActivity extends AppCompatActivity {
         }
 
         protected void fetchValues() {
+            addressSlashCheck();
             station.nodename = nodename.getText().toString();
             station.address = address.getText().toString();
             station.authstr = authstr.getText().toString();
@@ -518,6 +493,25 @@ public class StationsActivity extends AppCompatActivity {
             station.pervasive_ue = pervasive_ue.isChecked();
             station.ue_limit = Integer.parseInt(fetch_limit.getText().toString());
             station.cut_remote_index = Integer.parseInt(cut_remote_index.getText().toString());
+        }
+
+        protected String addressSlashCheck() {
+            String str_address = address.getText().toString();
+
+            if (!str_address.endsWith("/")) {
+                str_address += "/";
+
+                final String finalStr_address = str_address;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), R.string.station_slash_at_the_end, Toast.LENGTH_SHORT).show();
+                        address.setText(finalStr_address);
+                    }
+                });
+            }
+
+            return str_address;
         }
     }
 

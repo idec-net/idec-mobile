@@ -21,11 +21,19 @@ package vit01.idecmobile.Core;
 
 import android.content.Context;
 
+import vit01.idecmobile.prefs.Config;
+
 public class GlobalTransport {
     public static AbstractTransport transport;
 
     public static AbstractTransport transport(Context context) {
         if (transport == null) transport = new SqliteTransport(context);
+        return transport;
+    }
+
+    public static AbstractTransport transport() {
+        if (transport == null && Config.lastContext != null)
+            transport = transport(Config.lastContext);
         return transport;
     }
 }

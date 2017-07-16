@@ -22,7 +22,6 @@ package vit01.idecmobile;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -54,7 +53,6 @@ import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IDECFunctions;
-import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;
 
@@ -223,13 +221,6 @@ public class MessageSlideFragment extends Fragment {
             menu.findItem(R.id.action_discussion_next).setVisible(true).setIcon(discussionNextIcon);
         }
 
-        MenuItem compose = menu.findItem(R.id.action_new_message);
-
-        if (!isTablet && isRealEchoarea) {
-            IconicsDrawable newMsg = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_create).actionBar().color(iconColor);
-            compose.setIcon(newMsg);
-        } else compose.setVisible(false);
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -251,16 +242,6 @@ public class MessageSlideFragment extends Fragment {
                 activity.invalidateOptionsMenu();
 
                 if (listFragment != null) listFragment.mAdapter.messageChanged(msgid, false);
-                return true;
-            case R.id.action_new_message:
-                IIMessage msg = GlobalTransport.transport.getMessage
-                        (msglist.get(mPager.getCurrentItem()));
-
-                Intent intent = new Intent(activity, DraftEditor.class);
-                intent.putExtra("task", "new_in_echo");
-                intent.putExtra("echoarea", msg.echo);
-                intent.putExtra("nodeindex", nodeIndex);
-                startActivity(intent);
                 return true;
             case R.id.action_msglist_return:
                 onPause();
