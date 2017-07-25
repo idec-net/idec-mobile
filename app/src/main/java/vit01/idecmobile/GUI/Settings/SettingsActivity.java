@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Boris Timofeev <btimofeev@emunix.org>
+ * Copyright (c) 2016-2017 Viktor Fedenyov <me@ii-net.tk> <https://ii-net.tk>
  *
  * This file is part of IDEC Mobile.
  *
@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 import vit01.idecmobile.prefs.FakeSharedPref;
 

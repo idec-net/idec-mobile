@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Reading;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -40,6 +40,9 @@ import java.util.ArrayList;
 
 import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.R;
+import vit01.idecmobile.SearchActivity;
+import vit01.idecmobile.SearchAdvancedFragment;
 import vit01.idecmobile.prefs.Config;
 
 public class EchoReaderActivity extends AppCompatActivity {

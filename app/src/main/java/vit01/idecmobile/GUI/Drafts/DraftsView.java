@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Drafts;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -56,6 +56,7 @@ import vit01.idecmobile.Core.DraftMessage;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.R;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 import vit01.idecmobile.prefs.Config;
 

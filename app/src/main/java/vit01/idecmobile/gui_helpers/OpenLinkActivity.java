@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.gui_helpers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +29,7 @@ import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.IIMessage;
+import vit01.idecmobile.GUI.Reading.EchoReaderActivity;
 
 public class OpenLinkActivity extends AppCompatActivity {
 

@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="vit01.idecmobile.StationsActivity$PlaceholderFragment">
+    tools:context="vit01.idecmobile.GUI.Settings.StationsActivity$PlaceholderFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,6 +51,13 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:maxLines="1" />
+
+        <CheckBox
+            android:id="@+id/show_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/show_authstr" />
 
         <Switch
             android:id="@+id/stations_fetch_enable"

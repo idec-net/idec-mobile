@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="vit01.idecmobile.StationsActivity">
+    tools:context="vit01.idecmobile.GUI.Settings.StationsActivity">
     <item
         android:id="@+id/delete_station"
         android:title="@string/action_delete_station"

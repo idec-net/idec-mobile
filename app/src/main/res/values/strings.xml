@@ -57,6 +57,7 @@
     <string name="favorites">Favorites</string>
     <string name="carbon">Carbon area</string>
     <string name="unread">Unread</string>
+    <string name="file_echoareas">File echoareas</string>
     <string name="search_results">Search results</string>
     <string name="client_config">Client\'s config file</string>
 
@@ -116,6 +117,7 @@
     <string name="manage_node">Manage stations</string>
     <string name="choose_node">Choose station</string>
     <string name="enable_node">Enable this station</string>
+    <string name="show_authstr">Show password</string>
     <string name="node_authstr">Auth string (password)</string>
     <string name="node_name">Node name</string>
     <string name="node_address">Server address</string>
@@ -128,6 +130,7 @@
     <string name="echoareas">Echoareas</string>
     <string name="echoarea">Echoarea</string>
     <string name="echo">Echo</string>
+    <string name="file_echoarea">File echoarea</string>
     <string name="additional">Additional</string>
     <string name="drafts">Drafts</string>
     <string name="sent">Sent</string>
@@ -146,6 +149,9 @@
 
     <string name="file_chosen">File %s selected</string>
     <string name="file_loaded_to">File was loaded to %s</string>
+    <string name="filename">File name</string>
+    <string name="file_description">Description</string>
+    <string name="action_file_send">Upload {gmd-send}</string>
 
     <string name="confirm_delete_drafts">Delete all drafts?</string>
     <string name="confirm_delete_sent">Delete all sent messages?</string>
@@ -376,5 +382,4 @@
     <string name="settings_proxy_address_summary">String format: user:pass@host:port. Orbot usually uses port 8118, i2p prefers 4444</string>
     <string name="settings_tor">Tor integration</string>
     <string name="settings_tor_summary">Start Orbot automatically</string>
-
 </resources>

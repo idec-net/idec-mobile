@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Reading;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +29,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
 public class MessageSlideActivity extends AppCompatActivity {

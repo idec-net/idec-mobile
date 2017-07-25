@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Settings;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +30,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,6 +60,7 @@ import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
 public class StationsActivity extends AppCompatActivity {
@@ -263,7 +265,7 @@ public class StationsActivity extends AppCompatActivity {
         Station station;
         EditText nodename, address, authstr, fetch_limit, cut_remote_index;
         Switch fetch_enable;
-        CheckBox xc_enable, advanced_ue, pervasive_ue;
+        CheckBox xc_enable, advanced_ue, pervasive_ue, show_password;
         Button get_echolist, autoconfig;
 
         public PlaceholderFragment() {
@@ -302,6 +304,7 @@ public class StationsActivity extends AppCompatActivity {
             nodename = (EditText) fragm.findViewById(R.id.stations_nodename);
             address = (EditText) fragm.findViewById(R.id.stations_address);
             authstr = (EditText) fragm.findViewById(R.id.stations_authstr);
+            show_password = (CheckBox) fragm.findViewById(R.id.show_password);
             fetch_enable = (Switch) fragm.findViewById(R.id.stations_fetch_enable);
             xc_enable = (CheckBox) fragm.findViewById(R.id.stations_xc_enable);
             advanced_ue = (CheckBox) fragm.findViewById(R.id.stations_advanced_ue);
@@ -389,6 +392,15 @@ public class StationsActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            show_password.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    int inputType = b ?
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD;
+                    authstr.setInputType(InputType.TYPE_CLASS_TEXT | inputType);
+                }
+            });
         }
 
         public void xfeatures_configure(String xfinfo) {
@@ -417,55 +429,60 @@ public class StationsActivity extends AppCompatActivity {
             final Context mContext = getContext();
             final ListView lv = new ListView(mContext);
 
-            List<HashMap<String, String>> adapter_data = new ArrayList<>();
+            try {
+                List<HashMap<String, String>> adapter_data = new ArrayList<>();
 
-            if (rawfile == null) {
-                SimpleFunctions.debug("installEchoList: rawfile = null");
-                Toast.makeText(getActivity(), R.string.interner_error_echolist, Toast.LENGTH_SHORT).show();
-                return;
-            }
+                if (rawfile == null) {
+                    SimpleFunctions.debug("installEchoList: rawfile = null");
+                    Toast.makeText(getActivity(), R.string.interner_error_echolist, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            String[] lines = rawfile.split("\n");
+                String[] lines = rawfile.split("\n");
 
-            for (String line : lines) {
-                echoarea_entry entry = new echoarea_entry(line);
-                if (entry.corrupted) continue;
+                for (String line : lines) {
+                    echoarea_entry entry = new echoarea_entry(line);
+                    if (entry.corrupted) continue;
 
-                HashMap<String, String> entryMap = new HashMap<>(2);
-                entryMap.put("First Line", entry.name);
-                entryMap.put("Second Line", "[" + String.valueOf(entry.count) + "] - " + entry.description);
-                adapter_data.add(entryMap);
-                realEchoList.add(entry.name);
-            }
+                    HashMap<String, String> entryMap = new HashMap<>(2);
+                    entryMap.put("First Line", entry.name);
+                    entryMap.put("Second Line", "[" + String.valueOf(entry.count) + "] - " + entry.description);
+                    adapter_data.add(entryMap);
+                    realEchoList.add(entry.name);
+                }
 
-            if (realEchoList.size() == 0) {
+                if (realEchoList.size() == 0) {
+                    Toast.makeText(mContext, R.string.echolist_parsing_error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                final SimpleAdapter adapter = new SimpleAdapter(mContext, adapter_data,
+                        android.R.layout.simple_list_item_2,
+                        new String[]{"First Line", "Second Line"},
+                        new int[]{android.R.id.text1, android.R.id.text2});
+
+
+                lv.setAdapter(adapter);
+
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.echolist_confirm_install)
+                        .setView(lv)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Config.values.stations.get(nodeindex).echoareas = realEchoList;
+                                Config.writeConfig(mContext);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(mContext, R.string.edit_by_yourself, Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
+            } catch (Exception e) {
                 Toast.makeText(mContext, R.string.echolist_parsing_error, Toast.LENGTH_SHORT).show();
-                return;
+                SimpleFunctions.debug(e.getMessage() + e.toString());
             }
-
-            final SimpleAdapter adapter = new SimpleAdapter(mContext, adapter_data,
-                    android.R.layout.simple_list_item_2,
-                    new String[]{"First Line", "Second Line"},
-                    new int[]{android.R.id.text1, android.R.id.text2});
-
-
-            lv.setAdapter(adapter);
-
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.echolist_confirm_install)
-                    .setView(lv)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Config.values.stations.get(nodeindex).echoareas = realEchoList;
-                            Config.writeConfig(mContext);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(mContext, R.string.edit_by_yourself, Toast.LENGTH_SHORT).show();
-                        }
-                    }).show();
         }
 
         protected void installValues(int index) {

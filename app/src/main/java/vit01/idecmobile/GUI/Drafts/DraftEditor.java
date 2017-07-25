@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Drafts;
 
 import android.content.Context;
 import android.content.Intent;
@@ -39,15 +39,15 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import vit01.idecmobile.Core.DraftMessage;
 import vit01.idecmobile.Core.DraftsValidator;
 import vit01.idecmobile.Core.ExternalStorage;
+import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
-import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
 public class DraftEditor extends AppCompatActivity {
@@ -55,11 +55,11 @@ public class DraftEditor extends AppCompatActivity {
     TextInputEditText compose_echoarea, compose_to, compose_subj, compose_repto, compose_msg;
     DraftMessage message;
     File fileToSave;
-    ArrayList<String> station_names = new ArrayList<>();
     ArrayAdapter<String> spinnerAdapter;
     String generatedHash = null;
     int nodeindex = 0;
     String outbox_id;
+    boolean cancelSaving = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +167,7 @@ public class DraftEditor extends AppCompatActivity {
         if (id == R.id.action_compose_send) {
             fetchValues();
             saveMessage();
+            cancelSaving = true;
 
             new Thread(new Runnable() {
                 @Override
@@ -188,6 +189,7 @@ public class DraftEditor extends AppCompatActivity {
 
             finish();
         } else if (id == R.id.action_compose_delete) {
+            cancelSaving = true;
             Toast.makeText(DraftEditor.this, R.string.delete_draft, Toast.LENGTH_SHORT).show();
             boolean r = fileToSave.delete();
             if (!r) {
@@ -197,19 +199,6 @@ public class DraftEditor extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        fetchValues();
-        saveMessage();
-        super.onBackPressed();
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 
     public void getControls() {
@@ -247,10 +236,8 @@ public class DraftEditor extends AppCompatActivity {
     }
 
     public void installValues() {
-        for (Station station : Config.values.stations) {
-            station_names.add(station.nodename);
-        }
-        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, station_names);
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                IDECFunctions.getStationsNames());
         compose_stations.setAdapter(spinnerAdapter);
         compose_stations.setSelection(nodeindex);
 
@@ -280,7 +267,9 @@ public class DraftEditor extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        fetchValues();
+        if (!cancelSaving) saveMessage();
+        super.onPause();
     }
 }

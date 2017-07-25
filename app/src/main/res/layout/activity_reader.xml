@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/msglist"
-        android:name="vit01.idecmobile.MessageListFragment"
+        android:name="vit01.idecmobile.GUI.Reading.MessageListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"

@@ -73,6 +73,11 @@ import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.GUI.Drafts.DraftsView;
+import vit01.idecmobile.GUI.Reading.EchoReaderActivity;
+import vit01.idecmobile.GUI.Reading.MessageListFragment;
+import vit01.idecmobile.GUI.Settings.SettingsActivity;
+import vit01.idecmobile.GUI.Settings.StationsActivity;
 import vit01.idecmobile.gui_helpers.OnSwipeTouchListener;
 import vit01.idecmobile.notify.workerJob;
 import vit01.idecmobile.prefs.Config;
@@ -185,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(10).withName(R.string.title_activity_help).withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
         PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName(R.string.update).withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);
         PrimaryDrawerItem infoItem = new PrimaryDrawerItem().withIdentifier(12).withName(R.string.build_date).withIcon(GoogleMaterial.Icon.gmd_info).withSelectable(false);
+        PrimaryDrawerItem fechoItem = new PrimaryDrawerItem().withIdentifier(13).withName(R.string.file_echoareas).withIcon(GoogleMaterial.Icon.gmd_folder_shared).withSelectable(true);
 
         DrawerBuilder drawerBuilder = new DrawerBuilder()
                 .withActivity(this)
@@ -199,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                         draftsItem,
                         starredItem,
                         offlineItem,
+                        fechoItem,
                         extItem,
                         new DividerDrawerItem(),
                         settingsItem,
@@ -212,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
                         if (drawerItem != null) switch ((int) drawerItem.getIdentifier()) {
                             case 1:
                                 if (is_offline_list_now) {
+                                    // TODO: recreate fragment with file echoareas
                                     is_offline_list_now = false;
                                     updateEcholist();
                                 }
@@ -266,6 +274,9 @@ public class MainActivity extends AppCompatActivity {
                                         .setMessage(BuildConfig.VERSION_NAME)
                                         .setPositiveButton(android.R.string.ok, null)
                                         .show();
+                                break;
+                            case 13:
+                                Toast.makeText(MainActivity.this, "Not implemented now, sorry", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         return false;

@@ -34,11 +34,13 @@ public class Station implements Serializable {
             authstr = "",
             outbox_storage_id = null;
     public ArrayList<String> echoareas = new ArrayList<>();
+    public ArrayList<String> file_echoareas = new ArrayList<>();
     public boolean
             fetch_enabled = true,
             xc_enable = true,
             advanced_ue = true,
-            pervasive_ue = false;
+            pervasive_ue = false,
+            fecho_support = false;
     public int
             ue_limit = 25,
             cut_remote_index = 50;
@@ -47,7 +49,10 @@ public class Station implements Serializable {
         String[] default_echoareas = new String[]{"pipe.2032", "ii.14", "mlp.15", "ii.test.14", "piratemedia.rss.15",
                 "habra.16", "develop.16", "linux.14"};
 
+        String[] default_file_echoareas = new String[]{"pictures", "mlp.pictures"};
+
         Collections.addAll(echoareas, default_echoareas);
+        Collections.addAll(file_echoareas, default_file_echoareas);
         outbox_storage_id = SimpleFunctions.getRandomUUID();
     }
 }

@@ -54,6 +54,7 @@
     <string name="favorites">Избранные</string>
     <string name="carbon">Карбонка</string>
     <string name="unread">Непрочитанные</string>
+    <string name="file_echoareas">Файловые эхи</string>
     <string name="search_results">Найденное</string>
     <string name="client_config">Файл конфигурации клиента</string>
 
@@ -113,6 +114,7 @@
     <string name="manage_node">Управление станциями</string>
     <string name="choose_node">Выберите станцию</string>
     <string name="enable_node">Включить эту станцию</string>
+    <string name="show_authstr">Показать пароль</string>
     <string name="node_authstr">Строка авторизации (пароль)</string>
     <string name="node_name">Имя станции</string>
     <string name="node_address">Адрес сервера</string>
@@ -125,6 +127,7 @@
     <string name="echoareas">Эхоконференции</string>
     <string name="echoarea">Эхоконференция</string>
     <string name="echo">Эха</string>
+    <string name="file_echoarea">Файл-эхоконференция</string>
     <string name="additional">Дополнительно</string>
     <string name="drafts">Черновики</string>
     <string name="sent">Отправленные</string>
@@ -143,6 +146,9 @@
 
     <string name="file_chosen">Выбрал файл %s</string>
     <string name="file_loaded_to">Файл загружен в %s</string>
+    <string name="filename">Имя файла</string>
+    <string name="file_description">Описание</string>
+    <string name="action_file_send">Отправить {gmd-send}</string>
 
     <string name="confirm_delete_drafts">Удалить все черновики?</string>
     <string name="confirm_delete_sent">Удалить все отправленные?</string>

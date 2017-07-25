@@ -35,7 +35,7 @@
 
             <fragment
                 android:id="@+id/msglist"
-                android:name="vit01.idecmobile.MessageListFragment"
+                android:name="vit01.idecmobile.GUI.Reading.MessageListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -52,7 +52,7 @@
 
             <fragment
                 android:id="@+id/messages_slider"
-                android:name="vit01.idecmobile.MessageSlideFragment"
+                android:name="vit01.idecmobile.GUI.Reading.MessageSlideFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>

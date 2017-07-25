@@ -43,6 +43,7 @@ import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.GUI.Reading.EchoReaderActivity;
 import vit01.idecmobile.prefs.Config;
 
 public class ProgressActivity extends AppCompatActivity {
@@ -73,13 +74,18 @@ public class ProgressActivity extends AppCompatActivity {
             case "fetch":
                 progressBar.setIndeterminate(true);
                 new Thread(new doFetch()).start();
-                // Continue, copy code from DebugActivity
-
                 break;
             case "send":
                 progressBar.setIndeterminate(false);
                 new Thread(new sendMessages()).start();
-                // write code here
+                break;
+            case "upload_fp":
+                progressBar.setIndeterminate(false);
+
+                break;
+            case "download_fp":
+                progressBar.setIndeterminate(false);
+
                 break;
         }
     }
@@ -294,6 +300,52 @@ public class ProgressActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), getString(R.string.messages_sent, finalSent), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                finishTask();
+            }
+        }
+    }
+
+    class file_download implements Runnable {
+        @Override
+        public void run() {
+            try {
+                // do job
+            } catch (Exception e) {
+                e.printStackTrace();
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
+
+                errorHappened();
+            } finally {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //job result
+                    }
+                });
+
+                finishTask();
+            }
+        }
+    }
+
+    class upload_fp implements Runnable {
+        @Override
+        public void run() {
+            try {
+                // do job
+            } catch (Exception e) {
+                e.printStackTrace();
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
+
+                errorHappened();
+            } finally {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //job result
                     }
                 });
 

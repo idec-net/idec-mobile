@@ -32,7 +32,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".EchoReaderActivity"
+            android:name=".GUI.Reading.EchoReaderActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -47,7 +47,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".GUI.Settings.SettingsActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -58,7 +58,7 @@
             android:name=".ProgressActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".StationsActivity"
+            android:name=".GUI.Settings.StationsActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -71,17 +71,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
-        <activity android:name=".MessageSlideActivity">
+        <activity android:name=".GUI.Reading.MessageSlideActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="vit01.idecmobile.EchoReaderActivity" />
+                android:value="vit01.idecmobile.GUI.Reading.EchoReaderActivity" />
         </activity>
         <activity
             android:name=".HelperActivity"
             android:label="@string/title_activity_help">
         </activity>
         <activity
-            android:name=".OpenLinkActivity"
+            android:name=".gui_helpers.OpenLinkActivity"
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -92,7 +92,7 @@
                 <data android:scheme="ii" />
             </intent-filter>
         </activity>
-        <activity android:name=".DraftEditor" />
+        <activity android:name=".GUI.Drafts.DraftEditor" />
         <activity
             android:name=".AdditionalActivity"
             android:parentActivityName=".MainActivity"
@@ -101,7 +101,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
-        <activity android:name=".DraftsView" />
+        <activity android:name=".GUI.Drafts.DraftsView" />
         <activity android:name=".FileChooserActivity" />
         <activity
             android:name=".SearchActivity"

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.GUI.Reading.EchoReaderActivity;
 import vit01.idecmobile.prefs.Config;
 
 public class SearchActivity extends AppCompatActivity {

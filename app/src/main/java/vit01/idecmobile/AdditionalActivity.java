@@ -91,6 +91,7 @@ public class AdditionalActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode > 3) return;
 
         if (resultCode == RESULT_OK) {
             final File file = (File) data.getSerializableExtra("selected_file");
@@ -601,6 +602,8 @@ public class AdditionalActivity extends AppCompatActivity {
                     return Database_Fragment.newInstance();
                 case 2:
                     return Blacklist_Fragment.newInstance();
+                case 3:
+                    return FileUploadFragment.newInstance();
                 default:
                     return null;
             }
@@ -608,7 +611,7 @@ public class AdditionalActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -620,6 +623,8 @@ public class AdditionalActivity extends AppCompatActivity {
                     return getString(R.string.database);
                 case 2:
                     return getString(R.string.blacklist);
+                case 3:
+                    return getString(R.string.file_echoareas);
             }
             return null;
         }

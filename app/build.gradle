@@ -34,18 +34,20 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
     compile('com.mikepenz:materialdrawer:5.9.0@aar') {
         transitive = true
     }
+    // Используем https://github.com/Gericop/Android-Support-Preference-V7-Fix
+    // Tor & Proxy
+    // Encryption
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.takisoft.fix:preference-v7:25.3.1.1'
-    // Используем https://github.com/Gericop/Android-Support-Preference-V7-Fix
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
     compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'info.guardianproject.netcipher:netcipher:1.2' // Tor & Proxy
-    compile 'org.sufficientlysecure:openpgp-api:12.0'      // Encryption
+    compile 'info.guardianproject.netcipher:netcipher:1.2'
+    compile 'org.sufficientlysecure:openpgp-api:12.0'
     compile 'ch.acra:acra:4.9.2'
+    testCompile 'junit:junit:4.12'
 }

@@ -37,6 +37,7 @@ import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.GUI.Reading.EchoReaderActivity;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 
 public class EcholistFragment extends Fragment {

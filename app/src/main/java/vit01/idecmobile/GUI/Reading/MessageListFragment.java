@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Reading;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -60,11 +60,13 @@ import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.GUI.Drafts.DraftEditor;
+import vit01.idecmobile.R;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 import vit01.idecmobile.prefs.Config;
 
 public class MessageListFragment extends Fragment {
-    static boolean alreadyOpenedSliderActivity = false;
+    public static boolean alreadyOpenedSliderActivity = false;
     String echoarea;
     ArrayList<String> msglist;
     int countMessages;
