@@ -76,11 +76,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/file_description"
-                android:inputType="textAutoComplete"
+                android:inputType="none"
                 android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
-        <com.mikepenz.iconics.view.IconicsButton
+        <Button
             android:id="@+id/action_file_send"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"

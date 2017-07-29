@@ -151,7 +151,7 @@
     <string name="file_loaded_to">File was loaded to %s</string>
     <string name="filename">File name</string>
     <string name="file_description">Description</string>
-    <string name="action_file_send">Upload {gmd-send}</string>
+    <string name="action_file_send">Upload</string>
 
     <string name="confirm_delete_drafts">Delete all drafts?</string>
     <string name="confirm_delete_sent">Delete all sent messages?</string>
@@ -203,6 +203,11 @@
     <string name="blacklist_loaded">Blacklist loaded into RAM</string>
     <string name="blacklist_deleted">Blacklist was deleted successfully</string>
 
+    <!-- File echoareas -->
+    <string name="not_all_fields_specified">Looks like you have forgotten to fill something!</string>
+    <string name="file_upload_success">File was uploaded successfully</string>
+    <string name="upload_in_process" formatted="false">Loading: %s/%s</string>
+    <string name="upload_percentage" formatted="false">%d%% done</string>
 
     <!-- Errors & warnings -->
 
@@ -215,6 +220,7 @@
     <string name="error_moving_to_station">Error moving this to other station!</string>
     <string name="empty_file_warning">is not present or it\'s unavailable for reading</string>
     <string name="no_file_warning">File does not exist or it\'s unreadable</string>
+    <string name="file_not_selected">File was not chosen or is\'s empty</string>
     <string name="empty_msglist">Messages list is empty, getting out</string>
     <string name="empty_discussion_stack">Discussion stack is empty!</string>
     <string name="empty_search_params">Blank options were entered! There is nothing to search</string>

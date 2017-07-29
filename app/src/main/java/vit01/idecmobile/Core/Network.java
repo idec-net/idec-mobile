@@ -26,7 +26,9 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -34,8 +36,11 @@ import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLConnection;
+import java.util.Hashtable;
 
 import info.guardianproject.netcipher.NetCipher;
+import vit01.idecmobile.ProgressActivity;
 import vit01.idecmobile.prefs.Config;
 
 public class Network {
@@ -56,7 +61,7 @@ public class Network {
         }
     }
 
-    public static InputStream streamTransaction(Context context, String url, String data, int timeout) {
+    static InputStream streamTransaction(Context context, String url, String data, int timeout) {
         SimpleFunctions.debug("fetch " + url);
 
         ConnectivityManager connMgr;
@@ -77,7 +82,7 @@ public class Network {
         } else return null;
     }
 
-    public static InputStream getInputStream(String myurl, String data, int timeout) throws IOException {
+    private static InputStream getInputStream(String myurl, String data, int timeout) throws IOException {
         InputStream is;
         timeout *= 1000;
 
@@ -108,7 +113,69 @@ public class Network {
         return is;
     }
 
-    public static void setupProxy() {
+    public static InputStream performFileUpload(ProgressActivity.upload_fp uploader,
+                                                String myurl, InputStream fis, Hashtable<String, String> data,
+                                                String form_file_key, String filename, int timeout)
+            throws IOException {
+        timeout *= 1000;
+        HttpURLConnection conn = NetCipher.getHttpURLConnection(myurl);
+
+        conn.setReadTimeout(timeout);
+        conn.setConnectTimeout(timeout);
+        conn.setUseCaches(false);
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+
+        String boundary = "===" + System.currentTimeMillis() + "===";
+
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+        OutputStream os = conn.getOutputStream();
+
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(os), true);
+
+        for (String key : data.keySet()) {
+            String value = data.get(key);
+
+            writer.append(String.format("--%s\r\n", boundary));
+            writer.append(String.format("Content-Disposition: form-data; name=\"%s\"\r\n", key));
+            writer.append("Content-Type: text/plain; charset=UTF-8\r\n");
+            writer.append("\r\n");
+            writer.append(value).append("\r\n");
+            writer.flush();
+        }
+
+        writer.append(String.format("--%s\r\n", boundary));
+        writer.append(String.format("Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n",
+                form_file_key, filename));
+        writer.append(String.format("Content-Type: %s\r\n", URLConnection.guessContentTypeFromName(filename)));
+        writer.append("Content-Transfer-Encoding: binary\r\n");
+        writer.append("\r\n");
+        writer.flush();
+
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = fis.read(buffer)) != -1) {
+            os.write(buffer, 0, bytesRead);
+            uploader.bytesdone += bytesRead;
+        }
+        os.flush();
+        fis.close();
+
+        writer.append("\r\n");
+        writer.flush();
+
+        writer.append("\r\n").flush();
+        writer.append(String.format("--%s--\r\n", boundary));
+        writer.close();
+
+        conn.connect();
+        int response = conn.getResponseCode();
+
+        Log.d(SimpleFunctions.appName, "ServerResponse upload: " + response);
+        return conn.getInputStream();
+    }
+
+    private static void setupProxy() {
         if (!Config.values.useProxy) {
             SimpleFunctions.debug("(Not using proxy servers this time)");
             Authenticator.setDefault(null);

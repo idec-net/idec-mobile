@@ -40,8 +40,8 @@ import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
 public class Fetcher {
-    AbstractTransport transport;
-    ArrayList<String> emptyList;
+    private AbstractTransport transport;
+    private ArrayList<String> emptyList;
     private Context context;
     private String str_load_index, str_load_db, str_load_messages, str_save_in_db;
 
@@ -120,10 +120,10 @@ public class Fetcher {
             int read;
 
             class progress implements Runnable {
-                int currentvalue = 0;
-                boolean joined = false;
+                private int currentvalue = 0;
+                private boolean joined = false;
 
-                public void setCurrentvalue(int val) {
+                private void setCurrentvalue(int val) {
                     currentvalue = val;
                 }
 

@@ -22,6 +22,7 @@ package vit01.idecmobile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,10 +37,13 @@ import android.widget.Toast;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.GlobalTransport;
+import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.Sender;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
@@ -81,6 +85,20 @@ public class ProgressActivity extends AppCompatActivity {
                 break;
             case "upload_fp":
                 progressBar.setIndeterminate(false);
+                upload_fp uploader = new upload_fp();
+
+                uploader.nodeindex = gotIntent.getIntExtra("nodeindex", Config.currentSelectedStation);
+                uploader.filename = gotIntent.getStringExtra("filename");
+                uploader.maxsize = gotIntent.getLongExtra("filesize", 0);
+                uploader.description = gotIntent.getStringExtra("description");
+                uploader.fecho = gotIntent.getStringExtra("fecho");
+                uploader.input = gotIntent.getParcelableExtra("inputstream");
+
+                file_upload_progress progress = new file_upload_progress();
+                progress.loader = uploader;
+
+                new Thread(uploader).start();
+                new Thread(progress).start();
 
                 break;
             case "download_fp":
@@ -170,6 +188,7 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     public void errorHappened() {
+        SimpleFunctions.debugTaskFinished = true;
         info.setText(R.string.done_with_errors);
         viewLog.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
@@ -177,7 +196,7 @@ public class ProgressActivity extends AppCompatActivity {
         closeWindow = false;
     }
 
-    class updateDebug implements Runnable {
+    private class updateDebug implements Runnable {
         @Override
         public void run() {
             while (!SimpleFunctions.debugTaskFinished) {
@@ -204,7 +223,7 @@ public class ProgressActivity extends AppCompatActivity {
         }
     }
 
-    class doFetch implements Runnable {
+    private class doFetch implements Runnable {
         @Override
         public void run() {
             Context appContext = getApplicationContext();
@@ -281,7 +300,7 @@ public class ProgressActivity extends AppCompatActivity {
         }
     }
 
-    class sendMessages implements Runnable {
+    private class sendMessages implements Runnable {
         @Override
         public void run() {
             int sent = 0;
@@ -309,10 +328,17 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     class file_download implements Runnable {
+        long maxsize = 0;
+        long bytesdone = 0;
+        String maxsizestr = "";
+        Context context;
+
         @Override
         public void run() {
             try {
                 // do job
+                context = ProgressActivity.this;
+                maxsizestr = android.text.format.Formatter.formatFileSize(context, maxsize);
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
@@ -331,21 +357,89 @@ public class ProgressActivity extends AppCompatActivity {
         }
     }
 
-    class upload_fp implements Runnable {
+    private class file_upload_progress implements Runnable {
+        upload_fp loader;
+
+        public void run() {
+            while (loader != null && !SimpleFunctions.debugTaskFinished) {
+                if (loader.maxsize > 0) {
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            float percentage_temp = (loader.bytesdone * 100) / loader.maxsize;
+                            int percentage = (int) percentage_temp;
+                            final String statusString = getString(R.string.upload_in_process,
+                                    android.text.format.Formatter.formatFileSize(loader.context,
+                                            loader.bytesdone), loader.maxsizestr);
+
+                            progressBar.setProgress(percentage);
+                            SimpleFunctions.setActivityTitle(ProgressActivity.this,
+                                    getString(R.string.upload_percentage, percentage));
+
+                            SimpleFunctions.pretty_debug(statusString);
+                        }
+                    });
+                }
+
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public class upload_fp implements Runnable {
+        public long bytesdone = 0;
+        int nodeindex = 0;
+        long maxsize = 0;
+        String maxsizestr = "";
+        Context context;
+
+        String filename, description, fecho;
+        Uri input;
+
         @Override
         public void run() {
+            String responseString = getString(R.string.error);
+
             try {
-                // do job
+                context = ProgressActivity.this;
+                maxsizestr = android.text.format.Formatter.formatFileSize(context, maxsize);
+
+                InputStream fis = context.getContentResolver().openInputStream(input);
+
+                Station station = Config.values.stations.get(nodeindex);
+                Hashtable<String, String> formdata = new Hashtable<>();
+                formdata.put("fecho", fecho);
+                formdata.put("filename", filename);
+                formdata.put("pauth", station.authstr);
+                formdata.put("dsc", description);
+
+                InputStream uploadResults = Network.performFileUpload(this, station.address + "f/p", fis,
+                        formdata, "file", filename, Config.values.connectionTimeout);
+
+                String readableResult = SimpleFunctions.readIt(uploadResults);
+
+                if (readableResult.startsWith("file ok:")) {
+                    responseString = getString(R.string.file_upload_success);
+                } else {
+                    responseString = readableResult;
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
 
                 errorHappened();
             } finally {
+                final String finalResponseString = responseString;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //job result
+                        Toast.makeText(context, finalResponseString, Toast.LENGTH_LONG).show();
                     }
                 });
 

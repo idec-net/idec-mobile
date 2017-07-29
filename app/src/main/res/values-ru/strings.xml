@@ -148,7 +148,7 @@
     <string name="file_loaded_to">Файл загружен в %s</string>
     <string name="filename">Имя файла</string>
     <string name="file_description">Описание</string>
-    <string name="action_file_send">Отправить {gmd-send}</string>
+    <string name="action_file_send">Отправить</string>
 
     <string name="confirm_delete_drafts">Удалить все черновики?</string>
     <string name="confirm_delete_sent">Удалить все отправленные?</string>
@@ -186,6 +186,11 @@
     <string name="blacklist_loaded">ЧС загружен в ОЗУ</string>
     <string name="blacklist_deleted">ЧС успешно удалён</string>
 
+    <!-- File echoareas -->
+    <string name="not_all_fields_specified">Надо заполнить все поля!</string>
+    <string name="file_upload_success">Файл успешно выгружен</string>
+    <string name="upload_in_process" formatted="false">Загружаю: %s/%s</string>
+    <string name="upload_percentage" formatted="false">Готово на %d%%</string>
 
     <!-- Errors & warnings -->
 
@@ -198,6 +203,7 @@
     <string name="error_moving_to_station">Переместить на другую станцию не получилось!</string>
     <string name="empty_file_warning">отсутствует, либо недоступен для чтения</string>
     <string name="no_file_warning">Файл не существует, либо недоступен для чтения</string>
+    <string name="file_not_selected">Файл не был выбран (или он пустой)</string>
     <string name="empty_msglist">Список сообщений пуст, выходим</string>
     <string name="empty_discussion_stack">Стек дискуссии пуст!</string>
     <string name="empty_search_params">Введены пустые параметры! Искать нечего</string>

@@ -25,6 +25,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,18 +37,29 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import java.io.InputStream;
+
 import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.prefs.Config;
 
 public class FileUploadFragment extends Fragment {
-    String fecho, file_path;
+    String fecho = null;
     int nodeindex;
 
     TextInputEditText fechoarea, edit_filename, description;
     Spinner stations_spinner;
 
+    Uri input = null;
+    long filesize = 0;
+
     public static FileUploadFragment newInstance() {
         return new FileUploadFragment();
+    }
+
+    public static FileUploadFragment newInstance(String echo) {
+        FileUploadFragment fragm = new FileUploadFragment();
+        fragm.fecho = echo;
+        return fragm;
     }
 
     @Override
@@ -85,6 +97,8 @@ public class FileUploadFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        if (fecho != null) fechoarea.setText(fecho);
         return rootView;
     }
 
@@ -106,15 +120,37 @@ public class FileUploadFragment extends Fragment {
     }
 
     public void sendFile() {
+        if (input == null || filesize == 0) {
+            Toast.makeText(getActivity(), R.string.file_not_selected, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        String fecho = fechoarea.getText().toString().toLowerCase().replace(" ", "").trim();
+        String fname = edit_filename.getText().toString().toLowerCase().replace(" ", "").trim();
+        String desc = description.getText().toString()
+                .replace("\r", " ").replace("\n", " ").trim();
+
+        if (fname.equals("") || fecho.equals("") || desc.equals("")) {
+            Toast.makeText(getActivity(), R.string.not_all_fields_specified, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent startLoading = new Intent(getActivity(), ProgressActivity.class);
+        startLoading.putExtra("task", "upload_fp");
+        startLoading.putExtra("nodeindex", nodeindex);
+        startLoading.putExtra("filename", fname);
+        startLoading.putExtra("filesize", filesize);
+        startLoading.putExtra("fecho", fecho);
+        startLoading.putExtra("description", desc);
+        startLoading.putExtra("inputstream", input);
+
+        startActivity(startLoading);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode != 12) return;
 
-        if (data == null) {
-            Toast.makeText(getActivity(), "Nothing to choose", Toast.LENGTH_SHORT).show();
-        } else {
+        if (data != null) {
             Uri file_uri = data.getData();
             ContentResolver cr = getActivity().getContentResolver();
 
@@ -124,6 +160,8 @@ public class FileUploadFragment extends Fragment {
                 try {
                     if (metaCursor.moveToFirst()) {
                         String filename = metaCursor.getString(0);
+                        if (filename.contains(":")) filename = filename.replace(":", ".");
+                        if (!filename.contains(".")) filename += ".bin";
                         edit_filename.setText(filename);
                     }
                 } finally {
@@ -131,20 +169,33 @@ public class FileUploadFragment extends Fragment {
                 }
             }
 
-            projection = new String[]{MediaStore.MediaColumns.DATA};
+            long size = 0;
 
+            projection = new String[]{OpenableColumns.SIZE};
             metaCursor = cr.query(file_uri, projection, null, null, null);
             if (metaCursor != null) {
                 try {
                     if (metaCursor.moveToFirst()) {
-                        file_path = metaCursor.getString(0);
+                        size = metaCursor.getLong(0);
                     }
                 } finally {
                     metaCursor.close();
                 }
             }
 
-            Toast.makeText(getActivity(), file_path, Toast.LENGTH_SHORT).show();
+            if (size > 0) {
+                try {
+                    InputStream is = cr.openInputStream(file_uri);
+                    input = file_uri;
+                    filesize = size;
+                    Toast.makeText(getActivity(),
+                            getString(R.string.file_chosen, edit_filename.getText()), Toast.LENGTH_SHORT).show();
+                    if (is != null) is.close();
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), getString(R.string.error_formatted,
+                            e.toString()), Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 }
