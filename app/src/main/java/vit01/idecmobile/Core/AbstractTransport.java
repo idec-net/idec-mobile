@@ -74,6 +74,33 @@ public interface AbstractTransport {
             List<String> echoareas, List<String> senders, List<String> receivers, List<String> addresses,
             Long time1, Long time2, boolean is_favorite);
 
+    boolean saveFileMeta(String fid, String fecho, FEchoFile entry);
+
+    boolean saveFileMeta(String fid, String echo, String rawentry);
+
+    boolean updateFileMeta(String fid, FEchoFile entry);
+
+    boolean updateFileMeta(String fid, String echo, String rawentry);
+
+    boolean deleteFileEntry(String fid, String fecho);
+
+    void deleteFileEntries(ArrayList<String> fids, String fecho);
+
+    ArrayList<String> getFileList(String fecho, int offset, int length, String sort);
+
+    void deleteFileEchoarea(String fecho, boolean with_contents);
+
+    FEchoFile getFileMeta(String fid);
+
+    Hashtable<String, FEchoFile> getFilesMeta(ArrayList<String> msgids);
+
+    ArrayList<String> fullFEchoList();
+
+    int countFiles(String fecho);
+
+    ArrayList<String> fileSearchQuery(List<String> fechoes, List<String> filenames,
+                                      List<String> addresses, String descriptionKey);
+
     class echoStat {
         public int total_count = 0, unread_count = 0;
         echoStat(int total, int unread) {

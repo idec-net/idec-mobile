@@ -50,6 +50,7 @@ public class Fetcher {
         emptyList = SimpleFunctions.emptyList;
         context = mCont;
         if (!Blacklist.loaded) Blacklist.loadBlacklist();
+        if (!FileBlacklist.loaded) FileBlacklist.loadBlacklist();
 
         str_load_index = mCont.getString(R.string.fetcher_load_index);
         str_load_db = mCont.getString(R.string.fetcher_load_database);
@@ -497,6 +498,152 @@ public class Fetcher {
         }
     }
 
+    public ArrayList<String> fetch_files(Station station,
+                                         ArrayList<String> echoesToFetch, int timeout) {
+        if (echoesToFetch.size() == 0) return emptyList;
+
+        int fetch_limit = station.ue_limit;
+        int cut_remote_index = station.cut_remote_index;
+
+        int bottomOffset = 0;
+        String echoBundle;
+        String address = station.address;
+
+        if (fetch_limit != 0) {
+            bottomOffset = fetch_limit;
+            String offset = String.valueOf(bottomOffset);
+
+            // TODO: change strings
+            SimpleFunctions.pretty_debug(str_load_index + " (" + String.valueOf(offset) + ")");
+            echoBundle = Network.getFile(context,
+                    address + "f/e/" + TextUtils.join("/", echoesToFetch) +
+                            "/-" + offset + ":" + offset, null, timeout);
+        } else {
+            SimpleFunctions.pretty_debug(str_load_index);
+            echoBundle = Network.getFile(context,
+                    address + "f/e/" + TextUtils.join("/", echoesToFetch), null, timeout);
+        }
+
+        Hashtable<String, ArrayList<String>> localIndex = new Hashtable<>();
+
+        SimpleFunctions.pretty_debug(str_load_db);
+        for (String echo : echoesToFetch) {
+            SimpleFunctions.debug("Loading local fecho " + echo);
+
+            localIndex.put(echo, transport.getFileList(echo, 0, 0, "number"));
+        }
+
+        SimpleFunctions.debug("Calculating index difference...");
+        Hashtable<String, ArrayList<FEchoFile>> remoteIndex = filesParseRemoteIndex(echoBundle);
+
+        Hashtable<String, ArrayList<String>> commonDiff = new Hashtable<>();
+        ArrayList<String> nextfetch = new ArrayList<>();
+
+        if (fetch_limit > 0 && cut_remote_index == 0 && !station.pervasive_ue) {
+            cut_remote_index = fetch_limit;
+            // see fetch_messages()
+        }
+
+        for (String echo : echoesToFetch) {
+            ArrayList<String> localMessages = localIndex.get(echo);
+            ArrayList<FEchoFile> remoteMessages = remoteIndex.get(echo);
+
+            if (cut_remote_index > 0 && remoteMessages.size() > cut_remote_index) {
+                int remLength = remoteMessages.size();
+                remoteMessages = new ArrayList<>(
+                        remoteMessages.subList(remLength - cut_remote_index, remLength));
+
+                remoteIndex.put(echo, remoteMessages);
+            }
+
+            commonDiff.put(echo, SimpleFunctions.ListDifference(fetchFidsFromFileIndex(remoteMessages), localMessages));
+
+            if (fetch_limit > 0 && station.pervasive_ue && remoteMessages.size() == commonDiff.get(echo).size()) {
+                nextfetch.add(echo);
+            }
+        }
+
+        while (nextfetch.size() > 0) {
+            bottomOffset += fetch_limit;
+            // TODO: change strings
+            SimpleFunctions.pretty_debug(str_load_index + " (" + String.valueOf(bottomOffset) + ")");
+            echoBundle = Network.getFile(context, address + "f/e/"
+                            + TextUtils.join("/", nextfetch) + "/-"
+                            + String.valueOf(bottomOffset) + ":" + String.valueOf(fetch_limit),
+                    null, timeout);
+
+            // something wrong here, need to fix
+            Hashtable<String, ArrayList<FEchoFile>> msgsDict = filesParseRemoteIndex(echoBundle);
+
+            List<String> nextfetch_copy = new ArrayList<>(nextfetch);
+            for (String echo : nextfetch_copy) {
+                ArrayList<String> localMessages = localIndex.get(echo);
+                ArrayList<String> remoteMessages = fetchFidsFromFileIndex(msgsDict.get(echo));
+
+                if (remoteMessages == null || remoteMessages.size() == 0) {
+                    nextfetch.remove(echo);
+                    continue;
+                }
+
+                ArrayList<String> diff = SimpleFunctions.ListDifference(remoteMessages, localMessages);
+                diff = SimpleFunctions.ListDifference(diff, commonDiff.get(echo));
+
+                ArrayList<String> sumdiff = new ArrayList<>(diff);
+                sumdiff.addAll(commonDiff.get(echo));
+
+                if (cut_remote_index > 0 && sumdiff.size() > cut_remote_index) {
+                    // защищаемся от "перескачивания" при включенном pervasive_ue
+                    int remLength = sumdiff.size();
+                    sumdiff = new ArrayList<>(
+                            sumdiff.subList(remLength - cut_remote_index, remLength));
+                    nextfetch.remove(echo);
+                    commonDiff.put(echo, sumdiff);
+                    continue;
+                }
+
+                commonDiff.put(echo, sumdiff);
+
+                if (remoteMessages.size() != diff.size()) {
+                    nextfetch.remove(echo);
+                }
+            }
+        }
+
+        Hashtable<String, String> echoForMsgid = new Hashtable<>();
+        List<String> fetchedEchoes = Collections.list(commonDiff.keys());
+        ArrayList<String> difference = new ArrayList<>();
+
+        for (String echo : fetchedEchoes) {
+            ArrayList<String> msglist = commonDiff.get(echo);
+            difference.addAll(msglist);
+
+            for (String msgid : msglist) {
+                echoForMsgid.put(msgid, echo);
+            }
+        }
+
+        SimpleFunctions.debug(context.getString(R.string.blacklist_apply));
+        difference.removeAll(FileBlacklist.badMsgids);
+
+        ArrayList<String> savedEntries = new ArrayList<>();
+
+        for (String fid : difference) {
+            String fecho = echoForMsgid.get(fid);
+            FEchoFile search = null;
+
+            for (FEchoFile file : remoteIndex.get(fecho)) {
+                if (file.id.equals(fid)) search = file;
+            }
+
+            if (search != null) {
+                transport.saveFileMeta(fid, fecho, search);
+                savedEntries.add(fid);
+            }
+        }
+
+        return savedEntries;
+    }
+
     private void xc_parse_values(Hashtable<String, Integer> htable, String[] lines) {
         for (String line : lines) {
             String[] pieces = line.split(":");
@@ -525,5 +672,34 @@ public class Fetcher {
         }
 
         return remoteParsedEchos;
+    }
+
+    private Hashtable<String, ArrayList<FEchoFile>> filesParseRemoteIndex(String fechoBundle) {
+        Hashtable<String, ArrayList<FEchoFile>> remoteParsedFEchoes = new Hashtable<>();
+
+        String lastEcho = "";
+
+        for (String element : fechoBundle.split("\n")) {
+            if (!element.equals("")) {
+                if (!element.contains(":")) {
+                    lastEcho = element;
+                    remoteParsedFEchoes.put(lastEcho, new ArrayList<FEchoFile>());
+                } else {
+                    remoteParsedFEchoes.get(lastEcho).add(new FEchoFile(element));
+                }
+            }
+        }
+
+        return remoteParsedFEchoes;
+    }
+
+    private ArrayList<String> fetchFidsFromFileIndex(ArrayList<FEchoFile> fileEntries) {
+        ArrayList<String> result = new ArrayList<>();
+
+        for (FEchoFile entry : fileEntries) {
+            result.add(entry.id);
+        }
+
+        return result;
     }
 }

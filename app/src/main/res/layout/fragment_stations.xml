@@ -89,6 +89,13 @@
             android:checked="false"
             android:text="@string/node_continue_loading_index" />
 
+        <CheckBox
+            android:id="@+id/stations_fecho_support"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/node_fecho_support" />
+
         <TextView
             style="@style/AppTheme.MyCaption"
             android:layout_width="match_parent"

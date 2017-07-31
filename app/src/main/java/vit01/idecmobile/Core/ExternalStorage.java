@@ -33,11 +33,11 @@ import java.util.Comparator;
 import vit01.idecmobile.prefs.Config;
 
 public class ExternalStorage {
-    public static File rootStorage;
+    public static File rootStorage, fileStorage;
     public static boolean filtersPresent = false;
     static String dataDirectory = "idecMobile";
-    static FilenameFilter draftsFilter;
-    static FilenameFilter sentFilter;
+    static String filesDirectory = "files";
+    static FilenameFilter draftsFilter, sentFilter;
 
     ExternalStorage() {
     }
@@ -51,6 +51,12 @@ public class ExternalStorage {
 
         if (!rootStorage.exists() && !rootStorage.mkdirs()) {
             SimpleFunctions.debug("Root directory for drafts not created!");
+        }
+
+        fileStorage = new File(rootStorage, filesDirectory);
+
+        if (!fileStorage.exists() && !fileStorage.mkdirs()) {
+            SimpleFunctions.debug("Root directory for files not created");
         }
 
         if (filtersPresent) return;

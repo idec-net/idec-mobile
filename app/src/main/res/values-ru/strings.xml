@@ -120,6 +120,7 @@
     <string name="node_address">Адрес сервера</string>
     <string name="node_xc_support">Поддержка схемы IDEC /x/c</string>
     <string name="node_advanced_ue">Поддержка расширенного /u/e</string>
+    <string name="node_fecho_support">Поддержка файловых эх</string>
     <string name="node_continue_loading_index">Качать индекс дальше, если все сообщения новые</string>
     <string name="node_ue_limit">Лимит msgid на эху в одном запросе</string>
     <string name="node_cut_index">Принудительная обрезка индекса (0 - выключено)</string>

@@ -374,6 +374,7 @@ public class ProgressActivity extends AppCompatActivity {
                                             loader.bytesdone), loader.maxsizestr);
 
                             progressBar.setProgress(percentage);
+                            // TODO: почему-то прогрессбар идёт просто вертушкой, без прогресса :(
                             SimpleFunctions.setActivityTitle(ProgressActivity.this,
                                     getString(R.string.upload_percentage, percentage));
 

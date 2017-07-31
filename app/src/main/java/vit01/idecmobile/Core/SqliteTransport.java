@@ -31,35 +31,63 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
-public class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
-    public static SQLiteDatabase db_static = null;
+import vit01.idecmobile.prefs.Config;
 
-    public String tableName = "idecMessages";
-    public String echoIndexName = "echostats";
+class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
+    private static SQLiteDatabase db_static = null;
+    private Context savedcontext = null;
 
-    public String indexCreate = "create index if not exists " +
+    private String tableName = "idecMessages";
+    private String echoIndexName = "echostats";
+
+    private String filesTableName = "idecFiles";
+    private String fechoIndexName = "fechostats";
+
+    private String messagesDbCreate = "create table " + tableName + " ("
+            + "number integer primary key autoincrement,"
+            + "id text default none,"
+            + "tags text,"
+            + "echoarea text not null,"
+            + "date bigint default 0,"
+            + "msgfrom text,"
+            + "addr text,"
+            + "msgto text,"
+            + "subj text not null,"
+            + "msg text not null,"
+            + "isfavorite integer default 0,"
+            + "isunread integer default 1"
+            + ")";
+
+    private String filesDbCreate = "create table " + filesTableName + " ("
+            + "number integer primary key autoincrement,"
+            + "id text default none,"
+            + "tags text,"
+            + "fecho text not null,"
+            + "filename text not null,"
+            + "serversize bigint default 0,"
+            + "addr text,"
+            + "description text default none"
+            + ")";
+
+    private String messagesIndexCreate = "create index if not exists " +
             echoIndexName + " on " + tableName + " (echoarea, isunread)";
-    public SqliteTransport(Context context) {
-        super(context, "idec-db", null, 3);
+
+
+    private String filesIndexCreate = "create index if not exists " +
+            fechoIndexName + " on " + filesTableName + " (fecho)";
+
+
+    SqliteTransport(Context context) {
+        super(context, "idec-db", null, 4);
+        savedcontext = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + tableName + " ("
-                + "number integer primary key autoincrement, "
-                + "id text default none,"
-                + "tags text,"
-                + "echoarea text not null,"
-                + "date bigint default 0,"
-                + "msgfrom text,"
-                + "addr text,"
-                + "msgto text,"
-                + "subj text not null,"
-                + "msg text not null,"
-                + "isfavorite integer default 0,"
-                + "isunread integer default 1"
-                + ")");
-        db.execSQL(indexCreate);
+        db.execSQL(messagesDbCreate);
+        db.execSQL(messagesIndexCreate);
+        db.execSQL(filesDbCreate);
+        db.execSQL(filesIndexCreate);
     }
 
     @Override
@@ -77,16 +105,36 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
             db.execSQL("alter table " + tableName + " add isfavorite integer default 0");
             db.execSQL("alter table " + tableName + " add isunread integer default 1");
 
-            oldVersion = 2;
-            newVersion = 3;
+            oldVersion++;
+            newVersion++;
         }
 
         if (oldVersion == 2 && newVersion == 3) {
-            db.execSQL(indexCreate);
+            db.execSQL(messagesIndexCreate);
+            oldVersion++;
+            newVersion++;
+        }
+
+        if (oldVersion == 3 && newVersion == 4) {
+            db.execSQL(filesDbCreate);
+            db.execSQL(filesIndexCreate);
+
+            boolean configUpdate = false;
+            for (Station station : Config.values.stations) {
+                if (station.file_echoareas == null) station.file_echoareas = new ArrayList<>();
+                if (station.file_echoareas.size() == 0) {
+                    configUpdate = true;
+                    station.file_echoareas.add("books.tech");
+                    station.file_echoareas.add("pictures");
+                    station.file_echoareas.add("mlp.pictures");
+                }
+            }
+
+            if (configUpdate) Config.writeConfig(savedcontext);
         }
     }
 
-    public SQLiteDatabase getDb() {
+    private SQLiteDatabase getDb() {
         if (db_static == null) db_static = getWritableDatabase();
         while (db_static.isDbLockedByCurrentThread()) {
             try {
@@ -101,7 +149,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return db_static;
     }
 
-    public ContentValues getContentValues(IIMessage message) {
+    private ContentValues getContentValues(IIMessage message) {
         ContentValues cv = new ContentValues();
         cv.put("id", message.id);
         cv.put("echoarea", message.echo);
@@ -118,7 +166,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return cv;
     }
 
-    public IIMessage parseMessage(Cursor cursor) {
+    private IIMessage parseMessage(Cursor cursor) {
         IIMessage msg = new IIMessage();
 
         msg.id = cursor.getString(cursor.getColumnIndex("id"));
@@ -196,7 +244,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         }
     }
 
-    public ArrayList<String> fetch_rows(Cursor cursor) {
+    private ArrayList<String> fetch_rows(Cursor cursor) {
         ArrayList<String> result = new ArrayList<>();
 
         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
@@ -344,9 +392,10 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
     public void FuckDeleteEverything() {
         SQLiteDatabase db = getDb();
         db.delete(tableName, null, null);
+        db.delete(filesTableName, null, null);
     }
 
-    public ArrayList<String> msgidsBySelection(String selection_block, String sort, String limit) {
+    private ArrayList<String> msgidsBySelection(String selection_block, String sort, String limit) {
         SQLiteDatabase db = getReadableDatabase();
 
         if (sort == null) sort = "";
@@ -429,7 +478,7 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
         return selected;
     }
 
-    public void updateBooleanField(String field, boolean value, List<String> msgids) {
+    private void updateBooleanField(String field, boolean value, List<String> msgids) {
         if (msgids.size() == 0) SimpleFunctions.debug(field + " update failed: empty input!");
 
         SQLiteDatabase db = getDb();
@@ -511,4 +560,225 @@ public class SqliteTransport extends SQLiteOpenHelper implements AbstractTranspo
 
         return msgidsBySelection(clause_part, "number", null);
     }
+
+    private ContentValues filesGetContentValues(FEchoFile entry) {
+        ContentValues cv = new ContentValues();
+        cv.put("id", entry.id);
+        cv.put("tags", IIMessage.collectTags(entry.tags));
+        cv.put("fecho", entry.fecho);
+        cv.put("filename", entry.filename);
+        cv.put("serversize", entry.serverSize);
+        cv.put("addr", entry.addr);
+        cv.put("description", entry.description);
+
+        return cv;
+    }
+
+    public FEchoFile parseFileEntry(Cursor cursor) {
+        FEchoFile entry = new FEchoFile();
+
+        entry.id = cursor.getString(cursor.getColumnIndex("id"));
+        entry.tags = IIMessage.parseTags(cursor.getString(cursor.getColumnIndex("tags")));
+        entry.fecho = cursor.getString(cursor.getColumnIndex("fecho"));
+        entry.filename = cursor.getString(cursor.getColumnIndex("filename"));
+        entry.serverSize = cursor.getLong(cursor.getColumnIndex("serversize"));
+        entry.addr = cursor.getString(cursor.getColumnIndex("addr"));
+        entry.description = cursor.getString(cursor.getColumnIndex("description"));
+
+        return entry;
+    }
+
+    public boolean saveFileMeta(String fid, String fecho, FEchoFile entry) {
+        entry.id = fid;
+        if (entry.tags.size() == 0) {
+            entry.tags.put("ii", "ok");
+        }
+
+        SQLiteDatabase db = getDb();
+        ContentValues readyToInsert = filesGetContentValues(entry);
+
+        long result = db.insert(filesTableName, null, readyToInsert);
+
+        if (result == -1) {
+            SimpleFunctions.debug("Cannot save fid " + fid);
+            return false;
+        } else return true;
+    }
+
+    public boolean saveFileMeta(String fid, String echo, String rawentry) {
+        return saveFileMeta(fid, echo, new FEchoFile(rawentry));
+    }
+
+    public boolean updateFileMeta(String fid, FEchoFile entry) {
+        if (fid == null) {
+            return false;
+        }
+        entry.id = fid;
+        if (entry.tags.size() == 0) {
+            entry.tags.put("ii", "ok");
+        }
+
+        ContentValues cv = filesGetContentValues(entry);
+
+        SQLiteDatabase db = getDb();
+        int result = db.update(filesTableName, cv, "id = ?", new String[]{fid});
+
+        return result > 0;
+    }
+
+    public boolean updateFileMeta(String fid, String echo, String rawentry) {
+        return saveFileMeta(fid, echo, new FEchoFile(rawentry));
+    }
+
+
+    public boolean deleteFileEntry(String fid, String fecho) {
+        SQLiteDatabase db = getDb();
+
+        String whereClause = "id = ?";
+        String[] whereArgs;
+
+        if (fecho != null) {
+            whereClause += " and fecho = ?";
+            whereArgs = new String[]{fid, fecho};
+        } else whereArgs = new String[]{fid};
+
+        int result = db.delete(filesTableName, whereClause, whereArgs);
+
+        return result > 0;
+    }
+
+    public void deleteFileEntries(ArrayList<String> fids, String fecho) {
+        SQLiteDatabase db = getDb();
+
+        for (String fid : fids) {
+            db.delete(filesTableName, "id = ? and fecho = ?", new String[]{fid, fecho});
+        }
+    }
+
+    public ArrayList<String> getFileList(String fecho, int offset, int length, String sort) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        String limitstr;
+        if (offset >= 0 && length > 0) {
+            limitstr = String.valueOf(offset) + ", " + String.valueOf(length);
+        } else limitstr = null;
+
+        Cursor cursor = db.query(filesTableName, new String[]{"id", "number"}, "fecho = ?",
+                new String[]{fecho}, null, null, "number", limitstr);
+
+        return fetch_rows(cursor);
+    }
+
+    public void deleteFileEchoarea(String fecho, boolean with_contents) {
+        SQLiteDatabase db = getDb();
+        db.delete(filesTableName, "fecho = ?", new String[]{fecho});
+    }
+
+    public FEchoFile getFileMeta(String fid) {
+        ArrayList<String> msgidArr = new ArrayList<>();
+        msgidArr.add(fid);
+
+        Hashtable<String, FEchoFile> results = getFilesMeta(msgidArr);
+        return results.get(fid);
+    }
+
+    public Hashtable<String, FEchoFile> getFilesMeta(ArrayList<String> msgids) {
+        String args;
+        if (msgids.size() == 1) {
+            args = "id='" + msgids.get(0) + "'";
+        } else {
+            args = "id='" + TextUtils.join("' or id='", msgids) + "'";
+        }
+
+        Hashtable<String, FEchoFile> result = new Hashtable<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(filesTableName, null, args, null, null, null, null);
+
+        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+            boolean needToClose = false;
+
+            while (!needToClose) {
+                FEchoFile entry = parseFileEntry(cursor);
+                String fid = entry.id;
+
+                result.put(fid, entry);
+                if (!cursor.moveToNext()) needToClose = true;
+            }
+        }
+
+        cursor.close();
+        return result;
+    }
+
+    public ArrayList<String> fullFEchoList() {
+        SQLiteDatabase db = getDb();
+
+        Cursor cursor = db.query(true, filesTableName, new String[]{"fecho"},
+                null, null, null, null, null, null);
+
+        return fetch_rows(cursor);
+    }
+
+    public int countFiles(String fecho) {
+        SQLiteDatabase db = getDb();
+        Cursor cursor = db.query(filesTableName, new String[]{"count(*)"},
+                "fecho = ?", new String[]{fecho},
+                null, null, null);
+
+        int result = 0;
+
+        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+            result = cursor.getInt(0);
+        }
+
+        cursor.close();
+        return result;
+    }
+
+
+    public ArrayList<String> fidsBySelection(String selection_block, String sort, String limit) {
+        SQLiteDatabase db = getDb();
+
+        if (sort == null) sort = "";
+
+        Cursor cursor = db.query(true, filesTableName, new String[]{"id, number"},
+                selection_block, null, null, null, sort, limit);
+
+        return fetch_rows(cursor);
+    }
+
+    public ArrayList<String> fileSearchQuery(List<String> fechoes, List<String> filenames,
+                                             List<String> addresses, String descriptionKey) {
+
+        ArrayList<String> selectionKeys = new ArrayList<>();
+
+        if (fechoes != null && fechoes.size() > 0)
+            selectionKeys.add("fecho='" + TextUtils.join("' or fecho='", fechoes) + "'");
+
+        if (filenames != null && filenames.size() > 0)
+            selectionKeys.add("filename like '%" + TextUtils.join("%' or filename like '%", filenames) + "%'");
+
+        if (addresses != null && addresses.size() > 0)
+            selectionKeys.add("addr like '%" + TextUtils.join("' or addr like '%", addresses) + "%'");
+
+        if (descriptionKey != null)
+            selectionKeys.add("description like '%" + descriptionKey + "%'");
+
+        String clause_part = "(" + TextUtils.join(") and (", selectionKeys) + ")";
+
+        if (clause_part.equals("()")) {
+            SimpleFunctions.debug("Error: empty query");
+            return new ArrayList<>();
+        } else SimpleFunctions.debug(clause_part);
+
+        return fidsBySelection(clause_part, "number", null);
+    }
+
+    // TODO: file blacklist (child class)
+    // TODO: file index fetcher
+    // TODO: echolistfragment enchance
+    // TODO: recyclerview for displaying files
+    // TODO: progressActivity downloading
+    // TODO: files search (filter)
+    // TODO: files share menu popup
 }

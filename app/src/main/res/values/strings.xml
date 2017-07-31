@@ -123,6 +123,7 @@
     <string name="node_address">Server address</string>
     <string name="node_xc_support">IDEC scheme /x/c support</string>
     <string name="node_advanced_ue">Advanced /u/e support</string>
+    <string name="node_fecho_support">Support for file echoareas</string>
     <string name="node_continue_loading_index">Continue index downloading if all messages look like new</string>
     <string name="node_ue_limit">Msgid\'s limit for echoarea per request</string>
     <string name="node_cut_index">Forced index quantity limit (0 to disable)</string>

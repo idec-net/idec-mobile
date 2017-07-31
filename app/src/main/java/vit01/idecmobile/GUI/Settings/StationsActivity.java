@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -223,7 +224,7 @@ public class StationsActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
             View view;
 
             if (convertView == null) {
@@ -265,7 +266,7 @@ public class StationsActivity extends AppCompatActivity {
         Station station;
         EditText nodename, address, authstr, fetch_limit, cut_remote_index;
         Switch fetch_enable;
-        CheckBox xc_enable, advanced_ue, pervasive_ue, show_password;
+        CheckBox xc_enable, advanced_ue, pervasive_ue, show_password, fecho_enable;
         Button get_echolist, autoconfig;
 
         public PlaceholderFragment() {
@@ -309,6 +310,7 @@ public class StationsActivity extends AppCompatActivity {
             xc_enable = (CheckBox) fragm.findViewById(R.id.stations_xc_enable);
             advanced_ue = (CheckBox) fragm.findViewById(R.id.stations_advanced_ue);
             pervasive_ue = (CheckBox) fragm.findViewById(R.id.stations_pervasive_ue);
+            fecho_enable = (CheckBox) fragm.findViewById(R.id.stations_fecho_support);
             fetch_limit = (EditText) fragm.findViewById(R.id.stations_fetch_limit);
             cut_remote_index = (EditText) fragm.findViewById(R.id.stations_cut_remote_index);
             get_echolist = (Button) fragm.findViewById(R.id.stations_get_echolist);
@@ -408,9 +410,11 @@ public class StationsActivity extends AppCompatActivity {
                 List<String> keys = Arrays.asList(xfinfo.split("\n"));
                 boolean xc = keys.contains("x/c");
                 boolean ue = keys.contains("u/e");
+                boolean fe = keys.contains("f/");
 
                 xc_enable.setChecked(xc);
                 advanced_ue.setChecked(ue);
+                fecho_enable.setChecked(fe);
 
                 if (ue) {
                     pervasive_ue.setChecked(false);
@@ -418,6 +422,7 @@ public class StationsActivity extends AppCompatActivity {
             } else {
                 xc_enable.setChecked(false);
                 advanced_ue.setChecked(false);
+                fecho_enable.setChecked(false);
             }
             cut_remote_index.setText("50");
 
@@ -494,6 +499,7 @@ public class StationsActivity extends AppCompatActivity {
             fetch_enable.setChecked(station.fetch_enabled);
             xc_enable.setChecked(station.xc_enable);
             advanced_ue.setChecked(station.advanced_ue);
+            fecho_enable.setChecked(station.fecho_support);
             pervasive_ue.setChecked(station.pervasive_ue);
             fetch_limit.setText(String.valueOf(station.ue_limit));
             cut_remote_index.setText(String.valueOf(station.cut_remote_index));
@@ -508,6 +514,7 @@ public class StationsActivity extends AppCompatActivity {
             station.xc_enable = xc_enable.isChecked();
             station.advanced_ue = advanced_ue.isChecked();
             station.pervasive_ue = pervasive_ue.isChecked();
+            station.fecho_support = fecho_enable.isChecked();
             station.ue_limit = Integer.parseInt(fetch_limit.getText().toString());
             station.cut_remote_index = Integer.parseInt(cut_remote_index.getText().toString());
         }
