@@ -84,6 +84,10 @@ public class ListEditActivity extends AppCompatActivity {
             case "offline":
                 contents = Config.values.offlineEchoareas;
                 break;
+            case "fromstation-fecho":
+                int index = in.getIntExtra("index", 0);
+                contents = Config.values.stations.get(index).file_echoareas;
+                break;
         }
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_ev);

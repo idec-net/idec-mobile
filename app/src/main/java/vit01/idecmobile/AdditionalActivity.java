@@ -69,6 +69,8 @@ import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.prefs.Config;
 
 public class AdditionalActivity extends AppCompatActivity {
+    String fecho = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(Config.appTheme);
@@ -86,6 +88,12 @@ public class AdditionalActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        Intent gotIntent = getIntent();
+        if (gotIntent.hasExtra("fecho")) {
+            fecho = gotIntent.getStringExtra("fecho");
+            mViewPager.setCurrentItem(3);
+        }
     }
 
     @Override
@@ -603,7 +611,7 @@ public class AdditionalActivity extends AppCompatActivity {
                 case 2:
                     return Blacklist_Fragment.newInstance();
                 case 3:
-                    return FileUploadFragment.newInstance();
+                    return FileUploadFragment.newInstance(fecho);
                 default:
                     return null;
             }

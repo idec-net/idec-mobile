@@ -102,6 +102,7 @@
                 android:value="vit01.idecmobile.MainActivity" />
         </activity>
         <activity android:name=".GUI.Drafts.DraftsView" />
+        <activity android:name=".FilesActivity" />
         <activity android:name=".FileChooserActivity" />
         <activity
             android:name=".SearchActivity"
@@ -129,6 +130,16 @@
         <receiver android:name=".notify.workerJob" />
 
         <service android:name=".notify.AlarmService" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
     </application>
 
 </manifest>

@@ -603,11 +603,11 @@ public class MessageListFragment extends Fragment {
 
             ViewHolder(View myLayout) {
                 super(myLayout);
-                msg_subj = (TextView) myLayout.findViewById(R.id.msg_subj);
+                msg_subj = (TextView) myLayout.findViewById(R.id.fecho_filename);
                 msg_from_to = (TextView) myLayout.findViewById(R.id.msg_from_to);
                 msg_text = (TextView) myLayout.findViewById(R.id.msg_text);
-                msg_date = (TextView) myLayout.findViewById(R.id.msg_date);
-                msg_star = (ImageView) myLayout.findViewById(R.id.msg_star);
+                msg_date = (TextView) myLayout.findViewById(R.id.fecho_action_button);
+                msg_star = (ImageView) myLayout.findViewById(R.id.fecho_filesize);
             }
         }
     }

@@ -593,6 +593,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
         if (entry.tags.size() == 0) {
             entry.tags.put("ii", "ok");
         }
+        entry.fecho = fecho;
 
         SQLiteDatabase db = getDb();
         ContentValues readyToInsert = filesGetContentValues(entry);
@@ -663,7 +664,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
             limitstr = String.valueOf(offset) + ", " + String.valueOf(length);
         } else limitstr = null;
 
-        Cursor cursor = db.query(filesTableName, new String[]{"id", "number"}, "fecho = ?",
+        Cursor cursor = db.query(true, filesTableName, new String[]{"id", "number"}, "fecho = ?",
                 new String[]{fecho}, null, null, "number", limitstr);
 
         return fetch_rows(cursor);
@@ -774,10 +775,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
         return fidsBySelection(clause_part, "number", null);
     }
 
-    // TODO: file blacklist (child class)
     // TODO: file index fetcher
-    // TODO: echolistfragment enchance
-    // TODO: recyclerview for displaying files
     // TODO: progressActivity downloading
     // TODO: files search (filter)
     // TODO: files share menu popup

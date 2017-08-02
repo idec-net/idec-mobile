@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="vit01.idecmobile.MainActivity">
+    tools:context="vit01.idecmobile.FilesActivity">
 
     <LinearLayout
+        android:id="@+id/fragments_layout_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
@@ -18,7 +18,8 @@
             android:id="@+id/drawer_holder"
             android:layout_width="@dimen/material_drawer_width"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true" />
+            android:fitsSystemWindows="true"
+            android:orientation="vertical" />
 
         <View
             android:layout_width="1dp"
@@ -40,14 +41,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="?attr/colorPrimary" />
-
             </android.support.design.widget.AppBarLayout>
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_fetch"
+            <fragment
+                android:id="@+id/filelist_fragment"
+                android:name="vit01.idecmobile.GUI.Files.FileListFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                android:layout_height="match_parent" />
         </LinearLayout>
     </LinearLayout>
 

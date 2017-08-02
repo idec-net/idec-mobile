@@ -76,19 +76,19 @@ public class FEchoFile {
         return file != null && file.exists() && file.isFile();
     }
 
-    private boolean existsLocally() {
+    public boolean existsLocally() {
         return existsLocally(null);
     }
 
     public boolean localSizeIsCorrect() {
         File file = getLocalFile();
-        return file != null && existsLocally(file) && file.length() == serverSize;
+        return (file != null) && (existsLocally(file)) && (file.length() == serverSize);
     }
 
-    private File getLocalFile() {
-        if (id == null || filename == null) return null;
+    public File getLocalFile() {
+        if (filename == null || fecho == null) return null;
 
-        File idDir = new File(ExternalStorage.fileStorage, id);
+        File idDir = new File(ExternalStorage.fileStorage, fecho);
 
         if (!idDir.exists()) {
             boolean md = idDir.mkdirs();
@@ -97,10 +97,10 @@ public class FEchoFile {
                 return null;
             }
         } else if (!idDir.isDirectory()) {
-            SimpleFunctions.debug("fid dir " + id + " is not a directory");
+            SimpleFunctions.debug("fid dir " + fecho + " is not a directory");
             return null;
         }
 
-        return new File(idDir, id);
+        return new File(idDir, filename);
     }
 }

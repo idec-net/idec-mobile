@@ -35,7 +35,9 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
+import vit01.idecmobile.ProgressActivity;
 import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
@@ -104,9 +106,10 @@ public class Fetcher {
                 SimpleFunctions.debug("Error while creating new file " + fileToSave.getAbsolutePath() + ": " + e.toString());
                 return false;
             }
-            if (!created)
+            if (!created) {
                 SimpleFunctions.debug("Failed to create new file" + fileToSave.getAbsolutePath());
-            return false;
+                return false;
+            }
         }
 
         InputStream inputStream = Network.streamTransaction(context, station.address + "x/file", toServer, Config.values.connectionTimeout);
@@ -155,6 +158,53 @@ public class Fetcher {
 
             prgr.joined = true;
             progressThread.join();
+
+            os.close();
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            SimpleFunctions.debug("Error writing to file " + e.toString());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean fecho_download(ProgressActivity.download_fp downloader, Station station, String fecho, String fid, File fileToSave) {
+        if (!fileToSave.exists()) {
+            boolean created;
+            try {
+                created = fileToSave.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                SimpleFunctions.debug("Error while creating new file " + fileToSave.getAbsolutePath() + ": " + e.toString());
+                return false;
+            }
+            if (!created) {
+                SimpleFunctions.debug("Failed to create new file" + fileToSave.getAbsolutePath());
+                return false;
+            }
+        }
+
+        InputStream inputStream = Network.streamTransaction(context,
+                station.address + "f/f/" + fecho + "/" + fid, null, Config.values.connectionTimeout);
+        if (inputStream == null) return false;
+
+        FileOutputStream os;
+        try {
+            os = new FileOutputStream(fileToSave);
+            final byte[] buffer = new byte[500];
+            int totalRead = 0;
+
+            int read;
+
+            do {
+                read = inputStream.read(buffer, 0, buffer.length);
+                if (read > 0) os.write(buffer, 0, read);
+                totalRead += read;
+                downloader.bytesdone = totalRead;
+            }
+            while (read >= 0);
 
             os.close();
             inputStream.close();
@@ -535,6 +585,7 @@ public class Fetcher {
 
         SimpleFunctions.debug("Calculating index difference...");
         Hashtable<String, ArrayList<FEchoFile>> remoteIndex = filesParseRemoteIndex(echoBundle);
+        Hashtable<String, FEchoFile> allFiles = fullFidsArray(remoteIndex);
 
         Hashtable<String, ArrayList<String>> commonDiff = new Hashtable<>();
         ArrayList<String> nextfetch = new ArrayList<>();
@@ -565,15 +616,20 @@ public class Fetcher {
 
         while (nextfetch.size() > 0) {
             bottomOffset += fetch_limit;
-            // TODO: change strings
-            SimpleFunctions.pretty_debug(str_load_index + " (" + String.valueOf(bottomOffset) + ")");
+            SimpleFunctions.pretty_debug(str_load_index + " file (" + String.valueOf(bottomOffset) + ")");
             echoBundle = Network.getFile(context, address + "f/e/"
                             + TextUtils.join("/", nextfetch) + "/-"
                             + String.valueOf(bottomOffset) + ":" + String.valueOf(fetch_limit),
                     null, timeout);
 
-            // something wrong here, need to fix
             Hashtable<String, ArrayList<FEchoFile>> msgsDict = filesParseRemoteIndex(echoBundle);
+            Hashtable<String, FEchoFile> fidsDict = fullFidsArray(msgsDict);
+
+            // добавляем все файловые строки в общий массив файловых строк
+            Set msgidsOrigin = allFiles.keySet();
+            for (String key : fidsDict.keySet()) {
+                if (!msgidsOrigin.contains(key)) allFiles.put(key, fidsDict.get(key));
+            }
 
             List<String> nextfetch_copy = new ArrayList<>(nextfetch);
             for (String echo : nextfetch_copy) {
@@ -629,11 +685,7 @@ public class Fetcher {
 
         for (String fid : difference) {
             String fecho = echoForMsgid.get(fid);
-            FEchoFile search = null;
-
-            for (FEchoFile file : remoteIndex.get(fecho)) {
-                if (file.id.equals(fid)) search = file;
-            }
+            FEchoFile search = allFiles.get(fid);
 
             if (search != null) {
                 transport.saveFileMeta(fid, fecho, search);
@@ -700,6 +752,16 @@ public class Fetcher {
             result.add(entry.id);
         }
 
+        return result;
+    }
+
+    private Hashtable<String, FEchoFile> fullFidsArray(Hashtable<String, ArrayList<FEchoFile>> input) {
+        Hashtable<String, FEchoFile> result = new Hashtable<>();
+        for (String echo : input.keySet()) {
+            for (FEchoFile entry : input.get(echo)) {
+                result.put(entry.id, entry);
+            }
+        }
         return result;
     }
 }

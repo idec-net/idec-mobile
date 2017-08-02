@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(10).withName(R.string.title_activity_help).withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
         PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName(R.string.update).withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);
         PrimaryDrawerItem infoItem = new PrimaryDrawerItem().withIdentifier(12).withName(R.string.build_date).withIcon(GoogleMaterial.Icon.gmd_info).withSelectable(false);
-        PrimaryDrawerItem fechoItem = new PrimaryDrawerItem().withIdentifier(13).withName(R.string.file_echoareas).withIcon(GoogleMaterial.Icon.gmd_folder_shared).withSelectable(true);
+        PrimaryDrawerItem fechoItem = new PrimaryDrawerItem().withIdentifier(13).withName(R.string.file_echoareas).withIcon(GoogleMaterial.Icon.gmd_folder_shared).withSelectable(false);
 
         DrawerBuilder drawerBuilder = new DrawerBuilder()
                 .withActivity(this)
@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
                         if (drawerItem != null) switch ((int) drawerItem.getIdentifier()) {
                             case 1:
                                 if (is_offline_list_now) {
-                                    // TODO: recreate fragment with file echoareas
                                     is_offline_list_now = false;
                                     updateEcholist();
                                 }
@@ -276,7 +275,9 @@ public class MainActivity extends AppCompatActivity {
                                         .show();
                                 break;
                             case 13:
-                                Toast.makeText(MainActivity.this, "Not implemented now, sorry", Toast.LENGTH_SHORT).show();
+                                Intent fechoesIntent = new Intent(MainActivity.this, FilesActivity.class);
+                                fechoesIntent.putExtra("nodeindex", Config.currentSelectedStation);
+                                startActivity(fechoesIntent);
                                 break;
                         }
                         return false;

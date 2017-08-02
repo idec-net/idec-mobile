@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import vit01.idecmobile.Core.FEchoFile;
 import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.Network;
@@ -94,7 +95,7 @@ public class ProgressActivity extends AppCompatActivity {
                 uploader.fecho = gotIntent.getStringExtra("fecho");
                 uploader.input = gotIntent.getParcelableExtra("inputstream");
 
-                file_upload_progress progress = new file_upload_progress();
+                file_load_progress progress = new file_load_progress();
                 progress.loader = uploader;
 
                 new Thread(uploader).start();
@@ -103,7 +104,16 @@ public class ProgressActivity extends AppCompatActivity {
                 break;
             case "download_fp":
                 progressBar.setIndeterminate(false);
+                download_fp downloader = new download_fp();
+                downloader.nodeindex = gotIntent.getIntExtra("nodeindex", Config.currentSelectedStation);
+                downloader.maxsize = gotIntent.getLongExtra("filesize", 0);
+                downloader.fid = gotIntent.getStringExtra("fid");
 
+                file_load_progress dl_progress = new file_load_progress();
+                dl_progress.loader = downloader;
+
+                new Thread(downloader).start();
+                new Thread(dl_progress).start();
                 break;
         }
     }
@@ -196,6 +206,16 @@ public class ProgressActivity extends AppCompatActivity {
         closeWindow = false;
     }
 
+    private interface load_operations {
+        Long getBytesDone();
+
+        Long getMaxSize();
+
+        String getMaxSizeStr();
+
+        Context getContext();
+    }
+
     private class updateDebug implements Runnable {
         @Override
         public void run() {
@@ -255,6 +275,11 @@ public class ProgressActivity extends AppCompatActivity {
                             station.cut_remote_index,
                             Config.values.connectionTimeout
                     );
+
+                    if (station.fecho_support) {
+                        ArrayList<String> fetched_files = fetcher.fetch_files
+                                (station, station.file_echoareas, Config.values.connectionTimeout);
+                    }
 
                     if (fetched != null) fetchedCount += fetched.size();
                     else error_flag++;
@@ -327,51 +352,23 @@ public class ProgressActivity extends AppCompatActivity {
         }
     }
 
-    class file_download implements Runnable {
-        long maxsize = 0;
-        long bytesdone = 0;
-        String maxsizestr = "";
-        Context context;
-
-        @Override
-        public void run() {
-            try {
-                // do job
-                context = ProgressActivity.this;
-                maxsizestr = android.text.format.Formatter.formatFileSize(context, maxsize);
-            } catch (Exception e) {
-                e.printStackTrace();
-                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
-
-                errorHappened();
-            } finally {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //job result
-                    }
-                });
-
-                finishTask();
-            }
-        }
-    }
-
-    private class file_upload_progress implements Runnable {
-        upload_fp loader;
+    private class file_load_progress implements Runnable {
+        load_operations loader;
 
         public void run() {
             while (loader != null && !SimpleFunctions.debugTaskFinished) {
-                if (loader.maxsize > 0) {
+                final Long maxSize = loader.getMaxSize();
+                if (maxSize > 0) {
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            float percentage_temp = (loader.bytesdone * 100) / loader.maxsize;
+                            Long bytesdone = loader.getBytesDone();
+                            float percentage_temp = (bytesdone * 100) / maxSize;
                             int percentage = (int) percentage_temp;
                             final String statusString = getString(R.string.upload_in_process,
-                                    android.text.format.Formatter.formatFileSize(loader.context,
-                                            loader.bytesdone), loader.maxsizestr);
+                                    android.text.format.Formatter.formatFileSize(loader.getContext(),
+                                            bytesdone), loader.getMaxSizeStr());
 
                             progressBar.setProgress(percentage);
                             // TODO: почему-то прогрессбар идёт просто вертушкой, без прогресса :(
@@ -392,7 +389,78 @@ public class ProgressActivity extends AppCompatActivity {
         }
     }
 
-    public class upload_fp implements Runnable {
+    public class download_fp implements Runnable, load_operations {
+        public long bytesdone = 0;
+        long maxsize = 0;
+        String maxsizestr = "";
+        Context context;
+        int nodeindex;
+
+        String fid;
+
+        public Long getBytesDone() {
+            return bytesdone;
+        }
+
+        public Long getMaxSize() {
+            return maxsize;
+        }
+
+        public String getMaxSizeStr() {
+            return maxsizestr;
+        }
+
+        public Context getContext() {
+            return context;
+        }
+
+        @Override
+        public void run() {
+            String resultstr = "";
+
+            try {
+                context = ProgressActivity.this;
+                maxsizestr = android.text.format.Formatter.formatFileSize(context, maxsize);
+
+                Station station = Config.values.stations.get(nodeindex);
+                Fetcher fetcher = new Fetcher(context, GlobalTransport.transport);
+
+                FEchoFile file_entry = GlobalTransport.transport.getFileMeta(fid);
+                boolean successful = fetcher.fecho_download(this, station, file_entry.fecho, fid, file_entry.getLocalFile());
+
+                if (successful && file_entry.localSizeIsCorrect()) {
+                    resultstr += "File was downloaded successfully";
+                } else {
+                    resultstr += "ERROR DOWNLOADING";
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            errorHappened();
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
+
+                errorHappened();
+            } finally {
+                final String finalResultstr = resultstr;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!finalResultstr.equals("")) {
+                            Toast.makeText(context, finalResultstr, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                finishTask();
+            }
+        }
+    }
+
+    public class upload_fp implements Runnable, load_operations {
         public long bytesdone = 0;
         int nodeindex = 0;
         long maxsize = 0;
@@ -401,6 +469,22 @@ public class ProgressActivity extends AppCompatActivity {
 
         String filename, description, fecho;
         Uri input;
+
+        public Long getBytesDone() {
+            return bytesdone;
+        }
+
+        public Long getMaxSize() {
+            return maxsize;
+        }
+
+        public String getMaxSizeStr() {
+            return maxsizestr;
+        }
+
+        public Context getContext() {
+            return context;
+        }
 
         @Override
         public void run() {
