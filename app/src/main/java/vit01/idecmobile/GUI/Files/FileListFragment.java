@@ -274,17 +274,17 @@ public class FileListFragment extends Fragment {
             downloadDrawable = new IconicsDrawable(activity)
                     .icon(GoogleMaterial.Icon.gmd_file_download)
                     .color(primaryColor)
-                    .sizeDp(48);
+                    .sizeDp(24);
 
             deleteDrawable = new IconicsDrawable(activity)
                     .icon(GoogleMaterial.Icon.gmd_delete)
                     .color(primaryColor)
-                    .sizeDp(48);
+                    .sizeDp(24);
 
             fixDrawable = new IconicsDrawable(activity)
                     .icon(GoogleMaterial.Icon.gmd_warning)
                     .color(accentColor)
-                    .sizeDp(48);
+                    .sizeDp(24);
         }
 
         @Override
@@ -337,7 +337,7 @@ public class FileListFragment extends Fragment {
                     // add copy fid in clipboard
                     new AlertDialog.Builder(callingActivity)
                             .setPositiveButton(android.R.string.ok, null)
-                            .setTitle("File description")
+                            .setTitle(holder.entry.filename)
                             .setMessage("file id: " + holder.entry.id + "\n\n" + holder.entry.description)
                             .show();
                     return true;
@@ -350,7 +350,7 @@ public class FileListFragment extends Fragment {
                     if (holder.exists && holder.sizeIsCorrect) {
                         new AlertDialog.Builder(callingActivity)
                                 .setTitle("Confirm file delete")
-                                .setMessage("Delete file " + holder.fecho_filename + "?")
+                                .setMessage("Delete file " + holder.entry.filename + "?")
                                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {

@@ -54,8 +54,8 @@
 
     <ImageView
         android:id="@+id/fecho_action_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
