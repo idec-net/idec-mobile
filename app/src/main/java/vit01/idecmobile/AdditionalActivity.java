@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -70,6 +71,7 @@ import vit01.idecmobile.prefs.Config;
 
 public class AdditionalActivity extends AppCompatActivity {
     String fecho = null;
+    Uri extrauri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +91,15 @@ public class AdditionalActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        // Обработка операций в фэхах
         Intent gotIntent = getIntent();
         if (gotIntent.hasExtra("fecho")) {
             fecho = gotIntent.getStringExtra("fecho");
+            mViewPager.setCurrentItem(3);
+        } else if (Intent.ACTION_SEND.equals(gotIntent.getAction())) {
+            Uri fileUri = gotIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+            if (fileUri != null) extrauri = fileUri;
+
             mViewPager.setCurrentItem(3);
         }
     }
@@ -595,9 +603,9 @@ public class AdditionalActivity extends AppCompatActivity {
         }
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -611,7 +619,7 @@ public class AdditionalActivity extends AppCompatActivity {
                 case 2:
                     return Blacklist_Fragment.newInstance();
                 case 3:
-                    return FileUploadFragment.newInstance(fecho);
+                    return FileUploadFragment.newInstance(fecho, extrauri);
                 default:
                     return null;
             }

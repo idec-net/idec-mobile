@@ -6,6 +6,7 @@
     <string name="action_send">Send</string>
     <string name="action_send_all">Send all</string>
     <string name="action_fetch">Fetch messages</string>
+    <string name="action_share">Share this</string>
     <string name="action_download">Download</string>
     <string name="action_download_list">Download list</string>
     <string name="action_update_from_server">Update from server</string>

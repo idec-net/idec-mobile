@@ -42,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -107,6 +108,7 @@ public class FileListFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(rootView.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(rootView.getContext()));
+        recyclerView.setHasFixedSize(true);
 
         return rootView;
     }
@@ -124,6 +126,20 @@ public class FileListFragment extends Fragment {
         filelist = msgids;
         nodeIndex = nIndex;
 
+        // Восстанавливаем состояние фрагмента, если было показано окошко "здесь пусто"
+        ViewGroup current = (RelativeLayout) getActivity().findViewById(R.id.filelist_view_layout);
+        if (current.findViewById(R.id.filelist_view) == null) {
+            current.removeAllViews();
+            current.removeAllViewsInLayout();
+            recyclerView = new RecyclerView(current.getContext());
+            mLayoutManager = new LinearLayoutManager(current.getContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setLayoutParams(new RecyclerView.LayoutParams(
+                    RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT));
+            recyclerView.addItemDecoration(new DividerItemDecoration(current.getContext()));
+            recyclerView.setHasFixedSize(true);
+            current.addView(recyclerView);
+        }
         loadContent();
     }
 
@@ -161,15 +177,10 @@ public class FileListFragment extends Fragment {
         int tmp_countMessages = tmp_filelist.size();
 
         if (tmp_countMessages == 0) {
-            if (mAdapter == null) {
-                filelist = tmp_filelist;
-                countMessages = 0;
+            filelist = tmp_filelist;
+            countMessages = 0;
 
-                showEmptyView();
-            } else {
-                Toast.makeText(activity, R.string.no_such_messages, Toast.LENGTH_SHORT).show();
-            }
-            return false;
+            showEmptyView();
         }
 
         filelist = tmp_filelist;
@@ -277,7 +288,7 @@ public class FileListFragment extends Fragment {
                     .sizeDp(24);
 
             deleteDrawable = new IconicsDrawable(activity)
-                    .icon(GoogleMaterial.Icon.gmd_delete)
+                    .icon(GoogleMaterial.Icon.gmd_close)
                     .color(primaryColor)
                     .sizeDp(24);
 
@@ -293,7 +304,7 @@ public class FileListFragment extends Fragment {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fecho_file_list_element, parent, false);
 
-            final RelativeLayout l = (RelativeLayout) v.findViewById(R.id.fecho_file_clickable_layout);
+            final LinearLayout l = (LinearLayout) v.findViewById(R.id.fecho_file_clickable_layout);
             final ImageView actionBtn = (ImageView) l.findViewById(R.id.fecho_action_button);
 
             final FileListFragment.MyAdapter.ViewHolder holder = new FileListFragment.MyAdapter.ViewHolder(v);
@@ -323,7 +334,7 @@ public class FileListFragment extends Fragment {
                         Intent downloadFile = new Intent(callingActivity, ProgressActivity.class);
                         downloadFile.putExtra("task", "download_fp");
                         downloadFile.putExtra("fid", holder.fid);
-                        downloadFile.putExtra("maxsize", holder.entry.serverSize);
+                        downloadFile.putExtra("filesize", holder.entry.serverSize);
                         downloadFile.putExtra("nodeindex", nodeIndex);
                         callingActivity.startActivity(downloadFile);
                     }
@@ -351,29 +362,21 @@ public class FileListFragment extends Fragment {
                         new AlertDialog.Builder(callingActivity)
                                 .setTitle("Confirm file delete")
                                 .setMessage("Delete file " + holder.entry.filename + "?")
-                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         new Thread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                boolean r = holder.entry.getLocalFile().delete();
-                                                if (r) {
-                                                    callingActivity.runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            actionBtn.setImageDrawable(downloadDrawable);
-                                                            Toast.makeText(callingActivity, "File was deleted", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                                } else {
-                                                    callingActivity.runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            Toast.makeText(callingActivity, "Error in file deletion", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                                }
+                                                final boolean r = holder.entry.getLocalFile().delete();
+                                                callingActivity.runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        notifyItemChanged(holder.getAdapterPosition());
+                                                        Toast.makeText(callingActivity,
+                                                                r ? "File was deleted" : "Error in file deletion", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                         }).start();
                                     }

@@ -31,6 +31,7 @@ public class IDECFunctions {
         AbstractTransport transport = GlobalTransport.transport();
         ArrayList<String> msglist;
         if (echoarea == null) return SimpleFunctions.emptyList;
+        String sort = Config.values.sortByDate ? "date" : "number";
 
         switch (echoarea) {
             case "_favorites":
@@ -39,7 +40,6 @@ public class IDECFunctions {
             case "_carbon_classic":
                 List<String> carbon_users = Arrays.asList(Config.values.carbon_to.split(":"));
 
-                String sort = Config.values.sortByDate ? "date" : "number";
                 msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit, unread_only, sort);
                 break;
             case "_unread":
@@ -49,8 +49,7 @@ public class IDECFunctions {
                 if (unread_only) {
                     msglist = transport.getUnreadMessages(echoarea);
                 } else {
-                    msglist = transport.getMsgList(echoarea, 0, 0,
-                            Config.values.sortByDate ? "date" : "number");
+                    msglist = transport.getMsgList(echoarea, 0, 0, sort);
                 }
                 break;
         }

@@ -64,7 +64,10 @@ public class FilesActivity extends AppCompatActivity {
     SearchView searchView;
     FileListFragment filelist;
     int nodeindex;
+
     int selectedEcho = 0;
+    boolean shouldOpenDrawer = true;
+    Bundle savedInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,13 @@ public class FilesActivity extends AppCompatActivity {
 
         nodeindex = gotIntent.getIntExtra("nodeindex", 0);
         currentStation = Config.values.stations.get(nodeindex);
+
+        if (savedInstanceState != null) {
+            selectedEcho = savedInstanceState.getInt("selectedEcho");
+            if (selectedEcho >= currentStation.file_echoareas.size()) selectedEcho = 0;
+            shouldOpenDrawer = savedInstanceState.getBoolean("openDrawer");
+            savedInstance = savedInstanceState;
+        }
 
         ArrayList<IDrawerItem> drawerAreas = new ArrayList<>();
 
@@ -155,6 +165,13 @@ public class FilesActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("openDrawer", false);
+        outState.putInt("selectedEcho", selectedEcho);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         String firstFecho = currentStation.file_echoareas.get(selectedEcho);
@@ -173,8 +190,17 @@ public class FilesActivity extends AppCompatActivity {
                 return false;
             }
         };
-        drawer.openDrawer();
         drawer.setSelection(selectedEcho);
+        if (shouldOpenDrawer) {
+            drawer.openDrawer();
+            shouldOpenDrawer = false;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if (savedInstance != null) onSaveInstanceState(savedInstance);
+        super.onPause();
     }
 
     @Override

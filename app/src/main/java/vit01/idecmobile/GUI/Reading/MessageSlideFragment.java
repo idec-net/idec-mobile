@@ -22,6 +22,7 @@ package vit01.idecmobile.GUI.Reading;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,6 +54,7 @@ import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IDECFunctions;
+import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
@@ -208,7 +210,10 @@ public class MessageSlideFragment extends Fragment {
             tostart.setVisible(false);
             toend.setVisible(false);
 
-            if (msgCount == 0) menu.findItem(R.id.action_save_in_file).setVisible(false);
+            if (msgCount == 0) {
+                menu.findItem(R.id.action_save_in_file).setVisible(false);
+                menu.findItem(R.id.action_share).setVisible(false);
+            }
         } else {
             IconicsDrawable startIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_first_page).actionBar().color(iconColor);
             IconicsDrawable endIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_last_page).actionBar().color(iconColor);
@@ -313,6 +318,23 @@ public class MessageSlideFragment extends Fragment {
                 } else {
                     Toast.makeText(activity, file.getAbsolutePath() + " " + getString(R.string.unable_to_write_error), Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.action_share:
+                String id = msglist.get(mPager.getCurrentItem());
+                IIMessage msg = GlobalTransport.transport.getMessage(id);
+                if (msg == null) break;
+
+                String text = "hash: " + id + "\n"
+                        + msg.echo + "\n"
+                        + msg.from + " -> " + msg.to + "\n["
+                        + msg.subj + "]\n\n" + msg.msg;
+
+                Intent shareText = new Intent();
+                shareText.setAction(Intent.ACTION_SEND);
+                shareText.putExtra(Intent.EXTRA_TEXT, text);
+                shareText.setType("text/plain");
+                startActivity(shareText);
+
                 break;
             case R.id.action_update_from_server:
                 final String __msgid = msglist.get(mPager.getCurrentItem());

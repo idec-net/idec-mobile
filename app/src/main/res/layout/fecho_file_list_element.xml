@@ -1,76 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fecho_file_clickable_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
-    android:paddingBottom="8dp"
+    android:orientation="horizontal"
+    android:paddingBottom="11dp"
     android:paddingLeft="@dimen/list_horizontal_margin"
-    android:paddingRight="@dimen/list_horizontal_margin"
-    android:paddingTop="8dp">
+    android:paddingTop="11dp">
 
-    <TextView
-        android:id="@+id/fecho_filename"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/fecho_action_button"
-        android:layout_toStartOf="@+id/fecho_action_button"
-        android:lines="1"
-        android:text="some_shit.jpg"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/material_text_subhead" />
+        android:layout_weight="5"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/fecho_address"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/fecho_filename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="some_shit.jpg"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/material_text_subhead" />
+
+        <TextView
+            android:id="@+id/fecho_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="tavern,1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/material_text_body2" />
+
+        <TextView
+            android:id="@+id/fecho_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="250"
+            android:maxLines="2"
+            android:text="Большой и длинный текст на много строк, в котором куча разных цитат, мыслей и всего такого"
+            android:textSize="@dimen/material_text_body1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="54dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/fecho_filename"
-        android:lines="1"
-        android:text="tavern,1"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/material_text_body2" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/fecho_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="false"
-        android:layout_below="@+id/fecho_address"
-        android:layout_toLeftOf="@+id/fecho_filesize"
-        android:layout_toStartOf="@+id/fecho_filesize"
-        android:maxLength="250"
-        android:maxLines="2"
-        android:text="Большой и длинный текст на много строк, в котором куча разных цитат, мыслей и всего такого"
-        android:textSize="@dimen/material_text_body1" />
+        <ImageView
+            android:id="@+id/fecho_action_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="11dp" />
 
-    <ImageView
-        android:id="@+id/fecho_action_button"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp" />
+        <TextView
+            android:id="@+id/fecho_filesize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="16dp"
+            android:text="925,16 Kib"
+            android:textAlignment="textStart"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/material_text_caption" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/fecho_filesize"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/fecho_action_button"
-        android:text="100Mib"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/material_text_caption" />
-
-</RelativeLayout>
+</LinearLayout>

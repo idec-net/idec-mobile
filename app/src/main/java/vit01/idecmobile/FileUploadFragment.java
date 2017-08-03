@@ -19,6 +19,7 @@
 
 package vit01.idecmobile;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -37,9 +38,11 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.InputStream;
 
 import vit01.idecmobile.Core.IDECFunctions;
+import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.prefs.Config;
 
 public class FileUploadFragment extends Fragment {
@@ -50,15 +53,17 @@ public class FileUploadFragment extends Fragment {
     Spinner stations_spinner;
 
     Uri input = null;
+    Uri input_action_send = null;
     long filesize = 0;
 
     public static FileUploadFragment newInstance() {
         return new FileUploadFragment();
     }
 
-    public static FileUploadFragment newInstance(String echo) {
+    public static FileUploadFragment newInstance(String echo, Uri chosen_uri) {
         FileUploadFragment fragm = new FileUploadFragment();
         fragm.fecho = echo;
+        fragm.input_action_send = chosen_uri;
         return fragm;
     }
 
@@ -111,6 +116,13 @@ public class FileUploadFragment extends Fragment {
                 IDECFunctions.getStationsNames());
         stations_spinner.setAdapter(spinnerAdapter);
         stations_spinner.setSelection(nodeindex);
+
+        if (input_action_send != null) {
+            handleFileChosen(input_action_send);
+            SimpleFunctions.debug("file was chosen");
+        } else {
+            SimpleFunctions.debug("File was not chosen, try to do by hand!");
+        }
     }
 
     public void chooseFile() {
@@ -126,7 +138,7 @@ public class FileUploadFragment extends Fragment {
         }
 
         String fecho = fechoarea.getText().toString().toLowerCase().replace(" ", "").trim();
-        String fname = edit_filename.getText().toString().toLowerCase().replace(" ", "").trim();
+        String fname = edit_filename.getText().toString().replace(" ", "").trim();
         String desc = description.getText().toString()
                 .replace("\r", " ").replace("\n", " ").trim();
 
@@ -147,29 +159,26 @@ public class FileUploadFragment extends Fragment {
         startActivity(startLoading);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode != 12) return;
+    public void handleFileChosen(Uri file_uri) {
+        Activity activity = getActivity();
 
-        if (data != null) {
-            Uri file_uri = data.getData();
-            ContentResolver cr = getActivity().getContentResolver();
+        String filename = "no_filename";
+        long size = 0;
+
+        if (file_uri.getScheme().compareTo("content") == 0) {
+            ContentResolver cr = activity.getContentResolver();
 
             String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
             Cursor metaCursor = cr.query(file_uri, projection, null, null, null);
             if (metaCursor != null) {
                 try {
                     if (metaCursor.moveToFirst()) {
-                        String filename = metaCursor.getString(0);
-                        if (filename.contains(":")) filename = filename.replace(":", ".");
-                        if (!filename.contains(".")) filename += ".bin";
-                        edit_filename.setText(filename);
+                        filename = metaCursor.getString(0);
                     }
                 } finally {
                     metaCursor.close();
                 }
             }
-
-            long size = 0;
 
             projection = new String[]{OpenableColumns.SIZE};
             metaCursor = cr.query(file_uri, projection, null, null, null);
@@ -183,19 +192,54 @@ public class FileUploadFragment extends Fragment {
                 }
             }
 
-            if (size > 0) {
-                try {
-                    InputStream is = cr.openInputStream(file_uri);
-                    input = file_uri;
-                    filesize = size;
-                    Toast.makeText(getActivity(),
-                            getString(R.string.file_chosen, edit_filename.getText()), Toast.LENGTH_SHORT).show();
-                    if (is != null) is.close();
-                } catch (Exception e) {
-                    Toast.makeText(getActivity(), getString(R.string.error_formatted,
-                            e.toString()), Toast.LENGTH_SHORT).show();
+            if (size <= 0) {
+                Cursor cursor = cr.query(file_uri, null, null, null, null);
+                if (cursor != null) {
+                    try {
+                        if (cursor.moveToFirst()) {
+                            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                            Uri filePathUri = Uri.parse(cursor.getString(column_index));
+                            filename = filePathUri.getLastPathSegment();
+                            size = new File(file_uri.getPath()).length();
+                            cursor.close();
+                        }
+                    } finally {
+                        cursor.close();
+                    }
                 }
             }
+        } else if (file_uri.getScheme().compareTo("file") == 0) {
+            filename = file_uri.getLastPathSegment();
+            size = new File(file_uri.getPath()).length();
+        } else {
+            filename += "_" + file_uri.getLastPathSegment();
+            size = new File(file_uri.getPath()).length();
+        }
+
+        if (filename.contains(":")) filename = filename.replace(":", ".");
+        if (!filename.contains(".")) filename += ".bin";
+        edit_filename.setText(filename);
+
+        if (size > 0) {
+            try {
+                InputStream is = activity.getContentResolver().openInputStream(file_uri);
+                input = file_uri;
+                filesize = size;
+                Toast.makeText(getActivity(),
+                        getString(R.string.file_chosen, edit_filename.getText()), Toast.LENGTH_SHORT).show();
+                if (is != null) is.close();
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), getString(R.string.error_formatted,
+                        e.toString()), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode != 12) return;
+
+        if (data != null) {
+            handleFileChosen(data.getData());
         }
     }
 }
