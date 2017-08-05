@@ -101,6 +101,7 @@
     <string name="notification_service_reload">Уведомления IDECMobile (пере)запущены</string>
     <string name="message_saved_to_file">Сообщение сохранено в файл</string>
     <string name="msgid_clipboard_done">id сообщения скопирован в буфер обмена</string>
+    <string name="fid_clipboard_done">id файла скопирован в буфер обмена</string>
     <string name="repto_clipboard_done">msgid ответа скопирован в буфер обмена</string>
     <string name="answered">Ответ: %s</string>
     <string name="new_messages">Новые сообщения: %d</string>
@@ -154,6 +155,7 @@
 
     <string name="confirm_delete_drafts">Удалить все черновики?</string>
     <string name="confirm_delete_sent">Удалить все отправленные?</string>
+    <string name="confirm_delete_file">Вы точно хотите удалить %s?</string>
 
     <string-array name="echo_menu_options">
         <item>В начало</item>
@@ -191,6 +193,13 @@
     <!-- File echoareas -->
     <string name="not_all_fields_specified">Надо заполнить все поля!</string>
     <string name="file_upload_success">Файл успешно выгружен</string>
+    <string name="file_download_success">Скачивание прошло успешно</string>
+    <string name="file_download_error">Ошибка скачивания!</string>
+    <string name="data_is_corrupted">Данные повреждены</string>
+    <string name="file_size_mismatch" formatted="false">Размер файла в памяти (%s) не совпадает с тем, что сообщил сервер (%s)</string>
+    <string name="open_file_anyway">Всё равно открыть</string>
+    <string name="file_show_description">Показать описание</string>
+    <string name="fid_clipboard_copy">Скопировать fid</string>
     <string name="upload_in_process" formatted="false">Загружаю: %s/%s</string>
     <string name="upload_percentage" formatted="false">Готово на %d%%</string>
 

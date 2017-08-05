@@ -45,6 +45,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/fecho_action_layout"
         android:layout_width="54dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">

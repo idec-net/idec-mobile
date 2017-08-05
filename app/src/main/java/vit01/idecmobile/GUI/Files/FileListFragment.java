@@ -20,6 +20,9 @@
 package vit01.idecmobile.GUI.Files;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,14 +33,17 @@ import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -70,6 +76,7 @@ public class FileListFragment extends Fragment {
     RecyclerView recyclerView;
     FileListFragment.MyAdapter mAdapter = null;
     RecyclerView.LayoutManager mLayoutManager;
+    int gotPosition = -1;
 
     public FileListFragment() {
     }
@@ -128,7 +135,7 @@ public class FileListFragment extends Fragment {
 
         // Восстанавливаем состояние фрагмента, если было показано окошко "здесь пусто"
         ViewGroup current = (RelativeLayout) getActivity().findViewById(R.id.filelist_view_layout);
-        if (current.findViewById(R.id.filelist_view) == null) {
+        if (current.findViewById(R.id.content_empty_layout) != null) {
             current.removeAllViews();
             current.removeAllViewsInLayout();
             recyclerView = new RecyclerView(current.getContext());
@@ -138,7 +145,9 @@ public class FileListFragment extends Fragment {
                     RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT));
             recyclerView.addItemDecoration(new DividerItemDecoration(current.getContext()));
             recyclerView.setHasFixedSize(true);
+            recyclerView.scrollToPosition(0);
             current.addView(recyclerView);
+            SimpleFunctions.debug("Empty view showed");
         }
         loadContent();
     }
@@ -187,9 +196,11 @@ public class FileListFragment extends Fragment {
         countMessages = tmp_countMessages;
         Collections.reverse(filelist);
 
-        int gotPosition = filelist.size() - 1;
+        if (gotPosition < 0 || gotPosition >= filelist.size()) {
+            gotPosition = 0;
+        }
 
-        mAdapter = new FileListFragment.MyAdapter(activity, recyclerView, filelist, GlobalTransport.transport,
+        mAdapter = new FileListFragment.MyAdapter(activity, this, recyclerView, filelist, GlobalTransport.transport,
                 echoarea, nodeIndex, gotPosition);
         recyclerView.setAdapter(mAdapter);
         recyclerView.scrollToPosition(gotPosition);
@@ -214,12 +225,14 @@ public class FileListFragment extends Fragment {
         int nodeIndex;
         boolean loading, isTablet;
         int primaryColor, secondaryColor, normalItemColor, selectedItemColor;
+        FileListFragment fragm;
         private ArrayList<String> msglist;
         private ArrayList<String> visible_msglist;
         private Handler handler;
         private Drawable downloadDrawable, deleteDrawable, fixDrawable;
 
         MyAdapter(Activity activity,
+                  FileListFragment fragment,
                   RecyclerView recyclerView,
                   ArrayList<String> hashes,
                   AbstractTransport db,
@@ -232,6 +245,7 @@ public class FileListFragment extends Fragment {
             echoarea = echo;
             callingActivity = activity;
             isTablet = SimpleFunctions.isTablet(callingActivity);
+            fragm = fragment;
 
             total_count = msglist.size();
 
@@ -305,31 +319,44 @@ public class FileListFragment extends Fragment {
                     .inflate(R.layout.fecho_file_list_element, parent, false);
 
             final LinearLayout l = (LinearLayout) v.findViewById(R.id.fecho_file_clickable_layout);
-            final ImageView actionBtn = (ImageView) l.findViewById(R.id.fecho_action_button);
+            final LinearLayout actionLayout = (LinearLayout) v.findViewById(R.id.fecho_action_layout);
 
             final FileListFragment.MyAdapter.ViewHolder holder = new FileListFragment.MyAdapter.ViewHolder(v);
 
             l.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = total_count - holder.position - 1;
+                    fragm.gotPosition = holder.getAdapterPosition();
+
                     if (holder.entry == null) return;
 
                     boolean exists = holder.exists;
                     boolean sizeCorrect = holder.sizeIsCorrect;
 
                     if (exists && sizeCorrect) {
-                        Intent openfile = new Intent();
-                        openfile.setAction(Intent.ACTION_VIEW);
-                        Uri fileUri = FileProvider.getUriForFile(
-                                callingActivity.getApplicationContext(), "vit01.idecmobile.provider", holder.entry.getLocalFile());
-                        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                                MimeTypeMap.getFileExtensionFromUrl(fileUri.toString()));
-                        openfile.setDataAndType(fileUri, mime);
-                        openfile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        callingActivity.startActivity(openfile);
+                        performOpenFile(holder);
                     } else if (exists && !sizeCorrect) {
-                        Toast.makeText(callingActivity, "Open anyway or redownload", Toast.LENGTH_SHORT).show();
+                        String serverReportedSize = holder.fecho_filesize.getText().toString();
+                        long fsize = holder.entry.getLocalFile().length();
+                        String localSize = Formatter.formatFileSize(callingActivity, fsize);
+                        if (serverReportedSize.equals(localSize)) localSize = String.valueOf(fsize);
+
+                        new AlertDialog.Builder(callingActivity)
+                                .setTitle(R.string.data_is_corrupted)
+                                .setMessage(callingActivity.getString(R.string.file_size_mismatch, localSize, serverReportedSize))
+                                .setPositiveButton(R.string.open_file_anyway, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        performOpenFile(holder);
+                                    }
+                                })
+                                .setNeutralButton(R.string.action_file_delete, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        performDeletion(holder);
+                                    }
+                                })
+                                .show();
                     } else if (!exists) {
                         Intent downloadFile = new Intent(callingActivity, ProgressActivity.class);
                         downloadFile.putExtra("task", "download_fp");
@@ -341,44 +368,57 @@ public class FileListFragment extends Fragment {
                 }
             });
 
-            l.setOnLongClickListener(new View.OnLongClickListener() {
+            l.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
-                public boolean onLongClick(View view) {
-                    // TODO: translate
-                    // add copy fid in clipboard
-                    new AlertDialog.Builder(callingActivity)
-                            .setPositiveButton(android.R.string.ok, null)
-                            .setTitle(holder.entry.filename)
-                            .setMessage("file id: " + holder.entry.id + "\n\n" + holder.entry.description)
-                            .show();
-                    return true;
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                    menu.add(R.string.file_show_description)
+                            .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    new AlertDialog.Builder(callingActivity)
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .setTitle(holder.entry.filename)
+                                            .setMessage(holder.entry.description)
+                                            .show();
+                                    return true;
+                                }
+                            });
+                    menu.add(R.string.fid_clipboard_copy)
+                            .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    ClipboardManager clipboard = (ClipboardManager)
+                                            callingActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newPlainText("idec file id", holder.fid);
+                                    clipboard.setPrimaryClip(clip);
+
+                                    Toast.makeText(callingActivity, R.string.fid_clipboard_done, Toast.LENGTH_SHORT).show();
+                                    return true;
+                                }
+                            });
+                    menu.add(R.string.action_share)
+                            .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    performShare(holder);
+                                    return true;
+                                }
+                            });
                 }
             });
 
-            actionBtn.setOnClickListener(new View.OnClickListener() {
+            actionLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (holder.exists && holder.sizeIsCorrect) {
                         new AlertDialog.Builder(callingActivity)
-                                .setTitle("Confirm file delete")
-                                .setMessage("Delete file " + holder.entry.filename + "?")
+                                .setTitle(R.string.action_file_delete)
+                                .setMessage(callingActivity.getString(
+                                        R.string.confirm_delete_file, holder.entry.filename))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                final boolean r = holder.entry.getLocalFile().delete();
-                                                callingActivity.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        notifyItemChanged(holder.getAdapterPosition());
-                                                        Toast.makeText(callingActivity,
-                                                                r ? "File was deleted" : "Error in file deletion", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-                                            }
-                                        }).start();
+                                        performDeletion(holder);
                                     }
                                 })
                                 .setNegativeButton(android.R.string.cancel, null)
@@ -388,6 +428,57 @@ public class FileListFragment extends Fragment {
             });
 
             return holder;
+        }
+
+        void performOpenFile(final FileListFragment.MyAdapter.ViewHolder holder) {
+            Intent openfile = new Intent();
+            openfile.setAction(Intent.ACTION_VIEW);
+            Uri fileUri = FileProvider.getUriForFile(
+                    callingActivity.getApplicationContext(), "vit01.idecmobile.provider", holder.entry.getLocalFile());
+            String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                    MimeTypeMap.getFileExtensionFromUrl(fileUri.toString()));
+            openfile.setDataAndType(fileUri, mime);
+            openfile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            callingActivity.startActivity(openfile);
+        }
+
+        void performShare(final FileListFragment.MyAdapter.ViewHolder holder) {
+            if (!holder.exists) {
+                Toast.makeText(callingActivity, R.string.no_file_warning, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Uri fileUri = FileProvider.getUriForFile(
+                    callingActivity.getApplicationContext(), "vit01.idecmobile.provider", holder.entry.getLocalFile());
+
+            Intent shareIntent = ShareCompat.IntentBuilder.from(callingActivity)
+                    .setType(callingActivity.getContentResolver().getType(fileUri))
+                    .setStream(fileUri)
+                    .getIntent();
+
+            shareIntent.setData(fileUri);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            if (shareIntent.resolveActivity(callingActivity.getPackageManager()) != null) {
+                callingActivity.startActivity(shareIntent);
+            } else Toast.makeText(callingActivity, R.string.error, Toast.LENGTH_SHORT).show();
+        }
+
+        void performDeletion(final FileListFragment.MyAdapter.ViewHolder holder) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final boolean r = holder.entry.getLocalFile().delete();
+                    callingActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyItemChanged(holder.getAdapterPosition());
+                            Toast.makeText(callingActivity,
+                                    r ? R.string.done : R.string.deletion_error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }).start();
         }
 
         @Override

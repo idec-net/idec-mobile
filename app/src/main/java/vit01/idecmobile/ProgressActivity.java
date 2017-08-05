@@ -429,9 +429,9 @@ public class ProgressActivity extends AppCompatActivity {
                 boolean successful = fetcher.fecho_download(this, station, file_entry.fecho, fid, file_entry.getLocalFile());
 
                 if (successful && file_entry.localSizeIsCorrect()) {
-                    resultstr += "File was downloaded successfully";
+                    resultstr += getString(R.string.file_download_success);
                 } else {
-                    resultstr += "ERROR DOWNLOADING";
+                    resultstr += getString(R.string.file_download_error);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
