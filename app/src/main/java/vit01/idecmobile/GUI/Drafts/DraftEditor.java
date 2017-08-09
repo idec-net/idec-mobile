@@ -69,6 +69,12 @@ public class DraftEditor extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
         SimpleFunctions.setActivityTitle(this, getString(R.string.action_compose));
