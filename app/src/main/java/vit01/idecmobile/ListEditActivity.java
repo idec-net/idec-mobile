@@ -136,6 +136,7 @@ public class ListEditActivity extends AppCompatActivity {
             @Override
             public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 viewBeingCleared = true;
+                super.clearView(recyclerView, viewHolder);
             }
 
             @Override
@@ -220,7 +221,8 @@ public class ListEditActivity extends AppCompatActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String gotText = echoEdit.getText().toString().trim();
+                        String gotText = echoEdit.getText().toString()
+                                .replace(" ", "").toLowerCase().trim();
                         if (!gotText.equals("")) {
                             contents.set(echoPosition, gotText);
                             contents_adapter.notifyItemChanged(echoPosition);
