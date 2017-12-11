@@ -17,15 +17,13 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Files;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -50,7 +48,10 @@ import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
-import vit01.idecmobile.GUI.Files.FileListFragment;
+import vit01.idecmobile.ListEditActivity;
+import vit01.idecmobile.R;
+import vit01.idecmobile.SearchActivity;
+import vit01.idecmobile.SearchAdvancedFragment;
 import vit01.idecmobile.gui_helpers.OnSwipeTouchListener;
 import vit01.idecmobile.prefs.Config;
 
@@ -68,6 +69,9 @@ public class FilesActivity extends AppCompatActivity {
     int selectedEcho = 0;
     boolean shouldOpenDrawer = true;
     Bundle savedInstance;
+
+    String sortOptions[] = new String[]{"number desc", "number asc", "filename desc", "filename asc",
+            "serversize desc", "serversize asc"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,7 @@ public class FilesActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             selectedEcho = savedInstanceState.getInt("selectedEcho");
             if (selectedEcho >= currentStation.file_echoareas.size()) selectedEcho = 0;
+
             shouldOpenDrawer = savedInstanceState.getBoolean("openDrawer");
             savedInstance = savedInstanceState;
         }
@@ -131,7 +136,7 @@ public class FilesActivity extends AppCompatActivity {
                             String number = ((PrimaryDrawerItem) drawerItem).getBadge().getText();
 
                             SimpleFunctions.setActivityTitle(FilesActivity.this, fecho + " (" + number + ")");
-                            filelist.initFEchoView(fecho, null, nodeindex);
+                            filelist.initFEchoView(fecho, null, nodeindex, sortOptions[Config.values.fecho_sort_type]);
                             selectedEcho = itemId;
                         }
                         return false;
@@ -145,7 +150,7 @@ public class FilesActivity extends AppCompatActivity {
             drawer = drawerBuilder.withToolbar(toolbar).build();
         }
 
-        advsearch = SearchAdvancedFragment.newInstance();
+        // advsearch = SearchAdvancedFragment.newInstance();
         ExternalStorage.initStorage();
     }
 
@@ -176,7 +181,7 @@ public class FilesActivity extends AppCompatActivity {
         super.onResume();
         String firstFecho = currentStation.file_echoareas.get(selectedEcho);
         filelist = (FileListFragment) getSupportFragmentManager().findFragmentById(R.id.filelist_fragment);
-        filelist.initFEchoView(firstFecho, null, nodeindex);
+        filelist.initFEchoView(firstFecho, null, nodeindex, sortOptions[Config.values.fecho_sort_type]);
 
         SimpleFunctions.setActivityTitle(this, firstFecho + " (" + GlobalTransport.transport.countFiles(firstFecho) + ")");
 
@@ -205,15 +210,19 @@ public class FilesActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_echoview, menu);
+        getMenuInflater().inflate(R.menu.menu_fechoes, menu);
 
         int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItem sortItem = menu.findItem(R.id.sorting);
+        sortItem.setIcon(
+                new IconicsDrawable(getApplicationContext(), GoogleMaterial.Icon.gmd_sort)
+                        .actionBar().color(iconColor));
 
-        menu.findItem(R.id.action_mark_all_read).setVisible(false);
-        menu.findItem(R.id.action_display_unread_only).setVisible(false);
+        // TODO: make search reality
+
+        /*SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
 
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -254,9 +263,27 @@ public class FilesActivity extends AppCompatActivity {
                 invalidateOptionsMenu();
                 return true;
             }
-        });
+        });*/
 
         return true;
+    }
+
+    public int returnSortOrder(int id) {
+        switch (id) {
+            case R.id.sort_date_desc:
+                return 0;
+            case R.id.sort_date_asc:
+                return 1;
+            case R.id.sort_name_desc:
+                return 2;
+            case R.id.sort_name_asc:
+                return 3;
+            case R.id.sort_size_desc:
+                return 4;
+            case R.id.sort_size_asc:
+                return 5;
+        }
+        return 1;
     }
 
     @Override
@@ -270,6 +297,19 @@ public class FilesActivity extends AppCompatActivity {
             case R.id.action_advancedsearch:
                 advsearch.show(fm, advsearch.getTag());
                 return true;
+            case R.id.sorting:
+                return true;
+            default:
+                Config.values.fecho_sort_type = returnSortOrder(id);
+                item.setChecked(true);
+                String fecho = currentStation.file_echoareas.get(selectedEcho);
+                filelist.initFEchoView(fecho, null, nodeindex, sortOptions[Config.values.fecho_sort_type]);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Config.writeConfig(getApplicationContext());
+                    }
+                }).start();
         }
 
         return super.onOptionsItemSelected(item);

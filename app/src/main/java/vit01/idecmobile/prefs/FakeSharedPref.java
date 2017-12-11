@@ -19,6 +19,7 @@
 
 package vit01.idecmobile.prefs;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
@@ -30,7 +31,12 @@ import java.util.Set;
 import vit01.idecmobile.Core.SimpleFunctions;
 
 public class FakeSharedPref implements SharedPreferences {
-    SharedPreferences.OnSharedPreferenceChangeListener listener = null;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener = null;
+    private Context context;
+
+    public FakeSharedPref(Context configContext) {
+        context = configContext;
+    }
 
     @Nullable
     @Override
@@ -136,7 +142,7 @@ public class FakeSharedPref implements SharedPreferences {
     }
 
 
-    public class SharedPrefEditor implements SharedPreferences.Editor {
+    private class SharedPrefEditor implements SharedPreferences.Editor {
         @Override
         public SharedPreferences.Editor putString(String s, String s1) {
             switch (s) {
@@ -255,7 +261,7 @@ public class FakeSharedPref implements SharedPreferences {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Config.writeConfig(null);
+                    Config.writeConfig(context);
                 }
             }).start();
 

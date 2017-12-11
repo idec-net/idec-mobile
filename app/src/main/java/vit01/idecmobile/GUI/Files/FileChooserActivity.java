@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Files;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.R;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 import vit01.idecmobile.prefs.Config;
 

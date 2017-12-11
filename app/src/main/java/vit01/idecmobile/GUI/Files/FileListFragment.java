@@ -77,6 +77,7 @@ public class FileListFragment extends Fragment {
     FileListFragment.MyAdapter mAdapter = null;
     RecyclerView.LayoutManager mLayoutManager;
     int gotPosition = -1;
+    String sortType;
 
     public FileListFragment() {
     }
@@ -128,10 +129,11 @@ public class FileListFragment extends Fragment {
         }
     }
 
-    public void initFEchoView(String echo, ArrayList<String> msgids, int nIndex) {
+    public void initFEchoView(String echo, ArrayList<String> msgids, int nIndex, String sort) {
         echoarea = echo;
         filelist = msgids;
         nodeIndex = nIndex;
+        sortType = sort;
 
         // Восстанавливаем состояние фрагмента, если было показано окошко "здесь пусто"
         ViewGroup current = (RelativeLayout) getActivity().findViewById(R.id.filelist_view_layout);
@@ -175,7 +177,7 @@ public class FileListFragment extends Fragment {
         // Зануляем fid, см. MessageListFragment
 
         if (filelist == null) {
-            tmp_filelist = GlobalTransport.transport.getFileList(echoarea, 0, 0, "number");
+            tmp_filelist = GlobalTransport.transport.getFileList(echoarea, 0, 0, sortType);
             currentIntent.putExtra("filelist", tmp_filelist);
             activity.setIntent(currentIntent);
         } else {
@@ -210,7 +212,10 @@ public class FileListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (countMessages <= 1) menu.findItem(R.id.action_search).setVisible(false);
+        if (countMessages <= 1) {
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            if (searchItem != null) searchItem.setVisible(false);
+        }
 
         super.onCreateOptionsMenu(menu, inflater);
     }

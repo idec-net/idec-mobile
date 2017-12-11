@@ -17,7 +17,7 @@
  * along with IDEC Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vit01.idecmobile;
+package vit01.idecmobile.GUI.Files;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -43,6 +43,8 @@ import java.io.InputStream;
 
 import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.ProgressActivity;
+import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
 public class FileUploadFragment extends Fragment {

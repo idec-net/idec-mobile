@@ -61,6 +61,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public SharedPreferences getSharedPreferences(String filename, int id) {
-        return new FakeSharedPref();
+        return new FakeSharedPref(getApplicationContext());
     }
 }

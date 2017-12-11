@@ -74,6 +74,8 @@ import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
 import vit01.idecmobile.GUI.Drafts.DraftsView;
+import vit01.idecmobile.GUI.Files.FilesActivity;
+import vit01.idecmobile.GUI.ManageDatabase.ManageDatabaseActivity;
 import vit01.idecmobile.GUI.Reading.EchoReaderActivity;
 import vit01.idecmobile.GUI.Reading.MessageListFragment;
 import vit01.idecmobile.GUI.Settings.SettingsActivity;
@@ -104,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Config.values == null) Config.loadConfig(this);
-        else Config.lastContext = this;
+        if (Config.values == null) Config.loadConfig(getApplicationContext());
+        else Config.lastContext = getApplicationContext();
 
         setTheme(Config.appTheme);
         currentTheme = Config.appTheme;
@@ -191,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName(R.string.update).withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);
         PrimaryDrawerItem infoItem = new PrimaryDrawerItem().withIdentifier(12).withName(R.string.build_date).withIcon(GoogleMaterial.Icon.gmd_info).withSelectable(false);
         PrimaryDrawerItem fechoItem = new PrimaryDrawerItem().withIdentifier(13).withName(R.string.file_echoareas).withIcon(GoogleMaterial.Icon.gmd_folder_shared).withSelectable(false);
+        PrimaryDrawerItem manageDbItem = new PrimaryDrawerItem().withIdentifier(14).withName(R.string.additional).withIcon(GoogleMaterial.Icon.gmd_extension).withSelectable(false);
 
         DrawerBuilder drawerBuilder = new DrawerBuilder()
                 .withActivity(this)
@@ -207,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                         offlineItem,
                         fechoItem,
                         extItem,
+                        manageDbItem,
                         new DividerDrawerItem(),
                         settingsItem,
                         helpItem,
@@ -278,6 +282,10 @@ public class MainActivity extends AppCompatActivity {
                                 Intent fechoesIntent = new Intent(MainActivity.this, FilesActivity.class);
                                 fechoesIntent.putExtra("nodeindex", Config.currentSelectedStation);
                                 startActivity(fechoesIntent);
+                                break;
+                            case 14:
+                                Intent manageDbIntent = new Intent(MainActivity.this, ManageDatabaseActivity.class);
+                                startActivity(manageDbIntent);
                                 break;
                         }
                         return false;

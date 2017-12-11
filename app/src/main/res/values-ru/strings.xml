@@ -144,6 +144,14 @@
     <string name="answer_to">Ответ на</string>
     <string name="message">Сообщение</string>
 
+    <string name="sorting">Сортировка</string>
+    <string name="sort_date_desc">Новые сверху</string>
+    <string name="sort_date_asc">Старые сверху</string>
+    <string name="sort_name_asc">По имени файла</string>
+    <string name="sort_name_desc">По имени (в обратном порядке)</string>
+    <string name="sort_size_asc">По размеру (мелкие наверху)</string>
+    <string name="sort_size_desc">По размеру (наоборот)</string>
+
     <string name="drafts_cache">Кэш проверки черновиков</string>
     <string name="echo_positions">Кэш позиций</string>
 

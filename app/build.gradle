@@ -2,7 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
+    flavorDimensions "default"
 
     defaultConfig {
         applicationId "vit01.idecmobile"
@@ -23,8 +24,8 @@ android {
         }
         debugapk {
             def buildVersionName = {
-                def date = new Date().toString();
-                return date;
+                def date = new Date().toString()
+                return date
             }
 
             versionName buildVersionName()
@@ -45,9 +46,12 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'info.guardianproject.netcipher:netcipher:1.2'
     compile 'org.sufficientlysecure:openpgp-api:12.0'
     compile 'ch.acra:acra:4.9.2'
+    compile 'com.jakewharton:butterknife:8.8.1'
     testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

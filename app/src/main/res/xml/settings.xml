@@ -113,4 +113,13 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/client_config">
+        <Preference
+            android:key="config_import"
+            android:title="@string/action_config_import" />
+        <Preference
+            android:key="config_export"
+            android:title="@string/action_config_export" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

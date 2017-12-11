@@ -40,6 +40,7 @@ public class GlobalConfig implements Serializable {
             sortByDate = true,
             openUnreadAfterFetch = false;
     public int
+            fecho_sort_type = 0,
             oneRequestLimit = 20,
             connectionTimeout = 20,
             carbon_limit = 50, // максимальное количество сообщений в карбонке

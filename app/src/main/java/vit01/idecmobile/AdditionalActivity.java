@@ -48,11 +48,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,12 +58,13 @@ import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.Blacklist;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.Fetcher;
-import vit01.idecmobile.Core.GlobalConfig;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
+import vit01.idecmobile.GUI.Files.FileChooserActivity;
+import vit01.idecmobile.GUI.Files.FileUploadFragment;
 import vit01.idecmobile.prefs.Config;
 
 public class AdditionalActivity extends AppCompatActivity {
@@ -123,44 +121,6 @@ public class AdditionalActivity extends AppCompatActivity {
                 intent.putExtra("task", "import_bundle");
                 intent.putExtra("file", file);
                 startActivity(intent);
-            } else if (requestCode == 3) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String result;
-                        if (!file.exists() || !file.canRead())
-                            result = getString(R.string.no_file_warning);
-                        else {
-                            if (file.length() > (1024 * 1024))
-                                result = getString(R.string.config_very_big);
-                            else {
-                                try {
-                                    FileInputStream is = new FileInputStream(file);
-                                    ObjectInputStream ois = new ObjectInputStream(is);
-                                    Config.values = (GlobalConfig) ois.readObject();
-                                    ois.close();
-                                    is.close();
-                                    Config.configUpdate(getApplicationContext());
-                                    result = getString(R.string.done);
-                                } catch (Exception e) {
-                                    result = getString(R.string.config_not_found) + ": " + e.toString();
-                                    SimpleFunctions.debug(result);
-                                    e.printStackTrace();
-
-                                    Config.loadConfig(getApplicationContext());
-                                }
-                                Config.writeConfig(getApplicationContext());
-                            }
-                        }
-                        final String finalResult = result;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(AdditionalActivity.this, finalResult, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }).start();
             }
         }
     }
@@ -403,54 +363,6 @@ public class AdditionalActivity extends AppCompatActivity {
                     intent.putExtra("file", target);
                     intent.putExtra("echoareas", echoareas);
                     startActivity(intent);
-                }
-            });
-
-            Button importConfig = (Button) rootView.findViewById(R.id.additional_database_import_config);
-            importConfig.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Activity callingActivity = getActivity();
-                    callingActivity.startActivityForResult(new Intent(callingActivity, FileChooserActivity.class), 3);
-                }
-            });
-
-            Button exportConfig = (Button) rootView.findViewById(R.id.additional_database_export_config);
-            exportConfig.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ExternalStorage.initStorage();
-                            String result;
-                            try {
-                                File toExport = new File(ExternalStorage.rootStorage.getParentFile(), "idecConfig_" + String.valueOf(System.currentTimeMillis()) + ".obj");
-                                if (!toExport.exists() && !toExport.createNewFile())
-                                    throw new IOException(getString(R.string.create_file_error) + " " + toExport.getAbsolutePath());
-
-                                FileOutputStream os = new FileOutputStream(toExport);
-                                ObjectOutputStream oos = new ObjectOutputStream(os);
-                                oos.writeObject(Config.values);
-                                oos.close();
-                                os.close();
-
-                                result = getString(R.string.config_saved) + " " + toExport.getAbsolutePath();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                SimpleFunctions.debug(e.toString());
-                                result = getString(R.string.error_formatted, e.toString());
-                            }
-
-                            final String finalResult = result;
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getActivity(), finalResult, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }).start();
                 }
             });
 

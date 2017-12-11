@@ -574,7 +574,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
         return cv;
     }
 
-    public FEchoFile parseFileEntry(Cursor cursor) {
+    private FEchoFile parseFileEntry(Cursor cursor) {
         FEchoFile entry = new FEchoFile();
 
         entry.id = cursor.getString(cursor.getColumnIndex("id"));
@@ -665,7 +665,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
         } else limitstr = null;
 
         Cursor cursor = db.query(true, filesTableName, new String[]{"id", "number"}, "fecho = ?",
-                new String[]{fecho}, null, null, "number", limitstr);
+                new String[]{fecho}, null, null, sort, limitstr);
 
         return fetch_rows(cursor);
     }
@@ -737,7 +737,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
     }
 
 
-    public ArrayList<String> fidsBySelection(String selection_block, String sort, String limit) {
+    private ArrayList<String> fidsBySelection(String selection_block, String sort, String limit) {
         SQLiteDatabase db = getDb();
 
         if (sort == null) sort = "";
@@ -775,8 +775,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
         return fidsBySelection(clause_part, "number", null);
     }
 
-    // TODO: file index fetcher
+    // TODO: get fechoarea full contents
     // TODO: progressActivity downloading
     // TODO: files search (filter)
-    // TODO: files share menu popup
 }

@@ -104,33 +104,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/start" />
-
-        <TextView
-            style="@style/AppTheme.MyCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/client_config" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/additional_database_import_config"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/action_config_import" />
-
-            <Button
-                android:id="@+id/additional_database_export_config"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/action_config_export" />
-        </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

@@ -114,8 +114,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".GUI.Drafts.DraftsView" />
-        <activity android:name=".FilesActivity" />
-        <activity android:name=".FileChooserActivity" />
+        <activity android:name=".GUI.Files.FilesActivity" />
+        <activity android:name=".GUI.Files.FileChooserActivity" />
         <activity
             android:name=".SearchActivity"
             android:label="Поиск сообщений"
@@ -133,6 +133,7 @@
         <activity
             android:name=".bugreports.CrashReportActivity"
             android:theme="@style/Theme.AppCompat" />
+        <activity android:name=".GUI.ManageDatabase.ManageDatabaseActivity" />
 
         <receiver android:name=".notify.boot_completed_receiver">
             <intent-filter>

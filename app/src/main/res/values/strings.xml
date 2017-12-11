@@ -147,6 +147,14 @@
     <string name="answer_to">Reply to</string>
     <string name="message">Message</string>
 
+    <string name="sorting">Sort</string>
+    <string name="sort_date_asc">Latest at the top</string>
+    <string name="sort_date_desc">Old ones at the top</string>
+    <string name="sort_name_asc">Sort by name</string>
+    <string name="sort_name_desc">Sort by name (descending)</string>
+    <string name="sort_size_asc">By size (ascending)</string>
+    <string name="sort_size_desc">By size (descending)</string>
+
     <string name="drafts_cache">Drafts validation cache</string>
     <string name="echo_positions">Read-Positions Cache</string>
 
@@ -399,4 +407,12 @@
     <string name="settings_proxy_address_summary">String format: user:pass@host:port. Orbot usually uses port 8118, i2p prefers 4444</string>
     <string name="settings_tor">Tor integration</string>
     <string name="settings_tor_summary">Start Orbot automatically</string>
+
+    <!-- Additional options -->
+    <string name="manage_choose"></string>
+    <string name="manage_messages_db">Cообщения</string>
+    <string name="manage_files_db">Файлы</string>
+    <string name="manage_cache">Кэшированные данные</string>
+
+
 </resources>
