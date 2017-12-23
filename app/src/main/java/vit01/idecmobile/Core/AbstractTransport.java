@@ -101,6 +101,8 @@ public interface AbstractTransport {
     ArrayList<String> fileSearchQuery(List<String> fechoes, List<String> filenames,
                                       List<String> addresses, String descriptionKey);
 
+    ArrayList<String> searchSimilarMsgids(String msgidKey);
+
     class echoStat {
         public int total_count = 0, unread_count = 0;
         echoStat(int total, int unread) {

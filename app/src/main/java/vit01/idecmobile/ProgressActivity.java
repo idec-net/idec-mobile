@@ -38,6 +38,8 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -285,8 +287,10 @@ public class ProgressActivity extends AppCompatActivity {
                     else error_flag++;
                 }
             } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
                 e.printStackTrace();
-                SimpleFunctions.debug(getString(R.string.error_formatted, e.toString()));
+                SimpleFunctions.debug(getString(R.string.error_formatted, sw.toString()));
                 error_flag++;
             } finally {
                 final int finalFetched = fetchedCount;

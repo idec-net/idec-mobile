@@ -20,6 +20,7 @@
 package vit01.idecmobile.gui_helpers;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -37,7 +38,12 @@ public class OpenLinkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String ii_link = getIntent().getData().getHost();
+        Uri ii_link_data = getIntent().getData();
+        if (ii_link_data == null) {
+            finish();
+            return;
+        }
+        String ii_link = ii_link_data.getHost();
 
         if (ii_link.contains(".")) {
             // значит это эха!
@@ -49,10 +55,18 @@ public class OpenLinkActivity extends AppCompatActivity {
         } else {
             // иначе сообщение
             Intent intent = new Intent(OpenLinkActivity.this, EchoReaderActivity.class);
-            AbstractTransport transport = GlobalTransport.transport;
+            AbstractTransport transport = GlobalTransport.transport();
 
             IIMessage message = transport.getMessage(ii_link);
-            if (message == null) message = new IIMessage();
+            if (message == null) {
+                ArrayList<String> trySearch = transport.searchSimilarMsgids(ii_link);
+                if (trySearch == null || trySearch.size() == 0) {
+                    message = new IIMessage();
+                } else {
+                    ii_link = trySearch.get(0);
+                    message = transport.getMessage(ii_link);
+                }
+            }
 
             // Если сообщения в базе нет, то выдаётся "ненастоящая" эха no.echo.
             // Иначе имеет смысл загрузить эху и показать сообщение внутри неё

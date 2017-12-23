@@ -775,7 +775,11 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
         return fidsBySelection(clause_part, "number", null);
     }
 
+    public ArrayList<String> searchSimilarMsgids(String msgidKey) {
+        // used for lowercase msgid resolving
+        return msgidsBySelection("id like '%" + msgidKey + "%'", "number", null);
+    }
+
     // TODO: get fechoarea full contents
-    // TODO: progressActivity downloading
     // TODO: files search (filter)
 }

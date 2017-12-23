@@ -737,7 +737,9 @@ public class Fetcher {
                     lastEcho = element;
                     remoteParsedFEchoes.put(lastEcho, new ArrayList<FEchoFile>());
                 } else {
-                    remoteParsedFEchoes.get(lastEcho).add(new FEchoFile(element));
+                    FEchoFile elemFile = new FEchoFile(element);
+                    if (elemFile.id != null)
+                        remoteParsedFEchoes.get(lastEcho).add(elemFile);
                 }
             }
         }
@@ -759,6 +761,7 @@ public class Fetcher {
         Hashtable<String, FEchoFile> result = new Hashtable<>();
         for (String echo : input.keySet()) {
             for (FEchoFile entry : input.get(echo)) {
+                if (entry.id == null) continue;
                 result.put(entry.id, entry);
             }
         }
