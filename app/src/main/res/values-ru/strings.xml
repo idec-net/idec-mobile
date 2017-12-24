@@ -272,6 +272,9 @@
     <string name="fetcher_dl_messages">Скачиваем сообщения</string>
     <string name="fetcher_save_in_db">Сохраняем в базу</string>
 
+    <string name="fetcher_load_file_index">Получаем файловый индекс</string>
+    <string name="fetcher_load_file_database">Загрузка локальной БД файлов</string>
+
     <string name="fetcher_bundle_get_error">Ошибка получения бандла сообщений. Проверь интернет</string>
     <string name="fetcher_bundle_parse_error">Ошибка: повреждённый бандл сообщения</string>
 

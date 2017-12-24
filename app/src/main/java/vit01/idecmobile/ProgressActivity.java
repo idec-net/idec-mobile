@@ -258,6 +258,7 @@ public class ProgressActivity extends AppCompatActivity {
 
             ArrayList<String> fetched;
             int fetchedCount = 0;
+            int fetchedFilesCount = 0;
             int error_flag = 0;
 
             try {
@@ -287,6 +288,8 @@ public class ProgressActivity extends AppCompatActivity {
                     if (station.fecho_support) {
                         ArrayList<String> fetched_files = fetcher.fetch_files
                                 (station, station.file_echoareas, Config.values.connectionTimeout);
+                        if (fetched_files != null)
+                            fetchedFilesCount += fetched_files.size();
                     }
 
                     if (fetched != null) fetchedCount += fetched.size();
@@ -300,6 +303,7 @@ public class ProgressActivity extends AppCompatActivity {
                 error_flag++;
             } finally {
                 final int finalFetched = fetchedCount;
+                final int finalFetchedFiles = fetchedFilesCount;
                 final int finalErrorFlag = error_flag;
 
                 runOnUiThread(new Runnable() {
@@ -327,6 +331,10 @@ public class ProgressActivity extends AppCompatActivity {
                                 unreadIntent.putExtra("echoarea", "_unread");
                                 startActivity(unreadIntent);
                             }
+                        }
+
+                        if (finalFetchedFiles > 0) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.files_got, finalFetchedFiles), Toast.LENGTH_LONG).show();
                         }
                     }
                 });

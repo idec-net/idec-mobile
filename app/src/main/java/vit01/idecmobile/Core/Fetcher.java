@@ -45,7 +45,8 @@ public class Fetcher {
     private AbstractTransport transport;
     private ArrayList<String> emptyList;
     private Context context;
-    private String str_load_index, str_load_db, str_load_messages, str_save_in_db;
+    private String str_load_index, str_load_db, str_load_messages, str_save_in_db,
+            str_load_file_index, str_load_file_db;
 
     public Fetcher(Context mCont, AbstractTransport db) {
         transport = db;
@@ -58,6 +59,10 @@ public class Fetcher {
         str_load_db = mCont.getString(R.string.fetcher_load_database);
         str_load_messages = mCont.getString(R.string.fetcher_dl_messages);
         str_save_in_db = mCont.getString(R.string.fetcher_save_in_db);
+
+        str_load_file_index = mCont.getString(R.string.fetcher_load_file_index);
+        str_load_file_db = mCont.getString(R.string.fetcher_load_file_database);
+
     }
 
     public static ArrayList<String> xfile_list_download(Context context, Station station) {
@@ -563,20 +568,19 @@ public class Fetcher {
             bottomOffset = fetch_limit;
             String offset = String.valueOf(bottomOffset);
 
-            // TODO: change strings
-            SimpleFunctions.pretty_debug(str_load_index + " (" + String.valueOf(offset) + ")");
+            SimpleFunctions.pretty_debug(str_load_file_index + " (" + String.valueOf(offset) + ")");
             echoBundle = Network.getFile(context,
                     address + "f/e/" + TextUtils.join("/", echoesToFetch) +
                             "/-" + offset + ":" + offset, null, timeout);
         } else {
-            SimpleFunctions.pretty_debug(str_load_index);
+            SimpleFunctions.pretty_debug(str_load_file_index);
             echoBundle = Network.getFile(context,
                     address + "f/e/" + TextUtils.join("/", echoesToFetch), null, timeout);
         }
 
         Hashtable<String, ArrayList<String>> localIndex = new Hashtable<>();
 
-        SimpleFunctions.pretty_debug(str_load_db);
+        SimpleFunctions.pretty_debug(str_load_file_db);
         for (String echo : echoesToFetch) {
             SimpleFunctions.debug("Loading local fecho " + echo);
 
@@ -616,7 +620,7 @@ public class Fetcher {
 
         while (nextfetch.size() > 0) {
             bottomOffset += fetch_limit;
-            SimpleFunctions.pretty_debug(str_load_index + " file (" + String.valueOf(bottomOffset) + ")");
+            SimpleFunctions.pretty_debug(str_load_file_index + " file (" + String.valueOf(bottomOffset) + ")");
             echoBundle = Network.getFile(context, address + "f/e/"
                             + TextUtils.join("/", nextfetch) + "/-"
                             + String.valueOf(bottomOffset) + ":" + String.valueOf(fetch_limit),

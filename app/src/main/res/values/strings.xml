@@ -289,6 +289,9 @@
     <string name="fetcher_dl_messages">Fetching messages</string>
     <string name="fetcher_save_in_db">Saving into database</string>
 
+    <string name="fetcher_load_file_index">Fetching file index</string>
+    <string name="fetcher_load_file_database">Loading local file db</string>
+
     <string name="fetcher_bundle_get_error">Error getting messages bundle. Check your internet connection</string>
     <string name="fetcher_bundle_parse_error">Error: corrupted message bundle</string>
 
