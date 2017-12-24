@@ -383,7 +383,7 @@ public class StationsActivity extends AppCompatActivity {
             pervasive_ue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b && download_all_warning) {
+                    if (b && download_all_warning && !station.pervasive_ue) {
                         download_all_warning = false;
 
                         new AlertDialog.Builder(getContext())
