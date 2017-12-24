@@ -328,12 +328,30 @@ public class MainActivity extends AppCompatActivity {
 
         String task = getIntent().getStringExtra("task");
 
-        if (task != null && task.equals("fetch")) {
-            Intent fetcher = new Intent(MainActivity.this, ProgressActivity.class);
-            fetcher.putExtra("task", "fetch");
-            startActivity(fetcher);
+        if (task != null) {
+            switch (task) {
+                case "fetch":
+                    Intent fetcher = new Intent(MainActivity.this, ProgressActivity.class);
+                    fetcher.putExtra("task", "fetch");
+                    startActivity(fetcher);
 
-            workerJob.lastDifference = null; // чистим данные уведомлений, сбрасывая счётчик непрочитанных
+                    workerJob.lastDifference = null; // чистим данные уведомлений, сбрасывая счётчик непрочитанных
+                    break;
+                case "unread":
+                    Intent unreadIntent = new Intent(MainActivity.this, EchoReaderActivity.class);
+                    unreadIntent.putExtra("echoarea", "_unread");
+                    startActivity(unreadIntent);
+
+                    workerJob.lastFetched = 0; // сброс счётчика полученных для уведомлений
+                    break;
+                case "files":
+                    Intent fechoesIntent = new Intent(MainActivity.this, FilesActivity.class);
+                    fechoesIntent.putExtra("nodeindex", Config.currentSelectedStation);
+                    startActivity(fechoesIntent);
+
+                    workerJob.lastFetchedFiles = 0; // опять для уведомлений
+                    break;
+            }
             setIntent(new Intent()); // убиваем это дело, чтобы после поворота экрана снова не запустился фетчер
         }
 

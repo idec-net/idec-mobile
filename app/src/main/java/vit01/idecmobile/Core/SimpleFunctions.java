@@ -60,6 +60,7 @@ public class SimpleFunctions {
     public static Queue<String> debugMessages = new LinkedList<>();
     public static Queue<String> prettyDebugMessages = new LinkedList<>();
     public static boolean debugTaskFinished = true;
+    public static boolean backgroundFetcherRunning = false;
     public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), HH:mm", Locale.getDefault());
     public static Pattern quote_pattern = Pattern.compile("(^\\s?[\\w_.а-яА-Я0-9()\\-]{0,20})((>)+)(.+$)",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);

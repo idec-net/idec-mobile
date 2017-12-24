@@ -79,6 +79,12 @@ public class ProgressActivity extends AppCompatActivity {
 
         switch (task) {
             case "fetch":
+                if (SimpleFunctions.backgroundFetcherRunning) {
+                    Toast.makeText(this, getString(R.string.close_window_background_fetch),
+                            Toast.LENGTH_SHORT).show();
+                    finishTask();
+                    return;
+                }
                 progressBar.setIndeterminate(true);
                 new Thread(new doFetch()).start();
                 break;

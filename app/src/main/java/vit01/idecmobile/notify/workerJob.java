@@ -31,10 +31,16 @@ import android.os.StrictMode;
 import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import vit01.idecmobile.Core.Fetcher;
+import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.Network;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.Core.Station;
@@ -43,11 +49,23 @@ import vit01.idecmobile.prefs.Config;
 
 public class workerJob extends BroadcastReceiver {
     public static Hashtable<String, Integer> lastDifference = null;
+    public static int lastFetched = 0;
+    public static int lastFetchedFiles = 0;
+
     long[] vibrate_pattern = {1000, 1000};
     boolean vibrate = false;
 
-    public static int getNotificationID() {
-        return 42;
+    public static int getNotificationID(String task) {
+        switch (task) {
+            case "fetch":
+                return 42;
+            case "unread":
+                return 42;
+            case "files":
+                return 228;
+            default:
+                return 42;
+        }
     }
 
     @Override
@@ -57,7 +75,19 @@ public class workerJob extends BroadcastReceiver {
         StrictMode.setThreadPolicy(policy);
 
         if (intent.getAction() != null && intent.getAction().equals("notify_cancel")) {
-            lastDifference = null;
+            String task = intent.getStringExtra("task");
+            if (task == null) return;
+            switch (task) {
+                case "fetch":
+                    lastDifference = null;
+                    break;
+                case "unread":
+                    lastFetched = 0;
+                    break;
+                case "files":
+                    lastFetchedFiles = 0;
+                    break;
+            }
             return;
         }
 
@@ -65,17 +95,89 @@ public class workerJob extends BroadcastReceiver {
 
         vibrate = Config.values.notificationsVibrate;
 
-        if (lastDifference == null) lastDifference = new Hashtable<>();
-
-        for (Station station : Config.values.stations) {
-            if (station.fetch_enabled && station.xc_enable)
-                addToHashTable(lastDifference, pass_to_xc_api(context, station));
+        if (!SimpleFunctions.debugTaskFinished && Config.values.autoFetchEnabled) {
+            // запущен фетчер, и фетчить не надо
+            return;
         }
-        handleResult(context, lastDifference);
+        if (Config.values.autoFetchEnabled) {
+            SimpleFunctions.backgroundFetcherRunning = true;
+            ArrayList<String> fetched;
+            int error_flag = 0;
+
+            try {
+                Fetcher fetcher = new Fetcher(context, GlobalTransport.transport());
+
+                for (Station station : Config.values.stations) {
+                    if (!station.fetch_enabled) {
+                        SimpleFunctions.debug("skip fetching " + station.nodename);
+                        continue;
+                    }
+
+                    String xc_id = (station.xc_enable) ?
+                            station.outbox_storage_id : null;
+                    Integer ue_limit = (station.advanced_ue) ? station.ue_limit : 0;
+
+                    fetched = fetcher.fetch_messages(
+                            station.address,
+                            station.echoareas,
+                            xc_id,
+                            Config.values.oneRequestLimit,
+                            ue_limit,
+                            station.pervasive_ue,
+                            station.cut_remote_index,
+                            Config.values.connectionTimeout
+                    );
+
+                    if (station.fecho_support) {
+                        ArrayList<String> fetched_files = fetcher.fetch_files
+                                (station, station.file_echoareas, Config.values.connectionTimeout);
+                        if (fetched_files != null) {
+                            lastFetchedFiles += fetched_files.size();
+                        }
+                    }
+
+                    if (fetched != null) lastFetched += fetched.size();
+                    else error_flag++;
+                }
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                e.printStackTrace();
+                SimpleFunctions.debug(context.getString(R.string.error_formatted, sw.toString()));
+                error_flag++;
+            } finally {
+                SimpleFunctions.backgroundFetcherRunning = false;
+                String message = "";
+                if (error_flag > 0) {
+                    message += context.getString(R.string.errors, error_flag) + "\n\n";
+                }
+
+                if (!message.equals(""))
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+                if (lastFetched > 0) {
+                    Show_Notification(context, context.getString(R.string.messages_got, lastFetched),
+                            context.getString(R.string.notification_tap_to_open), "unread");
+                }
+                if (lastFetchedFiles > 0) {
+                    Show_Notification(context, context.getString(R.string.files_got, lastFetchedFiles),
+                            context.getString(R.string.notification_tap_to_open), "files");
+                }
+            }
+        } else {
+            // ничего не скачиваем, но просто кидаем уведомление
+            if (lastDifference == null) lastDifference = new Hashtable<>();
+
+            for (Station station : Config.values.stations) {
+                if (station.fetch_enabled && station.xc_enable)
+                    addToHashTable(lastDifference, pass_to_xc_api(context, station));
+            }
+            handleResult(context, lastDifference);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void Show_Notification(Context context, String title, String text, boolean big_text) {
+    public void Show_Notification(Context context, String title, String text, String task) {
         android.support.v4.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher_notify)
@@ -88,12 +190,10 @@ public class workerJob extends BroadcastReceiver {
             mBuilder.setVibrate(vibrate_pattern);
         } else mBuilder.setVibrate(null);
 
-        if (big_text) {
-            mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(text));
-        }
+        mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(text));
 
         Intent resultIntent = new Intent(context, vit01.idecmobile.MainActivity.class);
-        resultIntent.putExtra("task", "fetch");
+        resultIntent.putExtra("task", task);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(vit01.idecmobile.MainActivity.class);
@@ -103,10 +203,13 @@ public class workerJob extends BroadcastReceiver {
 
         Intent deleteIntent = new Intent(context, workerJob.class);
         deleteIntent.setAction("notify_cancel");
+        deleteIntent.putExtra("task", task);
         mBuilder.setDeleteIntent(PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT));
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(getNotificationID(), mBuilder.build());
+        if (mNotificationManager != null) {
+            mNotificationManager.notify(getNotificationID(task), mBuilder.build());
+        }
     }
 
     public Hashtable<String, Integer> pass_to_xc_api(Context context, Station station) {
@@ -169,7 +272,7 @@ public class workerJob extends BroadcastReceiver {
                 notification_text = notification_text.substring(0, notification_text.length() - 1);
 
             Show_Notification(context, context.getString(R.string.new_messages, total),
-                    notification_text, true);
+                    notification_text, "fetch");
         }
     }
 

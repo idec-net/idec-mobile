@@ -84,6 +84,7 @@
     <string name="autoconfig_done">Autoconfiguration complete</string>
     <string name="messages_sent">Messages sent: %d</string>
     <string name="messages_got">Received %d messages</string>
+    <string name="files_got">New files announced: %d</string>
     <string name="clear_favorites">Clear favorites</string>
     <string name="clear_favorites_confirm">Are you sure to remove this flag from all messages?</string>
     <string name="are_you_crazy">Are you sane comrade??</string>
@@ -101,7 +102,8 @@
     <string name="i_am_really_sure">I know what I\'m doing</string>
     <string name="config_saved">Config saved into file</string>
     <string name="message_updated">Message has been updated in database</string>
-    <string name="notification_service_reload">IDECMobile notification service (re)started</string>
+    <string name="notification_service_reload">IDECMobile background service (re)started</string>
+    <string name="notification_tap_to_open">Open client</string>
     <string name="message_saved_to_file">Message saved to file</string>
     <string name="msgid_clipboard_done">Message id copied to clipboard</string>
     <string name="fid_clipboard_done">File id copied to clipboard</string>
@@ -270,6 +272,7 @@
     <string name="repto_msgid_not_found">Current message list doesn\'t contain selected reply origin.\nMaybe you should navigate to the corresponding echoarea first?</string>
     <string name="close_window_later">You\'re about to close that later!</string>
     <string name="close_window_debug">You\'re behaving so bad trying to close debug window!</string>
+    <string name="close_window_background_fetch">Background fetcher is running, please wait!</string>
     <string name="station_slash_at_the_end">Node address must end with slash, remember for the next time!</string>
     <string name="warning_download_limits">This option may cause unwanted behavior because sometimes fetcher can fetch up the whole echoarea (up to several thousands of messages). We recommend to turn on \"forced index cut\" to avoid that.</string>
     <string name="warning_last_station">This is the last node left!</string>
@@ -392,6 +395,8 @@
     <string name="settings_category_notifications">Notifications</string>
     <string name="settings_notifications">Turn on notifications</string>
     <string name="settings_notifications_summary">Show notifications informing of new messages</string>
+    <string name="settings_notification_download_msgs">Download messages automatically</string>
+    <string name="settings_notification_download_msgs_summary">By default when notification is thrown, messages are not yet received</string>
     <string name="settings_notification_freq">Check-up frequency</string>
     <string name="settings_notification_freq_summary">Check for new messages every N minutes</string>
     <string name="settings_notification_vibrate">Vibration</string>
@@ -409,7 +414,7 @@
     <string name="settings_tor_summary">Start Orbot automatically</string>
 
     <!-- Additional options -->
-    <string name="manage_choose"></string>
+    <string name="manage_choose">Выбрать</string>
     <string name="manage_messages_db">Cообщения</string>
     <string name="manage_files_db">Файлы</string>
     <string name="manage_cache">Кэшированные данные</string>

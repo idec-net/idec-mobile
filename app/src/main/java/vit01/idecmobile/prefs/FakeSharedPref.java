@@ -86,6 +86,8 @@ public class FakeSharedPref implements SharedPreferences {
                 return Config.values.notificationsEnabled;
             case "notifications_vibrate":
                 return Config.values.notificationsVibrate;
+            case "autofetch_enabled":
+                return Config.values.autoFetchEnabled;
             case "swipe_to_fetch":
                 return Config.values.swipeToFetch;
             case "hide_toolbar_when_scrolling":
@@ -207,6 +209,9 @@ public class FakeSharedPref implements SharedPreferences {
                     break;
                 case "notifications_vibrate":
                     Config.values.notificationsVibrate = b;
+                    break;
+                case "autofetch_enabled":
+                    Config.values.autoFetchEnabled = b;
                     break;
                 case "swipe_to_fetch":
                     Config.values.swipeToFetch = b;

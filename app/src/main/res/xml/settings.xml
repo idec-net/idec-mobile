@@ -79,6 +79,12 @@
             android:summary="@string/settings_notification_vibrate_summary"
             android:title="@string/settings_notification_vibrate" />
 
+        <CheckBoxPreference
+            android:dependency="notifications_enabled"
+            android:key="autofetch_enabled"
+            android:summary="@string/settings_notification_download_msgs_summary"
+            android:title="@string/settings_notification_download_msgs" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_category_network">

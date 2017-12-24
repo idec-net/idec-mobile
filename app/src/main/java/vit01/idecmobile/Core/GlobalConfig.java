@@ -38,7 +38,8 @@ public class GlobalConfig implements Serializable {
             hide_toolbar_when_scrolling = false,
             disableMsglist = true, // начать читать эху сразу с того же места
             sortByDate = true,
-            openUnreadAfterFetch = false;
+            openUnreadAfterFetch = false,
+            autoFetchEnabled = false;
     public int
             fecho_sort_type = 0,
             oneRequestLimit = 20,

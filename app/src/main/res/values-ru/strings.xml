@@ -81,6 +81,7 @@
     <string name="autoconfig_done">Автоконфигурация выполнена</string>
     <string name="messages_sent">Отправлено сообщений: %d</string>
     <string name="messages_got">Получено сообщений: %d</string>
+    <string name="files_got">Новые файлы на станциях: %d</string>
     <string name="clear_favorites">Очистить избранные</string>
     <string name="clear_favorites_confirm">Снять со всех сообщений данную метку?</string>
     <string name="are_you_crazy">Ты в своём уме, товарищ??</string>
@@ -98,7 +99,8 @@
     <string name="i_am_really_sure">Я знаю, что делаю</string>
     <string name="config_saved">Конфиг сохранён в файл</string>
     <string name="message_updated">Сообщение в базе обновлено</string>
-    <string name="notification_service_reload">Уведомления IDECMobile (пере)запущены</string>
+    <string name="notification_service_reload">Отслеживание сообщений IDECMobile (пере)запущено</string>
+    <string name="notification_tap_to_open">Открыть клиент</string>
     <string name="message_saved_to_file">Сообщение сохранено в файл</string>
     <string name="msgid_clipboard_done">id сообщения скопирован в буфер обмена</string>
     <string name="fid_clipboard_done">id файла скопирован в буфер обмена</string>
@@ -253,6 +255,7 @@
     <string name="repto_msgid_not_found">В данном списке сообщений нет того, на которое отвечали.\nМожет быть, надо сначала зайти в саму эху?</string>
     <string name="close_window_later">Потом окно закроешь!</string>
     <string name="close_window_debug">Как нехорошо закрывать окно дебага!</string>
+    <string name="close_window_background_fetch">Сообщения скачиваются в фоне, подожди немного!</string>
     <string name="station_slash_at_the_end">Адрес станции должен заканчиваться слешем, запомни на будущее!</string>
     <string name="warning_download_limits">Эта опция довольно неприятная, потому что в некоторых случаях она может выкачать всю эху целиком (до нескольких тысяч сообщений!). Рекомендуется включить принудительную обрезку индекса, чтобы не напороться на эти грабли.</string>
     <string name="warning_last_station">Это последняя станция!</string>
@@ -367,6 +370,8 @@
     <string name="settings_category_notifications">Уведомления</string>
     <string name="settings_notifications">Включить уведомления</string>
     <string name="settings_notifications_summary">Показывать уведомления о новых сообщениях</string>
+    <string name="settings_notification_download_msgs">Скачивать сообщения автоматически</string>
+    <string name="settings_notification_download_msgs_summary">По умолчанию, когда бросается уведомление, сами сообщения на устройстве ещё не получены</string>
     <string name="settings_notification_freq">Периодичность проверки</string>
     <string name="settings_notification_freq_summary">Проверять новые сообщения каждые N минут</string>
     <string name="settings_notification_vibrate">Вибрация</string>
