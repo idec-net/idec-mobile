@@ -109,7 +109,8 @@
         </activity>
 
         <activity
-            android:name=".AdditionalActivity"
+            android:name=".GUI.Files.UploaderActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.Light">
             <meta-data

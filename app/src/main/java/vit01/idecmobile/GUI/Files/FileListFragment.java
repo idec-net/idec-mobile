@@ -59,7 +59,6 @@ import com.mikepenz.iconics.IconicsDrawable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import vit01.idecmobile.AdditionalActivity;
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.FEchoFile;
 import vit01.idecmobile.Core.GlobalTransport;
@@ -103,7 +102,7 @@ public class FileListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent additionalIntent = new Intent(getActivity(), AdditionalActivity.class);
+                Intent additionalIntent = new Intent(getActivity(), UploaderActivity.class);
                 additionalIntent.putExtra("fecho", echoarea);
                 startActivity(additionalIntent);
             }

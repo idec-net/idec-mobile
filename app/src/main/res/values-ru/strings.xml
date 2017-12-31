@@ -18,6 +18,7 @@
     <string name="action_new_message">Новое сообщение</string>
     <string name="action_reply">Ответить</string>
     <string name="action_quote_reply">С цитатой</string>
+    <string name="action_file_upload">Отправка файлов</string>
     <string name="action_file_choose">Выбрать файл</string>
     <string name="action_file_delete">Удалить файл</string>
     <string name="action_delete">Удалить</string>

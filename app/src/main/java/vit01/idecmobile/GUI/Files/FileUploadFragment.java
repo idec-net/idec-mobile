@@ -34,9 +34,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -53,6 +57,7 @@ public class FileUploadFragment extends Fragment {
 
     TextInputEditText fechoarea, edit_filename, description;
     Spinner stations_spinner;
+    Button fullNewMessageBtn;
 
     Uri input = null;
     Uri input_action_send = null;
@@ -82,7 +87,13 @@ public class FileUploadFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.action_file_send).setOnClickListener(new View.OnClickListener() {
+
+        fullNewMessageBtn = (Button) rootView.findViewById(R.id.action_file_send);
+        fullNewMessageBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_file_upload).sizeDp(20)
+                .color(SimpleFunctions.colorFromTheme(getActivity(), android.R.attr.textColorSecondary)), null, null);
+        fullNewMessageBtn.setCompoundDrawablePadding(30);
+
+        fullNewMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendFile();
