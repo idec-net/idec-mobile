@@ -12,7 +12,15 @@
         <item name="android:colorControlHighlight">#fff676</item>
     </style>
 
+    <style name="AppTheme.TheWhite_Pink" parent="AppTheme._TheWhite_Pink">
+        <item name="android:colorControlHighlight">#f4d0ff</item>
+    </style>
+
     <style name="AppTheme.TomorrowNightEighties" parent="AppTheme._TomorrowNightEighties">
         <item name="android:colorControlHighlight">#515151</item>
+    </style>
+
+    <style name="AppTheme.IDECHub" parent="AppTheme._IDECHub">
+        <item name="android:colorControlHighlight">#ba7000</item>
     </style>
 </resources>

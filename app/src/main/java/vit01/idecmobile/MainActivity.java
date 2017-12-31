@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         final PrimaryDrawerItem draftsItem = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.drafts).withIcon(GoogleMaterial.Icon.gmd_drafts).withSelectable(false);
         PrimaryDrawerItem starredItem = new PrimaryDrawerItem().withIdentifier(6).withName(R.string.favorites).withIcon(GoogleMaterial.Icon.gmd_star).withSelectable(false);
         final PrimaryDrawerItem offlineItem = new PrimaryDrawerItem().withIdentifier(7).withName(R.string.offline_echoes).withIcon(GoogleMaterial.Icon.gmd_signal_wifi_off);
-        PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(8).withName(R.string.additional).withIcon(GoogleMaterial.Icon.gmd_extension).withSelectable(false);
+        PrimaryDrawerItem extItem = new PrimaryDrawerItem().withIdentifier(8).withName(R.string.node_files).withIcon(GoogleMaterial.Icon.gmd_file_upload).withSelectable(false);
         PrimaryDrawerItem settingsItem = new PrimaryDrawerItem().withIdentifier(9).withName(R.string.settings).withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false);
         PrimaryDrawerItem helpItem = new PrimaryDrawerItem().withIdentifier(10).withName(R.string.title_activity_help).withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false);
         PrimaryDrawerItem updateItem = new PrimaryDrawerItem().withIdentifier(11).withName(R.string.update).withIcon(GoogleMaterial.Icon.gmd_system_update).withSelectable(false);

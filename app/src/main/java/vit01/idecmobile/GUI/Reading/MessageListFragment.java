@@ -111,7 +111,9 @@ public class MessageListFragment extends Fragment {
             }
         });
 
-        IconicsDrawable create_icon = new IconicsDrawable(getActivity()).icon(GoogleMaterial.Icon.gmd_create).color(Color.WHITE).sizeDp(19);
+        Activity activity = getActivity();
+        IconicsDrawable create_icon = new IconicsDrawable(activity).icon(GoogleMaterial.Icon.gmd_create)
+                .color(SimpleFunctions.colorFromTheme(activity, R.attr.fabIconColor)).sizeDp(19);
         fab.setImageDrawable(create_icon);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.msglist_view);

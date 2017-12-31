@@ -5,6 +5,7 @@
     <attr name="listItemBGColor" />
     <attr name="material_drawer_header_text_shadow" />
     <attr name="textColorDisabled" />
+    <attr name="fabIconColor" />
 
     <attr name="quoteColor" />
     <attr name="commentColor" />

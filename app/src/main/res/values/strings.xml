@@ -7,6 +7,7 @@
     <string name="action_send_all">Send all</string>
     <string name="action_fetch">Fetch messages</string>
     <string name="action_share">Share this</string>
+    <string name="action_share_idec">Share in IDEC</string>
     <string name="action_download">Download</string>
     <string name="action_download_list">Download list</string>
     <string name="action_update_from_server">Update from server</string>
@@ -174,14 +175,18 @@
         <item>default</item>
         <item>dark</item>
         <item>white</item>
+        <item>white_pink</item>
         <item>tomorrow_night_eighties</item>
+        <item>orangehub</item>
     </string-array>
 
     <string-array name="themes_names">
         <item>Twi-Light</item>
         <item>Friendly Darkness</item>
         <item>Sunny Skies</item>
+        <item>TestMolest</item>
         <item>Tomorrow Night Eighties</item>
+        <item>OrangeBlackHub</item>
     </string-array>
 
     <string-array name="echo_menu_options">

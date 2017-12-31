@@ -78,8 +78,7 @@
         </activity>
         <activity
             android:name=".HelperActivity"
-            android:label="@string/title_activity_help">
-        </activity>
+            android:label="@string/title_activity_help" />
         <activity
             android:name=".gui_helpers.OpenLinkActivity"
             android:theme="@android:style/Theme.NoDisplay">
@@ -92,7 +91,23 @@
                 <data android:scheme="ii" />
             </intent-filter>
         </activity>
-        <activity android:name=".GUI.Drafts.DraftEditor" />
+        <activity
+            android:name=".GUI.Drafts.DraftEditor"
+            android:label="@string/action_share_idec">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".AdditionalActivity"
             android:parentActivityName=".MainActivity"
@@ -118,7 +133,7 @@
         <activity android:name=".GUI.Files.FileChooserActivity" />
         <activity
             android:name=".SearchActivity"
-            android:label="Поиск сообщений"
+            android:label="@string/search"
             android:launchMode="singleTop">
 
             <intent-filter>

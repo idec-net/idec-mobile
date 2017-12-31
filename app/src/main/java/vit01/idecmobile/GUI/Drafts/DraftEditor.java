@@ -22,6 +22,7 @@ package vit01.idecmobile.GUI.Drafts;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TextInputEditText;
@@ -84,6 +85,13 @@ public class DraftEditor extends AppCompatActivity {
 
         ExternalStorage.initStorage();
 
+        String action = incoming.getAction();
+        if (Intent.ACTION_PROCESS_TEXT.equals(action) || Intent.ACTION_SEND.equals(action)) {
+            // юзверь выбрал поделиться текстом через контекстное меню
+            incoming.putExtra("echoarea", "");
+            incoming.putExtra("task", "new_in_echo");
+        }
+
         nodeindex = incoming.getIntExtra("nodeindex", 0);
         outbox_id = Config.values.stations.get(nodeindex).outbox_storage_id;
 
@@ -114,6 +122,19 @@ public class DraftEditor extends AppCompatActivity {
                 break;
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && incoming.hasExtra(Intent.EXTRA_PROCESS_TEXT)) {
+            // если сообщение заполнено заранее, подставляем текст
+            message.msg = incoming.getStringExtra(Intent.EXTRA_PROCESS_TEXT);
+        }
+
+        if (incoming.hasExtra(Intent.EXTRA_TEXT)) {
+            message.msg = incoming.getStringExtra(Intent.EXTRA_TEXT);
+        }
+
+        if (incoming.hasExtra(Intent.EXTRA_SUBJECT)) {
+            message.msg = incoming.getStringExtra(Intent.EXTRA_SUBJECT);
+        }
+
         if (fileToSave == null || message == null) {
             Toast.makeText(DraftEditor.this, R.string.open_create_file_error, Toast.LENGTH_SHORT).show();
             SimpleFunctions.debug("file creation problem");
@@ -137,7 +158,7 @@ public class DraftEditor extends AppCompatActivity {
 
         if (!Config.values.defaultEditor) {
             Intent intent = new Intent();
-            intent.setAction(android.content.Intent.ACTION_VIEW);
+            intent.setAction(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.fromFile(fileToSave), "text/plain");
 
             startActivity(intent);

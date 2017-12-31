@@ -128,8 +128,16 @@ public class Config {
                 appTheme = R.style.AppTheme_TheWhite;
                 break;
 
+            case "white_pink":
+                appTheme = R.style.AppTheme_TheWhite_Pink;
+                break;
+
             case "tomorrow_night_eighties":
                 appTheme = R.style.AppTheme_TomorrowNightEighties;
+                break;
+
+            case "orangehub":
+                appTheme = R.style.AppTheme_IDECHub;
                 break;
 
             case "default":

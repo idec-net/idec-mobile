@@ -5,6 +5,7 @@
     <string name="action_send_all">Отправить всё</string>
     <string name="action_fetch">Скачать сообщения</string>
     <string name="action_share">Поделиться</string>
+    <string name="action_share_idec">Поделиться в IDEC</string>
     <string name="action_download">Скачать</string>
     <string name="action_download_list">Скачать список</string>
     <string name="action_update_from_server">Обновить с сервера</string>

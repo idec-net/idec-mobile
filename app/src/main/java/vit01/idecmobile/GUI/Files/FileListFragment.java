@@ -109,7 +109,9 @@ public class FileListFragment extends Fragment {
             }
         });
 
-        IconicsDrawable upload_icon = new IconicsDrawable(getActivity()).icon(GoogleMaterial.Icon.gmd_file_upload).color(Color.WHITE).sizeDp(19);
+        Activity activity = getActivity();
+        IconicsDrawable upload_icon = new IconicsDrawable(activity).icon(GoogleMaterial.Icon.gmd_file_upload)
+                .color(SimpleFunctions.colorFromTheme(activity, R.attr.fabIconColor)).sizeDp(19);
         fab.setImageDrawable(upload_icon);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.filelist_view);

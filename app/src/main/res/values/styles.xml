@@ -14,6 +14,7 @@
         <item name="listItemBGColor">#FFFFFF
         </item> <!-- это нужно для некоторых элементов списков -->
         <item name="menuIconColor">#FFFFFF</item> <!-- ставить обязательно -->
+        <item name="fabIconColor">#FFFFFF</item>
         <item name="material_drawer_header_text_shadow">#00000000</item> <!-- И это тоже! -->
 
         <!-- Цвета для оформления цитат, постскриптумов и комментариев -->
@@ -66,6 +67,7 @@
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
         <item name="textColorDisabled">#bbc7d0ff</item>
 
+        <item name="fabIconColor">?android:attr/colorForeground</item>
         <item name="listItemBGColor">?android:attr/itemBackground</item>
 
         <item name="quoteColor">#81FADC</item>
@@ -109,7 +111,7 @@
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_dark</item>
         <item name="textColorDisabled">#c87ca99f</item>
 
-
+        <item name="fabIconColor">#FFFFFF</item>
         <item name="listItemBGColor">?android:attr/itemBackground</item>
         <item name="android:theme">@style/WhiteActionBar</item>
 
@@ -128,6 +130,34 @@
     </style>
 
     <style name="AppTheme.TheWhite" parent="AppTheme._TheWhite" />
+
+    <style name="AppTheme._TheWhite_Pink" parent="AppTheme._TheWhite">
+        <item name="colorControlHighlight">#f4d0ff</item>
+        <item name="android:textColorSecondary">#cf98d2</item>
+        <item name="textColorDisabled">#c87ca99f</item>
+
+        <item name="fabIconColor">#FFFFFF</item>
+        <item name="listItemBGColor">?android:attr/itemBackground</item>
+        <item name="android:theme">@style/WhiteActionBar_Pink</item>
+
+        <item name="quoteColor">#be8dc1</item>
+        <item name="commentColor">#42ACD3</item>
+        <item name="PSColor">#42ACD3</item>
+
+        <item name="material_drawer_divider">#9d749f</item>
+        <item name="material_drawer_selected">#ab96ac</item>
+
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="preferenceTheme">@style/AppTheme.Preferences</item>
+    </style>
+
+    <style name="WhiteActionBar_Pink" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorHint">?attr/quoteColor</item>
+        <item name="android:textColorPrimary">?attr/menuIconColor</item>
+        <item name="android:textColorSecondary">#cf98d2</item>
+    </style>
+
+    <style name="AppTheme.TheWhite_Pink" parent="AppTheme._TheWhite_Pink" />
 
     <style name="AppTheme._TomorrowNightEighties" parent="Theme.AppCompat.NoActionBar">
         <!-- Цвета взяты из темы https://github.com/chriskempson/tomorrow-theme -->
@@ -165,7 +195,7 @@
         <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
         <item name="textColorDisabled">#bbcccccc</item>
 
-
+        <item name="fabIconColor">#FFFFFF</item>
         <item name="listItemBGColor">?android:attr/itemBackground</item>
 
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
@@ -177,6 +207,54 @@
     </style>
 
     <style name="AppTheme.TomorrowNightEighties" parent="AppTheme._TomorrowNightEighties" />
+
+    <style name="AppTheme._IDECHub" parent="Theme.AppCompat.NoActionBar">
+        <item name="navdrawer_picture">@drawable/header_tomorrow_night_eighties</item>
+
+        <item name="colorPrimary">#2F2F2F</item>
+        <item name="colorPrimaryDark">#101010</item>
+        <item name="colorAccent">@color/theme_idechub_colorAccent</item>
+        <item name="android:colorBackground">#101010</item>
+        <item name="android:windowBackground">@color/theme_idechub_activityBackground</item>
+        <item name="android:itemBackground">#101010</item>
+        <item name="colorControlHighlight">#ba7000</item>
+        <item name="divider">@color/theme_idechub_listDivider</item>
+        <item name="menuIconColor">#cccccc</item>
+
+        <item name="material_drawer_background">#1B1B1B</item>
+        <item name="material_drawer_primary_text">#cccccc</item>
+        <item name="material_drawer_secondary_text">#999999</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
+        <item name="material_drawer_divider">@color/theme_idechub_listDivider</item>
+        <item name="material_drawer_selected">@color/theme_idechub_colorAccent</item>
+        <item name="material_drawer_selected_text">#000000</item>
+        <item name="material_drawer_header_selection_text">
+            @color/material_drawer_dark_header_selection_text
+        </item>
+        <item name="material_drawer_primary_icon">#858484</item>
+        <item name="material_drawer_header_text_shadow">#00000000</item>
+
+        <item name="android:colorForeground">#ffffff</item>
+        <item name="android:editTextColor">#ffffff</item>
+        <item name="android:textColor">?attr/android:textColorPrimary</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="android:textColorPrimaryInverse">@android:color/primary_text_light</item>
+        <item name="android:textColorSecondary">#c47602</item>
+        <item name="android:textColorSecondaryInverse">@android:color/secondary_text_light</item>
+        <item name="textColorDisabled">#bbcccccc</item>
+
+        <item name="fabIconColor">#101010</item>
+        <item name="listItemBGColor">?android:attr/itemBackground</item>
+
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="preferenceTheme">@style/AppTheme.Preferences</item>
+
+        <item name="quoteColor">#858484</item>
+        <item name="commentColor">#858484</item>
+        <item name="PSColor">#99cc99</item>
+    </style>
+
+    <style name="AppTheme.IDECHub" parent="AppTheme._IDECHub" />
 
     <!--
         Всё, что идёт далее, править не имеет смысла.
