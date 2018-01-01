@@ -31,6 +31,7 @@
     <string name="action_view_full_log">View full log</string>
     <string name="action_autoconfig">Configure automatically</string>
     <string name="action_save_in_file">Save to file</string>
+    <string name="action_speak_tts">Say it out loud</string>
     <string name="action_echo_export">Export into bundle file</string>
     <string name="action_echo_truncate">Truncate echo</string>
     <string name="action_echo_truncate_summary">Truncate echoarea up to N messages</string>
@@ -282,6 +283,7 @@
     <string name="station_slash_at_the_end">Node address must end with slash, remember for the next time!</string>
     <string name="warning_download_limits">This option may cause unwanted behavior because sometimes fetcher can fetch up the whole echoarea (up to several thousands of messages). We recommend to turn on \"forced index cut\" to avoid that.</string>
     <string name="warning_last_station">This is the last node left!</string>
+    <string name="tts_init_failed">Failed to init TextToSpeech</string>
 
     <!-- Fetcher -->
 

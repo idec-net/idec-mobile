@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -48,6 +49,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import vit01.idecmobile.Core.EchoReadingPosition;
 import vit01.idecmobile.Core.ExternalStorage;
@@ -59,12 +61,12 @@ import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.R;
 import vit01.idecmobile.prefs.Config;
 
-public class MessageSlideFragment extends Fragment {
+public class MessageSlideFragment extends Fragment implements TextToSpeech.OnInitListener {
     public boolean isTablet, isRealEchoarea;
     Activity activity;
     ViewPager mPager;
     Drawable starredIcon, unstarredIcon;
-    MenuItem starredMenuItem;
+    MenuItem starredMenuItem, ttsSpeakItem;
     MessageListFragment listFragment = null;
     boolean stackUpdate = false;
     private int msgCount;
@@ -73,6 +75,8 @@ public class MessageSlideFragment extends Fragment {
     private ArrayList<Integer> discussionStack = new ArrayList<>();
     private String echoarea = null;
     private String appendToTitle = null; // Здесь должно быть имя эхи и разделитель |
+
+    private TextToSpeech tts = null;
 
     public MessageSlideFragment() {
     }
@@ -128,6 +132,15 @@ public class MessageSlideFragment extends Fragment {
         activity = getActivity();
         listFragment = (MessageListFragment) getFragmentManager().findFragmentById(R.id.msglist);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
     }
 
     public void updateActionBar(int position) {
@@ -191,6 +204,8 @@ public class MessageSlideFragment extends Fragment {
 
         MenuItem tostart = menu.findItem(R.id.action_first_item);
         MenuItem toend = menu.findItem(R.id.action_last_item);
+
+        ttsSpeakItem = menu.findItem(R.id.action_tts_speak);
 
         starredMenuItem = menu.findItem(R.id.action_starred);
         starredIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_star)
@@ -393,6 +408,14 @@ public class MessageSlideFragment extends Fragment {
                         .setNegativeButton(android.R.string.cancel, null)
                         .show();
                 break;
+            case R.id.action_tts_speak:
+                if (tts == null) {
+                    tts = new TextToSpeech(activity, this);
+                } else {
+                    String myid = msglist.get(mPager.getCurrentItem());
+                    tts.speak(GlobalTransport.transport.getMessage(myid).msg, TextToSpeech.QUEUE_FLUSH, null);
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -402,6 +425,17 @@ public class MessageSlideFragment extends Fragment {
         if (isRealEchoarea)
             EchoReadingPosition.writePositionCache();
         super.onPause();
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(Locale.getDefault());
+            onOptionsItemSelected(ttsSpeakItem);
+        } else {
+            tts = null;
+            Toast.makeText(activity, R.string.tts_init_failed, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

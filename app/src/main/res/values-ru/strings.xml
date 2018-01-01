@@ -28,6 +28,7 @@
     <string name="action_view_full_log">Посмотреть полный лог</string>
     <string name="action_autoconfig">Настроить всё автоматически</string>
     <string name="action_save_in_file">Сохранить в файл</string>
+    <string name="action_speak_tts">Прочитать голосом</string>
     <string name="action_echo_export">Экспорт в файл бандла</string>
     <string name="action_echo_truncate">Обрезать эху</string>
     <string name="action_echo_truncate_summary">Укоротить эху до максимум N сообщений</string>
@@ -261,6 +262,7 @@
     <string name="station_slash_at_the_end">Адрес станции должен заканчиваться слешем, запомни на будущее!</string>
     <string name="warning_download_limits">Эта опция довольно неприятная, потому что в некоторых случаях она может выкачать всю эху целиком (до нескольких тысяч сообщений!). Рекомендуется включить принудительную обрезку индекса, чтобы не напороться на эти грабли.</string>
     <string name="warning_last_station">Это последняя станция!</string>
+    <string name="tts_init_failed">Ошибка инициализации голосового движка (TTS)</string>
 
     <!-- Fetcher -->
 

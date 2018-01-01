@@ -46,6 +46,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_tts_speak"
+        android:title="@string/action_speak_tts"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_discussion_previous"
         android:title="@string/navigate_discussion_previous"
         android:visible="false"
