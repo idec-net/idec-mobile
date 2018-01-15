@@ -75,7 +75,7 @@
 
         <include layout="@layout/divider" />
 
-        <TextView
+        <vit01.idecmobile.gui_helpers.MyTextView
             android:id="@+id/full_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

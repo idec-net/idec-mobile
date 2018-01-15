@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
     flavorDimensions "default"
 
     defaultConfig {
         applicationId "vit01.idecmobile"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 2
         versionName "debug"
     }
@@ -41,13 +41,13 @@ dependencies {
     // Используем https://github.com/Gericop/Android-Support-Preference-V7-Fix
     // Tor & Proxy
     // Encryption
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.takisoft.fix:preference-v7:25.3.1.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.takisoft.fix:preference-v7:27.0.2.0'
+    compile 'com.android.support:design:27.0.2'
+    compile 'com.android.support:support-v4:27.0.2'
+    compile 'com.android.support:recyclerview-v7:27.0.2'
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'info.guardianproject.netcipher:netcipher:1.2'
     compile 'org.sufficientlysecure:openpgp-api:12.0'
     compile 'ch.acra:acra:4.9.2'

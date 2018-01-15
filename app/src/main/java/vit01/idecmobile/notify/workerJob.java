@@ -29,7 +29,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.StrictMode;
 import android.provider.Settings;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 

@@ -24,6 +24,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -44,14 +45,17 @@ import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.GUI.Drafts.DraftEditor;
+import vit01.idecmobile.QuoteEditActivity;
 import vit01.idecmobile.R;
 import vit01.idecmobile.gui_helpers.CustomLinkMovementMethod;
+import vit01.idecmobile.gui_helpers.MyTextView;
 
 public class MessageView_full extends Fragment {
     public AbstractTransport transport = GlobalTransport.transport;
     public boolean messageStarred = false;
     MenuItem discussionBack;
-    TextView full_subj, full_msg, full_from_to, full_date, full_msgid, full_repto, full_echo;
+    TextView full_subj, full_from_to, full_date, full_msgid, full_repto, full_echo;
+    MyTextView full_msg;
     Fragment parentContext;
     Button fullNewMessageBtn;
     private String msgid;
@@ -79,17 +83,17 @@ public class MessageView_full extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.message_view, null, false);
 
-        full_subj = (TextView) rootLayout.findViewById(R.id.full_subj);
-        full_msg = (TextView) rootLayout.findViewById(R.id.full_text);
-        full_from_to = (TextView) rootLayout.findViewById(R.id.full_from_to);
-        full_date = (TextView) rootLayout.findViewById(R.id.full_date);
-        full_msgid = (TextView) rootLayout.findViewById(R.id.full_msgid);
-        full_repto = (TextView) rootLayout.findViewById(R.id.full_repto);
-        full_echo = (TextView) rootLayout.findViewById(R.id.full_echo);
+        full_subj = rootLayout.findViewById(R.id.full_subj);
+        full_msg = rootLayout.findViewById(R.id.full_text);
+        full_from_to = rootLayout.findViewById(R.id.full_from_to);
+        full_date = rootLayout.findViewById(R.id.full_date);
+        full_msgid = rootLayout.findViewById(R.id.full_msgid);
+        full_repto = rootLayout.findViewById(R.id.full_repto);
+        full_echo = rootLayout.findViewById(R.id.full_echo);
 
         full_msgid.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +110,7 @@ public class MessageView_full extends Fragment {
 
         int secondaryColor = SimpleFunctions.colorFromTheme(getActivity(), android.R.attr.textColorSecondary);
 
-        Button fullAnswerBtn = (Button) rootLayout.findViewById(R.id.full_answer_button);
+        Button fullAnswerBtn = rootLayout.findViewById(R.id.full_answer_button);
         fullAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_reply).sizeDp(20).color(secondaryColor), null, null);
         fullAnswerBtn.setCompoundDrawablePadding(30);
 
@@ -124,7 +128,7 @@ public class MessageView_full extends Fragment {
             }
         });
 
-        Button fullQuoteAnswerBtn = (Button) rootLayout.findViewById(R.id.full_quote_answer_button);
+        Button fullQuoteAnswerBtn = rootLayout.findViewById(R.id.full_quote_answer_button);
         fullQuoteAnswerBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_format_quote).sizeDp(20).color(secondaryColor), null, null);
         fullQuoteAnswerBtn.setCompoundDrawablePadding(30);
 
@@ -142,7 +146,20 @@ public class MessageView_full extends Fragment {
             }
         });
 
-        fullNewMessageBtn = (Button) rootLayout.findViewById(R.id.full_new_button);
+        fullQuoteAnswerBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(getActivity(), QuoteEditActivity.class);
+                intent.putExtra("nodeindex",
+                        SimpleFunctions.getPreferredOutboxId(message.echo));
+                intent.putExtra("message", message);
+
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        fullNewMessageBtn = rootLayout.findViewById(R.id.full_new_button);
         fullNewMessageBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_create).sizeDp(20).color(secondaryColor), null, null);
         fullNewMessageBtn.setCompoundDrawablePadding(30);
 
@@ -168,7 +185,7 @@ public class MessageView_full extends Fragment {
         messageStarred = message.is_favorite;
         full_subj.setText(message.subj);
         full_msg.setText(Html.fromHtml(SimpleFunctions.reparseMessage(context, message.msg)));
-        full_from_to.setText(message.from + " (" + message.addr + ") to " + message.to);
+        full_from_to.setText(String.format("%s (%s) to %s", message.from, message.addr, message.to));
         full_msgid.setText(String.format("msgid: %s", msgid));
 
         if (message.repto == null) {

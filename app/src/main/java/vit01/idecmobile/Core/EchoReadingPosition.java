@@ -102,6 +102,7 @@ public class EchoReadingPosition {
     }
 
     public static void setPosition(String echoarea, String msgid) {
+        if (positions == null) getPositionCache();
         positions.put(echoarea, msgid);
     }
 }

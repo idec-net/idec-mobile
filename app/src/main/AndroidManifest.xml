@@ -150,6 +150,9 @@
             android:name=".bugreports.CrashReportActivity"
             android:theme="@style/Theme.AppCompat" />
         <activity android:name=".GUI.ManageDatabase.ManageDatabaseActivity" />
+        <activity
+            android:name=".QuoteEditActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <receiver android:name=".notify.boot_completed_receiver">
             <intent-filter>
