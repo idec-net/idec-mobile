@@ -27,6 +27,7 @@
     <string name="action_delete_station">Удалить станцию</string>
     <string name="action_view_full_log">Посмотреть полный лог</string>
     <string name="action_autoconfig">Настроить всё автоматически</string>
+    <string name="action_save">Сохранить</string>
     <string name="action_save_in_file">Сохранить в файл</string>
     <string name="action_speak_tts">Прочитать голосом</string>
     <string name="action_echo_export">Экспорт в файл бандла</string>
@@ -72,6 +73,8 @@
     <string name="done">Выполнено!</string>
     <string name="start">Начать</string>
     <string name="ok_close">Всё понял, закрыть</string>
+    <string name="no">Нет</string>
+    <string name="cancel">Отмена</string>
     <string name="loading">Загрузка</string>
     <string name="loading_messages">Скачивание сообщений</string>
     <string name="sending_letters">Отправка почты</string>
@@ -87,6 +90,7 @@
     <string name="files_got">Новые файлы на станциях: %d</string>
     <string name="clear_favorites">Очистить избранные</string>
     <string name="clear_favorites_confirm">Снять со всех сообщений данную метку?</string>
+    <string name="confirmation">Подтверждение</string>
     <string name="are_you_crazy">Ты в своём уме, товарищ??</string>
     <string name="deleting_messages">Сообщения удаляются</string>
     <string name="deleting_useless_messages">Удаляем лишние сообщения…</string>
@@ -396,4 +400,8 @@
     <string name="settings_tor_summary">Автоматически запускать Orbot</string>
     <string name="action_new_message_short">Новое</string>
 
+    <!-- Quotation dialog -->
+    <string name="quote_dialog_title">Цитата</string>
+    <string name="quote_dialog_save_or_exit">Сохранить новое сообщение?</string>
+    <string name="title_break_quote">Разбить цитату</string>
 </resources>

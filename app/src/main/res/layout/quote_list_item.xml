@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/quote_clickable_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/listItemBGColor">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingBottom="16dp"
+        android:paddingLeft="@dimen/list_horizontal_margin"
+        android:paddingRight="@dimen/list_horizontal_margin"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:id="@+id/quote_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="echoarea.none"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/material_text_subhead" />
+    </RelativeLayout>
+</RelativeLayout>

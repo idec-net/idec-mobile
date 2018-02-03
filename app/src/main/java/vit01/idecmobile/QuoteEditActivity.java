@@ -20,6 +20,8 @@
 package vit01.idecmobile;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -27,16 +29,21 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -49,6 +56,7 @@ import vit01.idecmobile.Core.DraftMessage;
 import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.IIMessage;
 import vit01.idecmobile.Core.SimpleFunctions;
+import vit01.idecmobile.GUI.Drafts.DraftEditor;
 import vit01.idecmobile.gui_helpers.DividerItemDecoration;
 import vit01.idecmobile.prefs.Config;
 
@@ -71,7 +79,7 @@ public class QuoteEditActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
-        SimpleFunctions.setActivityTitle(this, getString(R.string.title_activity_list_edit));
+        SimpleFunctions.setActivityTitle(this, getString(R.string.quote_dialog_title));
 
         ExternalStorage.initStorage();
 
@@ -84,7 +92,7 @@ public class QuoteEditActivity extends AppCompatActivity {
         message_output.repto = message_input.id;
 
         message_output.msg = SimpleFunctions.quoteAnswer
-                (message_input.msg, message_input.to, Config.values.oldQuote);
+                (message_input.msg, message_output.to, Config.values.oldQuote);
 
         nodeindex = in.getIntExtra("nodeindex", 0);
         outbox_id = Config.values.stations.get(nodeindex).outbox_storage_id;
@@ -93,7 +101,10 @@ public class QuoteEditActivity extends AppCompatActivity {
         final FloatingActionButton fab = findViewById(R.id.fab_ev);
         fab.setVisibility(View.GONE);
 
-        contents = new ArrayList<>(Arrays.asList(message_output.msg.split("\n")));
+        contents = new ArrayList<>(Arrays.asList(message_output.msg.split("\n\n")));
+        for (String str : contents) {
+            if (str.equals("") || str.equals("\n")) contents.remove(str);
+        }
 
         recyclerView = findViewById(R.id.contents);
         mLayoutManager = new LinearLayoutManager(this);
@@ -196,10 +207,40 @@ public class QuoteEditActivity extends AppCompatActivity {
         touchHelper.attachToRecyclerView(recyclerView);
     }
 
+    public void saveMessage() {
+        message_output.msg = TextUtils.join("\n\n", contents_adapter.elements);
+        boolean result = ExternalStorage.writeDraftToFile(fileToSave, message_output.raw());
+        if (!result) {
+            SimpleFunctions.debug(getString(R.string.error));
+            Toast.makeText(QuoteEditActivity.this, R.string.unable_to_save_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        Config.writeConfig(this);
-        super.onBackPressed();
+        new AlertDialog.Builder(QuoteEditActivity.this)
+                .setTitle(R.string.confirmation)
+                .setMessage(R.string.quote_dialog_save_or_exit)
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(QuoteEditActivity.this, R.string.delete_draft, Toast.LENGTH_SHORT).show();
+                        boolean r = fileToSave.delete();
+                        if (!r) {
+                            Toast.makeText(QuoteEditActivity.this, R.string.deletion_error, Toast.LENGTH_SHORT).show();
+                        } else fileToSave = null;
+                        finish();
+                    }
+                })
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        saveMessage();
+                        finish();
+                    }
+                })
+                .setNeutralButton(R.string.cancel, null)
+                .show();
     }
 
     @Override
@@ -208,10 +249,41 @@ public class QuoteEditActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_quote_compose, menu);
+
+        Context context = getApplicationContext();
+
+        int iconColor = SimpleFunctions.colorFromTheme(this, R.attr.menuIconColor);
+
+        menu.findItem(R.id.action_quote_save).setIcon(new IconicsDrawable
+                (context, GoogleMaterial.Icon.gmd_check).actionBar().color(iconColor));
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_quote_save) {
+            saveMessage();
+            Intent editor = new Intent(QuoteEditActivity.this, DraftEditor.class);
+            editor.putExtra("nodeindex", nodeindex);
+            editor.putExtra("task", "edit_existing");
+            editor.putExtra("file", fileToSave);
+            startActivity(editor);
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public class ListEditAdapter extends RecyclerView.Adapter<ListEditAdapter.ViewHolder> {
         RecyclerView recyclerView;
         Activity callingActivity;
         ArrayList<String> elements;
+        int replaceindex;
 
         public ListEditAdapter(Activity activity,
                                RecyclerView rv,
@@ -224,16 +296,63 @@ public class QuoteEditActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.echoarea_list_item_edit, parent, false);
+                    .inflate(R.layout.quote_list_item, parent, false);
 
-            RelativeLayout l = v.findViewById(R.id.echoarea_edit_clickable_layout);
+            RelativeLayout l = v.findViewById(R.id.quote_clickable_layout);
 
-            return new ViewHolder(v);
+            final ViewHolder holder = new ViewHolder(v);
+            l.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int position = holder.getAdapterPosition();
+                    TextView content = view.findViewById(R.id.quote_text);
+                    final String[] strelements = content.getText().toString().split("\n");
+                    if (strelements.length == 1) return;
+
+                    new AlertDialog.Builder(QuoteEditActivity.this)
+                            .setTitle(R.string.title_break_quote)
+                            .setSingleChoiceItems(strelements, 0, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    replaceindex = i;
+                                    if (i == (strelements.length - 1) && i != 0) {
+                                        replaceindex--;
+                                    }
+                                }
+                            })
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    StringBuilder firstFragment = new StringBuilder();
+                                    StringBuilder secondFragment = new StringBuilder();
+
+                                    for (int a = 0; a < replaceindex + 1; a++) {
+                                        firstFragment.append(strelements[a]).append("\n");
+                                    }
+                                    firstFragment.deleteCharAt(firstFragment.length() - 1);
+                                    // мы просто удалили последний \n
+
+                                    for (int a = replaceindex + 1; a < strelements.length; a++) {
+                                        secondFragment.append(strelements[a]).append("\n");
+                                    }
+                                    secondFragment.deleteCharAt(secondFragment.length() - 1);
+
+                                    elements.remove(position);
+                                    elements.add(position, firstFragment.toString());
+                                    elements.add(position + 1, secondFragment.toString());
+                                    notifyDataSetChanged();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show();
+                }
+            });
+            return holder;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            TextView t1 = holder.itemView.findViewById(R.id.echoarea_edit_name);
+            TextView t1 = holder.itemView.findViewById(R.id.quote_text);
             t1.setText(elements.get(position));
         }
 

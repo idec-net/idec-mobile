@@ -30,6 +30,7 @@
     <string name="action_delete_station">Remove station</string>
     <string name="action_view_full_log">View full log</string>
     <string name="action_autoconfig">Configure automatically</string>
+    <string name="action_save">Save</string>
     <string name="action_save_in_file">Save to file</string>
     <string name="action_speak_tts">Say it out loud</string>
     <string name="action_echo_export">Export into bundle file</string>
@@ -76,6 +77,8 @@
     <string name="start">Start</string>
     <string name="ok_close">All right, close this</string>
     <string name="loading">Loading</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
     <string name="loading_messages">Messages downloading</string>
     <string name="sending_letters">Sending messages</string>
     <string name="connecting_to_station">Connecting to the station…</string>
@@ -90,6 +93,7 @@
     <string name="files_got">New files announced: %d</string>
     <string name="clear_favorites">Clear favorites</string>
     <string name="clear_favorites_confirm">Are you sure to remove this flag from all messages?</string>
+    <string name="confirmation">Confirmation</string>
     <string name="are_you_crazy">Are you sane comrade??</string>
     <string name="deleting_messages">Messages are being removed</string>
     <string name="deleting_useless_messages">Removing useless messages…</string>
@@ -430,5 +434,8 @@
     <string name="manage_files_db">Файлы</string>
     <string name="manage_cache">Кэшированные данные</string>
 
-
+    <!-- Quotation dialog -->
+    <string name="quote_dialog_title">Quote</string>
+    <string name="quote_dialog_save_or_exit">Save this message before exiting?</string>
+    <string name="title_break_quote">Break the quote</string>
 </resources>

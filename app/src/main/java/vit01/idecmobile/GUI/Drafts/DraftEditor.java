@@ -68,7 +68,7 @@ public class DraftEditor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draft_editor);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,12 +229,12 @@ public class DraftEditor extends AppCompatActivity {
     }
 
     public void getControls() {
-        compose_stations = (Spinner) findViewById(R.id.compose_stations);
-        compose_echoarea = (TextInputEditText) findViewById(R.id.compose_echoarea);
-        compose_to = (TextInputEditText) findViewById(R.id.compose_to);
-        compose_subj = (TextInputEditText) findViewById(R.id.compose_subj);
-        compose_repto = (TextInputEditText) findViewById(R.id.compose_repto);
-        compose_msg = (TextInputEditText) findViewById(R.id.compose_msg);
+        compose_stations = findViewById(R.id.compose_stations);
+        compose_echoarea = findViewById(R.id.compose_echoarea);
+        compose_to = findViewById(R.id.compose_to);
+        compose_subj = findViewById(R.id.compose_subj);
+        compose_repto = findViewById(R.id.compose_repto);
+        compose_msg = findViewById(R.id.compose_msg);
 
         compose_stations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
