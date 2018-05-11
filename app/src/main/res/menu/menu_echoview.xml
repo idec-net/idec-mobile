@@ -32,4 +32,9 @@
         android:title="@string/action_delete_favorites"
         android:visible="false"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_debug_export_links"
+        android:title="Export links to file"
+        app:showAsAction="never" />
 </menu>

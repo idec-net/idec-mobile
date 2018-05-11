@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.UriMatcher;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -36,6 +37,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,11 +53,16 @@ import android.widget.Toast;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.EchoReadingPosition;
+import vit01.idecmobile.Core.ExternalStorage;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IDECFunctions;
 import vit01.idecmobile.Core.IIMessage;
@@ -362,6 +369,57 @@ public class MessageListFragment extends Fragment {
                             }
                         })
                         .show();
+                break;
+            case R.id.action_debug_export_links:
+                StringBuilder links = new StringBuilder();
+                String currentLink = "";
+                for (String msgid: msglist) {
+                    IIMessage msg = GlobalTransport.transport.getMessage(msgid);
+                    Matcher lnk = Patterns.WEB_URL.matcher(msg.msg);
+                    while (lnk.find()) {
+                        currentLink = lnk.group();
+                    }
+                    if (!currentLink.equals("")) {
+                        links.append(currentLink).append("\n");
+                    }
+                    currentLink = "";
+                }
+
+                File file = new File(ExternalStorage.rootStorage, "links.txt");
+                if (!file.exists()) try {
+                    boolean create = file.createNewFile();
+
+                    if (!create) {
+                        String debug = getString(R.string.create_file_error) + " " + file.getName();
+                        Toast.makeText(activity, debug, Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    SimpleFunctions.debug(e.getMessage());
+                    break;
+                }
+                if (file.canWrite()) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        fos.write(links.toString().getBytes("UTF-8"));
+                        fos.close();
+                    } catch (Exception e) {
+                        SimpleFunctions.debug(e.getMessage());
+                        Toast.makeText(activity, getString(R.string.error) + ": " +
+                                e.getMessage(), Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                        break;
+                    }
+
+                    new AlertDialog.Builder(activity)
+                            .setMessage(getString(R.string.message_saved_to_file) + " " + file.getAbsolutePath())
+                            .setPositiveButton(android.R.string.ok, null)
+                            .show();
+                } else {
+                    Toast.makeText(activity, file.getAbsolutePath() + " " + getString(R.string.unable_to_write_error), Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
 
