@@ -46,10 +46,10 @@ public class Station implements Serializable {
             cut_remote_index = 50;
 
     public Station() {
-        String[] default_echoareas = new String[]{"pipe.2032", "ii.14", "mlp.15", "ii.test.14", "piratemedia.rss.15",
-                "habra.16", "develop.16", "linux.14"};
+        String[] default_echoareas = new String[]{"pipe.2032", "idec.talks", "std.club", "mlp.15", "ii.test.14",
+                "habra.rss", "develop.16", "linux.14"};
 
-        String[] default_file_echoareas = new String[]{"pictures", "mlp.pictures"};
+        String[] default_file_echoareas = new String[]{"pictures", "mlp.pictures", "music", "books", "books.tech"};
 
         Collections.addAll(echoareas, default_echoareas);
         Collections.addAll(file_echoareas, default_file_echoareas);
