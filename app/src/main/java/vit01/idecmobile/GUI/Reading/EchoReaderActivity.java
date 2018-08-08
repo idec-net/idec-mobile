@@ -63,7 +63,7 @@ public class EchoReaderActivity extends AppCompatActivity {
         isTablet = SimpleFunctions.isTablet(this);
         setContentView(R.layout.activity_reader);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);

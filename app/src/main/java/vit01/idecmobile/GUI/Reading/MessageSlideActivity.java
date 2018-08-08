@@ -22,6 +22,7 @@ package vit01.idecmobile.GUI.Reading;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class MessageSlideActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_message_slide);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         if (Config.values.hide_toolbar_when_scrolling) {
             AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
@@ -72,8 +73,8 @@ public class MessageSlideActivity extends AppCompatActivity {
         int firstPosition = gotInfo.getIntExtra("position", msglist.size() - 1);
         if (gotInfo.hasExtra("echoarea")) echoarea = gotInfo.getStringExtra("echoarea");
 
-        ((MessageSlideFragment) getSupportFragmentManager().findFragmentById(R.id.messages_slider))
-                .initSlider(echoarea, msglist, nodeIndex, firstPosition);
+        MessageSlideFragment msf = (MessageSlideFragment) getSupportFragmentManager().findFragmentById(R.id.messages_slider);
+        if (msf != null) msf.initSlider(this, echoarea, msglist, nodeIndex, firstPosition);
     }
 
     @Override

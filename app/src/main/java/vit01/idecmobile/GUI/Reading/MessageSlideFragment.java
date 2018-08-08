@@ -21,6 +21,7 @@ package vit01.idecmobile.GUI.Reading;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -90,7 +91,7 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_message_slide, container, false);
 
-        mPager = (ViewPager) rootView.findViewById(R.id.swipe_pager);
+        mPager = rootView.findViewById(R.id.swipe_pager);
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
@@ -110,7 +111,7 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        GlobalTransport.transport.setUnread(false, Collections.singletonList(msgid));
+                        GlobalTransport.transport(activity).setUnread(false, Collections.singletonList(msgid));
                         if (listFragment != null) {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
@@ -130,7 +131,10 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-        listFragment = (MessageListFragment) getFragmentManager().findFragmentById(R.id.msglist);
+        FragmentManager fm = getFragmentManager();
+        if (fm == null) return;
+
+        listFragment = (MessageListFragment) fm.findFragmentById(R.id.msglist);
         setHasOptionsMenu(true);
     }
 
@@ -148,7 +152,7 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
                 appendToTitle + getString(R.string.of, position + 1, msgCount));
     }
 
-    public void initSlider(String echo, ArrayList<String> msgids, int nIndex, int firstPosition) {
+    public void initSlider(Context context, String echo, ArrayList<String> msgids, int nIndex, int firstPosition) {
         SimpleFunctions.resetIDECParserColors();
         msglist = msgids;
 
@@ -176,7 +180,7 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
         mPager.setCurrentItem(firstPosition);
 
         // помечаем прочитанным первое сообщение
-        GlobalTransport.transport.setUnread(false, Collections.singletonList(msglist.get(firstPosition)));
+        GlobalTransport.transport(context).setUnread(false, Collections.singletonList(msglist.get(firstPosition)));
         updateActionBar(firstPosition);
 
         if (isRealEchoarea) {
@@ -255,7 +259,10 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
                 mPager.setCurrentItem(msgCount - 1, false);
                 return true;
             case R.id.action_starred:
-                MessageView_full current_fragment = ((ScreenSlidePagerAdapter) mPager.getAdapter()).mCurrentFragment;
+                ScreenSlidePagerAdapter adapter1 = (ScreenSlidePagerAdapter) mPager.getAdapter();
+                if (adapter1 == null) return true;
+
+                MessageView_full current_fragment = adapter1.mCurrentFragment;
                 String msgid = msglist.get(mPager.getCurrentItem());
                 current_fragment.messageStarred = !current_fragment.messageStarred;
                 GlobalTransport.transport.setFavorite(
@@ -392,7 +399,10 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
                                                             .setPositiveButton(android.R.string.ok, null)
                                                             .show();
                                                 } else {
-                                                    ((ScreenSlidePagerAdapter) mPager.getAdapter()).mCurrentFragment.initializeMessage(mPager.getContext());
+                                                    ScreenSlidePagerAdapter adapter1 = (ScreenSlidePagerAdapter) mPager.getAdapter();
+                                                    if (adapter1 == null) return;
+
+                                                    adapter1.mCurrentFragment.initializeMessage(mPager.getContext());
                                                     Toast.makeText(activity, R.string.message_updated, Toast.LENGTH_SHORT).show();
 
                                                     if (listFragment != null) {

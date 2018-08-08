@@ -259,6 +259,11 @@ public class SimpleFunctions {
             pieces = message.split("\n");
             for (int i = 0; i < pieces.length; i++) {
                 if (pieces[i].trim().equals("")) continue;
+                if (pieces[i].startsWith(">")) {
+                    // this is mixed quotes support
+                    pieces[i] = ">" + pieces[i];
+                    continue;
+                }
 
                 Matcher quote_match = quote_pattern.matcher(pieces[i]);
                 if (quote_match.matches()) {

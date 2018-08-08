@@ -27,7 +27,12 @@ public class GlobalTransport {
     public static AbstractTransport transport;
 
     public static AbstractTransport transport(Context context) {
-        if (transport == null) transport = new SqliteTransport(context);
+        if (transport == null) {
+            if (Config.lastContext != null)
+                transport = new SqliteTransport(Config.lastContext);
+            else
+                transport = new SqliteTransport(context);
+        }
         return transport;
     }
 

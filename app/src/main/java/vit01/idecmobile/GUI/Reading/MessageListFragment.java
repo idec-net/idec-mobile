@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.UriMatcher;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -106,7 +105,7 @@ public class MessageListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_msglist, container, false);
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,7 +122,7 @@ public class MessageListFragment extends Fragment {
                 .color(SimpleFunctions.colorFromTheme(activity, R.attr.fabIconColor)).sizeDp(19);
         fab.setImageDrawable(create_icon);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.msglist_view);
+        recyclerView = rootView.findViewById(R.id.msglist_view);
         mLayoutManager = new LinearLayoutManager(rootView.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(rootView.getContext()));
@@ -154,7 +153,7 @@ public class MessageListFragment extends Fragment {
         Activity activity = getActivity();
 
         View view = activity.getLayoutInflater().inflate(R.layout.content_empty, null, false);
-        RelativeLayout l = (RelativeLayout) view.findViewById(R.id.content_empty_layout);
+        RelativeLayout l = view.findViewById(R.id.content_empty_layout);
         ((CoordinatorLayout) view.getRootView()).removeAllViews();
 
         ViewGroup current = (RelativeLayout) activity.findViewById(R.id.msglist_view_layout);
@@ -162,7 +161,7 @@ public class MessageListFragment extends Fragment {
         current.removeAllViews();
         current.addView(l);
 
-        if (SimpleFunctions.isTablet(getActivity())) {
+        if (SimpleFunctions.isTablet(activity)) {
             // На планшетах просто растягиваем на весь экран фрагмент
             // Будет правильнее не удалять всё нафиг, а именно растянуть,
             // чтобы не потерять кнопку для написания нового сообщения.
@@ -280,7 +279,7 @@ public class MessageListFragment extends Fragment {
 
         if (isTablet) {
             alreadyOpenedSliderActivity = false;
-            slider.initSlider(echoarea, normalMsgList, nodeIndex, gotPosition);
+            slider.initSlider(activity, echoarea, normalMsgList, nodeIndex, gotPosition);
         }
         recyclerView.scrollToPosition(reversedPosition);
         mAdapter.lastSelectedItem = reversedPosition;
@@ -320,9 +319,9 @@ public class MessageListFragment extends Fragment {
         switch (id) {
             case R.id.action_mark_all_read:
                 if (!IDECFunctions.isRealEchoarea(echoarea)) {
-                    GlobalTransport.transport.setUnread(false, msglist);
+                    GlobalTransport.transport(activity).setUnread(false, msglist);
                 } else {
-                    GlobalTransport.transport.setUnread(false, echoarea);
+                    GlobalTransport.transport(activity).setUnread(false, echoarea);
                 }
 
                 if (mAdapter != null) {
@@ -349,8 +348,8 @@ public class MessageListFragment extends Fragment {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ArrayList<String> favorites = GlobalTransport.transport.getFavorites();
-                                        GlobalTransport.transport.setFavorite(false, favorites);
+                                        ArrayList<String> favorites = GlobalTransport.transport().getFavorites();
+                                        GlobalTransport.transport().setFavorite(false, favorites);
                                         progress.dismiss();
                                         activity.runOnUiThread(new Runnable() {
                                             @Override
@@ -522,7 +521,7 @@ public class MessageListFragment extends Fragment {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_list_element, parent, false);
 
-            RelativeLayout l = (RelativeLayout) v.findViewById(R.id.msg_clickable_layout);
+            RelativeLayout l = v.findViewById(R.id.msg_clickable_layout);
 
             final ViewHolder holder = new ViewHolder(v);
 
@@ -555,7 +554,7 @@ public class MessageListFragment extends Fragment {
                 }
             });
 
-            final ImageView star = (ImageView) v.findViewById(R.id.msg_star);
+            final ImageView star = v.findViewById(R.id.msg_star);
             star.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -663,11 +662,11 @@ public class MessageListFragment extends Fragment {
 
             ViewHolder(View myLayout) {
                 super(myLayout);
-                msg_subj = (TextView) myLayout.findViewById(R.id.msg_subj);
-                msg_from_to = (TextView) myLayout.findViewById(R.id.msg_from_to);
-                msg_text = (TextView) myLayout.findViewById(R.id.msg_text);
-                msg_date = (TextView) myLayout.findViewById(R.id.msg_date);
-                msg_star = (ImageView) myLayout.findViewById(R.id.msg_star);
+                msg_subj = myLayout.findViewById(R.id.msg_subj);
+                msg_from_to = myLayout.findViewById(R.id.msg_from_to);
+                msg_text = myLayout.findViewById(R.id.msg_text);
+                msg_date = myLayout.findViewById(R.id.msg_date);
+                msg_star = myLayout.findViewById(R.id.msg_star);
             }
         }
     }
