@@ -14,8 +14,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="25dp"
-            android:contentDescription="@string/gmd_error" />
+            android:layout_marginTop="25dp" />
 
         <TextView
             android:id="@+id/grant_permission_top_textview"

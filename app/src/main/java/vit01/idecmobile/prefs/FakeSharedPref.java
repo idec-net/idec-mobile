@@ -48,6 +48,8 @@ public class FakeSharedPref implements SharedPreferences {
                 return Config.values.proxyAddress;
             case "application_theme":
                 return Config.values.applicationTheme;
+            case "textsignature":
+                return Config.values.textsignature;
         }
         return s1;
     }
@@ -156,6 +158,9 @@ public class FakeSharedPref implements SharedPreferences {
                     break;
                 case "application_theme":
                     Config.values.applicationTheme = s1;
+                    break;
+                case "textsignature":
+                    Config.values.textsignature = s1;
                     break;
             }
             if (listener != null) listener.onSharedPreferenceChanged(FakeSharedPref.this, s);

@@ -47,6 +47,10 @@
             android:title="@string/settings_sort_by_date" />
 
         <EditTextPreference
+            android:key="textsignature"
+            android:summary="@string/signature_summary"
+            android:title="@string/signature" />
+        <EditTextPreference
             android:defaultValue="All"
             android:dialogTitle="@string/settings_carbon_names"
             android:key="carbon_to"

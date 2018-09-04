@@ -174,6 +174,9 @@
     <string name="confirm_delete_sent">Удалить все отправленные?</string>
     <string name="confirm_delete_file">Вы точно хотите удалить %s?</string>
 
+    <string name="signature">Подпись</string>
+    <string name="signature_summary">Текст в конце каждого отправленного сообщения. Если не нужно, не заполнять</string>
+
     <string-array name="echo_menu_options">
         <item>В начало</item>
         <item>В конец</item>

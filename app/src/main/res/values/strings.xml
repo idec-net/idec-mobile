@@ -177,6 +177,9 @@
     <string name="confirm_delete_sent">Delete all sent messages?</string>
     <string name="confirm_delete_file">Are you sure to delete %s?</string>
 
+    <string name="signature">Text signature</string>
+    <string name="signature_summary">Placed at the end of any message being sent. Leave empty to disable</string>
+
     <string-array name="themes">
         <item>default</item>
         <item>dark</item>

@@ -45,7 +45,6 @@
                     android:layout_height="100sp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="25dp"
-                    android:contentDescription="@string/gmd_error"
                     android:visibility="gone" />
 
                 <ProgressBar

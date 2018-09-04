@@ -53,7 +53,8 @@ public class GlobalConfig implements Serializable {
     // Сообщения какого пользователя слать в карбонку
     public String carbon_to = "All", // разделять двоеточием
             proxyAddress = "127.0.0.1:8118", // аутентификация для http-прокси поддерживается
-            applicationTheme = "default"; // тема оформления
+            applicationTheme = "default", // тема оформления
+            textsignature = ""; // текстовая подпись
 
     public GlobalConfig() {
         offlineEchoareas.add("lenta.rss");

@@ -51,7 +51,7 @@ import vit01.idecmobile.gui_helpers.CustomLinkMovementMethod;
 import vit01.idecmobile.gui_helpers.MyTextView;
 
 public class MessageView_full extends Fragment {
-    public AbstractTransport transport = GlobalTransport.transport;
+    public AbstractTransport transport;
     public boolean messageStarred = false;
     MenuItem discussionBack;
     TextView full_subj, full_from_to, full_date, full_msgid, full_repto, full_echo;
@@ -179,7 +179,7 @@ public class MessageView_full extends Fragment {
     }
 
     public void initializeMessage(Context context) {
-        message = transport.getMessage(msgid);
+        message = GlobalTransport.transport(context).getMessage(msgid);
         if (message == null) message = new IIMessage();
 
         messageStarred = message.is_favorite;

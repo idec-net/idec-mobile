@@ -20,6 +20,7 @@
 package vit01.idecmobile.Core;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import java.io.File;
@@ -57,6 +58,16 @@ public class Sender {
 
                 return null;
             }
+        }
+
+        str = str.trim();
+
+        if (!Config.values.textsignature.trim().equals("")) {
+            String pieces[] = Config.values.textsignature.trim().split("\n");
+            for (int i=0; i<pieces.length; i++) {
+                pieces[i] = "+++ " + pieces[i];
+            }
+            str += "\n\n" + TextUtils.join("\n", pieces);
         }
 
         String base64str = new String(Base64.encode(str.getBytes(), Base64.DEFAULT));

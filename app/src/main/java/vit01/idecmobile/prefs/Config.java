@@ -115,6 +115,11 @@ public class Config {
             }
         }
 
+        if (Config.values.textsignature == null) {
+            Config.values.textsignature = "";
+            needForWrite = true;
+        }
+
         if (needForWrite) writeConfig(context);
     }
 
