@@ -35,7 +35,7 @@ public class IDECFunctions {
 
         switch (echoarea) {
             case "_favorites":
-                msglist = (unread_only) ? transport.getUnreadFavorites() : transport.getFavorites();
+                msglist = (unread_only) ? transport.getUnreadFavorites(sort) : transport.getFavorites(sort);
                 break;
             case "_carbon_classic":
                 List<String> carbon_users = Arrays.asList(Config.values.carbon_to.split(":"));
@@ -43,11 +43,11 @@ public class IDECFunctions {
                 msglist = transport.messagesToUsers(carbon_users, Config.values.carbon_limit, unread_only, sort);
                 break;
             case "_unread":
-                msglist = transport.getAllUnreadMessages();
+                msglist = transport.getAllUnreadMessages(sort);
                 break;
             default:
                 if (unread_only) {
-                    msglist = transport.getUnreadMessages(echoarea);
+                    msglist = transport.getUnreadMessages(echoarea, sort);
                 } else {
                     msglist = transport.getMsgList(echoarea, 0, 0, sort);
                 }

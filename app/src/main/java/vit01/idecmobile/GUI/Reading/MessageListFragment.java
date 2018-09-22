@@ -348,7 +348,7 @@ public class MessageListFragment extends Fragment {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ArrayList<String> favorites = GlobalTransport.transport().getFavorites();
+                                        ArrayList<String> favorites = GlobalTransport.transport().getFavorites(null);
                                         GlobalTransport.transport().setFavorite(false, favorites);
                                         progress.dismiss();
                                         activity.runOnUiThread(new Runnable() {

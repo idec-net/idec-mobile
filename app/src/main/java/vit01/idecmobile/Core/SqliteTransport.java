@@ -35,7 +35,7 @@ import vit01.idecmobile.prefs.Config;
 
 class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
     private static SQLiteDatabase db_static = null;
-    private Context savedcontext = null;
+    private Context savedcontext;
 
     private String tableName = "idecMessages";
     private String echoIndexName = "echostats";
@@ -45,7 +45,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
 
     private String messagesDbCreate = "create table " + tableName + " ("
             + "number integer primary key autoincrement,"
-            + "id text default none,"
+            + "id text default null,"
             + "tags text,"
             + "echoarea text not null,"
             + "date bigint default 0,"
@@ -60,13 +60,13 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
 
     private String filesDbCreate = "create table " + filesTableName + " ("
             + "number integer primary key autoincrement,"
-            + "id text default none,"
+            + "id text default null,"
             + "tags text,"
             + "fecho text not null,"
             + "filename text not null,"
             + "serversize bigint default 0,"
             + "addr text,"
-            + "description text default none"
+            + "description text default null"
             + ")";
 
     private String messagesIndexCreate = "create index if not exists " +
@@ -406,19 +406,23 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
         return fetch_rows(cursor);
     }
 
-    public ArrayList<String> getFavorites() {
-        return msgidsBySelection("isfavorite=1", "number", null);
+    public ArrayList<String> getFavorites(String sort) {
+        if (sort == null) sort = "date";
+        return msgidsBySelection("isfavorite=1", sort, null);
     }
 
-    public ArrayList<String> getUnreadMessages(String echoarea) {
+    public ArrayList<String> getUnreadMessages(String echoarea, String sort) {
+        if (sort == null) sort = "date";
+
         String selection_block = (echoarea != null) ? "echoarea='" + echoarea + "'" : null;
         selection_block += " and isunread=1";
 
-        return msgidsBySelection(selection_block, "number", null);
+        return msgidsBySelection(selection_block, sort, null);
     }
 
-    public ArrayList<String> getAllUnreadMessages() {
-        return msgidsBySelection("isunread=1", "number", null);
+    public ArrayList<String> getAllUnreadMessages(String sort) {
+        if (sort == null) sort = "date";
+        return msgidsBySelection("isunread=1", sort, null);
     }
 
     @Override
@@ -452,9 +456,11 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
         }
     }
 
-    public ArrayList<String> getUnreadFavorites() {
+    public ArrayList<String> getUnreadFavorites(String sort) {
+        if (sort == null) sort = "date";
+
         String selection_block = "isfavorite=1 and isunread=1";
-        return msgidsBySelection(selection_block, "number", null);
+        return msgidsBySelection(selection_block, sort, null);
     }
 
     public ArrayList<String> messagesToUsers(List<String> users_to, int limit, boolean unread, String sort) {
