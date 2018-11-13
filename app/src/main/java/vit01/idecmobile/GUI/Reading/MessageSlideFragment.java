@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -67,9 +68,9 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
     Activity activity;
     ViewPager mPager;
     Drawable starredIcon, unstarredIcon;
-    MenuItem starredMenuItem, ttsSpeakItem;
+    MenuItem starredMenuItem, ttsSpeakItem, updateFromServerItem;
     MessageListFragment listFragment = null;
-    boolean stackUpdate = false;
+    boolean stackUpdate = false, is_corrupt = false;
     private int msgCount;
     private int nodeIndex;
     private ArrayList<String> msglist;
@@ -120,10 +121,12 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
                                 }
                             });
                         }
+                        checkCorrupt();
                     }
                 }).start();
             }
         });
+        // TODO: add checkCorrupt call
         return rootView;
     }
 
@@ -145,6 +148,17 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
             tts.shutdown();
         }
         super.onDestroy();
+    }
+
+    public void checkCorrupt() {
+        if (is_corrupt) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onOptionsItemSelected(updateFromServerItem);
+                }
+            });
+        }
     }
 
     public void updateActionBar(int position) {
@@ -210,6 +224,7 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
         MenuItem toend = menu.findItem(R.id.action_last_item);
 
         ttsSpeakItem = menu.findItem(R.id.action_tts_speak);
+        updateFromServerItem = menu.findItem(R.id.action_update_from_server);
 
         starredMenuItem = menu.findItem(R.id.action_starred);
         starredIcon = new IconicsDrawable(activity, GoogleMaterial.Icon.gmd_star)
@@ -438,6 +453,18 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Handler handlerTimer = new Handler();
+        handlerTimer.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkCorrupt();
+            }
+        }, 1000);
+    }
+
+    @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.getDefault());
@@ -468,6 +495,7 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
             if (starredMenuItem != null)
                 setStarredIcon(mCurrentFragment.messageStarred, starredMenuItem);
             super.setPrimaryItem(container, position, object);
+            is_corrupt = mCurrentFragment.is_corrupt;
         }
 
         @Override

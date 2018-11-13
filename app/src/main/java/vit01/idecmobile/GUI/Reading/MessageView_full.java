@@ -40,6 +40,8 @@ import android.widget.Toast;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import java.util.Objects;
+
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.GlobalTransport;
 import vit01.idecmobile.Core.IIMessage;
@@ -52,8 +54,8 @@ import vit01.idecmobile.gui_helpers.MyTextView;
 
 public class MessageView_full extends Fragment {
     public AbstractTransport transport;
-    public boolean messageStarred = false;
-    MenuItem discussionBack;
+    public boolean messageStarred = false, is_corrupt = false;
+    MenuItem discussionBack, updateFromServerItem;
     TextView full_subj, full_from_to, full_date, full_msgid, full_repto, full_echo;
     MyTextView full_msg;
     Fragment parentContext;
@@ -180,7 +182,13 @@ public class MessageView_full extends Fragment {
 
     public void initializeMessage(Context context) {
         message = GlobalTransport.transport(context).getMessage(msgid);
-        if (message == null) message = new IIMessage();
+        if (message == null) {
+            message = new IIMessage();
+        }
+        if (!message.tags.containsKey("ii")) {
+            message.is_corrupt = true;
+            is_corrupt = true;
+        }
 
         messageStarred = message.is_favorite;
         full_subj.setText(message.subj);
@@ -223,7 +231,6 @@ public class MessageView_full extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         discussionBack = menu.findItem(R.id.action_discussion_previous);
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 }

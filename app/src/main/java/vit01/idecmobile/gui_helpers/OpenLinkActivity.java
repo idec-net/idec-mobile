@@ -62,6 +62,7 @@ public class OpenLinkActivity extends AppCompatActivity {
                 ArrayList<String> trySearch = transport.searchSimilarMsgids(ii_link);
                 if (trySearch == null || trySearch.size() == 0) {
                     message = new IIMessage();
+                    message.is_corrupt = true;
                 } else {
                     ii_link = trySearch.get(0);
                     message = transport.getMessage(ii_link);

@@ -114,6 +114,7 @@
     <string name="message_saved_to_file">Message saved to file</string>
     <string name="msgid_clipboard_done">Message id copied to clipboard</string>
     <string name="fid_clipboard_done">File id copied to clipboard</string>
+    <string name="filename_clipboard_done">File name copied to clipboard</string>
     <string name="repto_clipboard_done">msgid of reply origin copied to clipboard</string>
     <string name="answered">Reply: %s</string>
     <string name="new_messages">New messages: %d</string>
@@ -126,7 +127,7 @@
     <string name="delete_node">Remove station</string>
     <string name="delete_node_confirm">There are some drafts/sent messages belonging to the current station. Are you sure to delete them?</string>
     <string name="manage_node">Manage stations</string>
-    <string name="choose_node">Choose station</string>
+    <string name="choose_node">Choose station to download the message</string>
     <string name="enable_node">Enable this station</string>
     <string name="show_authstr">Show password</string>
     <string name="node_authstr">Auth string (password)</string>
@@ -240,6 +241,7 @@
     <string name="file_size_mismatch" formatted="false">Local file size (%s) does not match with the server reported size (%s)</string>
     <string name="open_file_anyway">Open anyway</string>
     <string name="file_show_description">Show description</string>
+    <string name="file_copy_name">Copy filename to clipboard</string>
     <string name="fid_clipboard_copy">Copy fid to clipboard</string>
     <string name="upload_in_process" formatted="false">Loading: %s/%s</string>
     <string name="upload_percentage" formatted="false">%d%% done</string>

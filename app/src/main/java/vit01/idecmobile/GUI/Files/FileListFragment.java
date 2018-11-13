@@ -402,6 +402,19 @@ public class FileListFragment extends Fragment {
                                     return true;
                                 }
                             });
+                    menu.add(R.string.file_copy_name)
+                            .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    ClipboardManager clipboard = (ClipboardManager)
+                                            callingActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newPlainText("idec filename", holder.entry.filename);
+                                    clipboard.setPrimaryClip(clip);
+
+                                    Toast.makeText(callingActivity, R.string.filename_clipboard_done, Toast.LENGTH_SHORT).show();
+                                    return true;
+                                }
+                            });
                     menu.add(R.string.action_share)
                             .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                 @Override

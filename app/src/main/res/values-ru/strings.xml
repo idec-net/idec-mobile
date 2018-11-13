@@ -111,6 +111,7 @@
     <string name="message_saved_to_file">Сообщение сохранено в файл</string>
     <string name="msgid_clipboard_done">id сообщения скопирован в буфер обмена</string>
     <string name="fid_clipboard_done">id файла скопирован в буфер обмена</string>
+    <string name="filename_clipboard_done">Имя файла скопировано в буфер обмена</string>
     <string name="repto_clipboard_done">msgid ответа скопирован в буфер обмена</string>
     <string name="answered">Ответ: %s</string>
     <string name="new_messages">Новые сообщения: %d</string>
@@ -123,7 +124,7 @@
     <string name="delete_node">Удалить станцию</string>
     <string name="delete_node_confirm">На этой станции остались черновики/отправленные сообщения. Точно удалить?</string>
     <string name="manage_node">Управление станциями</string>
-    <string name="choose_node">Выберите станцию</string>
+    <string name="choose_node">С какой станции скачать сообщение?</string>
     <string name="enable_node">Включить эту станцию</string>
     <string name="show_authstr">Показать пароль</string>
     <string name="node_authstr">Строка авторизации (пароль)</string>
@@ -219,6 +220,7 @@
     <string name="file_size_mismatch" formatted="false">Размер файла в памяти (%s) не совпадает с тем, что сообщил сервер (%s)</string>
     <string name="open_file_anyway">Всё равно открыть</string>
     <string name="file_show_description">Показать описание</string>
+    <string name="file_copy_name">Скопировать имя файла</string>
     <string name="fid_clipboard_copy">Скопировать fid</string>
     <string name="upload_in_process" formatted="false">Загружаю: %s/%s</string>
     <string name="upload_percentage" formatted="false">Готово на %d%%</string>

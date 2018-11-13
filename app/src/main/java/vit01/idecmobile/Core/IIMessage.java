@@ -33,7 +33,7 @@ public class IIMessage implements Serializable {
     public String echo;
     public long time;
     public String from, addr, to, subj, msg, repto;
-    public boolean is_favorite, is_unread;
+    public boolean is_favorite, is_unread, is_corrupt;
 
     public IIMessage() {
         id = null;
@@ -48,6 +48,7 @@ public class IIMessage implements Serializable {
         repto = null;
         is_favorite = false;
         is_unread = true;
+        is_corrupt = false;
     }
 
     public IIMessage(String rawmsg) {

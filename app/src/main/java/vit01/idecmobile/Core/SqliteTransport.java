@@ -549,7 +549,7 @@ class SqliteTransport extends SQLiteOpenHelper implements AbstractTransport {
             selectionKeys.add("subj like '%" + subjKey + "%'");
 
         if (messageKey != null)
-            selectionKeys.add("msg like '%" + messageKey + "%'");
+            selectionKeys.add("msg like '%" + messageKey + "%' or id='" + messageKey + "'");
 
         if (time1 != null && time2 != null)
             selectionKeys.add("date>=" + String.valueOf(time1) + " and date<=" + String.valueOf(time2));
