@@ -41,7 +41,6 @@ import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -66,7 +65,7 @@ public class SimpleFunctions {
     public static DateFormat full_date = new SimpleDateFormat("dd.MM.yyyy (E), HH:mm", Locale.getDefault());
     public static Pattern quote_pattern = Pattern.compile("(^\\s?[\\w_.а-яА-Я0-9()\\-]{0,20})((>)+)(.+$)",
             Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
-    public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(//|#)(.+$)", Pattern.MULTILINE); // TODO
+    public static Pattern comment_pattern = Pattern.compile("(^|(\\w\\s+))(//|#)(.+$)", Pattern.MULTILINE);
     public static Pattern PS_pattern = Pattern.compile("^(PS|P.S|ЗЫ|З.Ы)(.+$)", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
     public static Pattern ii_link_pattern = Pattern.compile("ii://(\\w[\\w.-]+\\w+)");
     public static Pattern url_pattern = Pattern.compile("(https?|ftp|file)://?[-A-Za-zА-Яа-я0-9+&@#/%?=~_|!:,.;]+[-A-Za-zА-Яа-я0-9+&@#/%=~_|]",

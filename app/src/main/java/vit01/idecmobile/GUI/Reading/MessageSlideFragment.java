@@ -126,7 +126,6 @@ public class MessageSlideFragment extends Fragment implements TextToSpeech.OnIni
                 }).start();
             }
         });
-        // TODO: add checkCorrupt call
         return rootView;
     }
 

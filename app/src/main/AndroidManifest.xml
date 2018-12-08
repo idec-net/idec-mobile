@@ -178,6 +178,7 @@
             android:authorities="${applicationId}.documents"
             android:exported="true"
             android:grantUriPermissions="true"
+            android:enabled="@bool/atLeastKitKat"
             android:permission="android.permission.MANAGE_DOCUMENTS">
             <intent-filter>
                 <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
