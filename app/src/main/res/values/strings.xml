@@ -434,13 +434,21 @@
     <string name="settings_tor_summary">Start Orbot automatically</string>
 
     <!-- Additional options -->
-    <string name="manage_choose">Выбрать</string>
-    <string name="manage_messages_db">Cообщения</string>
-    <string name="manage_files_db">Файлы</string>
-    <string name="manage_cache">Кэшированные данные</string>
+    <string name="manage_choose">Choose</string>
+    <string name="manage_messages_db">Messages</string>
+    <string name="manage_files_db">Files</string>
+    <string name="manage_cache">Cached info</string>
 
     <!-- Quotation dialog -->
     <string name="quote_dialog_title">Quote</string>
     <string name="quote_dialog_save_or_exit">Save this message before exiting?</string>
     <string name="title_break_quote">Break the quote</string>
+
+    <!-- Notification channels -->
+    <string name="notify_channel_messages_title">Messages</string>
+    <string name="notify_channel_messages_desc">New messages inside echoareas</string>
+
+    <string name="notify_channel_files_title">Files</string>
+    <string name="notify_channel_files_desc">New files in file echoareas</string>
+
 </resources>

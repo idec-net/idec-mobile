@@ -20,9 +20,12 @@
 package vit01.idecmobile.notify;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
@@ -35,6 +38,8 @@ public class AlarmService extends Service {
     AlarmManager alarmManager;
     Intent jobIntent;
     PendingIntent jobPendingIntent;
+    public final static String CHANNEL_ID_MESSAGES = "msgs_channel";
+    public final static String CHANNEL_ID_FILES = "files_channel";
 
     @Override
     public void onCreate() {
@@ -51,6 +56,8 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        createNotificationChannel();
+
         jobPendingIntent = PendingIntent.getBroadcast(
                 this.getApplicationContext(),
                 666, // У секты должны быть соответствующие id уведомлений
@@ -81,5 +88,31 @@ public class AlarmService extends Service {
     public void stopAlarm() {
         alarmManager.cancel(jobPendingIntent);
         jobPendingIntent.cancel();
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            String name = getString(R.string.notify_channel_messages_title);
+            String description = getString(R.string.notify_channel_messages_desc);
+
+            NotificationChannel msgsChannel = new NotificationChannel(CHANNEL_ID_MESSAGES, name, importance);
+            msgsChannel.setDescription(description);
+
+            String name1 = getString(R.string.notify_channel_files_title);
+            String desc1 = getString(R.string.notify_channel_files_desc);
+
+            NotificationChannel filesChannel = new NotificationChannel(CHANNEL_ID_FILES, name1, importance);
+            filesChannel.setDescription(desc1);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(msgsChannel);
+                notificationManager.createNotificationChannel(filesChannel);
+            }
+        }
     }
 }

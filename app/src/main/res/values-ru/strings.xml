@@ -405,8 +405,21 @@
     <string name="settings_tor_summary">Автоматически запускать Orbot</string>
     <string name="action_new_message_short">Новое</string>
 
+    <!-- Additional options -->
+    <string name="manage_choose">Выбрать</string>
+    <string name="manage_messages_db">Cообщения</string>
+    <string name="manage_files_db">Файлы</string>
+    <string name="manage_cache">Кэшированные данные</string>
+
     <!-- Quotation dialog -->
     <string name="quote_dialog_title">Цитата</string>
     <string name="quote_dialog_save_or_exit">Сохранить новое сообщение?</string>
     <string name="title_break_quote">Разбить цитату</string>
+
+    <!-- Notification channels -->
+    <string name="notify_channel_messages_title">Сообщения</string>
+    <string name="notify_channel_messages_desc">Новые сообщения в эхоконференциях</string>
+
+    <string name="notify_channel_files_title">Файлы</string>
+    <string name="notify_channel_files_desc">Новые файлы в файловых эхах</string>
 </resources>

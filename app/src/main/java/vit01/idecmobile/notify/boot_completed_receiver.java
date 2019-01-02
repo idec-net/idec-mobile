@@ -22,6 +22,7 @@ package vit01.idecmobile.notify;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 
 import vit01.idecmobile.prefs.Config;
 
@@ -32,7 +33,7 @@ public class boot_completed_receiver extends BroadcastReceiver {
             if (Config.values == null) Config.loadConfig(context);
 
             Intent alarmStart = new Intent(context, AlarmService.class);
-            context.startService(alarmStart);
+            ContextCompat.startForegroundService(context, alarmStart);
         }
     }
 }

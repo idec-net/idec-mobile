@@ -22,7 +22,6 @@ package vit01.idecmobile.notify;
 import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -65,6 +64,19 @@ public class workerJob extends BroadcastReceiver {
                 return 228;
             default:
                 return 42;
+        }
+    }
+
+    public static String getNotificationChannel(String task) {
+        switch (task) {
+            case "fetch":
+                return AlarmService.CHANNEL_ID_MESSAGES;
+            case "unread":
+                return AlarmService.CHANNEL_ID_MESSAGES;
+            case "files":
+                return AlarmService.CHANNEL_ID_FILES;
+            default:
+                return AlarmService.CHANNEL_ID_MESSAGES;
         }
     }
 
@@ -179,26 +191,20 @@ public class workerJob extends BroadcastReceiver {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void Show_Notification(Context context, String title, String text, String task) {
         android.support.v4.app.NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context, getNotificationChannel(task))
                         .setSmallIcon(R.drawable.ic_launcher_notify)
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setContentTitle(title)
                         .setContentText(text)
-                        .setAutoCancel(true);
-
-        if (vibrate) {
-            mBuilder.setVibrate(vibrate_pattern);
-        } else mBuilder.setVibrate(null);
-
-        mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(text));
+                        .setAutoCancel(true)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setVibrate(vibrate ? vibrate_pattern: null)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
 
         Intent resultIntent = new Intent(context, vit01.idecmobile.MainActivity.class);
         resultIntent.putExtra("task", task);
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(vit01.idecmobile.MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent navigateIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent navigateIntent = PendingIntent.getActivity(context, 0, resultIntent, 0);
         mBuilder.setContentIntent(navigateIntent);
 
         Intent deleteIntent = new Intent(context, workerJob.class);
