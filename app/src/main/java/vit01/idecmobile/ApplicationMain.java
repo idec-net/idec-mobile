@@ -23,18 +23,18 @@ import android.app.Application;
 import android.content.Context;
 
 import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
+import org.acra.annotation.AcraCore;
+import org.acra.annotation.AcraDialog;
+import org.acra.annotation.AcraMailSender;
+import org.acra.data.StringFormat;
 
 import vit01.idecmobile.prefs.Config;
 
-@ReportsCrashes(
-        mailTo = "me@ii-net.tk",
-        mode = ReportingInteractionMode.DIALOG,
-        reportDialogClass = vit01.idecmobile.bugreports.CrashReportActivity.class,
-        reportSenderFactoryClasses = vit01.idecmobile.bugreports.CrashReportSenderFactory.class
-)
-
+@AcraCore(buildConfigClass = BuildConfig.class,
+        reportFormat = StringFormat.KEY_VALUE_LIST)
+@AcraMailSender(mailTo = "me@ii-net.tk",
+        reportAsFile = false)
+@AcraDialog(reportDialogClass = vit01.idecmobile.bugreports.CrashReportActivity.class)
 public class ApplicationMain extends Application {
     @Override
     protected void attachBaseContext(Context base) {
