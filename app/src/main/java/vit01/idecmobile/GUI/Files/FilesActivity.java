@@ -133,7 +133,7 @@ public class FilesActivity extends AppCompatActivity {
                             }
 
                             String fecho = currentStation.file_echoareas.get(itemId);
-                            String number = ((PrimaryDrawerItem) drawerItem).getBadge().getText();
+                            String number = ((PrimaryDrawerItem) drawerItem).getBadge().getText().toString();
 
                             SimpleFunctions.setActivityTitle(FilesActivity.this, fecho + " (" + number + ")");
                             filelist.initFEchoView(fecho, null, nodeindex, sortOptions[Config.values.fecho_sort_type]);
