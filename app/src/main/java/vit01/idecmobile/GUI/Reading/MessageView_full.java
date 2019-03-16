@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +41,7 @@ import android.widget.Toast;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import java.util.Objects;
+import java.util.regex.Matcher;
 
 import vit01.idecmobile.Core.AbstractTransport;
 import vit01.idecmobile.Core.GlobalTransport;
@@ -55,7 +56,7 @@ import vit01.idecmobile.gui_helpers.MyTextView;
 public class MessageView_full extends Fragment {
     public AbstractTransport transport;
     public boolean messageStarred = false, is_corrupt = false;
-    MenuItem discussionBack, updateFromServerItem;
+    MenuItem discussionBack;
     TextView full_subj, full_from_to, full_date, full_msgid, full_repto, full_echo;
     MyTextView full_msg;
     Fragment parentContext;
@@ -173,6 +174,35 @@ public class MessageView_full extends Fragment {
                 intent.putExtra("echoarea", message.echo);
                 intent.putExtra("nodeindex", SimpleFunctions.getPreferredOutboxId(message.echo));
                 startActivity(intent);
+            }
+        });
+
+        Button kdeconnectBtn = rootLayout.findViewById(R.id.full_share_kdeconnect);
+        kdeconnectBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_cast).sizeDp(20).color(secondaryColor), null, null);
+        kdeconnectBtn.setCompoundDrawablePadding(30);
+
+        kdeconnectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String currentLink = "";
+                Matcher lnk = Patterns.WEB_URL.matcher(message.msg);
+
+                while (lnk.find()) currentLink = lnk.group();
+
+                if (!currentLink.equals("")) {
+                    try {
+                        Intent launchIntent = new Intent(Intent.ACTION_SEND);
+                        launchIntent.setClassName("org.kde.kdeconnect_tp", "org.kde.kdeconnect.Plugins.SharePlugin.ShareActivity");
+                        launchIntent.putExtra(Intent.EXTRA_TEXT, currentLink);
+
+                        startActivity(launchIntent);
+                    }
+                    catch (Exception e) {
+                        SimpleFunctions.debug(e.getMessage());
+                    }
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_no_links, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

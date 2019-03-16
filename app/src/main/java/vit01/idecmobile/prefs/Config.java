@@ -21,6 +21,7 @@ package vit01.idecmobile.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 
 import java.io.FileInputStream;
@@ -42,6 +43,7 @@ public class Config {
     public static SharedPreferences sharedPref;
     public static SharedPreferences.Editor prefEditor;
     public static Context lastContext = null;
+    public static boolean isKDEConnectInstalled = false;
 
     public static void loadConfig(Context context, String filename) {
         lastContext = context;
@@ -60,6 +62,7 @@ public class Config {
         }
         default_values = new GlobalConfig();
         select_gui_theme();
+        isKDEConnectInstalled = appInstalledOrNot(context, "org.kde.kdeconnect_tp");
     }
 
     public static void loadConfig(Context context) {
@@ -165,5 +168,15 @@ public class Config {
         prefEditor = sharedPref.edit();
         prefEditor.putInt("nodeindex_current", currentSelectedStation);
         prefEditor.apply();
+    }
+
+    private static boolean appInstalledOrNot(Context context, String uri) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }

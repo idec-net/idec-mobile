@@ -119,6 +119,16 @@
                 android:layout_weight="1"
                 android:text="@string/action_quote_reply"
                 android:textColor="?attr/android:textColorSecondary" />
+
+            <Button
+                android:id="@+id/full_share_kdeconnect"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/action_share_kdeconnect"
+                android:textColor="?attr/android:textColorSecondary" />
+
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

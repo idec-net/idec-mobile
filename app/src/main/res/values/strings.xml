@@ -451,4 +451,7 @@
     <string name="notify_channel_files_title">Files</string>
     <string name="notify_channel_files_desc">New files in file echoareas</string>
 
+    <string name="action_share_kdeconnect">KDE Connect</string>
+    <string name="error_no_links">There are no links in this message</string>
+
 </resources>
