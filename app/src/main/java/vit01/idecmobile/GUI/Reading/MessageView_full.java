@@ -52,6 +52,7 @@ import vit01.idecmobile.QuoteEditActivity;
 import vit01.idecmobile.R;
 import vit01.idecmobile.gui_helpers.CustomLinkMovementMethod;
 import vit01.idecmobile.gui_helpers.MyTextView;
+import vit01.idecmobile.prefs.Config;
 
 public class MessageView_full extends Fragment {
     public AbstractTransport transport;
@@ -205,6 +206,10 @@ public class MessageView_full extends Fragment {
                 }
             }
         });
+
+        if (!Config.isKDEConnectInstalled) {
+            kdeconnectBtn.setVisibility(View.GONE);
+        }
 
         initializeMessage(getContext());
         return rootLayout;
