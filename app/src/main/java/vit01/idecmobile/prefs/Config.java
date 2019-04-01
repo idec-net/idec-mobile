@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import vit01.idecmobile.Core.GlobalConfig;
 import vit01.idecmobile.Core.SimpleFunctions;
@@ -47,6 +48,8 @@ public class Config {
 
     public static void loadConfig(Context context, String filename) {
         lastContext = context;
+        default_values = new GlobalConfig();
+
         try {
             FileInputStream is = context.openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(is);
@@ -60,7 +63,6 @@ public class Config {
 
             values = new GlobalConfig();
         }
-        default_values = new GlobalConfig();
         select_gui_theme();
         isKDEConnectInstalled = appInstalledOrNot(context, "org.kde.kdeconnect_tp");
     }
@@ -114,6 +116,13 @@ public class Config {
         for (Station station : Config.values.stations) {
             if (station.outbox_storage_id == null) {
                 station.outbox_storage_id = SimpleFunctions.getRandomUUID();
+                needForWrite = true;
+            }
+        }
+
+        for (Station station : Config.values.stations) {
+            if (station.file_echoareas == null) {
+                station.file_echoareas = new ArrayList<>(Config.default_values.stations.get(0).file_echoareas);
                 needForWrite = true;
             }
         }
