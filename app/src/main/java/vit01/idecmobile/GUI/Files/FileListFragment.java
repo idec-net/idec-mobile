@@ -30,14 +30,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.ShareCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -53,6 +45,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
@@ -98,7 +99,7 @@ public class FileListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_filelist, container, false);
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +114,7 @@ public class FileListFragment extends Fragment {
                 .color(SimpleFunctions.colorFromTheme(activity, R.attr.fabIconColor)).sizeDp(19);
         fab.setImageDrawable(upload_icon);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.filelist_view);
+        recyclerView = rootView.findViewById(R.id.filelist_view);
         mLayoutManager = new LinearLayoutManager(rootView.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(rootView.getContext()));
@@ -159,7 +160,7 @@ public class FileListFragment extends Fragment {
         Activity activity = getActivity();
 
         View view = activity.getLayoutInflater().inflate(R.layout.content_empty, null, false);
-        RelativeLayout l = (RelativeLayout) view.findViewById(R.id.content_empty_layout);
+        RelativeLayout l = view.findViewById(R.id.content_empty_layout);
         ((CoordinatorLayout) view.getRootView()).removeAllViews();
 
         ViewGroup current = (RelativeLayout) activity.findViewById(R.id.filelist_view_layout);
@@ -324,8 +325,8 @@ public class FileListFragment extends Fragment {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fecho_file_list_element, parent, false);
 
-            final LinearLayout l = (LinearLayout) v.findViewById(R.id.fecho_file_clickable_layout);
-            final LinearLayout actionLayout = (LinearLayout) v.findViewById(R.id.fecho_action_layout);
+            final LinearLayout l = v.findViewById(R.id.fecho_file_clickable_layout);
+            final LinearLayout actionLayout = v.findViewById(R.id.fecho_action_layout);
 
             final FileListFragment.MyAdapter.ViewHolder holder = new FileListFragment.MyAdapter.ViewHolder(v);
 
@@ -543,11 +544,11 @@ public class FileListFragment extends Fragment {
 
             ViewHolder(View myLayout) {
                 super(myLayout);
-                fecho_filename = (TextView) myLayout.findViewById(R.id.fecho_filename);
-                fecho_address = (TextView) myLayout.findViewById(R.id.fecho_address);
-                fecho_description = (TextView) myLayout.findViewById(R.id.fecho_description);
-                fecho_filesize = (TextView) myLayout.findViewById(R.id.fecho_filesize);
-                action_button = (ImageView) myLayout.findViewById(R.id.fecho_action_button);
+                fecho_filename = myLayout.findViewById(R.id.fecho_filename);
+                fecho_address = myLayout.findViewById(R.id.fecho_address);
+                fecho_description = myLayout.findViewById(R.id.fecho_description);
+                fecho_filesize = myLayout.findViewById(R.id.fecho_filesize);
+                action_button = myLayout.findViewById(R.id.fecho_action_button);
             }
         }
     }

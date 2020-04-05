@@ -21,13 +21,6 @@ package vit01.idecmobile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -36,6 +29,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,16 +52,16 @@ public class HelperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_helper);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
         SimpleFunctions.setActivityTitle(this, getString(R.string.title_activity_help));
 
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
         Intent gotIntent = getIntent();
@@ -112,10 +114,10 @@ public class HelperActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.content_newbie, container, false);
-            TextView targetText = (TextView) rootView.findViewById(R.id.help_newbie);
+            TextView targetText = rootView.findViewById(R.id.help_newbie);
             targetText.setText(Html.fromHtml(getString(R.string.help_newbie)));
 
-            Button closeWindow = (Button) rootView.findViewById(R.id.close_window);
+            Button closeWindow = rootView.findViewById(R.id.close_window);
             closeWindow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -143,8 +145,8 @@ public class HelperActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.content_license, container, false);
 
-            licenceTextView = (TextView) rootView.findViewById(R.id.text_GPL);
-            progressBar = (ProgressBar) rootView.findViewById(R.id.progressbar);
+            licenceTextView = rootView.findViewById(R.id.text_GPL);
+            progressBar = rootView.findViewById(R.id.progressbar);
             return rootView;
         }
 

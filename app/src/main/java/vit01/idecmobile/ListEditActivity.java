@@ -27,13 +27,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +37,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
@@ -68,7 +69,7 @@ public class ListEditActivity extends AppCompatActivity {
         setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_edit);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
         SimpleFunctions.setActivityTitle(this, getString(R.string.title_activity_list_edit));
@@ -90,13 +91,13 @@ public class ListEditActivity extends AppCompatActivity {
                 break;
         }
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_ev);
+        final FloatingActionButton fab = findViewById(R.id.fab_ev);
         IconicsDrawable add_icon = new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_add)
                 .color(SimpleFunctions.colorFromTheme(this, R.attr.fabIconColor)).sizeDp(16);
         fab.setImageDrawable(add_icon);
 
 
-        recyclerView = (RecyclerView) findViewById(R.id.contents);
+        recyclerView = findViewById(R.id.contents);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
@@ -198,8 +199,8 @@ public class ListEditActivity extends AppCompatActivity {
 
         final View alertView = getLayoutInflater().inflate(R.layout.alert_echo_menu, null);
 
-        echoEdit = (EditText) alertView.findViewById(R.id.edit_echoarea);
-        action = (ListView) alertView.findViewById(R.id.echo_menu_options);
+        echoEdit = alertView.findViewById(R.id.edit_echoarea);
+        action = alertView.findViewById(R.id.echo_menu_options);
 
         fab.setOnClickListener(new View.OnClickListener() {
                                    @Override
@@ -294,14 +295,14 @@ public class ListEditActivity extends AppCompatActivity {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.echoarea_list_item_edit, parent, false);
 
-            RelativeLayout l = (RelativeLayout) v.findViewById(R.id.echoarea_edit_clickable_layout);
+            RelativeLayout l = v.findViewById(R.id.echoarea_edit_clickable_layout);
 
             final ViewHolder holder = new ViewHolder(v);
             l.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     echoPosition = holder.getAdapterPosition();
-                    TextView content = (TextView) view.findViewById(R.id.echoarea_edit_name);
+                    TextView content = view.findViewById(R.id.echoarea_edit_name);
                     echoEdit.setText(content.getText());
                     editEchoarea.show();
                 }
@@ -311,7 +312,7 @@ public class ListEditActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            TextView t1 = (TextView) holder.itemView.findViewById(R.id.echoarea_edit_name);
+            TextView t1 = holder.itemView.findViewById(R.id.echoarea_edit_name);
             t1.setText(elements.get(position));
         }
 

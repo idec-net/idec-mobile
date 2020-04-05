@@ -21,18 +21,20 @@ package vit01.idecmobile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import vit01.idecmobile.Core.AbstractTransport;
@@ -55,15 +57,15 @@ public class DebugActivity extends AppCompatActivity {
         setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setActivityTitle(this, getString(R.string.title_activity_debug));
 
         decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        debugLayout = (ScrollView) findViewById(R.id.debugLayout);
-        textView = (TextView) findViewById(R.id.debug_view);
+        debugLayout = findViewById(R.id.debugLayout);
+        textView = findViewById(R.id.debug_view);
         textView.setText("");
 
         SimpleFunctions.debugTaskFinished = false;
@@ -328,7 +330,7 @@ public class DebugActivity extends AppCompatActivity {
                             msgids.addAll(GlobalTransport.transport.getMsgList(echoarea, 0, 0, "number"));
                             exported += exportThese(fos, msgids);
 
-                            SimpleFunctions.debug(echoarea + ": " + String.valueOf(msgids.size()));
+                            SimpleFunctions.debug(echoarea + ": " + msgids.size());
                             msgids.clear();
                         }
                     }
@@ -371,8 +373,7 @@ public class DebugActivity extends AppCompatActivity {
 
                 if (message != null && message.id != null) {
                     // Это нужно, чтобы сисоп станции не мог навязать поинту добавление сообщения в избранное
-                    if (message.tags.containsKey("idecmobile-favorite"))
-                        message.tags.remove("idecmobile-favorite");
+                    message.tags.remove("idecmobile-favorite");
                     if (message.is_favorite) message.tags.put("idecmobile-favorite", "true");
                     String bundleStr = msgid + ":" + Base64.encodeToString(message.raw().getBytes(), Base64.NO_WRAP) + "\n";
                     fos.write(bundleStr.getBytes());
@@ -404,7 +405,7 @@ public class DebugActivity extends AppCompatActivity {
 
                             try {
                                 byte[] rawmsg = Base64.decode(pieces[1], Base64.DEFAULT);
-                                message = new String(rawmsg, "UTF-8");
+                                message = new String(rawmsg, StandardCharsets.UTF_8);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 SimpleFunctions.debug("Invalid decoded message: " + pieces[1]);

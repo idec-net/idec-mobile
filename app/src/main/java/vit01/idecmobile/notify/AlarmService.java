@@ -27,8 +27,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import vit01.idecmobile.Core.SimpleFunctions;
 import vit01.idecmobile.R;
@@ -64,7 +65,7 @@ public class AlarmService extends Service {
                 jobIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        SimpleFunctions.debug("IDEC notifications enabled: " + String.valueOf(Config.values.notificationsEnabled));
+        SimpleFunctions.debug("IDEC notifications enabled: " + Config.values.notificationsEnabled);
 
         if (Config.values.notificationsEnabled) {
             SimpleFunctions.checkTorRunning(getApplicationContext(), false);

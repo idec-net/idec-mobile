@@ -28,9 +28,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.StrictMode;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -190,7 +191,7 @@ public class workerJob extends BroadcastReceiver {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void Show_Notification(Context context, String title, String text, String task) {
-        android.support.v4.app.NotificationCompat.Builder mBuilder =
+        androidx.core.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, getNotificationChannel(task))
                         .setSmallIcon(R.drawable.ic_launcher_notify)
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
@@ -271,7 +272,7 @@ public class workerJob extends BroadcastReceiver {
                 Integer next = (Integer) difference.get(echoarea);
 
                 total += next;
-                notification_text += echoarea + ": " + String.valueOf(next) + "\n";
+                notification_text += echoarea + ": " + next + "\n";
             }
 
             if (notification_text.length() > 0) // костыль с последним переносом строки

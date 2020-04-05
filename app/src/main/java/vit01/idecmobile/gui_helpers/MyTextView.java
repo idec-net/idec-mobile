@@ -1,9 +1,10 @@
 package vit01.idecmobile.gui_helpers;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 public class MyTextView extends AppCompatTextView {
     public MyTextView(Context context) {

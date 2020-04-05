@@ -32,16 +32,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -52,6 +42,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -117,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         boolean isTablet = SimpleFunctions.isTablet(this);
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_fetch);
+        swipeRefresh = findViewById(R.id.swipe_fetch);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -174,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         int shadowColor = SimpleFunctions.colorFromTheme(this, R.attr.material_drawer_header_text_shadow);
-        TextView headerText = (TextView) drawerHeader.getView().findViewById(R.id.material_drawer_account_header_name);
-        TextView emailText = (TextView) drawerHeader.getView().findViewById(R.id.material_drawer_account_header_email);
+        TextView headerText = drawerHeader.getView().findViewById(R.id.material_drawer_account_header_name);
+        TextView emailText = drawerHeader.getView().findViewById(R.id.material_drawer_account_header_email);
         headerText.setShadowLayer(5, 2, 2, shadowColor);
         emailText.setShadowLayer(5, 2, 2, shadowColor);
         emailText.setTextSize(15f);
@@ -482,7 +483,7 @@ public class MainActivity extends AppCompatActivity {
 
     public Drawable getStationIcon(String stationName) {
         int hash = stationName.hashCode();
-        int colors[] = new int[3];
+        int[] colors = new int[3];
 
         colors[0] = (hash & 0xFF0000) >> 16;
         colors[1] = (hash & 0x00FF00) >> 8;
@@ -635,7 +636,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
             setContentView(R.layout.content_grant_permission);
-            ImageView v = (ImageView) findViewById(R.id.imageView);
+            ImageView v = findViewById(R.id.imageView);
 
             int secondaryText = SimpleFunctions.colorFromTheme(this, android.R.attr.textColorSecondary);
             IconicsDrawable icon = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_warning).color(secondaryText);

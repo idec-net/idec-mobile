@@ -22,13 +22,14 @@ package vit01.idecmobile.Core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,6 +38,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -96,7 +98,7 @@ public class SimpleFunctions {
     public static void write_internal_file(Context context, String filename, String data) {
         try {
             FileOutputStream os = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            os.write(data.getBytes(Charset.forName("UTF-8")));
+            os.write(data.getBytes(StandardCharsets.UTF_8));
             os.close();
         } catch (Exception e) {
             Log.e("WTF IDEC?", e.toString());
@@ -105,7 +107,7 @@ public class SimpleFunctions {
     }
 
     public static String readIt(InputStream stream) throws IOException {
-        Reader reader = new InputStreamReader(stream, "UTF-8");
+        Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
         final char[] buffer = new char[500];
         StringBuilder out = new StringBuilder();
         int read;

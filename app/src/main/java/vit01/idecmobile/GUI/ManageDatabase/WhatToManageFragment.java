@@ -22,15 +22,14 @@ package vit01.idecmobile.GUI.ManageDatabase;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import androidx.fragment.app.Fragment;
+
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.List;
@@ -86,16 +85,13 @@ public class WhatToManageFragment extends Fragment {
 
         secondaryText = SimpleFunctions.colorFromTheme(activity, android.R.attr.textColorSecondary);
         final int iconSize = 40;
-        final GoogleMaterial.Icon icons[] = {Icon.gmd_message, Icon.gmd_folder_shared, Icon.gmd_cached};
+        final Icon[] icons = {Icon.gmd_message, Icon.gmd_folder_shared, Icon.gmd_cached};
 
-        ButterKnife.apply(buttons, new ButterKnife.Action<Button>() {
-            @Override
-            public void apply(@NonNull Button btn, int index) {
-                btn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(activity, icons[index])
-                        .sizeDp(iconSize).color(secondaryText), null, null);
-                btn.setCompoundDrawablePadding(iconSize);
-            }
-        });
+        for (int i=0; i<buttons.size(); i++) {
+            buttons.get(i).setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(activity, icons[i])
+                    .sizeDp(iconSize).color(secondaryText), null, null);
+            buttons.get(i).setCompoundDrawablePadding(iconSize);
+        }
 
         return view;
     }

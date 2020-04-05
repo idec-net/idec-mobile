@@ -27,8 +27,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +37,9 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.textfield.TextInputEditText;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
@@ -88,7 +89,7 @@ public class FileUploadFragment extends Fragment {
         });
 
 
-        fullNewMessageBtn = (Button) rootView.findViewById(R.id.action_file_send);
+        fullNewMessageBtn = rootView.findViewById(R.id.action_file_send);
         fullNewMessageBtn.setCompoundDrawablesWithIntrinsicBounds(null, new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_file_upload).sizeDp(20)
                 .color(SimpleFunctions.colorFromTheme(getActivity(), android.R.attr.textColorSecondary)), null, null);
         fullNewMessageBtn.setCompoundDrawablePadding(30);
@@ -100,10 +101,10 @@ public class FileUploadFragment extends Fragment {
             }
         });
 
-        stations_spinner = (Spinner) rootView.findViewById(R.id.upload_stations);
-        fechoarea = (TextInputEditText) rootView.findViewById(R.id.file_echoarea);
-        edit_filename = (TextInputEditText) rootView.findViewById(R.id.filename);
-        description = (TextInputEditText) rootView.findViewById(R.id.file_description);
+        stations_spinner = rootView.findViewById(R.id.upload_stations);
+        fechoarea = rootView.findViewById(R.id.file_echoarea);
+        edit_filename = rootView.findViewById(R.id.filename);
+        description = rootView.findViewById(R.id.file_description);
 
         stations_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

@@ -25,13 +25,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.preference.Preference;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.Preference;
 
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 
@@ -129,7 +130,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                             String result;
                             try {
                                 File toExport = new File(ExternalStorage.rootStorage.getParentFile(),
-                                        "idecConfig_" + String.valueOf(System.currentTimeMillis()) + ".obj");
+                                        "idecConfig_" + System.currentTimeMillis() + ".obj");
                                 if (!toExport.exists() && !toExport.createNewFile())
                                     throw new IOException(getString(R.string.create_file_error) + " " + toExport.getAbsolutePath());
 

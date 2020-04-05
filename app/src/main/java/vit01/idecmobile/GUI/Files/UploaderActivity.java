@@ -22,9 +22,10 @@ package vit01.idecmobile.GUI.Files;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
 
@@ -42,7 +43,7 @@ public class UploaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uploader);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
         SimpleFunctions.setActivityTitle(this, getString(R.string.action_file_upload));

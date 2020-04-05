@@ -24,13 +24,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ThemedSpinnerAdapter;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,6 +43,14 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ThemedSpinnerAdapter;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class StationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stations);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
         ActionBar ab = getSupportActionBar();
@@ -90,7 +91,7 @@ public class StationsActivity extends AppCompatActivity {
         stationNames = new ArrayList<>();
 
         // Setup spinner
-        spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = findViewById(R.id.spinner);
         nodenamesAdapter = new MyAdapter(toolbar.getContext(), stationNames);
         spinner.setAdapter(nodenamesAdapter);
 
@@ -235,7 +236,7 @@ public class StationsActivity extends AppCompatActivity {
                 view = convertView;
             }
 
-            TextView textView = (TextView) view.findViewById(android.R.id.text1);
+            TextView textView = view.findViewById(android.R.id.text1);
             textView.setText(getItem(position));
 
             return view;
@@ -302,19 +303,19 @@ public class StationsActivity extends AppCompatActivity {
         }
 
         protected void getControls(View fragm) {
-            nodename = (EditText) fragm.findViewById(R.id.stations_nodename);
-            address = (EditText) fragm.findViewById(R.id.stations_address);
-            authstr = (EditText) fragm.findViewById(R.id.stations_authstr);
-            show_password = (CheckBox) fragm.findViewById(R.id.show_password);
-            fetch_enable = (Switch) fragm.findViewById(R.id.stations_fetch_enable);
-            xc_enable = (CheckBox) fragm.findViewById(R.id.stations_xc_enable);
-            advanced_ue = (CheckBox) fragm.findViewById(R.id.stations_advanced_ue);
-            pervasive_ue = (CheckBox) fragm.findViewById(R.id.stations_pervasive_ue);
-            fecho_enable = (CheckBox) fragm.findViewById(R.id.stations_fecho_support);
-            fetch_limit = (EditText) fragm.findViewById(R.id.stations_fetch_limit);
-            cut_remote_index = (EditText) fragm.findViewById(R.id.stations_cut_remote_index);
-            get_echolist = (Button) fragm.findViewById(R.id.stations_get_echolist);
-            autoconfig = (Button) fragm.findViewById(R.id.stations_autoconfig);
+            nodename = fragm.findViewById(R.id.stations_nodename);
+            address = fragm.findViewById(R.id.stations_address);
+            authstr = fragm.findViewById(R.id.stations_authstr);
+            show_password = fragm.findViewById(R.id.show_password);
+            fetch_enable = fragm.findViewById(R.id.stations_fetch_enable);
+            xc_enable = fragm.findViewById(R.id.stations_xc_enable);
+            advanced_ue = fragm.findViewById(R.id.stations_advanced_ue);
+            pervasive_ue = fragm.findViewById(R.id.stations_pervasive_ue);
+            fecho_enable = fragm.findViewById(R.id.stations_fecho_support);
+            fetch_limit = fragm.findViewById(R.id.stations_fetch_limit);
+            cut_remote_index = fragm.findViewById(R.id.stations_cut_remote_index);
+            get_echolist = fragm.findViewById(R.id.stations_get_echolist);
+            autoconfig = fragm.findViewById(R.id.stations_autoconfig);
 
             advanced_ue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -451,7 +452,7 @@ public class StationsActivity extends AppCompatActivity {
 
                     HashMap<String, String> entryMap = new HashMap<>(2);
                     entryMap.put("First Line", entry.name);
-                    entryMap.put("Second Line", "[" + String.valueOf(entry.count) + "] - " + entry.description);
+                    entryMap.put("Second Line", "[" + entry.count + "] - " + entry.description);
                     adapter_data.add(entryMap);
                     realEchoList.add(entry.name);
                 }

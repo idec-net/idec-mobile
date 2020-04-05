@@ -23,16 +23,17 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -70,7 +71,7 @@ public class FilesActivity extends AppCompatActivity {
     boolean shouldOpenDrawer = true;
     Bundle savedInstance;
 
-    String sortOptions[] = new String[]{"number desc", "number asc", "filename desc", "filename asc",
+    String[] sortOptions = new String[]{"number desc", "number asc", "filename desc", "filename asc",
             "serversize desc", "serversize asc"};
 
     @Override
@@ -79,7 +80,7 @@ public class FilesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         boolean isTablet = SimpleFunctions.isTablet(this);
@@ -179,10 +180,14 @@ public class FilesActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        String firstFecho = currentStation.file_echoareas.get(selectedEcho);
         filelist = (FileListFragment) getSupportFragmentManager().findFragmentById(R.id.filelist_fragment);
-        filelist.initFEchoView(firstFecho, null, nodeindex, sortOptions[Config.values.fecho_sort_type]);
+        String firstFecho;
 
+        if (currentStation.file_echoareas.size()-1 >= selectedEcho) {
+            firstFecho = currentStation.file_echoareas.get(selectedEcho);
+        } else firstFecho = "null";
+
+        filelist.initFEchoView(firstFecho, null, nodeindex, sortOptions[Config.values.fecho_sort_type]);
         SimpleFunctions.setActivityTitle(this, firstFecho + " (" + GlobalTransport.transport.countFiles(firstFecho) + ")");
 
         swipeDrawerListener = new OnSwipeTouchListener(this, filelist) {

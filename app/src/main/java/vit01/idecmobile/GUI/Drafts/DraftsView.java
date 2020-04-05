@@ -29,13 +29,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +37,14 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -75,7 +76,7 @@ public class DraftsView extends AppCompatActivity {
         setTheme(Config.appTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draft_view);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
 
@@ -85,7 +86,7 @@ public class DraftsView extends AppCompatActivity {
             stations_outbox_id_list.add(station.outbox_storage_id);
         }
 
-        recyclerView = (RecyclerView) findViewById(R.id.drafts_list_view);
+        recyclerView = findViewById(R.id.drafts_list_view);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
@@ -106,10 +107,10 @@ public class DraftsView extends AppCompatActivity {
         if (countMessages == 0 && mAdapter == null) {
             // Отображаем окошечко, что здесь пусто
             View view = getLayoutInflater().inflate(R.layout.content_empty, null);
-            RelativeLayout l = (RelativeLayout) view.findViewById(R.id.content_empty_layout);
+            RelativeLayout l = view.findViewById(R.id.content_empty_layout);
             ((CoordinatorLayout) view.getRootView()).removeAllViews();
 
-            RelativeLayout current = (RelativeLayout) findViewById(R.id.draftslist_view_layout);
+            RelativeLayout current = findViewById(R.id.draftslist_view_layout);
             current.removeAllViews();
             current.addView(l);
             return false;
@@ -321,7 +322,7 @@ public class DraftsView extends AppCompatActivity {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.draft_list_element, parent, false);
 
-            RelativeLayout l = (RelativeLayout) v.findViewById(R.id.draft_clickable_layout);
+            RelativeLayout l = v.findViewById(R.id.draft_clickable_layout);
 
             final ViewHolder holder = new ViewHolder(v);
 
@@ -385,9 +386,9 @@ public class DraftsView extends AppCompatActivity {
 
             public ViewHolder(View myLayout) {
                 super(myLayout);
-                draft_subj = (TextView) myLayout.findViewById(R.id.draft_subj);
-                draft_to = (TextView) myLayout.findViewById(R.id.draft_to);
-                draft_text = (TextView) myLayout.findViewById(R.id.draft_text);
+                draft_subj = myLayout.findViewById(R.id.draft_subj);
+                draft_to = myLayout.findViewById(R.id.draft_to);
+                draft_text = myLayout.findViewById(R.id.draft_text);
             }
         }
     }

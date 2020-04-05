@@ -24,15 +24,16 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -151,13 +152,13 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     public void initUI() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        info = (TextView) findViewById(R.id.progress_status_text);
-        progressBar = (ProgressBar) findViewById(R.id.progressbar);
-        errorView = (ImageView) findViewById(R.id.error_view);
-        viewLog = (Button) findViewById(R.id.progress_watch_log);
+        info = findViewById(R.id.progress_status_text);
+        progressBar = findViewById(R.id.progressbar);
+        errorView = findViewById(R.id.error_view);
+        viewLog = findViewById(R.id.progress_watch_log);
 
         viewLog.setOnClickListener(new View.OnClickListener() {
             @Override

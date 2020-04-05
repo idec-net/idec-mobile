@@ -24,9 +24,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -41,6 +38,13 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.Drawer;
@@ -82,7 +86,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
     boolean shouldOpenDrawer = true;
     Bundle savedInstance;
 
-    android.support.v4.app.Fragment firstFragment;
+    Fragment firstFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +96,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tools);
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         boolean isTablet = SimpleFunctions.isTablet(this);
@@ -118,9 +122,9 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                         if (drawerItem != null) {
                             int itemId = (int) drawerItem.getIdentifier();
 
-                            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-                            android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
-                            android.support.v4.app.Fragment fragm;
+                            FragmentManager fm = getSupportFragmentManager();
+                            FragmentTransaction transaction = fm.beginTransaction();
+                            Fragment fragm;
 
                             int title;
 
@@ -233,7 +237,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    public static class xfile_Fragment extends android.support.v4.app.Fragment {
+    public static class xfile_Fragment extends Fragment {
         public xfile_Fragment() {
         }
 
@@ -245,15 +249,15 @@ public class ManageDatabaseActivity extends AppCompatActivity {
         public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_additional_xfile, container, false);
 
-            final Spinner spinner = (Spinner) rootView.findViewById(R.id.additional_stations_spinner);
+            final Spinner spinner = rootView.findViewById(R.id.additional_stations_spinner);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_dropdown_item, IDECFunctions.getStationsNames());
             spinner.setAdapter(adapter);
 
-            final ListView listview = (ListView) rootView.findViewById(R.id.additional_xfile_list);
+            final ListView listview = rootView.findViewById(R.id.additional_xfile_list);
 
-            Button button = (Button) rootView.findViewById(R.id.additional_load_xfile_list);
+            Button button = rootView.findViewById(R.id.additional_load_xfile_list);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -295,7 +299,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    TextView filename_view = (TextView) view.findViewById(android.R.id.text1);
+                    TextView filename_view = view.findViewById(android.R.id.text1);
                     String filename = filename_view.getText().toString();
 
                     Intent intent = new Intent(getActivity(), DebugActivity.class);
@@ -324,7 +328,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
         }
     }
 
-    public static class Database_Fragment extends android.support.v4.app.Fragment {
+    public static class Database_Fragment extends Fragment {
         AbstractTransport transport;
         Spinner echoareas_spinner;
         ArrayAdapter<String> spinner_adapter;
@@ -343,7 +347,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_additional_database, container, false);
 
-            Button delete_everything = (Button) rootView.findViewById(R.id.additional_database_clear_all);
+            Button delete_everything = rootView.findViewById(R.id.additional_database_clear_all);
             delete_everything.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -366,7 +370,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            Button clear_xc_cache = (Button) rootView.findViewById(R.id.additional_clear_xc);
+            Button clear_xc_cache = rootView.findViewById(R.id.additional_clear_xc);
             clear_xc_cache.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -379,15 +383,15 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            final EditText truncate_echoarea = (EditText) rootView.findViewById(R.id.additional_truncate_echoarea_limit);
+            final EditText truncate_echoarea = rootView.findViewById(R.id.additional_truncate_echoarea_limit);
             truncate_echoarea.setText("50");
 
-            echoareas_spinner = (Spinner) rootView.findViewById(R.id.additional_full_echolist);
+            echoareas_spinner = rootView.findViewById(R.id.additional_full_echolist);
             spinner_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, echolist);
             echoareas_spinner.setAdapter(spinner_adapter);
             updateEchoList();
 
-            Button delete_echoarea = (Button) rootView.findViewById(R.id.additional_database_clear_echo);
+            Button delete_echoarea = rootView.findViewById(R.id.additional_database_clear_echo);
             delete_echoarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -401,14 +405,14 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            Button export_echoarea = (Button) rootView.findViewById(R.id.additional_database_export_echoarea);
+            Button export_echoarea = rootView.findViewById(R.id.additional_database_export_echoarea);
             export_echoarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String current_echo = ((TextView) echoareas_spinner.getSelectedView()).getText().toString();
 
                     if (!current_echo.equals("")) {
-                        String filename = current_echo + "_" + String.valueOf(System.currentTimeMillis()) + ".bundle";
+                        String filename = current_echo + "_" + System.currentTimeMillis() + ".bundle";
                         ExternalStorage.initStorage();
 
                         File target = new File(ExternalStorage.rootStorage.getParentFile(), filename);
@@ -426,7 +430,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            Button truncate_start = (Button) rootView.findViewById(R.id.additional_truncate_echo);
+            Button truncate_start = rootView.findViewById(R.id.additional_truncate_echo);
             truncate_start.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -442,7 +446,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            Button selectFile = (Button) rootView.findViewById(R.id.additional_select_file_bundle_import);
+            Button selectFile = rootView.findViewById(R.id.additional_select_file_bundle_import);
             selectFile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -451,7 +455,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            Button exportAll = (Button) rootView.findViewById(R.id.additional_database_export_all);
+            Button exportAll = rootView.findViewById(R.id.additional_database_export_all);
             exportAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -461,7 +465,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                         return;
                     }
 
-                    String filename = "idecDatabase_full_" + String.valueOf(System.currentTimeMillis()) + ".bundle";
+                    String filename = "idecDatabase_full_" + System.currentTimeMillis() + ".bundle";
                     ExternalStorage.initStorage();
 
                     File target = new File(ExternalStorage.rootStorage.getParentFile(), filename);
@@ -484,7 +488,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
         }
     }
 
-    public static class Blacklist_Fragment extends android.support.v4.app.Fragment {
+    public static class Blacklist_Fragment extends Fragment {
         public Blacklist_Fragment() {
         }
 
@@ -495,7 +499,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_additional_blacklist, container, false);
-            final Spinner spinner = (Spinner) rootView.findViewById(R.id.additional_blacklist_station_spinner);
+            final Spinner spinner = rootView.findViewById(R.id.additional_blacklist_station_spinner);
 
             ArrayList<String> stationNames = new ArrayList<>();
             for (Station station : Config.values.stations) {
@@ -504,7 +508,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, stationNames);
             spinner.setAdapter(adapter);
 
-            Button selectFile = (Button) rootView.findViewById(R.id.additional_select_file_blacklist);
+            Button selectFile = rootView.findViewById(R.id.additional_select_file_blacklist);
             selectFile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -513,7 +517,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            Button clearButton = (Button) rootView.findViewById(R.id.additional_blacklist_clear);
+            Button clearButton = rootView.findViewById(R.id.additional_blacklist_clear);
             clearButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -523,7 +527,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            Button downloadBlacklist = (Button) rootView.findViewById(R.id.additional_load_blacklist);
+            Button downloadBlacklist = rootView.findViewById(R.id.additional_load_blacklist);
             downloadBlacklist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -601,7 +605,7 @@ public class ManageDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            Button deleteBlacklistFile = (Button) rootView.findViewById(R.id.additional_delete_blacklist_file);
+            Button deleteBlacklistFile = rootView.findViewById(R.id.additional_delete_blacklist_file);
             deleteBlacklistFile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

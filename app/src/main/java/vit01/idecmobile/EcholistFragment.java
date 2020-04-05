@@ -23,15 +23,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
@@ -80,7 +81,7 @@ public class EcholistFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_echolist, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.echolist);
+        recyclerView = rootView.findViewById(R.id.echolist);
         mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
@@ -149,7 +150,7 @@ public class EcholistFragment extends Fragment {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.echoarea_list_item_main, parent, false);
 
-            RelativeLayout l = (RelativeLayout) v.findViewById(R.id.echoarea_clickable_layout);
+            RelativeLayout l = v.findViewById(R.id.echoarea_clickable_layout);
 
             final ViewHolder holder = new ViewHolder(v);
 
@@ -189,7 +190,7 @@ public class EcholistFragment extends Fragment {
             if (stat.unread_count > 0) {
                 holder.echoarea_unread.setVisibility(View.VISIBLE);
                 holder.echoarea_unread.setText(String.valueOf(stat.unread_count));
-                holder.echoarea_total_count.setText("/" + String.valueOf(stat.total_count));
+                holder.echoarea_total_count.setText("/" + stat.total_count);
             } else {
                 holder.echoarea_unread.setVisibility(View.GONE);
                 holder.echoarea_total_count.setText(String.valueOf(stat.total_count));
@@ -219,9 +220,9 @@ public class EcholistFragment extends Fragment {
 
             public ViewHolder(View myLayout) {
                 super(myLayout);
-                echoarea_name = (TextView) myLayout.findViewById(R.id.echoarea_name);
-                echoarea_unread = (TextView) myLayout.findViewById(R.id.echoarea_unread_count);
-                echoarea_total_count = (TextView) myLayout.findViewById(R.id.echoarea_total_count);
+                echoarea_name = myLayout.findViewById(R.id.echoarea_name);
+                echoarea_unread = myLayout.findViewById(R.id.echoarea_unread_count);
+                echoarea_total_count = myLayout.findViewById(R.id.echoarea_total_count);
             }
         }
     }

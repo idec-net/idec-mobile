@@ -25,10 +25,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +32,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -79,7 +80,7 @@ public class FileChooserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_chooser);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SimpleFunctions.setDisplayHomeAsUpEnabled(this);
         SimpleFunctions.setActivityTitle(this, getString(R.string.title_activity_file_chooser));
@@ -87,7 +88,7 @@ public class FileChooserActivity extends AppCompatActivity {
         textColorPrimary = SimpleFunctions.colorFromTheme(this, android.R.attr.textColorPrimary);
         currentDir = getExternalOrRoot();
 
-        recyclerView = (RecyclerView) findViewById(R.id.file_chooser_entries);
+        recyclerView = findViewById(R.id.file_chooser_entries);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
@@ -180,7 +181,7 @@ public class FileChooserActivity extends AppCompatActivity {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.file_list_element, parent, false);
 
-            RelativeLayout l = (RelativeLayout) v.findViewById(R.id.file_clickable_layout);
+            RelativeLayout l = v.findViewById(R.id.file_clickable_layout);
 
             final ViewHolder holder = new ViewHolder(v);
 
@@ -254,9 +255,9 @@ public class FileChooserActivity extends AppCompatActivity {
 
             public ViewHolder(View myLayout) {
                 super(myLayout);
-                filename = (TextView) myLayout.findViewById(R.id.file_item_name);
-                filesize = (TextView) myLayout.findViewById(R.id.file_item_size);
-                fileIcon = (ImageView) myLayout.findViewById(R.id.file_item_icon);
+                filename = myLayout.findViewById(R.id.file_item_name);
+                filesize = myLayout.findViewById(R.id.file_item_size);
+                fileIcon = myLayout.findViewById(R.id.file_item_icon);
             }
         }
     }
