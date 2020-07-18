@@ -272,6 +272,7 @@
     <string name="unable_to_save_error">Failed to save the file. Sorry :(</string>
     <string name="deletion_error">Failed to delete!</string>
     <string name="draft_dir_deletion_error">Empty drafts directory was not deleted…</string>
+    <string name="draft_external_editor_error">Error opening external editor</string>
     <string name="station_deletion_error" formatted="false">Deletion error for station %s &amp; %s</string>
     <string name="echolist_parsing_error">Echolist parsing error!</string>
     <string name="wrong_input">You typed something wrong</string>

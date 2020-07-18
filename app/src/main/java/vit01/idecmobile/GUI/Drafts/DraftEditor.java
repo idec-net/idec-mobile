@@ -162,9 +162,14 @@ public class DraftEditor extends AppCompatActivity {
             intent.setAction(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.fromFile(fileToSave), "text/plain");
 
-            startActivity(intent);
-            finish();
-            return;
+            try {
+                startActivity(intent);
+                finish();
+                return;
+            }
+            catch (Exception e) {
+                Toast.makeText(DraftEditor.this, R.string.draft_external_editor_error, Toast.LENGTH_SHORT).show();
+            }
         }
 
         installValues();

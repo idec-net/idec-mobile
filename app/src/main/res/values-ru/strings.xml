@@ -251,6 +251,7 @@
     <string name="unable_to_save_error">Файл как-то не сохранён. Сожалею :(</string>
     <string name="deletion_error">Удалить не получилось!</string>
     <string name="draft_dir_deletion_error">Пустой каталог для черновиков не удалился…</string>
+    <string name="draft_external_editor_error">Не получилось запустить внешний редактор, открываем обычный</string>
     <string name="station_deletion_error" formatted="false">Ошибка удаления для станции %s &amp; %s</string>
     <string name="echolist_parsing_error">Проблемы с парсингом списка эх!</string>
     <string name="wrong_input">Чё-то ты не то ввёл</string>

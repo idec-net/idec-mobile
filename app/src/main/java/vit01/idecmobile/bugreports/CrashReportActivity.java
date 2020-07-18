@@ -21,6 +21,7 @@ package vit01.idecmobile.bugreports;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -54,7 +55,12 @@ public class CrashReportActivity extends BaseCrashReportDialog
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            sendCrash("", "");
+            try {
+                sendCrash("", "");
+            } catch (Exception e) {
+                Toast.makeText(CrashReportActivity.this, "Can't send report because Email client not installed", Toast.LENGTH_SHORT).show();
+                cancelReports();
+            }
         } else {
             cancelReports();
         }
