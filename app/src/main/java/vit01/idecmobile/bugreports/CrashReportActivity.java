@@ -21,19 +21,18 @@ package vit01.idecmobile.bugreports;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import org.acra.dialog.BaseCrashReportDialog;
+import org.acra.dialog.CrashReportDialog;
 
 import vit01.idecmobile.R;
 
-public class CrashReportActivity extends BaseCrashReportDialog
+public class CrashReportActivity extends CrashReportDialog
         implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
     @Override
-    protected void init(Bundle savedInstanceState) {
-        super.init(savedInstanceState);
+    protected void buildAndShowDialog(Bundle savedInstanceState) {
+        super.buildAndShowDialog(savedInstanceState);
 
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.acra_report_title)
@@ -49,21 +48,6 @@ public class CrashReportActivity extends BaseCrashReportDialog
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        finish();
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-            try {
-                sendCrash("", "");
-            } catch (Exception e) {
-                Toast.makeText(CrashReportActivity.this, "Can't send report because Email client not installed", Toast.LENGTH_SHORT).show();
-                cancelReports();
-            }
-        } else {
-            cancelReports();
-        }
         finish();
     }
 }

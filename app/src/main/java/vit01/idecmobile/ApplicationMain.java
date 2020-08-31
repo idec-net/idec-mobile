@@ -26,14 +26,11 @@ import org.acra.ACRA;
 import org.acra.annotation.AcraCore;
 import org.acra.annotation.AcraDialog;
 import org.acra.annotation.AcraMailSender;
-import org.acra.data.StringFormat;
 
 import vit01.idecmobile.prefs.Config;
 
-@AcraCore(buildConfigClass = BuildConfig.class,
-        reportFormat = StringFormat.KEY_VALUE_LIST)
-@AcraMailSender(mailTo = "me@ii-net.tk",
-        reportAsFile = false)
+@AcraCore(buildConfigClass = BuildConfig.class)
+@AcraMailSender(mailTo = "me@ii-net.tk", reportAsFile = false)
 @AcraDialog(reportDialogClass = vit01.idecmobile.bugreports.CrashReportActivity.class)
 public class ApplicationMain extends Application {
     @Override
