@@ -1,7 +1,7 @@
 ### IDEC Mobile
 
-Android client for [IDEC fidolike networks](https://ii-net.tk). Latest APK: <https://ii-net.tk/ii/files/app-debug.apk>
+Android client for [IDEC fidolike networks](https://github.com/idec-net/).
 
-Supported languages: Russian and English. IDEC API English docs are here: <https://ii-net.tk/idec-doc/?p=protocol-en>
+Supported languages: Russian and English.
 
 License: GPLv3

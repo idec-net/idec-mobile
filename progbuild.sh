@@ -5,7 +5,7 @@ bld="./gradlew --offline assembleDebug"
 apk="./app/build/outputs/apk/debugapk/debug/app-debugapk-debug.apk"
 
 if [ "$1" = "upload" ]; then
-	scp $apk ii-net.tk:/home/vitya/websites/ii-net.tk/ii/files/app-debug.apk
+	#scp $apk myserver:/
 	exit
 fi
 

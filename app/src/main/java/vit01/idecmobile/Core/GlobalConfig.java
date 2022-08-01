@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Viktor Fedenyov <me@ii-net.tk> <https://ii-net.tk>
+ * Copyright (c) 2016-2022 Viktor Fedenyov <me@alicorn.tk> <https://alicorn.tk>
  *
  * This file is part of IDEC Mobile.
  *
@@ -61,14 +61,5 @@ public class GlobalConfig implements Serializable {
         offlineEchoareas.add("edgar.allan.poe");
 
         stations.add(new Station());
-        stations.add(new Station());
-
-        Station secondStation = stations.get(1);
-        secondStation.nodename = Strings.node_tavern;
-        secondStation.address = "http://idec.spline-online.tk/";
-
-        secondStation.echoareas.add("spline.local.14");
-        secondStation.echoareas.add("game.rogue.14");
-        swipeToFetch = true;
     }
 }

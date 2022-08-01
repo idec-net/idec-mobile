@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 Viktor Fedenyov <me@ii-net.tk> <https://ii-net.tk>
+ * Copyright (c) 2016-2018 Viktor Fedenyov <me@alicorn.tk> <https://alicorn.tk>
  *
  * This file is part of IDEC Mobile.
  *

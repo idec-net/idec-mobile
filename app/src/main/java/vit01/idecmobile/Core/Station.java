@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Viktor Fedenyov <me@ii-net.tk> <https://ii-net.tk>
+ * Copyright (c) 2016-2022 Viktor Fedenyov <me@alicorn.tk> <https://alicorn.tk>
  *
  * This file is part of IDEC Mobile.
  *
@@ -29,8 +29,8 @@ public class Station implements Serializable {
     static final long serialVersionUID = 100L;
 
     public String
-            nodename = Strings.node_mira,
-            address = "https://ii-net.tk/ii/ii-point.php?q=/",
+            nodename = Strings.node_tavern,
+            address = "http://idec.spline-online.tk/",
             authstr = "",
             outbox_storage_id = null;
     public ArrayList<String> echoareas = new ArrayList<>();
@@ -46,10 +46,9 @@ public class Station implements Serializable {
             cut_remote_index = 50;
 
     public Station() {
-        String[] default_echoareas = new String[]{"pipe.2032", "idec.talks", "std.club", "mlp.15", "ii.test.14",
-                "habra.rss", "develop.16", "linux.14"};
+        String[] default_echoareas = new String[]{"pipe.2032", "idec.talks", "std.club", "ii.test.14", "develop.16", "linux.14"};
 
-        String[] default_file_echoareas = new String[]{"pictures", "mlp.pictures", "music", "books", "books.tech"};
+        String[] default_file_echoareas = new String[]{"pictures", "music", "books", "books.tech"};
 
         Collections.addAll(echoareas, default_echoareas);
         Collections.addAll(file_echoareas, default_file_echoareas);

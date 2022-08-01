@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Viktor Fedenyov <me@ii-net.tk> <https://ii-net.tk>
+ * Copyright (c) 2016-2022 Viktor Fedenyov <me@alicorn.tk> <https://alicorn.tk>
  *
  * This file is part of IDEC Mobile.
  *
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(MainActivity.this, HelperActivity.class));
                                 break;
                             case 11:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://ii-net.tk/ii/files/app-debug.apk")));
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/idec-net/idec-mobile")));
                                 break;
                             case 12:
                                 new AlertDialog.Builder(MainActivity.this)

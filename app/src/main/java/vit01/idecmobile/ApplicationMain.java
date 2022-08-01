@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Viktor Fedenyov <me@ii-net.tk> <https://ii-net.tk>
+ * Copyright (c) 2016-2022 Viktor Fedenyov <me@alicorn.tk> <https://alicorn.tk>
  *
  * This file is part of IDEC Mobile.
  *
@@ -30,7 +30,7 @@ import org.acra.annotation.AcraMailSender;
 import vit01.idecmobile.prefs.Config;
 
 @AcraCore(buildConfigClass = BuildConfig.class)
-@AcraMailSender(mailTo = "me@ii-net.tk", reportAsFile = false)
+@AcraMailSender(mailTo = "me@alicorn.tk", reportAsFile = false)
 @AcraDialog(reportDialogClass = vit01.idecmobile.bugreports.CrashReportActivity.class)
 public class ApplicationMain extends Application {
     @Override
